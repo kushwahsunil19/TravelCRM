@@ -41,9 +41,9 @@ class BranchController extends Controller
         ]);
 
         // Create a new branch
-        Branch::create($request->all());
-
-        return redirect()->route('quotations.create')->with('success', 'Branch created successfully.');
+        $branches =   Branch::create($request->all());
+        $branchDetails = Branch::latest()->get();
+        return response()->json(['status'=>true,'data'=>$branchDetails ,'message' => 'Branch details added successfully']);
     }
 
     /**

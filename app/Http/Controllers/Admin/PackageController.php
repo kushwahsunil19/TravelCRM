@@ -48,6 +48,7 @@ class PackageController extends Controller
      */
     public function store(Request $request)
     {
+      
         // Validate the incoming data
         $request->validate([
             'package_name' => 'required|string|max:255',
@@ -56,8 +57,9 @@ class PackageController extends Controller
         ]);
         // Create a new package
         Package::create($request->all());
-
-        return redirect()->route('quotations.create')->with('success', 'Package created successfully.');
+        $packageDetails = Package::latest()->get();
+        return response()->json(['status'=>true,'data'=>$packageDetails ,'message' => 'Package details added successfully']);
+   
     }
 
     /**

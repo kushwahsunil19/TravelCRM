@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Quotation,Branch,Partner,Package};
+use App\Models\{Quotation,Branch,Partner,Package,Bank};
 use PDF;
 class QuotationController extends Controller
 {
@@ -13,7 +13,7 @@ class QuotationController extends Controller
      */
     public function index()
     {
-        $quotations = Quotation::with(['branch', 'partner', 'package'])->paginate(10);
+        $quotations = Quotation::with(['branch', 'partner', 'package','bank'])->paginate(10);
         return view('admin.quotations.index', compact('quotations'));
     }
 
@@ -32,7 +32,8 @@ class QuotationController extends Controller
         $branches = Branch::all();
         $partners = Partner::all();
         $packages = Package::all();
-        return view('admin.quotations.create', compact('branches', 'partners', 'packages','quotation_no'));
+        $bankDetails = Bank::latest()->get();
+        return view('admin.quotations.create', compact('branches', 'partners', 'packages','quotation_no','bankDetails'));
     }
 
     /**
@@ -161,7 +162,25 @@ class QuotationController extends Controller
         // Return the PDF file
         return $pdf->download('Estimate-' . $currentDateTime . '.pdf');
     }
+        public function addBankDetail(Request $request){
 
+            $request->validate([
+                'bank_name' => 'required|string|max:255',
+                'account_no' => 'required|numeric',
+                'branch_name' => 'required|string|max:255',
+                'ifsc_code' => 'required',
+            ]);
+    
+            // Create new bank detail
+            $bankDetail = Bank::create([
+                'bank_name' => $request->bank_name,
+                'account_no' => $request->account_no,
+                'branch_name' => $request->branch_name,
+                'ifsc_code' => $request->ifsc_code,
+            ]);
+            $bankDetails = Bank::latest()->get();
+            return response()->json(['status'=>true,'data'=>$bankDetails ,'message' => 'Bank details added successfully']);
+        }
       /**
      * Restore a soft-deleted package.
      */

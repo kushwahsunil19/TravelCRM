@@ -17,6 +17,7 @@ class Quotation extends Model
         'branch_id',
         'partner_id',
         'package_id',
+        'bank_id',
         'quotation_no',
         'twin_double_sharing_cost',
         'triple_sharing_cost',
@@ -25,6 +26,9 @@ class Quotation extends Model
         'gst_tax',       
         'discount_type',
         'discount',
+        'status',
+        'note',
+        'term_condition'
     ];
 
     /**
@@ -50,4 +54,12 @@ class Quotation extends Model
     {
         return $this->belongsTo(Package::class);
     }
+    // Defining the relationship with the Back model
+    public function bank()
+    {
+        return $this->belongsTo(Bank::class , 'bank_id', 'id');    
+
+    }
+
+
 }

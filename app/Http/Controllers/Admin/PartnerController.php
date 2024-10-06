@@ -44,7 +44,9 @@ class PartnerController extends Controller
         }
 
         $partner->save();
-        return redirect()->route('quotations.create')->with('success', 'Partner created successfully.');
+        $partnerDetails = Partner::latest()->get();
+        return response()->json(['status'=>true,'data'=>$partnerDetails ,'message' => 'Partner details added successfully']);
+ 
     }
 
     public function show(Partner $partner)

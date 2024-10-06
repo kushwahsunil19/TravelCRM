@@ -549,8 +549,6 @@
 			CKEDITOR.replace('description');
 		});
 	
-        // Initialize CKEditor on the textarea
-      //  CKEDITOR.replace('description');
     </script>	
 
 

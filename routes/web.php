@@ -62,6 +62,7 @@ Route::middleware(['auth'])->group(function() {
     Route::post('packages/{id}/restore', [PackageController::class, 'restore'])->name('packages.restore');
     Route::resource('quotations', QuotationController::class); 
     Route::get('/quotation/pdf/{id}', [QuotationController::class, 'generateQuotationPDF'])->name('quotation.estimate');
+    Route::post('/bank-details', [QuotationController::class, 'addBankDetail'])->name('bank-details.add');
 
     Route::post('quotations/{id}/restore', [QuotationController::class, 'restore'])->name('packages.restore');
 
