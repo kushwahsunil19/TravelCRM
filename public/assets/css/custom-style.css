@@ -1,0 +1,208 @@
+.settings-icon {
+    display: none;
+    }
+    /* Custom Toastr Styles */
+ 
+    .dataTables_length label:before {
+    content: "Show";
+    margin-right: 5px;
+    font-size: 14px;
+    visibility: hidden;
+    }
+    
+    .dataTables_length label:after {
+    content: "Entries";
+    margin-left: 5px;
+    font-size: 14px;
+    visibility: hidden;
+    }
+
+    /* public/css/custom-toastr.css */
+
+/* General Toast Container Styling */
+#toast-container {
+    position: fixed;
+    z-index: 9999;
+    right: 20px;
+    top: 20px;
+    width: 300px; /* Adjust width as needed */
+}
+
+/* Success Toast */
+.toast-success {
+    background-color: #4CAF50 !important; /* Green background */
+    color: #fff !important; /* White text */
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.toast-success .toast-title {
+    color: #059669; /* Dark green for title */
+    font-size: 1em;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.toast-success .toast-message {
+    font-size: 1em;
+    font-weight: 400;
+    display: block;
+    line-height: 1.25em;
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.toast-success .toast-progress {
+    background-color: #fff; /* White progress bar */
+    height: 5px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transition: width 5s linear;
+}
+
+/* Error Toast */
+.toast-error {
+    background-color: #F44336 !important; /* Red background */
+    color: #fff !important;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.toast-error .toast-title {
+    color: #D32F2F; /* Dark red for title */
+    font-size: 1em;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.toast-error .toast-message {
+    font-size: 1em;
+    font-weight: 400;
+    display: block;
+    line-height: 1.25em;
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.toast-error .toast-progress {
+    background-color: #fff;
+    height: 5px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transition: width 5s linear;
+}
+
+/* Warning Toast */
+.toast-warning {
+    background-color: #FF9800 !important; /* Orange background */
+    color: #fff !important;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.toast-warning .toast-title {
+    color: #F57C00; /* Dark orange for title */
+    font-size: 1em;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.toast-warning .toast-message {
+    font-size: 1em;
+    font-weight: 400;
+    display: block;
+    line-height: 1.25em;
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.toast-warning .toast-progress {
+    background-color: #fff;
+    height: 5px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transition: width 5s linear;
+}
+
+/* Info Toast */
+.toast-info {
+    background-color: #2196F3 !important; /* Blue background */
+    color: #fff !important;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.toast-info .toast-title {
+    color: #1976D2; /* Dark blue for title */
+    font-size: 1em;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.toast-info .toast-message {
+    font-size: 1em;
+    font-weight: 400;
+    display: block;
+    line-height: 1.25em;
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.toast-info .toast-progress {
+    background-color: #fff;
+    height: 5px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transition: width 5s linear;
+}
+
+/* Close Button Styling */
+.toast-close-button {
+    color: #fff;
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.toast-close-button:hover {
+    opacity: 1;
+}
+
+.cke_notification_warning {
+    background: #c83939;
+    border: 1px solid #902b2b;
+    display: none!important;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left; /* Align text to the left */
+    overflow-wrap: break-word; /* Break words to wrap text */
+    word-wrap: break-word; /* For older browsers */
+    white-space: normal; /* Allow wrapping */
+}
