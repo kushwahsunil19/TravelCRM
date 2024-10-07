@@ -75,6 +75,9 @@ class PackageController extends Controller
      */
     public function edit(Package $package)
     {
+      
+        return response()->json(['status'=>true,'data'=>$package ,'message' => 'Package details added successfully']);
+
         return view('admin.packages.edit', compact('package'));
     }
 
@@ -92,8 +95,10 @@ class PackageController extends Controller
 
         // Update the package
         $package->update($request->all());
+        return response()->json(['status'=>true,'data'=>$package ,'message' => 'Package details updated successfully']);
 
-        return redirect()->route('quotations.create')->with('success', 'Package updated successfully.');
+
+        // return redirect()->route('quotations.create')->with('success', 'Package updated successfully.');
     }
 
     /**

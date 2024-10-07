@@ -79,7 +79,9 @@ class QuotationController extends Controller
         $branches = Branch::all();
         $partners = Partner::all();
         $packages = Package::all();
-        return view('admin.quotations.edit', compact('quotation', 'branches', 'partners', 'packages'));
+        $bankDetails = Bank::latest()->get();
+
+        return view('admin.quotations.edit', compact('quotation', 'branches', 'partners', 'packages','bankDetails'));
     }
 
     /**

@@ -5,7 +5,35 @@
 <!-- Main Wrapper -->
 @extends('admin.layouts.common-sidebar')
 <!-- /Main Wrapper -->
+<!-- /Main Wrapper -->
+<style>
+.description-cell p {
+    word-wrap: break-word !important;
+    /* Ensure long words break */
+    overflow-wrap: break-word !important;
+    /* Ensure long words break */
+    white-space: normal !important;
+    /* Allow text to wrap naturally */
+    max-width: 300px !important;
+    /* Optional: Limit the width of the cell */
+}
 
+.description-cell2 {
+    word-wrap: break-word !important;
+    /* Ensure long words break */
+    overflow-wrap: break-word !important;
+    /* Ensure long words break */
+    white-space: normal !important;
+    /* Allow text to wrap naturally */
+    max-width: 300px !important;
+    /* Optional: Limit the width of the cell */
+}
+
+td {
+    vertical-align: top;
+    /* Align the content to the top of the cell */
+}
+</style>
 <!-- Page Wrapper -->
 <div class="page-wrapper">
     <div class="content container-fluid">
@@ -152,44 +180,18 @@
                                 <div class="form-group-item">
                                     <div class="card-table">
                                         <div class="card-body">
-                                            <div class="table-responsive no-pagination">
+                                            <div class="table-responsive itme_table no-pagination">
                                                 <table class="table table-center table-hover datatable">
                                                     <thead class="thead-light">
                                                         <tr>
-                                                            <th>Product / Service</th>
-                                                            <th>Quantity</th>
-                                                            <th>Unit</th>
-                                                            <th>Rate</th>
-                                                            <th>Discount</th>
-                                                            <th>Tax</th>
+                                                            <th>Package Name</th>
+                                                            <th>Discription</th>
                                                             <th>Amount</th>
                                                             <th class="no-sort">Action</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>Lorem ipsum dolor sit amet</td>
-                                                            <td><input type="number" class="form-control"
-                                                                    placeholder="0">
-                                                            </td>
-                                                            <td>Pcs</td>
-                                                            <td><input type="number" class="form-control"
-                                                                    placeholder="120">
-                                                            </td>
-                                                            <td>0</td>
-                                                            <td>0</td>
-                                                            <td>$120.00</td>
-                                                            <td class="d-flex align-items-center">
-                                                                <a href="#" class="btn-action-icon me-2"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#add_discount"><span><i
-                                                                            class="fe fe-edit"></i></span></a>
-                                                                <a href="#" class="btn-action-icon"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#delete_discount"><span><i
-                                                                            class="fe fe-trash-2"></i></span></a>
-                                                            </td>
-                                                        </tr>
+                                                    <tbody id="packageBody">
+                                                        <!-- Rows will be added here by AJAX -->
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -225,11 +227,13 @@
                                                 <div class="input-block mb-3">
                                                     <div class="input-block mb-3">
                                                         <label>Tax</label>
-                                                        <select class="select" name="gst_tax">                                                           
+                                                        <input type="number" class="form-control gst_tax" name="gst_tax"
+                                                        placeholder="Enter Tax">
+                                                        <!-- <select class="select" name="gst_tax" id="gst_tax">
                                                             <option value="21">IVA - (21%)</option>
-                                                            <option  value="15">IRPF - (-15%)</option>
-                                                            <option  value="20">PDV - (20%)</option>
-                                                        </select>
+                                                            <option value="15">IRPF - (-15%)</option>
+                                                            <option value="20">PDV - (20%)</option>
+                                                        </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -280,10 +284,13 @@
                                             <div class="form-group-bank">
                                                 <div class="invoice-total-box">
                                                     <div class="invoice-total-inner">
-                                                        <p>Taxable Amount <span>$120.00</span></p>
-                                                        <p>Discount <span>$13.20</span></p>
-                                                        <p>Vat <span>$0.00</span></p>
-                                                        <div class="status-toggle justify-content-between">
+                                                           <p>Package Amount <span class="amount">$0.00</span></p>
+                                                            <input type="hidden" id="package_amt" value="0">
+                                                            <p>Discount <span class="discount">$0.00</span></p>
+                                                            <input type="hidden" id="discount" value="0">
+                                                            <p>Tax <span class="gst_tax">$0.00</span></p>
+                                                            <input type="hidden" id="gst_tax" value="0">
+                                                        <!-- <div class="status-toggle justify-content-between">
                                                             <div class="d-flex align-center">
                                                                 <p>Round Off </p>
                                                                 <input id="rating_1" class="check" type="checkbox"
@@ -292,13 +299,13 @@
                                                                     class="checktoggle checkbox-bg">checkbox</label>
                                                             </div>
                                                             <span>$0.00</span>
-                                                        </div>
+                                                        </div> -->
                                                     </div>
                                                     <div class="invoice-total-footer">
-                                                        <h4>Total Amount <span>$107.80</span></h4>
+                                                    <h4>Total Amount <span class="total_amt">$00.00</span></h4>
                                                     </div>
                                                 </div>
-                                                <div class="input-block mb-3">
+                                                <!-- <div class="input-block mb-3">
                                                     <label>Signature Name</label>
                                                     <input type="text" class="form-control"
                                                         placeholder="Enter Signature Name">
@@ -311,14 +318,14 @@
                                                         <input type="file" multiple="" id="image_sign">
                                                         <div id="frames"></div>
                                                     </div>
-                                                </div>
+                                                </div> -->
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="text-end">
-                                <a href="{{route('quotations.index')}}" class="btn customer-btn-cancel">Cancel</a>
-                                    <button type="submit" class="btn customer-btn-save">Create</button>
+                                    <a href="{{route('quotations.index')}}" class="btn customer-btn-cancel">Cancel</a>
+                                    <button type="submit" class="btn btn-primary  customer-btn-save">Create</button>
 
                                 </div>
 
@@ -642,6 +649,70 @@
     </div>
 </div>
 <!-- /Add package Details Modal -->
+<!-- edit Package Details Modal -->
+<div class="modal custom-modal modal-lg fade" id="edit_package_details" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <div class="form-header modal-header-title text-start mb-0">
+                    <h4 class="mb-0">Edit Package Details</h4>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="edit_package_details_form" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <!-- Spoofing PUT for update -->
+                    <input type="hidden" name="package_id" id="pkg_id"> <!-- Hidden field for user ID -->
+                    <!-- Include CSRF token for security -->
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="input-block mb-3">
+                                <label>Package Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="package_name" id="edit_package_name"
+                                    placeholder="Enter Package Name">
+                                @if ($errors->has('package_name'))
+                                <span class="text-danger">{{ $errors->first('package_name') }}</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="input-block mb-3">
+                                <label>Amount</label>
+                                <input type="text" class="form-control" id="edit_package_amt" name="amount"
+                                    placeholder="Enter Amount">
+                                @if ($errors->has('amount'))
+                                <span class="text-danger">{{ $errors->first('amount') }}</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="input-block mb-3">
+                                <label>Description</label>
+                                <textarea class="form-control" name="description" id="description_edit"></textarea>
+
+                                @if ($errors->has('description'))
+                                <span class="text-danger">{{ $errors->first('description') }}</span>
+                                @endif
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="reset" data-bs-dismiss="modal" class="btn btn-primary cancel me-2">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /edit package Details Modal -->
+
 <!-- Add Bank Details Modal -->
 <div class="modal custom-modal fade" id="bank_details" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-md">
@@ -1071,6 +1142,7 @@
 <script>
 $(document).ready(function() {
     CKEDITOR.replace('description');
+    CKEDITOR.replace('description_edit');
 });
 </script>
 <script type="text/javascript">
@@ -1233,12 +1305,12 @@ $(document).ready(function() {
             }
         });
     });
-
+    // add package
     $('#package_details_form').on('submit', function(e) {
         e.preventDefault(); // Prevent the form from submitting normally
         for (instance in CKEDITOR.instances) {
-                CKEDITOR.instances[instance].updateElement();
-            }
+            CKEDITOR.instances[instance].updateElement();
+        }
         var formData = new FormData(this); // Create FormData object from the form
 
         $.ajax({
@@ -1257,7 +1329,7 @@ $(document).ready(function() {
                 var packageSelect = $('#package_id');
                 packageSelect.empty(); // Clear the existing options
                 packageSelect.append(
-                    '<option value="">Select Partner</option>'); // Add default option
+                    '<option value="">Select Package</option>'); // Add default option
 
                 // Loop through the returned bank data and append to select box
                 $.each(response.data, function(index, package) {
@@ -1283,5 +1355,196 @@ $(document).ready(function() {
         });
     });
 
-});
+    $(document).on('click', '.edit_package', function() {
+        var id = $(this).data('id'); // Get user ID from the button
+
+        // Make an AJAX request to fetch the user data
+        $.ajax({
+            url: '{{ route("packages.edit", ":id") }}'.replace(':id',
+                id), // Replace ':id' with the actual user ID
+            type: 'GET',
+            success: function(response) {
+                var data = response.data;
+
+                // Populate the form fields with the fetched data
+                $('#pkg_id').val(data.id); // Hidden user ID
+                $('#edit_package_name').val(data.package_name);
+                $('#edit_package_amt').val(data.amount);
+                $('#description_edit').val(data.description);
+                if (CKEDITOR.instances['description_edit']) {
+                    CKEDITOR.instances['description_edit'].setData(data.description);
+                }
+                // Open the modal
+                $('#edit_package_details').modal('show');
+            },
+            error: function(xhr) {
+                toastr.error('Error fetching user data.');
+            }
+        });
+    });
+    // Edit package
+    $('#edit_package_details_form').on('submit', function(e) {
+        e.preventDefault(); // Prevent the form from submitting normally
+        for (instance in CKEDITOR.instances) {
+            CKEDITOR.instances[instance].updateElement();
+        }
+        var formData = new FormData(this); // FormData for file uploads
+        var id = $('#pkg_id').val(); // Get user ID from hidden input
+        $.ajax({
+            url: '{{ route("packages.update", ":id") }}'.replace(':id', id), // Update route
+            type: 'POST', // POST method with method override
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: {
+                'X-HTTP-Method-Override': 'PUT' // Spoofing PUT
+            },
+            success: function(response) {
+                toastr.success(response.message);
+                // Clear the existing table body
+                const tableBody = $('#packageBody');
+                tableBody.empty(); // Clear existing rows
+
+                // Ensure that the response contains the expected fields
+                const packageData = response.data;
+
+                // Create a new row with package details
+                const newRow = `
+                        <tr>
+                            <td>${packageData.package_name }</td> <!-- Package Name -->
+                            <td  class="description-cell">${packageData.description }</td> <!-- Description -->
+                            <td>${packageData.amount }</td> <!-- Amount -->
+                           <td class="d-flex align-items-center">
+                                <!-- Edit button that calls the 'packages.edit' route -->
+                                <a  class="btn-action-icon me-2">
+                                    <span><i data-id="${packageData.id }" class="fe fe-edit edit_package"></i></span>
+                                </a>
+                            </td>
+                        </tr>
+                    `;
+
+                // Append the new row to the table body
+                tableBody.append(newRow);
+                $('#edit_package_details').modal('hide'); // Close modal after success
+
+            },
+            error: function(xhr) {
+                // Display error messages from the server if any
+                let errors = xhr.responseJSON.errors;
+                if (errors) {
+                    $.each(errors, function(key, value) {
+                        toastr.error(value[0]);
+                    });
+                } else {
+                    toastr.error('Error updating user.');
+                }
+            }
+        });
+    });
+    $(document).on('change', '#package_id', function() {
+        var packageId = $(this).val();
+
+        if (packageId) {
+            $.ajax({
+                url: '{{ route("packages.details", ":id") }}'.replace(':id', packageId),
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    console.log(response); // Log the response for debugging
+
+                    if (response.success) {
+                        // Update package amounts
+                        $('.amount').text('$' + response.data.amount);
+                        $('#package_amt').val(response.data.amount);
+                        $('.total_amt').text('$' + response.data.amount);
+                     
+                        // Clear the existing table body
+                        const tableBody = $('#packageBody');
+                        tableBody.empty(); // Clear existing rows
+
+                        // Ensure that the response contains the expected fields
+                        const packageData = response.data;
+
+                        // Create a new row with package details
+                        const newRow = `
+                        <tr>
+                            <td>${packageData.package_name }</td> <!-- Package Name -->
+                            <td  class="description-cell">${packageData.description }</td> <!-- Description -->
+                            <td>${packageData.amount }</td> <!-- Amount -->
+                           <td class="d-flex align-items-center">
+                                <!-- Edit button that calls the 'packages.edit' route -->
+                                <a  class="btn-action-icon me-2">
+                                    <span><i data-id="${packageData.id }" class="fe fe-edit edit_package"></i></span>
+                                </a>
+                            </td>
+                        </tr>
+                    `;
+
+                        // Append the new row to the table body
+                        tableBody.append(newRow);
+                        calculation( response.data.amount,'','');
+
+                    } else {
+                        alert('Package not found');
+                        clearPackageFormFields(); // Reset fields if needed
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText); // Log error for debugging
+                    alert('An error occurred while fetching package details.');
+                    clearPackageFormFields(); // Reset fields if needed
+                }
+            });
+        } else {
+            const tableBody = $('#packageBody');
+            tableBody.empty(); // Clear existing rows
+
+        }
+    });
+    $(document).on('keyup', '.discount', function() {
+        // Get the current discount value
+        var discount = parseFloat($(this).val()) || 0; // Default to 0 if not a number
+       // alert(discount);
+           // Get package amount and GST tax values
+        var package_amt = parseFloat($('#package_amt').val()) || 0; // Default to 0 if not a number
+     
+        var gst_tax = parseFloat($('#gst_tax').val()) || 0; // Default to 0 if not a number
+     
+        calculation(package_amt,gst_tax,discount);
+    });
+    $(document).on('keyup', '.gst_tax', function() {
+        var gst_tax = $(this).val();
+         var package_amt = $('#package_amt').val(); // Default to 0 if not a number
+         var discount =  $('#discount').val()
+      
+     
+         calculation(package_amt,gst_tax,discount);
+    });
+    function calculation(amount,tax,discount){
+
+        var discount = parseFloat(discount) || 0; // Default to 0 if not a number
+        $('#discount').val(discount);
+        $('#gst_tax').val(tax);
+
+        // Update the displayed discount value
+        $('.discount').text('$' + discount);
+        $('.gst_tax').text('$' + tax);
+        
+        // Get package amount and GST tax values
+        var package_amt = parseFloat(amount) || 0; // Default to 0 if not a number
+        var gst_tax = parseFloat(tax) || 0; // Default to 0 if not a number
+        // Calculate the discount amount
+        var discountAmount = (package_amt * discount) / 100;
+
+        // Calculate the amount after discount
+        var amountAfterDiscount = package_amt - discountAmount;
+
+        // Calculate the total amount including GST
+        var total_amt = amountAfterDiscount + (amountAfterDiscount + gst_tax) / 100;
+
+        // Display the calculated total amount
+        $('.total_amt').text('$' + total_amt.toFixed(2)); // Format to 2 decimal places
+    }
+
+}); //end redy function
 </script>
