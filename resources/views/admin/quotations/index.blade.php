@@ -1,11 +1,8 @@
 @extends('admin.layouts.master')
 @section('content')
-
-
 <!-- Main Wrapper -->
 @include('admin.layouts.common-sidebar')
 <!-- /Main Wrapper -->
-
 <!-- Page Wrapper -->
 <div class="page-wrapper">
     <div class="content container-fluid">
