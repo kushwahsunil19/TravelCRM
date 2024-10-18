@@ -7,6 +7,7 @@ use App\Models\Branch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
+
 class BranchController extends Controller
 {
     /**
@@ -15,7 +16,7 @@ class BranchController extends Controller
     public function index()
     {
         // Fetch all branches, including soft-deleted ones if needed
-        $branches = Branch::all();
+        $branches = Branch::latest()->get();
 
         return view('admin.branches.index', compact('branches'));
     }
@@ -59,7 +60,8 @@ class BranchController extends Controller
      */
     public function edit(Branch $branch)
     {
-        return view('admin.branches.edit', compact('branch'));
+        return response()->json(['status'=>true,'data'=>$branch ,'message' => 'branch details added successfully']);
+        //eturn view('admin.branches.edit', compact('branch'));
     }
 
     /**
@@ -76,8 +78,9 @@ class BranchController extends Controller
 
         // Update the branch
         $branch->update($request->all());
+        return response()->json(['status'=>true,'data'=>$branch ,'message' => 'Branch details updated successfully']);
 
-        return redirect()->route('branches.index')->with('success', 'Branch updated successfully.');
+       // return redirect()->route('branches.index')->with('success', 'Branch updated successfully.');
     }
 
     /**

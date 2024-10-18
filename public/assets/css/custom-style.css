@@ -2,20 +2,7 @@
     display: none;
     }
     /* Custom Toastr Styles */
- 
-    .dataTables_length label:before {
-    content: "Show";
-    margin-right: 5px;
-    font-size: 14px;
-    visibility: hidden;
-    }
-    
-    .dataTables_length label:after {
-    content: "Entries";
-    margin-left: 5px;
-    font-size: 14px;
-    visibility: hidden;
-    }
+
 
     /* public/css/custom-toastr.css */
 

@@ -3,7 +3,7 @@
 
 
 <!-- Main Wrapper -->
-@extends('admin.layouts.common-sidebar')
+@include('admin.layouts.common-sidebar')
 <!-- /Main Wrapper -->
 
 <!-- Page Wrapper -->
@@ -41,8 +41,8 @@
 										<a class="btn btn-import" href="javascript:void(0);"><span><i class="fe fe-check-square me-2"></i>Import Customer</span></a>
 									</li> -->
                         <li>
-                            <a class="btn btn-primary" href="{{route('branches.create')}}"><i
-                                    class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add Branch</a>
+                            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#branch_details"><i
+                                    class="fa fa-plus-circle me-2" aria-hidden="true" ></i>Add Branch</a>
                         </li>
                     </ul>
                 </div>
@@ -109,9 +109,8 @@
                                                 <div class="dropdown-menu dropdown-menu-end">
                                                     <ul>
                                                         <li>
-                                                            <a class="dropdown-item"
-                                                                href="{{ route('branches.edit', $branch->id) }}"><i
-                                                                    class="far fa-edit me-2"></i>Edit</a>
+                                                            <a class="dropdown-item edit_branch" data-id="{{$branch->id}}"><i
+                                                                    class="far fa-edit me-2"  class="fe fe-edit "></i>Edit</a>
                                                         </li>
                                                         <li>
                                                             <a class="dropdown-item" href="javascript:void(0);"
@@ -300,7 +299,121 @@
 
 </div>
 <!-- /Main Wrapper -->
+<!-- Add branch_detail Modal -->
+<div class="modal custom-modal modal-lg fade" id="branch_details" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <div class="form-header modal-header-title text-start mb-0">
+                    <h4 class="mb-0">Add Branch Details</h4>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="branch_details_form" action="{{ route('branches.store') }}" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <!-- Include CSRF token for security -->
+                    <div class="row">
+                        <div class="col-lg-12 col-md-6">
+                            <div class="input-block mb-3">
+                                <label>Brach Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="branch_name" placeholder="Enter Name">
+                                @if ($errors->has('branch_name'))
+                                <span class="text-danger">{{ $errors->first('branch_name') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-6">
+                            <div class="input-block mb-3">
+                                <label>City</label>
+                                <input type="text" class="form-control" name="city" placeholder="Enter City">
+                                @if ($errors->has('city'))
+                                <span class="text-danger">{{ $errors->first('city') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="input-block mb-3">
+                                <label>Address</label>
+                                <textarea class="form-control" name="address"></textarea>
+                                @if ($errors->has('address'))
+                                <span class="text-danger">{{ $errors->first('address') }}</span>
+                                @endif
+                            </div>
+                        </div>
 
+                    </div>
+                    <br>
+                    <div class="modal-footer">
+                        <button type="reset" data-bs-dismiss="modal" class="btn btn-primary cancel me-2">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Add branch_detail Modal -->
+ <!-- Edit brach_detail Modal -->
+<div class="modal custom-modal modal-lg fade" id="edt_branch_details" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <div class="form-header modal-header-title text-start mb-0">
+                    <h4 class="mb-0">Add Branch Details</h4>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            
+                    <form id="edit_branch_details_form" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <!-- Spoofing PUT for update -->
+                    <input type="hidden" name="branch_id" id="branch_id"> 
+                    <!-- Include CSRF token for security -->
+                    <div class="row">
+                        <div class="col-lg-12 col-md-6">
+                            <div class="input-block mb-3">
+                                <label>Brach Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="branch_name" id="edit_branch_name" placeholder="Enter Name">
+                                @if ($errors->has('branch_name'))
+                                <span class="text-danger">{{ $errors->first('branch_name') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-6">
+                            <div class="input-block mb-3">
+                                <label>City</label>
+                                <input type="text" class="form-control" name="city" id="edit_city" placeholder="Enter City">
+                                @if ($errors->has('city'))
+                                <span class="text-danger">{{ $errors->first('city') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="input-block mb-3">
+                                <label>Address</label>
+                                <textarea class="form-control" name="address" id="edit_address"></textarea>
+                                @if ($errors->has('address'))
+                                <span class="text-danger">{{ $errors->first('address') }}</span>
+                                @endif
+                            </div>
+                        </div>
+
+                    </div>
+                    <br>
+                    <div class="modal-footer">
+                        <button type="reset" data-bs-dismiss="modal" class="btn btn-primary cancel me-2">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Edit brach_detail Modal -->
 <!--Theme Setting -->
 <div class="settings-icon">
     <span data-bs-toggle="offcanvas" data-bs-target="#theme-settings-offcanvas"
@@ -658,4 +771,129 @@
     </div>
 </div>
 <!-- /Theme Setting -->
+
+<!-- Include Toastr CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+
+
+<!-- Toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right", // Position of the toast
+        "preventDuplicates": false,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000", // Duration for which the toast is shown
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn", // Use fadeIn or slideDown
+        "hideMethod": "fadeOut" // Use fadeOut or slideUp
+    };
+    $('#branch_details_form').on('submit', function(e) {
+        e.preventDefault(); // Prevent the form from submitting normally
+
+        var formData = new FormData(this); // Create FormData object from the form
+
+        $.ajax({
+            url: $(this).attr('action'), // Get the action URL from the form
+            type: 'POST',
+            data: formData, // Send FormData object
+            contentType: false, // Important for file upload
+            processData: false, // Important for file upload
+            success: function(response) {
+                toastr.success(response.message); // Display success message
+                // Optionally, reset the form or close the modal
+                // $('#branch_details').modal('hide'); // Close modal
+                $('#branch_details_form')[0].reset(); // Reset the form
+                setTimeout(function() {
+                window.location.reload(); // Reload the page after the delay
+               }, 3000); // 5-second delay
+
+            },
+            error: function(xhr) {
+                if (xhr.responseJSON.errors) {
+                    $.each(xhr.responseJSON.errors, function(key, value) {
+                        toastr.error(value[0]); // Display each error message
+                    });
+                } else {
+                    toastr.error('Error uploading profile.'); // Generic error message
+                }
+            }
+        });
+    });
+
+    $(document).on('click', '.edit_branch', function() {
+        var id = $(this).data('id'); // Get user ID from the button
+
+        // Make an AJAX request to fetch the user data
+        $.ajax({
+            url: '{{ route("branches.edit", ":id") }}'.replace(':id',
+                id), // Replace ':id' with the actual user ID
+            type: 'GET',
+            success: function(response) {
+                var data = response.data;
+
+                // Populate the form fields with the fetched data
+                $('#branch_id').val(data.id); // Hidden user ID
+                $('#edit_branch_name').val(data.branch_name);
+                $('#edit_city').val(data.city);
+                $('#edit_address').val(data.address);
+                // if (CKEDITOR.instances['description_edit']) {
+                //     CKEDITOR.instances['description_edit'].setData(data.description);
+                // }
+                // Open the modal
+                $('#edt_branch_details').modal('show');
+            },
+            error: function(xhr) {
+                toastr.error('Error fetching user data.');
+            }
+        });
+    });
+    // Edit package
+    $('#edit_branch_details_form').on('submit', function(e) {
+        e.preventDefault(); // Prevent the form from submitting normally
+       
+        var formData = new FormData(this); // FormData for file uploads
+        var id = $('#branch_id').val(); // Get user ID from hidden input
+        $.ajax({
+            url: '{{ route("branches.update", ":id") }}'.replace(':id', id), // Update route
+            type: 'POST', // POST method with method override
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: {
+                'X-HTTP-Method-Override': 'PUT' // Spoofing PUT
+            },
+            success: function(response) {
+                toastr.success(response.message);
+                // Clear the existing table body            
+                // $('#edt_branch_details').modal('hide'); // Close modal after success
+                setTimeout(function() {
+                window.location.reload(); // Reload the page after the delay
+               }, 3000);
+            },
+            error: function(xhr) {
+                // Display error messages from the server if any
+                let errors = xhr.responseJSON.errors;
+                if (errors) {
+                    $.each(errors, function(key, value) {
+                        toastr.error(value[0]);
+                    });
+                } else {
+                    toastr.error('Error updating user.');
+                }
+            }
+        });
+    });
+});
+</script>
 @endsection

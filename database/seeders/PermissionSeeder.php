@@ -16,18 +16,17 @@ class PermissionSeeder extends Seeder
         $permissions = [
             'create-role',
             'edit-role',
-            'delete-role',
+            'view-role',
+            'delete-role',           
             'create-user',
             'edit-user',
+            'view-user',
             'delete-user',
             'create-quotation',
             'edit-quotation',
-            'delete-quotation',
-            'create-operations',
-            'edit-operations',
-            'delete-operations',
-            // Added permission
-            // Add any other permissions here
+            'view-quotation',
+            'delete-quotation'
+
         ];
         
         // Looping and Inserting Array's Permissions into Permission Table

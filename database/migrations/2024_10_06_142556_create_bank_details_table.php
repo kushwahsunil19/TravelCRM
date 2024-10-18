@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('account_no')->nullable();
             $table->string('branch_name')->nullable();
             $table->string('ifsc_code')->nullable();
+            $table->string('iban_no')->nullable();
             $table->timestamps();
         });
     }

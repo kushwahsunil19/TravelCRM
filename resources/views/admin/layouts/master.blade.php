@@ -7,30 +7,11 @@
 
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Kanakku provides clean Admin Templates for managing Sales, Payment, Invoice, Accounts and Expenses in HTML, Bootstrap 5, ReactJs, Angular, VueJs and Laravel.">
-        <meta name="keywords" content="admin, estimates, bootstrap, business, corporate, creative, management, minimal, modern, accounts, invoice, html5, responsive, CRM, Projects">
-        <meta name="author" content="Dreamguys - Bootstrap Admin Template">
-        <!-- Twitter -->
-        <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:site" content="@dreamguystech">
-        <meta name="twitter:title" content="Finance & Accounting Admin Website Templates | Kanakku">
-        <meta name="twitter:description" content="Kanakku is a Sales, Invoices & Accounts Admin template for Accountant or Companies/Offices with various features for all your needs. Try Demo and Buy Now.">
-        <meta name="twitter:image" content="../../../kanakku.dreamguystech.com/public/assets/img/kanakku.html">
-        <meta name="twitter:image:alt" content="Kanakku">  
-
-        <!-- Facebook -->
-        <meta property="og:url" content="https://kanakku.dreamguystech.com/">
-        <meta property="og:title" content="Finance & Accounting Admin Website Templates | Kanakku">
-        <meta property="og:description" content="Kanakku is a Sales, Invoices & Accounts Admin template for Accountant or Companies/Offices with various features for all your needs. Try Demo and Buy Now.">
-        <meta property="og:image" content="../../../kanakku.dreamguystech.com/public/assets/img/kanakku.html">
-        <meta property="og:image:secure_url" content="../../../kanakku.dreamguystech.com/public/assets/img/kanakku.html">
-        <meta property="og:image:type" content="image/png">
-        <meta property="og:image:width" content="1200" >
-        <meta property="og:image:height" content="600" >
-		<title>Kanakku - Bootstrap Admin HTML Template</title>
+		<!-- <title>@yield('title')</title> -->
+		<title>CENTURION LUXURY TRAVELS | UAE</title>
 		
 		<!-- Favicon -->
-		<link rel="shortcut icon" href="{{url('public/assets/img/favicon.png')}}">
+		<link rel="shortcut icon" type="image/x-icon" href="{{url('public/assets/img/favicon.png')}}">
 		
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="{{url('public/assets/css/bootstrap.min.css')}}">
@@ -62,23 +43,7 @@
 		<script src="{{url('public/assets/js/layout.js')}}"></script>
 		<!-- Summernote CSS -->
         <link rel="stylesheet" href="{{url('public/assets/plugins/summernote/summernote-bs4.min.css')}}">
-        <script>
-        @if(Session::has('success'))
-            toastr.success("{{ Session::get('success') }}");
-        @endif
-
-        @if(Session::has('error'))
-            toastr.error("{{ Session::get('error') }}");
-        @endif
-
-        @if(Session::has('info'))
-            toastr.info("{{ Session::get('info') }}");
-        @endif
-
-        @if(Session::has('warning'))
-            toastr.warning("{{ Session::get('warning') }}");
-        @endif
-    </script>
+      
 	</head>
 	<body>
 

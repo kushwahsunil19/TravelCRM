@@ -3,7 +3,7 @@
 
 
 <!-- Main Wrapper -->
-@extends('admin.layouts.common-sidebar')
+@include('admin.layouts.common-sidebar')
 <!-- /Main Wrapper -->
 
 <!-- Page Wrapper -->
@@ -41,7 +41,7 @@
 										<a class="btn btn-import" href="javascript:void(0);"><span><i class="fe fe-check-square me-2"></i>Import Customer</span></a>
 									</li> -->
                         <li>
-                            <a class="btn btn-primary" href="{{route('packages.create')}}"><i
+                            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#package_details"><i
                                     class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add package</a>
                         </li>
                     </ul>
@@ -99,7 +99,7 @@
                                         <td>{{ $package->package_name }}</td>
 
                                         <td>{{ $package->amount }}</td>
-                                        <td>{!! $package->description !!}</td>
+                                        <td style="text-align:justify">{!! $package->description !!}</td>
 
                                         <td>
 
@@ -109,8 +109,7 @@
                                                 <div class="dropdown-menu dropdown-menu-end">
                                                     <ul>
                                                         <li>
-                                                            <a class="dropdown-item"
-                                                                href="{{ route('packages.edit', $package->id) }}"><i
+                                                            <a class="dropdown-item edit_package" data-id="{{$package->id}}"><i
                                                                     class="far fa-edit me-2"></i>Edit</a>
                                                         </li>
                                                         <li>
@@ -300,7 +299,129 @@
 
 </div>
 <!-- /Main Wrapper -->
+<!-- Add Package Details Modal -->
+<div class="modal custom-modal modal-lg fade" id="package_details" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <div class="form-header modal-header-title text-start mb-0">
+                    <h4 class="mb-0">Add Package Details</h4>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="package_details_form" action="{{ route('packages.store') }}" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <!-- Include CSRF token for security -->
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="input-block mb-3">
+                                <label>Package Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="package_name"
+                                    placeholder="Enter Package Name">
+                                @if ($errors->has('package_name'))
+                                <span class="text-danger">{{ $errors->first('package_name') }}</span>
+                                @endif
+                            </div>
+                        </div>
 
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="input-block mb-3">
+                                <label>Amount</label>
+                                <input type="text" class="form-control" name="amount" placeholder="Enter Amount">
+                                @if ($errors->has('amount'))
+                                <span class="text-danger">{{ $errors->first('amount') }}</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="input-block mb-3">
+                                <label>Description</label>
+                                <textarea class="form-control" name="description" id="description"></textarea>
+
+                                @if ($errors->has('description'))
+                                <span class="text-danger">{{ $errors->first('description') }}</span>
+                                @endif
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="reset" data-bs-dismiss="modal" class="btn btn-primary cancel me-2">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Add package Details Modal -->
+<!-- edit Package Details Modal -->
+<div class="modal custom-modal modal-lg fade" id="edit_package_details" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <div class="form-header modal-header-title text-start mb-0">
+                    <h4 class="mb-0">Edit Package Details</h4>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="edit_package_details_form" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <!-- Spoofing PUT for update -->
+                    <input type="hidden" name="package_id" id="pkg_id"> <!-- Hidden field for user ID -->
+                    <!-- Include CSRF token for security -->
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="input-block mb-3">
+                                <label>Package Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="package_name" id="edit_package_name"
+                                    placeholder="Enter Package Name">
+                                @if ($errors->has('package_name'))
+                                <span class="text-danger">{{ $errors->first('package_name') }}</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="input-block mb-3">
+                                <label>Amount</label>
+                                <input type="text" class="form-control" id="edit_package_amt" name="amount"
+                                    placeholder="Enter Amount">
+                                @if ($errors->has('amount'))
+                                <span class="text-danger">{{ $errors->first('amount') }}</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="input-block mb-3">
+                                <label>Description</label>
+                                <textarea class="form-control" name="description" id="description_edit"></textarea>
+
+                                @if ($errors->has('description'))
+                                <span class="text-danger">{{ $errors->first('description') }}</span>
+                                @endif
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="reset" data-bs-dismiss="modal" class="btn btn-primary cancel me-2">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /edit package Details Modal -->
 <!--Theme Setting -->
 <div class="settings-icon">
     <span data-bs-toggle="offcanvas" data-bs-target="#theme-settings-offcanvas"
@@ -658,4 +779,153 @@
     </div>
 </div>
 <!-- /Theme Setting -->
+
+
+<style>
+tr td {
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    white-space: normal !important;
+    max-width: 300px !important;
+}
+</style>
+<!-- Include Toastr CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+<!-- Toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdn.ckeditor.com/4.20.1/standard/ckeditor.js"></script>
+
+
+<script>
+$(document).ready(function() {
+    CKEDITOR.replace('description');
+    CKEDITOR.replace('description_edit');
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right", // Position of the toast
+        "preventDuplicates": false,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000", // Duration for which the toast is shown
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn", // Use fadeIn or slideDown
+        "hideMethod": "fadeOut" // Use fadeOut or slideUp
+    };
+$('#package_details_form').on('submit', function(e) {
+        e.preventDefault(); // Prevent the form from submitting normally
+        for (instance in CKEDITOR.instances) {
+            CKEDITOR.instances[instance].updateElement();
+        }
+        var formData = new FormData(this); // Create FormData object from the form
+
+        $.ajax({
+            url: $(this).attr('action'), // Get the action URL from the form
+            type: 'POST',
+            data: formData, // Send FormData object
+            contentType: false, // Important for file upload
+            processData: false, // Important for file upload
+            success: function(response) {
+                toastr.success(response.message); // Display success message
+
+                // Optionally, reset the form or close the modal
+                // $('#package_details').modal('hide'); // Close modal
+                $('#package_details_form')[0].reset(); // Reset the form
+                // Populate the select box with the latest bank details
+                setTimeout(function() {
+                window.location.reload(); // Reload the page after the delay
+               }, 3000); // 5-second delay
+
+
+            },
+            error: function(xhr) {
+                if (xhr.responseJSON.errors) {
+                    $.each(xhr.responseJSON.errors, function(key, value) {
+                        toastr.error(value[0]); // Display each error message
+                    });
+                } else {
+                    toastr.error('Error uploading profile.'); // Generic error message
+                }
+            }
+        });
+    });
+
+    $(document).on('click', '.edit_package', function() {
+        var id = $(this).data('id'); // Get user ID from the button
+
+        // Make an AJAX request to fetch the user data
+        $.ajax({
+            url: '{{ route("packages.edit", ":id") }}'.replace(':id',
+                id), // Replace ':id' with the actual user ID
+            type: 'GET',
+            success: function(response) {
+                var data = response.data;
+
+                // Populate the form fields with the fetched data
+                $('#pkg_id').val(data.id); // Hidden user ID
+                $('#edit_package_name').val(data.package_name);
+                $('#edit_package_amt').val(data.amount);
+                $('#description_edit').val(data.description);
+                if (CKEDITOR.instances['description_edit']) {
+                    CKEDITOR.instances['description_edit'].setData(data.description);
+                }
+                // Open the modal
+                $('#edit_package_details').modal('show');
+            },
+            error: function(xhr) {
+                toastr.error('Error fetching user data.');
+            }
+        });
+    });
+    // Edit package
+    $('#edit_package_details_form').on('submit', function(e) {
+        e.preventDefault(); // Prevent the form from submitting normally
+        for (instance in CKEDITOR.instances) {
+            CKEDITOR.instances[instance].updateElement();
+        }
+        var formData = new FormData(this); // FormData for file uploads
+        var id = $('#pkg_id').val(); // Get user ID from hidden input
+        $.ajax({
+            url: '{{ route("packages.update", ":id") }}'.replace(':id', id), // Update route
+            type: 'POST', // POST method with method override
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: {
+                'X-HTTP-Method-Override': 'PUT' // Spoofing PUT
+            },
+            success: function(response) {
+                toastr.success(response.message);
+                // Clear the existing table body
+                setTimeout(function() {
+                window.location.reload(); // Reload the page after the delay
+               }, 3000); // 5-second delay
+
+
+            },
+            error: function(xhr) {
+                // Display error messages from the server if any
+                let errors = xhr.responseJSON.errors;
+                if (errors) {
+                    $.each(errors, function(key, value) {
+                        toastr.error(value[0]);
+                    });
+                } else {
+                    toastr.error('Error updating user.');
+                }
+            }
+        });
+    });
+
+});
+</script>
 @endsection

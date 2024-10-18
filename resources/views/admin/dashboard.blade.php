@@ -2,7 +2,7 @@
 @section('content')
 		
 		<!-- Main Wrapper -->
-		@extends('admin.layouts.common-sidebar')
+		@include('admin.layouts.common-sidebar')
 		<!-- /Main Wrapper -->
 <!-- Page Wrapper -->
 <div class="page-wrapper">

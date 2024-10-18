@@ -50,10 +50,10 @@
 										</div>
 									</div>
 									<button class="btn btn-lg  btn-primary w-100" type="submit">Login</button>
-									<div class="login-or">
+									<!-- <div class="login-or">
 										<span class="or-line"></span>
 										<span class="span-or">or</span>
-									</div>
+									</div> -->
 									<!-- Social Login -->
 									<!-- <div class="social-login mb-3">
 										<span>Login with</span>
