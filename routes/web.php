@@ -34,7 +34,8 @@ Route::controller(AuthController::class)->group(function() {
     Route::get('/login', 'login')->name('login');
     Route::post('/authenticate', 'authenticate')->name('authenticate');
    
-});
+});Route::get('admin/invoices/download-csv', [InvoiceController::class, 'downloadCSV'])->name('invoices.downloadCSV');
+
 
 Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
 Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post'); 
@@ -92,6 +93,8 @@ Route::middleware(['auth'])->group(function() {
     Route::resource('quotation-report', QuotationReportController::class);
     
     // Route::post('quotations/{id}/restore', [QuotationController::class, 'restore'])->name('quotations.restore');
+
+    Route::get('/pdf', [InvoiceController::class, 'downloadPDF'])->name('invoice.downloadPDF');
 
 // Route::get('/users', [UserController::class, 'index'])->name('users.index');
 // Route::post('/users', [UserController::class, 'store'])->name('users.store');

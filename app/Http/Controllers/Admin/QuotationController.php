@@ -20,12 +20,90 @@ class QuotationController extends Controller
     /**
      * Display a listing of the quotations.
      */
-    public function index()
-    {
-        $totalQuotations = Quotation::count();
-        $quotations = Quotation::with(['branch', 'partner', 'package','bank'])->paginate( $totalQuotations);
-        return view('admin.quotations.index', compact('quotations'));
+  
+
+//         public function index(Request $request)
+// {
+//     // Get the total number of quotations
+//     $totalQuotations = Quotation::count();
+
+//     // Build the query for fetching quotations with the necessary relationships
+//     $query = Quotation::with(['branch', 'partner', 'package', 'bank']);
+
+//     // Apply filters based on request parameters
+//     if ($request->filled('quotation_no')) {
+//         $query->where('quotation_no', 'like', '%' . $request->quotation_no . '%');
+//     }
+//     if ($request->filled('branch')) {
+//         $query->whereHas('branch', function ($q) use ($request) {
+//             $q->where('city', 'like', '%' . $request->branch . '%');
+//         });
+//     }
+//     if ($request->filled('package')) {
+//         $query->whereHas('package', function ($q) use ($request) {
+//             $q->where('package_name', 'like', '%' . $request->package . '%');
+//         });
+//     }
+//     if ($request->filled('partner')) {
+//         $query->whereHas('partner', function ($q) use ($request) {
+//             $q->where('name', 'like', '%' . $request->partner . '%');
+//         });
+//     }
+//     if ($request->filled('discount_type')) {
+//         $query->where('discount_type', $request->discount_type);
+//     }
+
+//     // Paginate results (you can adjust the number per page as needed)
+
+      
+//         $quotations = Quotation::with(['branch', 'partner', 'package','bank'])->paginate( $totalQuotations);
+        
+
+//     // Return the view with total quotations and paginated quotations
+//     return view('admin.quotations.index', compact('quotations', 'totalQuotations'));
+// }
+
+public function index(Request $request)
+{
+    // Get the total number of quotations
+    $totalQuotations = Quotation::count();
+
+    // Build the query for fetching quotations with the necessary relationships
+    $query = Quotation::with(['branch', 'partner', 'package', 'bank']);
+
+    // Apply filters based on request parameters
+    if ($request->filled('quotation_no')) {
+        $query->where('quotation_no', 'like', '%' . $request->quotation_no . '%');
     }
+    if ($request->filled('branch')) {
+        $query->whereHas('branch', function ($q) use ($request) {
+            $q->where('city', 'like', '%' . $request->branch . '%');
+        });
+    }
+    if ($request->filled('package')) {
+        $query->whereHas('package', function ($q) use ($request) {
+            $q->where('package_name', 'like', '%' . $request->package . '%');
+        });
+    }
+    if ($request->filled('partner')) {
+        $query->whereHas('partner', function ($q) use ($request) {
+            $q->where('name', 'like', '%' . $request->partner . '%');
+        });
+    }
+    if ($request->filled('discount_type')) {
+        $query->where('discount_type', $request->discount_type);
+    }
+    $totalQuotations = Quotation::count();
+
+    // Paginate the filtered results (you can adjust the number per page as needed)
+    $quotations = $query->paginate(10); // Paginate the filtered results
+
+    // Return the view with total quotations and paginated quotations
+    return view('admin.quotations.index', compact('quotations', 'totalQuotations'));
+}
+
+
+    
 
     /**
      * Show the form for creating a new quotation.
