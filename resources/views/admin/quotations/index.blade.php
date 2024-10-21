@@ -9,7 +9,18 @@
 <!-- Page Wrapper -->
 <div class="page-wrapper">
     <div class="content container-fluid">
-<<<<<<< HEAD
+
+
+        <!-- Page Header -->
+       
+                        <!-- <li>
+										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filter"><span class="me-2"><img src="assets/img/icons/filter-icon.svg" alt="Filter"></span>Filter </a>
+									</li> -->
+									<!-- <li>
+										<a class="btn-filters" href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Settings"><span><i class="fe fe-settings"></i></span> </a>
+									</li> -->
+
+
 
         <!-- Page Header -->
         <div class="page-header">
@@ -24,38 +35,7 @@
                                                             alt="filter"></span>Filter
                                 </a>
                             </li>
-                        <!-- <li>
-										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filter"><span class="me-2"><img src="assets/img/icons/filter-icon.svg" alt="Filter"></span>Filter </a>
-									</li> -->
-									<!-- <li>
-										<a class="btn-filters" href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Settings"><span><i class="fe fe-settings"></i></span> </a>
-									</li> -->
-
-=======
-
-        <!-- Page Header -->
-        <div class="page-header">
-            <div class="content-page-header">
-                <h5>Quotations </h5>
-                <div class="list-btn">
-                    <ul class="filter-list">
-                    <li>
-                                <a class="btn btn-filters w-auto popup-toggle" id="filterToggle"
-                                   data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filter">
-                                    <span class="me-2"><img src="assets/img/icons/filter-icon.svg"
-                                                            alt="filter"></span>Filter
-                                </a>
-                            </li>
-                        <!-- <li>
-										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filter"><span class="me-2"><img src="assets/img/icons/filter-icon.svg" alt="Filter"></span>Filter </a>
-									</li> -->
-									<!-- <li>
-										<a class="btn-filters" href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Settings"><span><i class="fe fe-settings"></i></span> </a>
-<<<<<<< HEAD
-									</li> -->
-
->>>>>>> d23585de407528246e065edfc1f379e10609c5ab
-                                    <li>
+                            <li>
                                 <div class="dropdown dropdown-action" data-bs-toggle="tooltip"
                                      data-bs-placement="bottom" title="Download">
                                     <a href="#" class="btn-filters" data-bs-toggle="dropdown" aria-expanded="false">
@@ -78,13 +58,18 @@
                                         </ul>
                                     </div>
                                 </div>
-                            </li>     
-<<<<<<< HEAD
-=======
-=======
-						     </li> -->
->>>>>>> origin/main
->>>>>>> d23585de407528246e065edfc1f379e10609c5ab
+                            </li>  
+                        <!-- <li>
+										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filter"><span class="me-2"><img src="assets/img/icons/filter-icon.svg" alt="Filter"></span>Filter </a>
+									</li> -->
+									<!-- <li>
+										<a class="btn-filters" href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Settings"><span><i class="fe fe-settings"></i></span> </a>
+
+									</li> -->
+
+
+                                   
+
                         @if(collect(getPermission())->contains('name', 'create-quotation'))
                         <li>
                             <a class="btn btn-primary" href="{{route('quotations.create')}}"><i
