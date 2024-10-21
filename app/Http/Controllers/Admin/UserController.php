@@ -29,14 +29,9 @@ class UserController extends Controller
        
         $userId = Auth::id(); // This will return the ID of the authenticated user.
         $roles = Role::where('id', '!=', 1)->get();
-        return view('admin.users', compact('roles')); 
-    }
-      
- 
-    public function getUsers(Request $request)
-    {
-             $userId = Auth::id(); 
-             $roles = Role::where('id', '!=', 1)->get(); // Fetch roles to pass along with users data
+        if ($request->ajax()) {   
+            // $userId = Auth::id(); 
+            //  $roles = Role::where('id', '!=', 1)->get(); // Fetch roles to pass along with users data
 
              $users = User::with('roles')->where('id', '!=', $userId)->latest()->get(); // Make sure to eager load the roles to avoid N+1 query issue
              return DataTables::of($users)
@@ -108,6 +103,16 @@ class UserController extends Controller
             
             ->rawColumns(['first_name', 'role', 'action', 'status']) // Mark 'first_name' as raw HTML
             ->make(true);
+        }
+        return view('admin.users', compact('roles')); 
+    }
+      
+ 
+    public function getUsers(Request $request)
+    {
+        
+        
+           
     
     }
     
@@ -158,7 +163,7 @@ class UserController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
-            'mobile' => 'required|string|max:15',
+            'mobile' => 'required|numeric|digits_between:10,15|regex:/^(?:\+?\d{1,3})?\d{10,15}$/',
             'role' => 'required',
             'password' => 'required|confirmed|min:6',
             'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate image file
@@ -228,7 +233,7 @@ class UserController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
-            'mobile' => 'required|string|max:15',
+            'mobile' => 'required|numeric|digits_between:10,15|regex:/^(?:\+?\d{1,3})?\d{10,15}$/',
             'role' => 'required|exists:roles,id',
             'status' => 'required|boolean',
             'password' => 'nullable|string|min:6|confirmed', // Password fields are optional

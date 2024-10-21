@@ -17,6 +17,7 @@ class Quotation extends Model
         'branch_id',
         'partner_id',
         'package_id',
+        'currency_id',
         'bank_id',
         'quotation_no',
         'twin_double_sharing_cost',
@@ -58,6 +59,11 @@ class Quotation extends Model
     public function bank()
     {
         return $this->belongsTo(Bank::class , 'bank_id', 'id');    
+
+    }
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class , 'currency_id', 'id');    
 
     }
 

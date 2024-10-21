@@ -17,6 +17,7 @@ class Bank extends Model
         'account_no',
         'branch_name',
         'ifsc_code',
+        'iban_no',
     ];
 
     

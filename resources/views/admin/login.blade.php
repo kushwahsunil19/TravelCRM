@@ -19,7 +19,7 @@
 								@csrf
 									<div class="input-block mb-3">
 										<label class="form-control-label">Email Address</label>
-										<input type="email" class="form-control" name="email">
+										<input type="email" class="form-control" name="email" value="{{old('email')}}">
 									@if ($errors->has('email'))
 										<span class="text-danger">{{ $errors->first('email') }}</span>
 									@endif
@@ -27,7 +27,7 @@
 									<div class="input-block mb-3">
 										<label class="form-control-label">Password</label>
 										<div class="pass-group">
-											<input type="password" class="form-control pass-input" name="password">
+											<input type="password" class="form-control pass-input" value="{{old('password')}}" name="password">
 									
 											<span class="fas fa-eye toggle-password"></span>
 									
@@ -50,10 +50,10 @@
 										</div>
 									</div>
 									<button class="btn btn-lg  btn-primary w-100" type="submit">Login</button>
-									<div class="login-or">
+									<!-- <div class="login-or">
 										<span class="or-line"></span>
 										<span class="span-or">or</span>
-									</div>
+									</div> -->
 									<!-- Social Login -->
 									<!-- <div class="social-login mb-3">
 										<span>Login with</span>

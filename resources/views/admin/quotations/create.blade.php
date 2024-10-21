@@ -3,8 +3,8 @@
 
 
 <!-- Main Wrapper -->
-@extends('admin.layouts.common-sidebar')
-<!-- /Main Wrapper -->
+@include('admin.layouts.common-sidebar')
+
 <!-- /Main Wrapper -->
 <style>
 .description-cell p {
@@ -15,6 +15,7 @@
     white-space: normal !important;
     /* Allow text to wrap naturally */
     max-width: 300px !important;
+    text-align: justify !important;
     /* Optional: Limit the width of the cell */
 }
 
@@ -27,6 +28,7 @@
     /* Allow text to wrap naturally */
     max-width: 300px !important;
     /* Optional: Limit the width of the cell */
+    text-align: justify !important;
 }
 
 td {
@@ -85,8 +87,8 @@ td {
                                                 <label> Branch</label>
                                                 <ul class="form-group-plus css-equal-heights">
                                                     <li>
-                                                        <select class="select" name="branch_id" id="branch_id">
-                                                            <option value=""> Select Branch </option>
+                                                        <select class="select" name="branch_id" id="branch_id" required>
+                                                            <option value="">Select Branch</option>
                                                             @foreach ($branches as $branch)
                                                             <option value="{{ $branch->id }}"
                                                                 {{ old('branch_id') == $branch->id ? 'selected' : '' }}>
@@ -117,7 +119,8 @@ td {
                                                 <label> Partner</label>
                                                 <ul class="form-group-plus css-equal-heights">
                                                     <li>
-                                                        <select class="select" name="partner_id" id="partner_id">
+                                                        <select class="select" name="partner_id" id="partner_id"
+                                                            required>
                                                             <option value="">Select Partner </option>
                                                             @foreach ($partners as $partner)
                                                             <option value="{{ $partner->id }}"
@@ -147,7 +150,8 @@ td {
                                                 <label> Package</label>
                                                 <ul class="form-group-plus css-equal-heights">
                                                     <li>
-                                                        <select class="select" name="package_id" id="package_id">
+                                                        <select class="select" name="package_id" id="package_id"
+                                                            required>
                                                             <option value="">Select package </option>
                                                             @foreach ($packages as $package)
                                                             <option value="{{ $package->id }}"
@@ -181,7 +185,7 @@ td {
                                     <div class="card-table">
                                         <div class="card-body">
                                             <div class="table-responsive itme_table no-pagination">
-                                                <table class="table table-center table-hover datatable">
+                                                <table class="table">
                                                     <thead class="thead-light">
                                                         <tr>
                                                             <th>Package Name</th>
@@ -191,7 +195,10 @@ td {
                                                         </tr>
                                                     </thead>
                                                     <tbody id="packageBody">
-                                                        <!-- Rows will be added here by AJAX -->
+                                                    <tr class="odd"> <td valign="top" colspan="4" class="dataTables_empty"
+                                                                style="text-align:center;">No data available in table
+                                                            </td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -201,10 +208,32 @@ td {
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="row">
-                                            <div class="col-lg-4">
+                                            <div class="col-lg-3">
+                                                <div class="input-block mb-3">
+                                                    <label>Currency</label>
+                                                    <select class="select" name="currency_id" id="currency_id"
+                                                        required>
+                                                        <option value="">Select Currency </option>  
+                                                        @foreach ($currencies as $currency)
+                                                            <option value="{{ $currency->id }}" data-symbol="{{$currency->symbol}}"
+                                                                {{ old('currency_id') == $currency->id ? 'selected' : '' }}>
+                                                                {{ $currency->code }}
+                                                            </option>
+                                                            @endforeach                                                     
+                                                    </select>
+
+                                                    @if ($errors->has('currency_id'))
+                                                    <span class="text-danger">{{ $errors->first('currency_id') }}</span>
+                                                    @endif
+                                                    <input type="hidden" id="currency_symbol" value="₹"> 
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Discount Type</label>
-                                                    <select class="select" name="discount_type">
+                                                    <select class="select" name="discount_type" id="discount_type"
+                                                        required>
+                                                        <option value="">Select Discount Type </option>
                                                         <option value="Percentage">Percentage(%)</option>
                                                         <option value="Fixed">Fixed</option>
                                                     </select>
@@ -213,22 +242,22 @@ td {
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="col-lg-4">
+                                            <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Discount </label>
                                                     <input type="number" class="form-control discount" name="discount"
-                                                        placeholder="Enter discount">
+                                                        placeholder="Enter discount" min="0" required>
                                                     @if ($errors->has('discount'))
                                                     <span class="text-danger">{{ $errors->first('discount') }}</span>
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="col-lg-4">
+                                            <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <div class="input-block mb-3">
-                                                        <label>Tax</label>
+                                                        <label>Vat</label>
                                                         <input type="number" class="form-control gst_tax" name="gst_tax"
-                                                        placeholder="Enter Tax">
+                                                            placeholder="Enter Vat" min="0" required>
                                                         <!-- <select class="select" name="gst_tax" id="gst_tax">
                                                             <option value="21">IVA - (21%)</option>
                                                             <option value="15">IRPF - (-15%)</option>
@@ -250,7 +279,7 @@ td {
                                                     <div class="col-md-8">
                                                         <div class="input-block mb-3">
                                                             <label>Select Bank</label>
-                                                            <select class="select" id="bank_id" name="bank_id">
+                                                            <select class="select" id="bank_id" name="bank_id" required>
                                                                 <option value="">Select Bank</option>
                                                                 @foreach($bankDetails as $res)
                                                                 <option value="{{ $res->id}}">{{  $res->bank_name}}
@@ -265,6 +294,9 @@ td {
                                                                 data-bs-target="#bank_details">Add Bank</a>
                                                         </div>
                                                     </div>
+                                                    @if ($errors->has('bank_id'))
+                                                    <span class="text-danger">{{ $errors->first('bank_id') }}</span>
+                                                    @endif
                                                 </div>
 
                                                 <div class="input-block mb-3 notes-form-group-info">
@@ -284,12 +316,12 @@ td {
                                             <div class="form-group-bank">
                                                 <div class="invoice-total-box">
                                                     <div class="invoice-total-inner">
-                                                           <p>Package Amount <span class="amount">$0.00</span></p>
-                                                            <input type="hidden" id="package_amt" value="0">
-                                                            <p>Discount <span class="discount">$0.00</span></p>
-                                                            <input type="hidden" id="discount" value="0">
-                                                            <p>Tax <span class="gst_tax">$0.00</span></p>
-                                                            <input type="hidden" id="gst_tax" value="0">
+                                                        <p>Package Amount <span class="amount">0.00</span></p>
+                                                        <input type="hidden" id="package_amt" value="0">
+                                                        <p>Discount <span class="discount">0.00</span></p>
+                                                        <input type="hidden" id="discount" value="0">
+                                                        <p>Vat <span class="gst_tax">0.00</span></p>
+                                                        <input type="hidden" id="gst_tax" value="0">
                                                         <!-- <div class="status-toggle justify-content-between">
                                                             <div class="d-flex align-center">
                                                                 <p>Round Off </p>
@@ -302,7 +334,7 @@ td {
                                                         </div> -->
                                                     </div>
                                                     <div class="invoice-total-footer">
-                                                    <h4>Total Amount <span class="total_amt">$00.00</span></h4>
+                                                        <h4>Total Amount <span class="total_amt">00.00</span></h4>
                                                     </div>
                                                 </div>
                                                 <!-- <div class="input-block mb-3">
@@ -432,7 +464,7 @@ td {
                     <div class="row">
                         <div class="col-lg-12 col-md-6">
                             <div class="input-block mb-3">
-                                <label>Brach Name <span class="text-danger">*</span></label>
+                                <label>Branch Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="branch_name" placeholder="Enter Name">
                                 @if ($errors->has('branch_name'))
                                 <span class="text-danger">{{ $errors->first('branch_name') }}</span>
@@ -749,12 +781,21 @@ td {
                                     placeholder="Enter Branch Name">
                             </div>
                         </div>
-                        <div class="col-lg-12 col-md-12">
-                            <div class="input-block mb-0">
-                                <label>IFSC Code <span class="text-danger">*</span></label>
-                                <input type="text" name="ifsc_code" class="form-control" placeholder="Enter IFSC Code">
+                        <div class="col-lg-12 col-md-12 iban_no">
+                            <div class="input-block mb-3">
+                                <label>IBAN No <span class="text-danger"></span></label>
+                                <input type="text" name="iban_no" id="iban_no" class="form-control"
+                                    placeholder="Enter IBAN No">
                             </div>
                         </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="input-block mb-0">
+                                <label for="ifsc_code">IFSC Code <span class="text-danger">*</span></label>
+                                <input type="text" name="ifsc_code" id="ifsc_code" class="form-control"
+                                    placeholder="Enter IFSC Code">
+                            </div>
+                        </div>
+
                     </div>
                     <br>
                     <div class="modal-footer">
@@ -1127,8 +1168,7 @@ td {
     </div>
 </div>
 <!-- /Theme Setting -->
-<!-- /Theme Setting -->
-@endsection
+
 <!-- Include Toastr CSS -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
 
@@ -1441,9 +1481,34 @@ $(document).ready(function() {
             }
         });
     });
+
+    // onchange Symbol
+    function updateSymbol() {
+            var selectedOption = $('#currency_id option:selected'); // Get selected option
+            var symbol = selectedOption.data('symbol'); // Get symbol from the data attribute
+         
+            if (!symbol) {
+                symbol = '₹'; // Default to ₹ symbol if none selected
+            }
+            // Update all relevant fields with the new symbol
+          
+            var discount_type = $('#discount_type').val();
+            var package_amt = $('#package_amt').val(); // Default to 0 if not a number
+            var discount = $('.discount').val();         
+            var gst_tax = $('.gst_tax').val();
+        
+            $('#currency_symbol').val(symbol);          
+            calculation(package_amt, gst_tax, discount, discount_type,symbol);
+            
+        }
+        // Call the function on page load in case a currency is already selected
+        updateSymbol();        
+        // Update symbol when the selection changes
+        $('#currency_id').on('change', updateSymbol);
+        // Symbol end 
     $(document).on('change', '#package_id', function() {
         var packageId = $(this).val();
-
+      
         if (packageId) {
             $.ajax({
                 url: '{{ route("packages.details", ":id") }}'.replace(':id', packageId),
@@ -1454,10 +1519,10 @@ $(document).ready(function() {
 
                     if (response.success) {
                         // Update package amounts
-                        $('.amount').text('$' + response.data.amount);
+                        // $('.amount').text(symbol + response.data.amount);
                         $('#package_amt').val(response.data.amount);
-                        $('.total_amt').text('$' + response.data.amount);
-                     
+                       // $('.total_amt').text(symbol + response.data.amount);
+
                         // Clear the existing table body
                         const tableBody = $('#packageBody');
                         tableBody.empty(); // Clear existing rows
@@ -1471,7 +1536,7 @@ $(document).ready(function() {
                             <td>${packageData.package_name }</td> <!-- Package Name -->
                             <td  class="description-cell">${packageData.description }</td> <!-- Description -->
                             <td>${packageData.amount }</td> <!-- Amount -->
-                           <td class="d-flex align-items-center">
+                           <td>
                                 <!-- Edit button that calls the 'packages.edit' route -->
                                 <a  class="btn-action-icon me-2">
                                     <span><i data-id="${packageData.id }" class="fe fe-edit edit_package"></i></span>
@@ -1482,7 +1547,11 @@ $(document).ready(function() {
 
                         // Append the new row to the table body
                         tableBody.append(newRow);
-                        calculation( response.data.amount,'','');
+                        var discount = $('.discount').val();
+                        var gst_tax = $('.gst_tax').val();
+                        var discount_type = $('#discount_type').val();
+                        var symbol = $('#currency_symbol').val(); 
+                        calculation(response.data.amount, gst_tax, discount, discount_type,symbol);
 
                     } else {
                         alert('Package not found');
@@ -1498,53 +1567,123 @@ $(document).ready(function() {
         } else {
             const tableBody = $('#packageBody');
             tableBody.empty(); // Clear existing rows
+            const newRow = `<tr class="odd"> <td valign="top" colspan="4" class="dataTables_empty"
+                                                                style="text-align:center;">No data available in table
+                                                            </td>
+                                                        </tr>
+                    `;
+            // Append the new row to the table body
+            tableBody.append(newRow);
 
         }
     });
-    $(document).on('keyup', '.discount', function() {
-        // Get the current discount value
-        var discount = parseFloat($(this).val()) || 0; // Default to 0 if not a number
-       // alert(discount);
-           // Get package amount and GST tax values
-        var package_amt = parseFloat($('#package_amt').val()) || 0; // Default to 0 if not a number
-     
-        var gst_tax = parseFloat($('#gst_tax').val()) || 0; // Default to 0 if not a number
-     
-        calculation(package_amt,gst_tax,discount);
-    });
-    $(document).on('keyup', '.gst_tax', function() {
-        var gst_tax = $(this).val();
-         var package_amt = $('#package_amt').val(); // Default to 0 if not a number
-         var discount =  $('#discount').val()
-      
-     
-         calculation(package_amt,gst_tax,discount);
-    });
-    function calculation(amount,tax,discount){
 
-        var discount = parseFloat(discount) || 0; // Default to 0 if not a number
+
+    $(document).on('change', '#discount_type', function() {
+        var discount_type = $(this).val();
+        if (discount_type === 'Fixed') {
+            var discount = $('.discount').val();
+            var gst_tax = $('.gst_tax').val();
+            var package_amt = $('#package_amt').val();
+            var symbol = $('#currency_symbol').val();
+        } else {
+            var discount = $('.discount').val();
+            var gst_tax = $('.gst_tax').val();
+            var package_amt = $('#package_amt').val();
+            var symbol = $('#currency_symbol').val();
+        }
+        calculation(package_amt, gst_tax, discount, discount_type,symbol);
+    });
+
+    $(document).on('input', '.discount', function() {
+        var discount_type = $('#discount_type').val();
+
+        // Get the current discount value
+        var discount = $(this).val(); // Default to 0 if not a number
+        // alert(discount);
+        // Get package amount and GST tax values
+        var package_amt = $('#package_amt').val(); // Default to 0 if not a number
+        var gst_tax = $('.gst_tax').val();
+        var symbol = $('#currency_symbol').val();
+        calculation(package_amt, gst_tax, discount, discount_type,symbol);
+    });
+
+    $(document).on('input', '.gst_tax', function() {
+        var gst_tax = $(this).val();
+        var discount_type = $('#discount_type').val();
+        var package_amt = $('#package_amt').val(); // Default to 0 if not a number
+        var discount = $('.discount').val();
+        var symbol = $('#currency_symbol').val();
+        calculation(package_amt, gst_tax, discount, discount_type,symbol);
+    });
+
+    function calculation(amount, tax, discount, discount_type,symbol) {
+
+
         $('#discount').val(discount);
         $('#gst_tax').val(tax);
 
-        // Update the displayed discount value
-        $('.discount').text('$' + discount);
-        $('.gst_tax').text('$' + tax);
-        
         // Get package amount and GST tax values
         var package_amt = parseFloat(amount) || 0; // Default to 0 if not a number
         var gst_tax = parseFloat(tax) || 0; // Default to 0 if not a number
+        var discount = parseFloat(discount) || 0; // Default to 0 if not a number
+
+        // Update the displayed discount value
+        $('.amount').text(symbol + package_amt.toFixed(2));
+        //$('.discount').text(symbol + discount.toFixed(2));
+        $('.gst_tax').text( gst_tax.toFixed(2) + '%');
         // Calculate the discount amount
-        var discountAmount = (package_amt * discount) / 100;
+        var discountAmount = 0;
+        if (discount_type === 'Fixed') {
+            discountAmount = discount; // For fixed discount, use the discount value directly
+            $('.discount').text(symbol + discount.toFixed(2));
+        } else if(discount_type === 'Percentage'){
+        
+            discountAmount = (package_amt * discount) / 100; // For percentage discount
+            $('.discount').text( discount.toFixed(2) +'%');
+        }else{
+            $('.discount').text(symbol + discount.toFixed(2));
+        }
+
 
         // Calculate the amount after discount
         var amountAfterDiscount = package_amt - discountAmount;
 
-        // Calculate the total amount including GST
-        var total_amt = amountAfterDiscount + (amountAfterDiscount + gst_tax) / 100;
+        // Calculate the GST amount based on the amount after discount
+        var gstAmount = (amountAfterDiscount * gst_tax) / 100;
 
+        // Calculate the total amount including GST
+        var total_amt = amountAfterDiscount + gstAmount;
         // Display the calculated total amount
-        $('.total_amt').text('$' + total_amt.toFixed(2)); // Format to 2 decimal places
+        $('.total_amt').text(symbol + total_amt.toFixed(2)); // Format to 2 decimal places
     }
+
+    function toggleIBANField() {
+        var selectedBranch = $.trim($('#branch_id option:selected').text()).toLowerCase();
+        if (selectedBranch === 'dubai') {
+            $('.iban_no').show();
+            // Change label text to SWIFT Code
+            $('label[for="ifsc_code"]').text('SWIFT Code');
+            // Change placeholder to Enter SWIFT Code
+            $('#ifsc_code').attr('placeholder', 'Enter SWIFT Code');
+        } else {
+            $('.iban_no').hide();
+            // Revert back to IFSC Code for other branches
+            $('label[for="ifsc_code"]').text('IFSC Code');
+            // Revert placeholder to Enter IFSC Code
+            $('#ifsc_code').attr('placeholder', 'Enter IFSC Code');
+        }
+    }
+
+    // Check the branch on page load (for edit case)
+    toggleIBANField();
+
+    // Listen for changes in the branch selection
+    $('#branch_id').change(function() {
+        toggleIBANField();
+    });
 
 }); //end redy function
 </script>
+<!-- /Theme Setting -->
+@endsection

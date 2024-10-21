@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\{AuthController,ForgotPasswordController,ProfileController,UserController,QuotationController,ItineraryController,PartnerController,BranchController,PackageController};
+use App\Http\Controllers\Admin\{AuthController,ForgotPasswordController,ProfileController,UserController,QuotationController,ItineraryController,PartnerController,BranchController,PackageController,CurrencyController,RolesPermissionController,VendorController,InvoiceController,SupplierController,QuotationReportController};
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +26,7 @@ Route::get('/clear', function () {
     Artisan::call('optimize:clear');
    return "Cache cleared successfully";
 });
+
 Route::controller(AuthController::class)->group(function() {
     Route::get('/', 'login')->name('login');
     Route::get('/register', 'register')->name('register');
@@ -33,7 +34,8 @@ Route::controller(AuthController::class)->group(function() {
     Route::get('/login', 'login')->name('login');
     Route::post('/authenticate', 'authenticate')->name('authenticate');
    
-});
+});Route::get('admin/invoices/download-csv', [InvoiceController::class, 'downloadCSV'])->name('invoices.downloadCSV');
+
 
 Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
 Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post'); 
@@ -57,14 +59,42 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/partners-data', [PartnerController::class, 'getdata'])->name('partners.data');
     Route::resource('branches', BranchController::class);
     Route::resource('packages', PackageController::class);
+    Route::resource('currencies', CurrencyController::class);
+   
+
+
     Route::get('packages/{id}/details', [PackageController::class, 'getPackageDetails'])->name('packages.details');
     // Optional: Route to restore soft-deleted packages
     Route::post('packages/{id}/restore', [PackageController::class, 'restore'])->name('packages.restore');
     Route::resource('quotations', QuotationController::class); 
     Route::get('/quotation/pdf/{id}', [QuotationController::class, 'generateQuotationPDF'])->name('quotation.estimate');
     Route::post('/bank-details', [QuotationController::class, 'addBankDetail'])->name('bank-details.add');
+    Route::get('quotations/preview/{id}', [QuotationController::class, 'preview'])->name('quotations.preview');
+    Route::resource('roles-permission', RolesPermissionController::class);
+    Route::get('permission/{id}', [RolesPermissionController::class, 'getPermission'])->name('permission.details');
+    Route::put('/roles/{role}/permissions', [RolesPermissionController::class, 'updatePermissions'])->name('roles.updatePermissions');
+    Route::resource('vendors', VendorController::class); 
+    Route::resource('invoices', InvoiceController::class); 
+    Route::get('/invoices-paid', [InvoiceController::class, 'getInvoicesPaid'])->name('invoices.invoices-paid');
+    Route::get('/invoices-overdue', [InvoiceController::class, 'getInvoicesOverdue'])->name('invoices.invoices-overdue');
+    Route::get('/invoices-cancelled', [InvoiceController::class, 'getInvoicesCancelled'])->name('invoices.invoices-cancelled');
+    Route::get('/invoices-recurring', [InvoiceController::class, 'getInvoicesRecurring'])->name('invoices.invoices-recurring');
+    Route::get('/invoices-unpaid', [InvoiceController::class, 'getInvoicesUnpaid'])->name('invoices.invoices-unpaid');
+    Route::get('/invoices-refunded', [InvoiceController::class, 'getInvoicesRefunded'])->name('invoices.invoices-refunded');
+    Route::get('/invoices-draft', [InvoiceController::class, 'getInvoicesPaid'])->name('invoices.invoices-draft');
+    Route::get('/invoices/pdf/{id}', [InvoiceController::class, 'generateQuotationPDF'])->name('invoice.estimate');
+    Route::get('invoices/preview/{id}', [InvoiceController::class, 'preview'])->name('invoice.preview');
+    Route::get('/invoices/pdf/{id}', [InvoiceController::class, 'generateQuotationPDF'])->name('invoice.estimate');
+    Route::get('/convert-invoice/{id}', [QuotationController::class, 'convertToInvoice'])->name('convert-invoice.estimate');
 
-    Route::post('quotations/{id}/restore', [QuotationController::class, 'restore'])->name('packages.restore');
+    Route::resource('suppliers', SupplierController::class);
+    Route::get('/admin/quotations/download-csv', [QuotationReportController::class, 'downloadCSV'])->name('quotations.downloadCSV');
+    Route::get('/admin/quotations/download-pdf', [QuotationReportController::class, 'downloadPDF'])->name('quotations.downloadPDF');
+    Route::resource('quotation-report', QuotationReportController::class);
+    
+    // Route::post('quotations/{id}/restore', [QuotationController::class, 'restore'])->name('quotations.restore');
+
+    Route::get('/pdf', [InvoiceController::class, 'downloadPDF'])->name('invoice.downloadPDF');
 
 // Route::get('/users', [UserController::class, 'index'])->name('users.index');
 // Route::post('/users', [UserController::class, 'store'])->name('users.store');
@@ -73,7 +103,7 @@ Route::middleware(['auth'])->group(function() {
 
 // Route::delete('users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
-Route::post('/assing-role', [UserController::class, 'updateRole'])->name('users.updateRole');
+    Route::post('/assing-role', [UserController::class, 'updateRole'])->name('users.updateRole');
 
 // Route for fetching users data via AJAX
 

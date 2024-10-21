@@ -24,7 +24,7 @@ class PartnerController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'mobile' => 'required|string|max:15',
+            'mobile' => 'required|numeric|digits_between:10,15|regex:/^(?:\+?\d{1,3})?\d{10,15}$/',
             'email' => 'required|email|unique:partners',
             'city' => 'nullable|string|max:255',
             'state' => 'nullable|string|max:255',
@@ -56,18 +56,20 @@ class PartnerController extends Controller
 
     public function edit(Partner $partner)
     {
-        return view('admin.partners.edit-partner', compact('partner'));
+        return response()->json(['status'=>true,'data'=>$partner ,'message' => 'Partner details successfully']);
+
+        // return view('admin.partners.edit-partner', compact('partner'));
     }
 
     public function update(Request $request, Partner $partner)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'mobile' => 'required|string|max:15',
+            'mobile' => 'required|numeric|digits_between:10,15|regex:/^(?:\+?\d{1,3})?\d{10,15}$/',
             'email' => 'required|email|unique:partners,email,' . $partner->id,
             'city' => 'nullable|string|max:255',
             'state' => 'nullable|string|max:255',
-            'country' => 'nullable|string|max:255',
+            'country' =>     'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -89,7 +91,8 @@ class PartnerController extends Controller
         }
 
         $partner->save();
-        return redirect()->route('partners.index')->with('success', 'Partner updated successfully.');
+        return response()->json(['status'=>true,'data'=>$partner ,'message' => 'Partner details updated successfully']);
+        // return redirect()->route('partners.index')->with('success', 'Partner updated successfully.');
     }
 
     public function destroy(Partner $partner)

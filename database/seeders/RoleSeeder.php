@@ -20,16 +20,19 @@ class RoleSeeder extends Seeder
         $admin->givePermissionTo([
             'create-user',
             'edit-user',
-            'delete-user',
-            'create-operations',
-            'edit-operations',
-            'delete-operations'
+            'view-user',
+            'delete-user',          
+            'create-quotation',
+            'edit-quotation',
+            'view-quotation',
+            'delete-quotation'
         ]);
 
         $salse->givePermissionTo([
-            'create-operations',
-            'edit-operations',
-            'delete-operations'
+            'create-quotation',
+            'edit-quotation',
+            'view-quotation',
+            'delete-quotation'
         ]); 
        
     }

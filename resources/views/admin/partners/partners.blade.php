@@ -3,7 +3,7 @@
 
 
 <!-- Main Wrapper -->
-@extends('admin.layouts.common-sidebar')
+@include('admin.layouts.common-sidebar')
 <!-- /Main Wrapper -->
 
 <!-- Page Wrapper -->
@@ -12,7 +12,7 @@
         <!-- Page Header -->
         <div class="page-header">
             <div class="content-page-header">
-                <h5>Partners</h5>
+                <h5>Partners/Agent</h5>
                 <div class="list-btn">
                     <ul class="filter-list">
                         <!-- <li>
@@ -41,7 +41,7 @@
 										<a class="btn btn-import" href="javascript:void(0);"><span><i class="fe fe-check-square me-2"></i>Import Customer</span></a>
 									</li> -->
                         <li>
-                            <a class="btn btn-primary" href="{{route('partners.create')}}"><i
+                            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#partner_details"><i
                                     class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add Partner</a>
                         </li>
                     </ul>
@@ -125,8 +125,8 @@
                                                 <div class="dropdown-menu dropdown-menu-end">
                                                     <ul>
                                                         <li>
-                                                            <a class="dropdown-item"
-                                                                href="{{ route('partners.edit', $partner->id) }}"><i
+                                                            <a class="dropdown-item edit_partner"
+                                                                data-id="{{$partner->id}}"><i
                                                                     class="far fa-edit me-2"></i>Edit</a>
                                                         </li>
                                                         <li>
@@ -316,7 +316,246 @@
 
 </div>
 <!-- /Main Wrapper -->
+<!-- Add Partner Details Modal -->
+<div class="modal custom-modal modal-lg fade" id="partner_details" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <div class="form-header modal-header-title text-start mb-0">
+                    <h4 class="mb-0">Add Partner Details</h4>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="partner_details_form" action="{{ route('partners.store') }}" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <!-- Include CSRF token for security -->
+                    <div class="row">
+                        <div class="profile-picture">
+                            <div class="upload-profile">
+                                <div class="profile-img">
+                                    <img id="blah" class="avatar" src="assets/img/profiles/avatar-14.jpg"
+                                        alt="profile-img">
+                                </div>
+                                <div class="add-profile">
+                                    <h5>Upload a New Photo</h5>
+                                </div>
+                            </div>
+                            <div class="img-upload">
+                                <label class="btn btn-upload">
+                                    Upload <input type="file" name="image"
+                                        onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])">
+                                </label>
+                                <!-- <a class="btn btn-remove">Remove</a> -->
+                            </div>
+                        </div>
 
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="name" placeholder="Enter Name">
+                                    @if ($errors->has('name'))
+                                    <span class="text-danger">{{ $errors->first('name') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Email <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" name="email"
+                                        placeholder="Enter Email Address">
+                                    @if ($errors->has('email'))
+                                    <span class="text-danger">{{ $errors->first('email') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Mobile <span class="text-danger">*</span></label>
+                                    <input type="text" id="mobile_code" name="mobile" class="form-control"
+                                        placeholder="Phone Number" name="name">
+                                    @if ($errors->has('mobile'))
+                                    <span class="text-danger">{{ $errors->first('mobile') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>City</label>
+                                    <input type="text" class="form-control" name="city" placeholder="Enter City">
+                                    @if ($errors->has('city'))
+                                    <span class="text-danger">{{ $errors->first('city') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+
+
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="input-block">
+                                    <label>State</label>
+                                    <input type="text" class="form-control" name="state" placeholder="Enter State">
+                                    @if ($errors->has('state'))
+                                    <span class="text-danger">{{ $errors->first('state') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="pass-group">
+                                    <div class="input-block">
+                                        <label>Country</label>
+                                        <input type="text" class="form-control" name="country"
+                                            placeholder="Enter Country">
+                                        @if ($errors->has('country'))
+                                        <span class="text-danger">{{ $errors->first('country') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="reset" data-bs-dismiss="modal" class="btn btn-primary cancel me-2">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Add Partner Details Modal -->
+<!-- Edit Partner Details Modal -->
+<div class="modal custom-modal modal-lg fade" id="edit_partner_details" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <div class="form-header modal-header-title text-start mb-0">
+                    <h4 class="mb-0">Add Partner Details</h4>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form id="edit_partner_details_form" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <!-- Spoofing PUT for update -->
+                    <input type="hidden" name="partner_id" id="partner_id">
+                    <!-- Include CSRF token for security -->
+                    <div class="row">
+                        <div class="profile-picture">
+                            <div class="upload-profile">
+                                <div class="profile-img">
+                                    <img id="blahedit" class="avatar" src="assets/img/profiles/avatar-14.jpg"
+                                        alt="profile-img">
+                                </div>
+                                <div class="add-profile">
+                                    <h5>Upload a New Photo</h5>
+                                </div>
+                            </div>
+                            <div class="img-upload">
+                                <label class="btn btn-upload">
+                                    Upload <input type="file" name="image"
+                                        onchange="document.getElementById('blahedit').src = window.URL.createObjectURL(this.files[0])">
+                                </label>
+                                <!-- <a class="btn btn-remove">Remove</a> -->
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="name" id="edit_name"
+                                        placeholder="Enter Name">
+                                    @if ($errors->has('name'))
+                                    <span class="text-danger">{{ $errors->first('name') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Email <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" name="email" id="edit_email"
+                                        placeholder="Enter Email Address">
+                                    @if ($errors->has('email'))
+                                    <span class="text-danger">{{ $errors->first('email') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Mobile <span class="text-danger">*</span></label>
+                                    <input type="text" name="mobile" class="form-control" placeholder="Phone Number"
+                                        id="edit_mobile">
+                                    @if ($errors->has('mobile'))
+                                    <span class="text-danger">{{ $errors->first('mobile') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>City</label>
+                                    <input type="text" class="form-control" name="city" id="edit_city"
+                                        placeholder="Enter City">
+                                    @if ($errors->has('city'))
+                                    <span class="text-danger">{{ $errors->first('city') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+
+
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="input-block">
+                                    <label>State</label>
+                                    <input type="text" class="form-control" name="state" id="edit_state"
+                                        placeholder="Enter State">
+                                    @if ($errors->has('state'))
+                                    <span class="text-danger">{{ $errors->first('state') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="pass-group">
+                                    <div class="input-block">
+                                        <label>Country</label>
+                                        <input type="text" class="form-control" name="country" id="edit_country"
+                                            placeholder="Enter Country">
+                                        @if ($errors->has('country'))
+                                        <span class="text-danger">{{ $errors->first('country') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="reset" data-bs-dismiss="modal" class="btn btn-primary cancel me-2">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Edit Partner Details Modal -->
 <!--Theme Setting -->
 <div class="settings-icon">
     <span data-bs-toggle="offcanvas" data-bs-target="#theme-settings-offcanvas"
@@ -674,4 +913,136 @@
     </div>
 </div>
 <!-- /Theme Setting -->
+
+<!-- Include Toastr CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+<!-- Toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right", // Position of the toast
+        "preventDuplicates": false,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000", // Duration for which the toast is shown
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn", // Use fadeIn or slideDown
+        "hideMethod": "fadeOut" // Use fadeOut or slideUp
+    };
+    $('#partner_details_form').on('submit', function(e) {
+        e.preventDefault(); // Prevent the form from submitting normally
+
+        var formData = new FormData(this); // Create FormData object from the form
+
+        $.ajax({
+            url: $(this).attr('action'), // Get the action URL from the form
+            type: 'POST',
+            data: formData, // Send FormData object
+            contentType: false, // Important for file upload
+            processData: false, // Important for file upload
+            success: function(response) {
+                toastr.success(response.message); // Display success message
+                // Optionally, reset the form or close the modal
+                // $('#partner_details').modal('hide'); // Close modal
+                $('#partner_details_form')[0].reset(); // Reset the form
+                setTimeout(function() {
+                    window.location.reload(); // Reload the page after the delay
+                }, 3000); // 5-second delay
+
+            },
+            error: function(xhr) {
+                if (xhr.responseJSON.errors) {
+                    $.each(xhr.responseJSON.errors, function(key, value) {
+                        toastr.error(value[0]); // Display each error message
+                    });
+                } else {
+                    toastr.error('Error uploading profile.'); // Generic error message
+                }
+            }
+        });
+    });
+
+    $(document).on('click', '.edit_partner', function() {
+        var id = $(this).data('id'); // Get user ID from the button
+        // Make an AJAX request to fetch the user data
+        $.ajax({
+            url: '{{ route("partners.edit", ":id") }}'.replace(':id',
+                id), // Replace ':id' with the actual user ID
+            type: 'GET',
+            success: function(response) {
+                var data = response.data;
+
+                // Populate the form fields with the fetched data
+                $('#partner_id').val(data.id); // Hidden user ID
+                $('#edit_name').val(data.name);
+                $('#edit_email').val(data.email);
+                $('#edit_mobile').val(data.mobile);
+                $('#edit_city').val(data.city);
+                $('#edit_state').val(data.state);
+                $('#edit_country').val(data.country);
+                if (data.image) {
+                    // Set the profile image source
+                    $('#blahedit').attr('src', '{{ url("public/profile") }}/' + data
+                        .image);
+                } else {
+                    // Set to default image if no profile exists
+                    $('#blahedit').attr('src',
+                        '{{ url("public/assets/img/profiles/default.png") }}');
+                }
+                // Open the modal
+                $('#edit_partner_details').modal('show');
+            },
+            error: function(xhr) {
+                toastr.error('Error fetching user data.');
+            }
+        });
+    });
+    // Edit Partner
+    $('#edit_partner_details_form').on('submit', function(e) {
+        e.preventDefault(); // Prevent the form from submitting normally
+
+        var formData = new FormData(this); // FormData for file uploads
+        var id = $('#partner_id').val(); // Get user ID from hidden input
+
+        $.ajax({
+            url: '{{ route("partners.update", ":id") }}'.replace(':id', id), // Update route
+            type: 'POST', // POST method with method override
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: {
+                'X-HTTP-Method-Override': 'PUT' // Spoofing PUT
+            },
+            success: function(response) {
+                toastr.success(response.message);
+                // Clear the existing table body            
+                // $('#edit_partner_details').modal('hide'); // Close modal after success
+                setTimeout(function() {
+                    window.location.reload(); // Reload the page after the delay
+                }, 3000);
+            },
+            error: function(xhr) {
+                // Display error messages from the server if any
+                let errors = xhr.responseJSON.errors;
+                if (errors) {
+                    $.each(errors, function(key, value) {
+                        toastr.error(value[0]);
+                    });
+                } else {
+                    toastr.error('Error updating user.');
+                }
+            }
+        });
+    });
+});
+</script>
 @endsection
