@@ -24,7 +24,7 @@ class PartnerController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'mobile' => 'required|string|max:15',
+            'mobile' => 'required|numeric|digits_between:10,15|regex:/^(?:\+?\d{1,3})?\d{10,15}$/',
             'email' => 'required|email|unique:partners',
             'city' => 'nullable|string|max:255',
             'state' => 'nullable|string|max:255',
@@ -65,7 +65,7 @@ class PartnerController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'mobile' => 'required|string|max:15',
+            'mobile' => 'required|numeric|digits_between:10,15|regex:/^(?:\+?\d{1,3})?\d{10,15}$/',
             'email' => 'required|email|unique:partners,email,' . $partner->id,
             'city' => 'nullable|string|max:255',
             'state' => 'nullable|string|max:255',

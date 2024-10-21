@@ -28,7 +28,10 @@ class Supplier extends Model
         'city',
         'state',
         'country',
-        'postal_code',       
+        'postal_code',  
+        'amount',
+        'description',
+        'status',     
         'image',
     ];
 

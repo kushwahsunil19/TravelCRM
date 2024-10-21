@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Quotation,Invoice,Branch,Partner,Package,Bank};
+use App\Models\{Quotation,Invoice,Branch,Partner,Package,Bank,Currency};
 use PDF;
 class QuotationController extends Controller
 {
@@ -23,7 +23,7 @@ class QuotationController extends Controller
     public function index()
     {
         $totalQuotations = Quotation::count();
-        $quotations = Quotation::with(['branch', 'partner', 'package','bank'])->paginate( $totalQuotations);
+        $quotations = Quotation::with(['branch', 'partner', 'package','bank','currency'])->paginate( $totalQuotations);
         return view('admin.quotations.index', compact('quotations'));
     }
 
@@ -43,8 +43,9 @@ class QuotationController extends Controller
         $branches = Branch::all();
         $partners = Partner::all();
         $packages = Package::all();
+        $currencies = Currency::all();
         $bankDetails = Bank::latest()->get();
-        return view('admin.quotations.create', compact('branches', 'partners', 'packages','quotation_no','bankDetails'));
+        return view('admin.quotations.create', compact('branches', 'partners', 'packages','quotation_no','bankDetails','currencies'));
     }
 
     /**
@@ -56,8 +57,8 @@ class QuotationController extends Controller
             'branch_id' => 'required|exists:branches,id',
             'partner_id' => 'required|exists:partners,id',
             'package_id' => 'required|exists:packages,id',
-            'bank_id' => 'required',
-             'quotation_no' => 'required|unique:quotations,quotation_no',
+            'currency_id' => 'required|exists:currencies,id',
+            'bank_id' => 'required|exists:bank_details,id',           
             'twin_double_sharing_cost' => 'nullable|numeric',
             'triple_sharing_cost' => 'nullable|numeric',
             'child_extra_bed_cost' => 'nullable|numeric',
@@ -91,9 +92,11 @@ class QuotationController extends Controller
         $branches = Branch::all();
         $partners = Partner::all();
         $packages = Package::all();
+        $currencies = Currency::all();
+
         $bankDetails = Bank::latest()->get();
 
-        return view('admin.quotations.edit', compact('quotation', 'branches', 'partners', 'packages','bankDetails'));
+        return view('admin.quotations.edit', compact('quotation', 'branches', 'partners', 'packages','bankDetails','currencies'));
     }
 
     /**
@@ -105,7 +108,8 @@ class QuotationController extends Controller
             'branch_id' => 'required|exists:branches,id',
             'partner_id' => 'required|exists:partners,id',
             'package_id' => 'required|exists:packages,id',
-            'bank_id' => 'required|exists:packages,id',
+            'currency_id' => 'required|exists:currencies,id',
+            'bank_id' => 'required|exists:bank_details,id',
             'quotation_no' => 'required|unique:quotations,quotation_no,' . $quotation->id,
             'twin_double_sharing_cost' => 'nullable|numeric',
             'triple_sharing_cost' => 'nullable|numeric',
@@ -136,7 +140,7 @@ class QuotationController extends Controller
     public function generateQuotationPDF($id)
     {
         // Fetch the quotation by ID from the database
-        $quotation = Quotation::with(['branch', 'partner', 'package','bank'])->findOrFail($id);
+        $quotation = Quotation::with(['branch', 'partner', 'package','bank','currency'])->findOrFail($id);
       
         // Get the package amount
         $package_amt = $quotation->package->amount;
@@ -176,6 +180,8 @@ class QuotationController extends Controller
 
         // Example: Adjust these fields based on your `quotations` table structure
         $data = [
+            'currency_code'=>$quotation->currency->code,
+            'curreny_symbol'=>$quotation->currency->symbol,
             'branch_address'=>$quotation->branch->address,
             'branch_name'=>$quotation->branch->branch_name,
             'quotation_date' => now()->toDateString(),
@@ -209,7 +215,7 @@ class QuotationController extends Controller
     public function preview($id)
     {
         // Fetch the quotation by ID from the database
-        $quotation = Quotation::with(['branch', 'partner', 'package','bank'])->findOrFail($id);
+        $quotation = Quotation::with(['branch', 'partner', 'package','bank','currency'])->findOrFail($id);
       
         // Get the package amount
         $package_amt = $quotation->package->amount;
@@ -249,6 +255,8 @@ class QuotationController extends Controller
 
         // Example: Adjust these fields based on your `quotations` table structure
         $data = [
+            'currency_code'=>$quotation->currency->code,
+            'curreny_symbol'=>$quotation->currency->symbol,
             'branch_address'=>$quotation->branch->address,
             'branch_name'=>$quotation->branch->branch_name,
             'quotation_date' => now()->toDateString(),
@@ -322,6 +330,7 @@ class QuotationController extends Controller
                 'branch_id' => $quotation->branch_id,
                 'partner_id' => $quotation->partner_id,
                 'package_id' => $quotation->package_id,
+                'currency_id' => $quotation->currency_id,
                 'bank_id' => $quotation->bank_id,
                 'vat' => $quotation->gst_tax, // Assuming total amount is mapped
                 'discount_type' => $quotation->discount_type,               
@@ -339,6 +348,7 @@ class QuotationController extends Controller
                     'branch_id' => $quotation->branch_id,
                     'partner_id' => $quotation->partner_id,
                     'package_id' => $quotation->package_id,
+                    'currency_id' => $quotation->currency_id,
                     'bank_id' => $quotation->bank_id,
                     'vat' => $quotation->gst_tax, // Assuming total amount is mapped
                     'discount_type' =>$quotation->discount_type, // Or any other status you want to set                 

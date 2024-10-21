@@ -202,7 +202,7 @@
                     <b>Invoice Number:</b> {{ $data['invoice_number'] }}<br />
                     <b>Invoice Date:</b> {{ $data['invoice_date'] }}<br />
                     <b>Valid Until:</b> {{ now()->addDays(30)->toDateString() }}<br />
-                    <b>Invoice Total:</b> ₹{{ number_format($data['total'], 2) }}
+                    <b>Invoice Total:</b> {{$data['curreny_symbol']}}{{ number_format($data['total'], 2) }}
                 </p>
             </div>
         </div>
@@ -215,7 +215,7 @@
                 <tr>
                     <th>Service</th>
                     <th>Description</th>
-                    <th>Amount </th>
+                    <th>Amount ({{$data['currency_code']}})</th>
                 </tr>
             </thead>
             <tbody>
@@ -225,7 +225,7 @@
                 <tr>
                     <td style="text-align:justify;"><b>{{ $item['package_name'] }}</b></td>
                     <td style="text-align:justify;">{!! $item['description'] !!}</td>
-                    <td style="text-align:justify;">{{ number_format($item['amount'], 2) }}</td>
+                    <td style="text-align:justify;">{{$data['curreny_symbol']}}{{ number_format($item['amount'], 2) }}</td>
                 </tr>
                 @endforeach
                 @endif
@@ -238,10 +238,10 @@
     <!-- Total and Notes Section -->
     <div class="total" style="padding: 0px">
         <p>
-            <strong>Sub Total:</strong> ₹{{ number_format($data['subtotal'], 2) }}<br />
-        <p><strong>Discount:</strong> {{ number_format($data['discount'], 2) }} </p>
-        <p><strong>Vat %:</strong> {{ number_format($data['tax'], 2) }} </p>
-        <strong>Invoice Total :</strong> ₹{{ number_format($data['total'], 2) }}
+            <strong>Sub Total :</strong> {{$data['curreny_symbol']}}{{ number_format($data['subtotal'], 2) }}<br />
+        <p><strong>Discount @if($data['discount_type'] == 'Percentage') (%) @endif: </strong>@if($data['discount_type'] == 'Fixed') {{$data['curreny_symbol'] }} @endif{{ number_format($data['discount'], 2) }} </p>
+        <p><strong>Vat % : </strong>{{ number_format($data['tax'], 2) }} </p>
+        <strong>Invoice Total :</strong> {{$data['curreny_symbol']}}{{ number_format($data['total'], 2) }}
         </p>
     </div>
 

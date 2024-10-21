@@ -915,7 +915,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: {
-            url: '{{ route('users.data') }}',
+            url: '{{ route('users.index') }}',
             type: 'GET'
         },
         columns: [{

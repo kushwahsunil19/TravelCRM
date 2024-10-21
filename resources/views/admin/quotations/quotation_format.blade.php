@@ -11,10 +11,10 @@
     <style>
     /* General Layout */
     body {
-        font-family: 'Arial', sans-serif;
         margin: 0;
         padding: 0;
         background: #fff;
+        font-family: 'DejaVu Sans', sans-serif;
     }
 
     .container {
@@ -212,7 +212,7 @@
                                 <b>Estimate Number:</b> {{ $quotation_number }}<br />
                                 <b>Estimate Date:</b> {{ $quotation_date }}<br />
                                 <b>Valid Until:</b> {{ now()->addDays(30)->toDateString() }}<br />
-                                <b>Estimate Total:</b> ${{ number_format($total, 2) }}
+                                <b>Estimate Total:</b> {{$curreny_symbol}}{{ number_format($total, 2) }}
                             </p>
                         </td>
                     </tr>
@@ -229,7 +229,7 @@
                     <tr>
                         <th style="text-align:left; ">Service</th>
                         <th style="text-align:left; ">Description</th>
-                        <th style="text-align:left; ">Amount</th>
+                        <th style="text-align:left; ">Amount ({{$currency_code}})</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -240,7 +240,7 @@
                     <tr style="text-align:center;">
                         <td style="text-align:justify;"><b>{{ $item['package_name'] }}</b></td>
                         <td style="text-align:justify;">{!! $item['description'] !!}</td>
-                        <td style="text-align:justify;">${{ number_format($item['amount'] ?? 0, 2) }}</td>
+                        <td style="text-align:justify;">{{$curreny_symbol}}{{ number_format($item['amount'] ?? 0, 2) }}</td>
                     </tr>
                     @endif
                     @endforeach
@@ -263,10 +263,10 @@
             </p>
         </div> -->
         <div class="total" style="padding: 0px">
-            <p><strong>Sub Total:</strong> {{ number_format($subtotal, 2) }} </p>
-            <p><strong>Discount:</strong> {{ number_format($discount, 2) }} </p>
-            <p><strong>Vat :</strong> {{ number_format($tax, 2) }} </p>
-            <p><strong>Total:</strong> {{ number_format($total, 2) }} </p>
+            <p><strong>Sub Total :</strong> {{$curreny_symbol}}{{ number_format($subtotal, 2) }} </p>
+            <p><strong>Discount @if($discount_type == 'Percentage') (%) @endif: </strong>@if($discount_type == 'Fixed') {{$curreny_symbol}} @endif{{ number_format($discount, 2) }} </p>
+            <p><strong>Vat (%) : </strong>{{ number_format($tax, 2) }} </p>
+            <p><strong>Estimate Total :</strong> {{$curreny_symbol}}{{ number_format($total, 2) }} </p>
         </div>
 
         <!-- Notes / Terms Section -->

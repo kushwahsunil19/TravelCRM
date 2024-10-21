@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Invoice,Branch,Partner,Package,Bank};
+use App\Models\{Invoice,Branch,Partner,Package,Bank,Currency};
 use PDF;
 class InvoiceController extends Controller
 {
@@ -14,7 +14,7 @@ class InvoiceController extends Controller
     public function index()
     {
       $totalInvoice = Invoice::count();
-      $invoices = Invoice::with(['branch', 'partner', 'package','bank'])->paginate( $totalInvoice);
+      $invoices = Invoice::with(['branch', 'partner', 'package','bank','currency'])->paginate( $totalInvoice);
       return view('admin.invoices.invoices',compact('invoices'));
     }
      /**
@@ -23,7 +23,7 @@ class InvoiceController extends Controller
     public function getInvoicesPaid()
     {
       $totalInvoice = Invoice::count();
-      $invoices = Invoice::with(['branch', 'partner', 'package','bank'])->paginate( $totalInvoice);
+      $invoices = Invoice::with(['branch', 'partner', 'package','bank','currency'])->paginate( $totalInvoice);
    
       return view('admin.invoices.invoices-paid',compact('invoices'));
     }
@@ -33,7 +33,7 @@ class InvoiceController extends Controller
     public function getInvoicesOverdue()
     {
       $totalInvoice = Invoice::count();
-      $invoices = Invoice::with(['branch', 'partner', 'package','bank'])->where('status',6)->paginate( $totalInvoice);
+      $invoices = Invoice::with(['branch', 'partner', 'package','bank','currency'])->where('status',6)->paginate( $totalInvoice);
 
       return view('admin.invoices.invoices-overdue',compact('invoices'));
     }
@@ -43,7 +43,7 @@ class InvoiceController extends Controller
     public function getInvoicesCancelled()
     {
       $totalInvoice = Invoice::count();
-      $invoices = Invoice::with(['branch', 'partner', 'package','bank'])->where('status',0)->paginate( $totalInvoice);
+      $invoices = Invoice::with(['branch', 'partner', 'package','bank','currency'])->where('status',0)->paginate( $totalInvoice);
  
       return view('admin.invoices.invoices-cancelled',compact('invoices'));
     }
@@ -54,7 +54,7 @@ class InvoiceController extends Controller
     {
       $totalInvoice = Invoice::count();
       
-      $invoices = Invoice::with(['branch', 'partner', 'package','bank'])->where('status',1)->paginate( $totalInvoice);
+      $invoices = Invoice::with(['branch', 'partner', 'package','bank','currency'])->where('status',1)->paginate( $totalInvoice);
 
       return view('admin.invoices.invoices-recurring',compact('invoices'));
     }
@@ -64,7 +64,7 @@ class InvoiceController extends Controller
     public function getInvoicesUnpaid()
     {
       $totalInvoice = Invoice::count();
-      $invoices = Invoice::with(['branch', 'partner', 'package','bank'])->where('status',4)->paginate( $totalInvoice);
+      $invoices = Invoice::with(['branch', 'partner', 'package','bank','currency'])->where('status',4)->paginate( $totalInvoice);
     
       return view('admin.invoices.invoices-unpaid',compact('invoices'));
     }
@@ -74,7 +74,7 @@ class InvoiceController extends Controller
     public function getInvoicesRefunded()
     {
       $totalInvoice = Invoice::count();
-      $invoices = Invoice::with(['branch', 'partner', 'package','bank'])->where('status',5)->paginate( $totalInvoice);
+      $invoices = Invoice::with(['branch', 'partner', 'package','bank','currency'])->where('status',5)->paginate( $totalInvoice);
   
       return view('admin.invoices.invoices-refunded',compact('invoices'));
     }
@@ -84,7 +84,7 @@ class InvoiceController extends Controller
     public function getInvoicesDraft()
     {
       $totalInvoice = Invoice::count();
-      $invoices = Invoice::with(['branch', 'partner', 'package','bank'])->where('status',3)->paginate( $totalInvoice);
+      $invoices = Invoice::with(['branch', 'partner', 'package','bank','currency'])->where('status',3)->paginate( $totalInvoice);
      
       return view('admin.invoices.invoices-draft',compact('invoices'));
     }
@@ -107,8 +107,9 @@ class InvoiceController extends Controller
         $branches = Branch::all();
         $partners = Partner::all();
         $packages = Package::all();
+        $currencies = Currency::all();
         $bankDetails = Bank::latest()->get();
-        return view('admin.invoices.create', compact('branches', 'partners', 'packages','invoice_no','bankDetails'));
+        return view('admin.invoices.create', compact('branches', 'partners', 'packages','invoice_no','bankDetails','currencies'));
     }
 
     /**
@@ -121,6 +122,7 @@ class InvoiceController extends Controller
             'branch_id' => 'required|exists:branches,id',
             'partner_id' => 'required|exists:partners,id',
             'package_id' => 'required|exists:packages,id',
+            'currency_id' => 'required|exists:currencies,id',
             'bank_id' => 'required',
             'invoice_no' => 'required|unique:invoices,invoice_no',        
             // 'child_no_extra_bed_cost' => 'nullable|numeric',
@@ -153,9 +155,10 @@ class InvoiceController extends Controller
         $branches = Branch::all();
         $partners = Partner::all();
         $packages = Package::all();
+        $currencies = Currency::all();
         $bankDetails = Bank::latest()->get();
 
-        return view('admin.invoices.edit', compact('invoice', 'branches', 'partners', 'packages','bankDetails'));
+        return view('admin.invoices.edit', compact('invoice', 'branches', 'partners', 'packages','bankDetails','currencies'));
     }
 
     /**
@@ -167,7 +170,8 @@ class InvoiceController extends Controller
             'branch_id' => 'required|exists:branches,id',
             'partner_id' => 'required|exists:partners,id',
             'package_id' => 'required|exists:packages,id',
-            'bank_id' => 'required|exists:packages,id',
+            'currency_id' => 'required|exists:currencies,id',
+            'bank_id' => 'required',
             'invoice_no' => 'required|unique:invoices,invoice_no,' . $invoice->id,
           
             'vat' => 'nullable|numeric',
@@ -194,7 +198,7 @@ class InvoiceController extends Controller
     public function generateQuotationPDF($id)
     {
         // Fetch the quotation by ID from the database
-        $invoice = Invoice::with(['branch', 'partner', 'package','bank'])->findOrFail($id);
+        $invoice = Invoice::with(['branch', 'partner', 'package','bank','currency'])->findOrFail($id);
       
         // Get the package amount
         $package_amt = $invoice->package->amount;
@@ -234,6 +238,8 @@ class InvoiceController extends Controller
 
         // Example: Adjust these fields based on your `quotations` table structure
         $data = [
+            'currency_code'=>$invoice->currency->code,
+            'curreny_symbol'=>$invoice->currency->symbol,
             'branch_address'=>$invoice->branch->address,
             'branch_name'=>$invoice->branch->branch_name,
             'invoice_date' => now()->toDateString(),
@@ -267,7 +273,7 @@ class InvoiceController extends Controller
     public function preview($id)
     {
         // Fetch the quotation by ID from the database
-        $invoice = Invoice::with(['branch', 'partner', 'package','bank'])->findOrFail($id);
+        $invoice = Invoice::with(['branch', 'partner', 'package','bank','currency'])->findOrFail($id);
       
         // Get the package amount
         $package_amt = $invoice->package->amount;
@@ -307,6 +313,8 @@ class InvoiceController extends Controller
 
         // Example: Adjust these fields based on your `invoices` table structure
         $data = [
+            'currency_code'=>$invoice->currency->code,
+            'curreny_symbol'=>$invoice->currency->symbol,
             'branch_address'=>$invoice->branch->address,
             'branch_name'=>$invoice->branch->branch_name,
             'invoice_date' => now()->toDateString(),
