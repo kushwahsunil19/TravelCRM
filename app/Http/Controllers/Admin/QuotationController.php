@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Quotation,Invoice,Branch,Partner,Package,Bank};
+use App\Models\{Quotation,Invoice,Branch,Partner,Package,Bank,Currency};
 use PDF;
 class QuotationController extends Controller
 {
@@ -20,6 +20,7 @@ class QuotationController extends Controller
     /**
      * Display a listing of the quotations.
      */
+<<<<<<< HEAD
   
 
 //         public function index(Request $request)
@@ -74,6 +75,13 @@ public function index(Request $request)
     // Apply filters based on request parameters
     if ($request->filled('quotation_no')) {
         $query->where('quotation_no', 'like', '%' . $request->quotation_no . '%');
+=======
+    public function index()
+    {
+        $totalQuotations = Quotation::count();
+        $quotations = Quotation::with(['branch', 'partner', 'package','bank','currency'])->paginate( $totalQuotations);
+        return view('admin.quotations.index', compact('quotations'));
+>>>>>>> origin/main
     }
     if ($request->filled('branch')) {
         $query->whereHas('branch', function ($q) use ($request) {
@@ -121,8 +129,9 @@ public function index(Request $request)
         $branches = Branch::all();
         $partners = Partner::all();
         $packages = Package::all();
+        $currencies = Currency::all();
         $bankDetails = Bank::latest()->get();
-        return view('admin.quotations.create', compact('branches', 'partners', 'packages','quotation_no','bankDetails'));
+        return view('admin.quotations.create', compact('branches', 'partners', 'packages','quotation_no','bankDetails','currencies'));
     }
 
     /**
@@ -134,8 +143,8 @@ public function index(Request $request)
             'branch_id' => 'required|exists:branches,id',
             'partner_id' => 'required|exists:partners,id',
             'package_id' => 'required|exists:packages,id',
-            'bank_id' => 'required',
-             'quotation_no' => 'required|unique:quotations,quotation_no',
+            'currency_id' => 'required|exists:currencies,id',
+            'bank_id' => 'required|exists:bank_details,id',           
             'twin_double_sharing_cost' => 'nullable|numeric',
             'triple_sharing_cost' => 'nullable|numeric',
             'child_extra_bed_cost' => 'nullable|numeric',
@@ -169,9 +178,11 @@ public function index(Request $request)
         $branches = Branch::all();
         $partners = Partner::all();
         $packages = Package::all();
+        $currencies = Currency::all();
+
         $bankDetails = Bank::latest()->get();
 
-        return view('admin.quotations.edit', compact('quotation', 'branches', 'partners', 'packages','bankDetails'));
+        return view('admin.quotations.edit', compact('quotation', 'branches', 'partners', 'packages','bankDetails','currencies'));
     }
 
     /**
@@ -183,7 +194,8 @@ public function index(Request $request)
             'branch_id' => 'required|exists:branches,id',
             'partner_id' => 'required|exists:partners,id',
             'package_id' => 'required|exists:packages,id',
-            'bank_id' => 'required|exists:packages,id',
+            'currency_id' => 'required|exists:currencies,id',
+            'bank_id' => 'required|exists:bank_details,id',
             'quotation_no' => 'required|unique:quotations,quotation_no,' . $quotation->id,
             'twin_double_sharing_cost' => 'nullable|numeric',
             'triple_sharing_cost' => 'nullable|numeric',
@@ -214,7 +226,7 @@ public function index(Request $request)
     public function generateQuotationPDF($id)
     {
         // Fetch the quotation by ID from the database
-        $quotation = Quotation::with(['branch', 'partner', 'package','bank'])->findOrFail($id);
+        $quotation = Quotation::with(['branch', 'partner', 'package','bank','currency'])->findOrFail($id);
       
         // Get the package amount
         $package_amt = $quotation->package->amount;
@@ -254,6 +266,8 @@ public function index(Request $request)
 
         // Example: Adjust these fields based on your `quotations` table structure
         $data = [
+            'currency_code'=>$quotation->currency->code,
+            'curreny_symbol'=>$quotation->currency->symbol,
             'branch_address'=>$quotation->branch->address,
             'branch_name'=>$quotation->branch->branch_name,
             'quotation_date' => now()->toDateString(),
@@ -287,7 +301,7 @@ public function index(Request $request)
     public function preview($id)
     {
         // Fetch the quotation by ID from the database
-        $quotation = Quotation::with(['branch', 'partner', 'package','bank'])->findOrFail($id);
+        $quotation = Quotation::with(['branch', 'partner', 'package','bank','currency'])->findOrFail($id);
       
         // Get the package amount
         $package_amt = $quotation->package->amount;
@@ -327,6 +341,8 @@ public function index(Request $request)
 
         // Example: Adjust these fields based on your `quotations` table structure
         $data = [
+            'currency_code'=>$quotation->currency->code,
+            'curreny_symbol'=>$quotation->currency->symbol,
             'branch_address'=>$quotation->branch->address,
             'branch_name'=>$quotation->branch->branch_name,
             'quotation_date' => now()->toDateString(),
@@ -400,6 +416,7 @@ public function index(Request $request)
                 'branch_id' => $quotation->branch_id,
                 'partner_id' => $quotation->partner_id,
                 'package_id' => $quotation->package_id,
+                'currency_id' => $quotation->currency_id,
                 'bank_id' => $quotation->bank_id,
                 'vat' => $quotation->gst_tax, // Assuming total amount is mapped
                 'discount_type' => $quotation->discount_type,               
@@ -417,6 +434,7 @@ public function index(Request $request)
                     'branch_id' => $quotation->branch_id,
                     'partner_id' => $quotation->partner_id,
                     'package_id' => $quotation->package_id,
+                    'currency_id' => $quotation->currency_id,
                     'bank_id' => $quotation->bank_id,
                     'vat' => $quotation->gst_tax, // Assuming total amount is mapped
                     'discount_type' =>$quotation->discount_type, // Or any other status you want to set                 

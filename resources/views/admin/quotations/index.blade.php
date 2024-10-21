@@ -28,6 +28,7 @@
 									</li> -->
 									<!-- <li>
 										<a class="btn-filters" href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Settings"><span><i class="fe fe-settings"></i></span> </a>
+<<<<<<< HEAD
 									</li> -->
 
                                     <li>
@@ -54,6 +55,9 @@
                                     </div>
                                 </div>
                             </li>     
+=======
+						     </li> -->
+>>>>>>> origin/main
                         @if(collect(getPermission())->contains('name', 'create-quotation'))
                         <li>
                             <a class="btn btn-primary" href="{{route('quotations.create')}}"><i
@@ -123,7 +127,7 @@
                                         </td>
                                         <td>{{ isset($quotation->partner->name)?$quotation->partner->name:'' }}</td>
                                         <td>{{ $quotation->discount_type }}</td>
-                                        <td>{{ $quotation->discount }}{{ ($quotation->discount_type=='Fixed')?'':'%'}}
+                                        <td>{{ ($quotation->discount_type=='Fixed') ? $quotation->currency->symbol : '' }}{{ $quotation->discount }}{{ ($quotation->discount_type=='Fixed')?'':'%'}}
                                         </td>
                                         <td>{{ $quotation->gst_tax }}%</td>
 
@@ -161,11 +165,11 @@
                                                                     class="fe fe-download me-2"></i>Download</a> -->
                                                         </li>
                                                         <li>
-                                                        <form method="GET"
+                                                            <form method="GET"
                                                                 action="{{ route('convert-invoice.estimate', $quotation->id) }}">
                                                                 <button type="submit" class="dropdown-item"><i
-                                                                    class="fe fe-file-text me-2"></i>Convert to
-                                                                Invoice</button>
+                                                                        class="fe fe-file-text me-2"></i>Convert to
+                                                                    Invoice</button>
                                                             </form>
                                                         </li>
                                                         <!-- <li>
@@ -226,7 +230,7 @@
                                 </tbody>
                             </table>
                         </div>
-                     
+
                     </div>
                 </div>
             </div>

@@ -192,7 +192,7 @@ td {
                                     <div class="card-table">
                                         <div class="card-body">
                                             <div class="table-responsive itme_table no-pagination">
-                                                <table class="table table-center table-hover datatable">
+                                                <table class="table">
                                                     <thead class="thead-light">
                                                         <tr>
                                                             <th>Package Name</th>
@@ -211,7 +211,7 @@ td {
                                                             <!-- Description -->
                                                             <td>{{ isset($invoice->package->amount)?$invoice->package->amount:''}}
                                                             </td> <!-- Amount -->
-                                                            <td class="d-flex align-items-center">
+                                                            <td>
                                                                 <!-- Edit button that calls the 'packages.edit' route -->
                                                                 <a class="btn-action-icon me-2">
                                                                     <span><i data-id="{{ $invoice->package->id}}"
@@ -230,7 +230,28 @@ td {
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="row">
-                                            <div class="col-lg-4">
+                                        <div class="col-lg-3">
+                                                <div class="input-block mb-3">
+                                                    <label>Currency</label>
+                                                    <select class="select" name="currency_id" id="currency_id" required>
+                                                        <option value="">Select Currency </option>
+                                                        @foreach ($currencies as $currency)
+                                                        <option value="{{ $currency->id }}"
+                                                            data-symbol="{{$currency->symbol}}"
+                                                            {{ (old('currency_id', $invoice->currency_id) == $currency->id) ? 'selected' : '' }}>
+                                                            {{ $currency->code }}
+                                                        </option>
+
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('currency_id'))
+                                                    <span class="text-danger">{{ $errors->first('currency_id') }}</span>
+                                                    @endif
+                                                    <input type="hidden" id="currency_symbol"
+                                                        value="{{ $invoice->currency->symbol }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Discount Type</label>
                                                     <select class="select" name="discount_type" id="discount_type"
@@ -248,7 +269,7 @@ td {
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="col-lg-4">
+                                            <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Discount </label>
                                                     <input type="number" class="form-control discount" name="discount"
@@ -259,7 +280,7 @@ td {
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="col-lg-4">
+                                            <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <div class="input-block mb-3">
                                                         <label>Vat</label>
@@ -1464,6 +1485,29 @@ $(document).ready(function() {
             }
         });
     });
+    // onchange Symbol
+    function updateSymbol() {
+        var selectedOption = $('#currency_id option:selected'); // Get selected option
+        var symbol = selectedOption.data('symbol'); // Get symbol from the data attribute
+
+        if (!symbol) {
+            symbol = '₹'; // Default to ₹ symbol if none selected
+        }
+        // Update all relevant fields with the new symbol
+
+        var discount_type = $('#discount_type').val();
+        var package_amt = $('#package_amt').val(); // Default to 0 if not a number
+        var discount = $('.discount').val();
+        var vat = $('.vat').val();
+        $('#currency_symbol').val(symbol);
+        calculation(package_amt, vat, discount, discount_type, symbol);
+
+    }
+    // Call the function on page load in case a currency is already selected
+    updateSymbol();
+    // Update symbol when the selection changes
+    $('#currency_id').on('change', updateSymbol);
+    // Symbol end
 
     $(document).on('click', '.edit_package', function() {
         var id = $(this).data('id'); // Get user ID from the button
@@ -1564,9 +1608,9 @@ $(document).ready(function() {
 
                     if (response.success) {
                         // Update package amounts
-                        $('.amount').text('$' + response.data.amount);
+                        // $('.amount').text('$' + response.data.amount);
                         $('#package_amt').val(response.data.amount);
-                        $('.total_amt').text('$' + response.data.amount);
+                        // $('.total_amt').text('$' + response.data.amount);
 
                         // Clear the existing table body
                         const tableBody = $('#packageBody');
@@ -1581,7 +1625,7 @@ $(document).ready(function() {
                             <td>${packageData.package_name }</td> <!-- Package Name -->
                             <td  class="description-cell">${packageData.description }</td> <!-- Description -->
                             <td>${packageData.amount }</td> <!-- Amount -->
-                           <td class="d-flex align-items-center">
+                           <td>
                                 <!-- Edit button that calls the 'packages.edit' route -->
                                 <a  class="btn-action-icon me-2">
                                     <span><i data-id="${packageData.id }" class="fe fe-edit edit_package"></i></span>
@@ -1595,7 +1639,8 @@ $(document).ready(function() {
                         var discount = $('.discount').val();
                         var vat = $('.vat').val();
                         var discount_type = $('#discount_type').val();
-                        calculation(response.data.amount, vat, discount, discount_type);
+                        var symbol = $('#currency_symbol').val();
+                        calculation(response.data.amount, vat, discount, discount_type,symbol);
 
 
                     } else {
@@ -1612,7 +1657,13 @@ $(document).ready(function() {
         } else {
             const tableBody = $('#packageBody');
             tableBody.empty(); // Clear existing rows
-
+            const newRow = `<tr class="odd"> <td valign="top" colspan="4" class="dataTables_empty"
+                                                                style="text-align:center;">No data available in table
+                                                            </td>
+                                                        </tr>
+                    `;
+            // Append the new row to the table body
+            tableBody.append(newRow);
         }
     });
     $(document).on('change', '#discount_type', function() {
@@ -1621,35 +1672,39 @@ $(document).ready(function() {
             var discount = $('.discount').val();
             var vat = $('.vat').val();
             var package_amt = $('#package_amt').val();
+            var symbol = $('#currency_symbol').val();
+
         } else {
             var discount = $('.discount').val();
             var vat = $('.vat').val();
             var package_amt = $('#package_amt').val();
+            var symbol = $('#currency_symbol').val();
+
         }
-        calculation(package_amt, vat, discount, discount_type);
+        calculation(package_amt, vat, discount, discount_type, symbol);
     });
-    $(document).on('input', '.discount', function() {
+    $(document).on('input', '.discount', function() {      
         // Get the current discount value
         var discount_type = $('#discount_type').val();
         var discount = $(this).val(); // Default to 0 if not a number
-        // alert(discount);
+       
         // Get package amount and GST tax values
         var package_amt = $('#package_amt').val(); // Default to 0 if not a number
         var vat = $('.vat').val();
-
-        calculation(package_amt, vat, discount, discount_type);
+        var symbol = $('#currency_symbol').val();
+        calculation(package_amt, vat, discount, discount_type, symbol);
     });
     $(document).on('input', '.vat', function() {
         var vat = $(this).val();
         var discount_type = $('#discount_type').val();
         var package_amt = $('#package_amt').val(); // Default to 0 if not a number
         var discount = $('.discount').val();
+        var symbol = $('#currency_symbol').val();
 
-
-        calculation(package_amt, vat, discount, discount_type);
+        calculation(package_amt, vat, discount, discount_type, symbol);
     });
 
-    function calculation(amount, tax, discount, discount_type) {
+    function calculation(amount, tax, discount, discount_type, symbol) {
         // Parse discount and tax values as floats, default to 0 if not a number
         var discount = parseFloat(discount) || 0;
         var vat = parseFloat(tax) || 0;
@@ -1659,15 +1714,20 @@ $(document).ready(function() {
         // Update the input and display values
         $('#discount').val(discount);
         $('#vat').val(vat);
-        $('.discount').text('$' + discount);
-        $('.vat').text('$' + vat);
-
+        //$('.discount').text(symbol + discount.toFixed(2));
+        $('.vat').text( vat.toFixed(2) + '%');
+        $('.amount').text(symbol + package_amt.toFixed(2));
         // Calculate the discount amount based on discount type
         var discountAmount = 0;
         if (discount_type === 'Fixed') {
             discountAmount = discount; // For fixed discount, use the discount value directly
-        } else {
+            $('.discount').text(symbol + discount.toFixed(2));
+        } else if(discount_type === 'Percentage'){
+        
             discountAmount = (package_amt * discount) / 100; // For percentage discount
+            $('.discount').text( discount.toFixed(2) +'%');
+        }else{
+            $('.discount').text(symbol + discount.toFixed(2));
         }
 
         // Calculate the amount after applying the discount
@@ -1679,12 +1739,10 @@ $(document).ready(function() {
         var total_amt = amountAfterDiscount + gstAmount;
 
         // Display the calculated total amount with 2 decimal places
-        $('.total_amt').text('$' + total_amt.toFixed(2));
+        $('.total_amt').text(symbol + total_amt.toFixed(2));
 
         // Optional: You can remove this alert in the final version
-        console.log('Amount after discount: ', amountAfterDiscount);
-        console.log('GST Amount: ', gstAmount);
-        console.log('Total Amount: ', total_amt);
+     
     }
     $('#branch_id').change(function() {
         var selectedBranch = $.trim($('#branch_id option:selected').text()).toLowerCase();

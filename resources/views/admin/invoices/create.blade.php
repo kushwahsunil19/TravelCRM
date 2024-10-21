@@ -15,7 +15,7 @@
     white-space: normal !important;
     /* Allow text to wrap naturally */
     max-width: 300px !important;
-    text-align:justify!important;
+    text-align: justify !important;
     /* Optional: Limit the width of the cell */
 }
 
@@ -27,7 +27,7 @@
     white-space: normal !important;
     /* Allow text to wrap naturally */
     max-width: 300px !important;
-    text-align:justify!important;
+    text-align: justify !important;
     /* Optional: Limit the width of the cell */
 }
 
@@ -119,7 +119,8 @@ td {
                                                 <label> Partner</label>
                                                 <ul class="form-group-plus css-equal-heights">
                                                     <li>
-                                                        <select class="select" name="partner_id" id="partner_id" required>
+                                                        <select class="select" name="partner_id" id="partner_id"
+                                                            required>
                                                             <option value="">Select Partner </option>
                                                             @foreach ($partners as $partner)
                                                             <option value="{{ $partner->id }}"
@@ -149,7 +150,8 @@ td {
                                                 <label> Package</label>
                                                 <ul class="form-group-plus css-equal-heights">
                                                     <li>
-                                                        <select class="select" name="package_id" id="package_id" required>
+                                                        <select class="select" name="package_id" id="package_id"
+                                                            required>
                                                             <option value="">Select package </option>
                                                             @foreach ($packages as $package)
                                                             <option value="{{ $package->id }}"
@@ -183,7 +185,7 @@ td {
                                     <div class="card-table">
                                         <div class="card-body">
                                             <div class="table-responsive itme_table no-pagination">
-                                                <table class="table table-center table-hover datatable">
+                                                <table class="table">
                                                     <thead class="thead-light">
                                                         <tr>
                                                             <th>Package Name</th>
@@ -193,7 +195,11 @@ td {
                                                         </tr>
                                                     </thead>
                                                     <tbody id="packageBody">
-                                                        <!-- Rows will be added here by AJAX -->
+                                                        <tr class="odd">
+                                                            <td valign="top" colspan="4" class="dataTables_empty"
+                                                                style="text-align:center;">No data available in table
+                                                            </td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -203,36 +209,57 @@ td {
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="row">
-                                            <div class="col-lg-4">
+                                            <div class="col-lg-3">
+                                                <div class="input-block mb-3">
+                                                    <label>Currency</label>
+                                                    <select class="select" name="currency_id" id="currency_id" required>
+                                                        <option value="">Select Currency </option>
+                                                        @foreach ($currencies as $currency)
+                                                        <option value="{{ $currency->id }}"
+                                                            data-symbol="{{$currency->symbol}}"
+                                                            {{ old('currency_id') == $currency->id ? 'selected' : '' }}>
+                                                            {{ $currency->code }}
+                                                        </option>
+                                                        @endforeach
+                                                    </select>
+
+                                                    @if ($errors->has('currency_id'))
+                                                    <span class="text-danger">{{ $errors->first('currency_id') }}</span>
+                                                    @endif
+                                                    <input type="hidden" id="currency_symbol" value="₹">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Discount Type</label>
-                                                    <select class="select" name="discount_type" id="discount_type" required>
-                                                         <option value="">Select Discount Type </option>
+                                                    <select class="select" name="discount_type" id="discount_type"
+                                                        required>
+                                                        <option value="">Select Discount Type </option>
                                                         <option value="Percentage">Percentage(%)</option>
                                                         <option value="Fixed">Fixed</option>
                                                     </select>
-                                                    @if ($errors->has('gst_tax'))
-                                                    <span class="text-danger">{{ $errors->first('gst_tax') }}</span>
+                                                    @if ($errors->has('vat'))
+                                                    <span class="text-danger">{{ $errors->first('vat') }}</span>
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="col-lg-4">
+                                            <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Discount </label>
                                                     <input type="number" class="form-control discount" name="discount"
-                                                        placeholder="Enter discount"  min="0" required>
+                                                        placeholder="Enter discount" min="0" required>
                                                     @if ($errors->has('discount'))
                                                     <span class="text-danger">{{ $errors->first('discount') }}</span>
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="col-lg-4">
+                                            <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <div class="input-block mb-3">
                                                         <label>Vat</label>
-                                                        <input type="number" class="form-control gst_tax" name="vat"
+                                                        <input type="number" class="form-control vat" name="vat"
                                                             placeholder="Enter Vat" min="0" required>
-                                                        <!-- <select class="select" name="gst_tax" id="gst_tax">
+                                                        <!-- <select class="select" name="vat" id="vat">
                                                             <option value="21">IVA - (21%)</option>
                                                             <option value="15">IRPF - (-15%)</option>
                                                             <option value="20">PDV - (20%)</option>
@@ -294,8 +321,8 @@ td {
                                                         <input type="hidden" id="package_amt" value="0">
                                                         <p>Discount <span class="discount">$0.00</span></p>
                                                         <input type="hidden" id="discount" value="0">
-                                                        <p>Vat <span class="gst_tax">$0.00</span></p>
-                                                        <input type="hidden" id="gst_tax" value="0">
+                                                        <p>Vat <span class="vat">$0.00</span></p>
+                                                        <input type="hidden" id="vat" value="0">
                                                         <!-- <div class="status-toggle justify-content-between">
                                                             <div class="d-flex align-center">
                                                                 <p>Round Off </p>
@@ -346,13 +373,13 @@ td {
 </div>
 <!-- /Page Wrapper -->
 
-<!-- Add Tax & Discount Modal -->
+<!-- Add vat & Discount Modal -->
 <div class="modal custom-modal fade" id="add_discount" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
                 <div class="form-header modal-header-title text-start mb-0">
-                    <h4 class="mb-0">Add Tax & Discount</h4>
+                    <h4 class="mb-0">Add vat & Discount</h4>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
 
@@ -374,7 +401,7 @@ td {
                     </div>
                     <div class="col-lg-12 col-md-12">
                         <div class="input-block mb-0">
-                            <label>Tax</label>
+                            <label>vat</label>
                             <select class="select">
                                 <option>N/A</option>
                                 <option>5%</option>
@@ -392,7 +419,7 @@ td {
         </div>
     </div>
 </div>
-<!-- /Add Tax & Discount Modal -->
+<!-- /Add vat & Discount Modal -->
 
 <!-- Delete Items Modal -->
 <div class="modal custom-modal  fade" id="delete_discount" role="dialog">
@@ -720,66 +747,67 @@ td {
 <!-- /edit package Details Modal -->
 
 <!-- Add Bank Details Modal -->
-    <div class="modal custom-modal fade" id="bank_details" role="dialog">
-        <div class="modal-dialog modal-dialog-centered modal-md">
-            <div class="modal-content">
-                <div class="modal-header border-0 pb-0">
-                    <div class="form-header modal-header-title text-start mb-0">
-                        <h4 class="mb-0">Add Bank Details</h4>
-                    </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal custom-modal fade" id="bank_details" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <div class="form-header modal-header-title text-start mb-0">
+                    <h4 class="mb-0">Add Bank Details</h4>
                 </div>
-                <div class="modal-body">
-                    <form id="bank_details_form" action="{{ route('bank-details.add') }}" method="POST"
-                        enctype="multipart/form-data">
-                        @csrf
-                        <!-- Include CSRF token for security -->
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12">
-                                <div class="input-block mb-3">
-                                    <label>Bank Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="bank_name" class="form-control" placeholder="Enter Bank Name">
-                                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="bank_details_form" action="{{ route('bank-details.add') }}" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <!-- Include CSRF token for security -->
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="input-block mb-3">
+                                <label>Bank Name <span class="text-danger">*</span></label>
+                                <input type="text" name="bank_name" class="form-control" placeholder="Enter Bank Name">
                             </div>
-                            <div class="col-lg-12 col-md-12">
-                                <div class="input-block mb-3">
-                                    <label>Account Number <span class="text-danger">*</span></label>
-                                    <input type="number" name="account_no" class="form-control"
-                                        placeholder="Enter Account Number">
-                                </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="input-block mb-3">
+                                <label>Account Number <span class="text-danger">*</span></label>
+                                <input type="number" name="account_no" class="form-control"
+                                    placeholder="Enter Account Number">
                             </div>
-                            <div class="col-lg-12 col-md-12">
-                                <div class="input-block mb-3">
-                                    <label>Branch Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="branch_name" class="form-control"
-                                        placeholder="Enter Branch Name">
-                                </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="input-block mb-3">
+                                <label>Branch Name <span class="text-danger">*</span></label>
+                                <input type="text" name="branch_name" class="form-control"
+                                    placeholder="Enter Branch Name">
                             </div>
-                            <div class="col-lg-12 col-md-12 iban_no">
-                                <div class="input-block mb-3">
-                                    <label>IBAN No <span class="text-danger"></span></label>
-                                    <input type="text" name="iban_no"  id="iban_no" class="form-control"
-                                        placeholder="Enter IBAN No">
-                                </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 iban_no">
+                            <div class="input-block mb-3">
+                                <label>IBAN No <span class="text-danger"></span></label>
+                                <input type="text" name="iban_no" id="iban_no" class="form-control"
+                                    placeholder="Enter IBAN No">
                             </div>
-                            <div class="col-lg-12 col-md-12">
-                                <div class="input-block mb-0">
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="input-block mb-0">
                                 <label for="ifsc_code">IFSC Code <span class="text-danger">*</span></label>
-                                <input type="text" name="ifsc_code" id="ifsc_code" class="form-control" placeholder="Enter IFSC Code">
-                                </div>
+                                <input type="text" name="ifsc_code" id="ifsc_code" class="form-control"
+                                    placeholder="Enter IFSC Code">
                             </div>
-                            
                         </div>
-                        <br>
-                        <div class="modal-footer">
-                            <button type="reset" data-bs-dismiss="modal" class="btn btn-primary cancel me-2">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </form>
-                </div>
+
+                    </div>
+                    <br>
+                    <div class="modal-footer">
+                        <button type="reset" data-bs-dismiss="modal" class="btn btn-primary cancel me-2">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
 <!-- /Add Bank Details Modal -->
 </div>
 <!-- /Main Wrapper -->
@@ -1367,6 +1395,29 @@ $(document).ready(function() {
             }
         });
     });
+    // onchange Symbol
+    function updateSymbol() {
+        var selectedOption = $('#currency_id option:selected'); // Get selected option
+        var symbol = selectedOption.data('symbol'); // Get symbol from the data attribute
+
+        if (!symbol) {
+            symbol = '₹'; // Default to ₹ symbol if none selected
+        }
+        // Update all relevant fields with the new symbol
+
+        var discount_type = $('#discount_type').val();
+        var package_amt = $('#package_amt').val(); // Default to 0 if not a number
+        var discount = $('.discount').val();
+        var vat = $('.vat').val();
+        $('#currency_symbol').val(symbol);
+        calculation(package_amt, vat, discount, discount_type, symbol);
+
+    }
+    // Call the function on page load in case a currency is already selected
+    updateSymbol();
+    // Update symbol when the selection changes
+    $('#currency_id').on('change', updateSymbol);
+    // Symbol end
 
     $(document).on('click', '.edit_package', function() {
         var id = $(this).data('id'); // Get user ID from the button
@@ -1395,6 +1446,7 @@ $(document).ready(function() {
             }
         });
     });
+
     // Edit package
     $('#edit_package_details_form').on('submit', function(e) {
         e.preventDefault(); // Prevent the form from submitting normally
@@ -1458,7 +1510,9 @@ $(document).ready(function() {
 
     $(document).on('change', '#package_id', function() {
         var packageId = $(this).val();
-
+        // Clear the existing table body
+        const tableBody = $('#packageBody');
+        tableBody.empty(); // Clear existing rows
         if (packageId) {
             $.ajax({
                 url: '{{ route("packages.details", ":id") }}'.replace(':id', packageId),
@@ -1469,13 +1523,11 @@ $(document).ready(function() {
 
                     if (response.success) {
                         // Update package amounts
-                        $('.amount').text('$' + response.data.amount);
+                        // $('.amount').text('$' + response.data.amount);
                         $('#package_amt').val(response.data.amount);
-                        $('.total_amt').text('$' + response.data.amount);
+                        // $('.total_amt').text('$' + response.data.amount);
 
-                        // Clear the existing table body
-                        const tableBody = $('#packageBody');
-                        tableBody.empty(); // Clear existing rows
+
 
                         // Ensure that the response contains the expected fields
                         const packageData = response.data;
@@ -1486,7 +1538,7 @@ $(document).ready(function() {
                             <td>${packageData.package_name }</td> <!-- Package Name -->
                             <td  class="description-cell">${packageData.description }</td> <!-- Description -->
                             <td>${packageData.amount }</td> <!-- Amount -->
-                           <td class="d-flex align-items-center">
+                           <td >
                                 <!-- Edit button that calls the 'packages.edit' route -->
                                 <a  class="btn-action-icon me-2">
                                     <span><i data-id="${packageData.id }" class="fe fe-edit edit_package"></i></span>
@@ -1498,9 +1550,11 @@ $(document).ready(function() {
                         // Append the new row to the table body
                         tableBody.append(newRow);
                         var discount = $('.discount').val();
-                        var gst_tax = $('.gst_tax').val();
+                        var vat = $('.vat').val();
                         var discount_type = $('#discount_type').val();
-                        calculation(response.data.amount, gst_tax, discount,discount_type);
+                        var symbol = $('#currency_symbol').val();
+                        calculation(response.data.amount, vat, discount, discount_type,
+                            symbol);
 
                     } else {
                         alert('Package not found');
@@ -1516,77 +1570,97 @@ $(document).ready(function() {
         } else {
             const tableBody = $('#packageBody');
             tableBody.empty(); // Clear existing rows
+            const newRow = `<tr class="odd"> <td valign="top" colspan="4" class="dataTables_empty"
+                                                                style="text-align:center;">No data available in table
+                                                            </td>
+                                                        </tr>
+                    `;
+
+            // Append the new row to the table body
+            tableBody.append(newRow);
 
         }
     });
-    
-       $(document).on('change', '#discount_type', function() {
-        var discount_type = $(this).val();
-        if(discount_type ==='Fixed'){
-             var discount = $('.discount').val();
-             var gst_tax = $('.gst_tax').val();
-             var package_amt = $('#package_amt').val();
-        }else{
-             var discount = $('.discount').val();
-             var gst_tax = $('.gst_tax').val();
-             var package_amt = $('#package_amt').val();
-        }
-         calculation(package_amt, gst_tax, discount, discount_type);
-       });
 
-       $(document).on('input', '.discount', function() {
+    $(document).on('change', '#discount_type', function() {
+        var discount_type = $(this).val();
+        var symbol = $('#currency_symbol').val();
+        if (discount_type === 'Fixed') {
+            var discount = $('.discount').val();
+            var vat = $('.vat').val();
+            var package_amt = $('#package_amt').val();
+
+        } else {
+            var discount = $('.discount').val();
+            var vat = $('.vat').val();
+            var package_amt = $('#package_amt').val();
+
+        }
+        calculation(package_amt, vat, discount, discount_type, symbol);
+    });
+
+    $(document).on('input', '.discount', function() {
         var discount_type = $('#discount_type').val();
 
         // Get the current discount value
         var discount = $(this).val(); // Default to 0 if not a number
         // alert(discount);
-        // Get package amount and GST tax values
+        // Get package amount and GST vat values
         var package_amt = $('#package_amt').val(); // Default to 0 if not a number
-        var gst_tax = $('.gst_tax').val();
-        calculation(package_amt, gst_tax, discount, discount_type);
+        var vat = $('.vat').val();
+        var symbol = $('#currency_symbol').val();
+        calculation(package_amt, vat, discount, discount_type, symbol);
     });
-    
-    $(document).on('input', '.gst_tax', function() {
-        var gst_tax = $(this).val();
+
+    $(document).on('input', '.vat', function() {
+        var vat = $(this).val();
         var discount_type = $('#discount_type').val();
         var package_amt = $('#package_amt').val(); // Default to 0 if not a number
         var discount = $('.discount').val();
-        calculation(package_amt, gst_tax, discount, discount_type);
+        var symbol = $('#currency_symbol').val();
+        calculation(package_amt, vat, discount, discount_type, symbol);
     });
 
-    function calculation(amount, tax, discount, discount_type) {
+    function calculation(amount, tax, discount, discount_type, symbol) {
+        // Parse discount and tax values as floats, default to 0 if not a number
+        var discount = parseFloat(discount) || 0;
+        var vat = parseFloat(tax) || 0;
+        var package_amt = parseFloat(amount) || 0;
 
-       
+        // Update the input and display values
         $('#discount').val(discount);
-        $('#gst_tax').val(tax);
+        $('#vat').val(vat);
 
-        // Get package amount and GST tax values
-        var package_amt = parseFloat(amount) || 0; // Default to 0 if not a number
-        var gst_tax = parseFloat(tax) || 0; // Default to 0 if not a number
-        var discount = parseFloat(discount) || 0; // Default to 0 if not a number
-
-     // Update the displayed discount value
-        $('.discount').text('$' + discount);
-        $('.gst_tax').text('$' + gst_tax);
-        // Calculate the discount amount
+        $('.vat').text(vat.toFixed(2) + '%');
+        $('.amount').text(symbol + package_amt.toFixed(2));
+        // Calculate the discount amount based on discount type
+        var discountAmount = 0;
         if (discount_type === 'Fixed') {
-            var discountAmount = discount;
+            discountAmount = discount; // For fixed discount, use the discount value directly
+            $('.discount').text(symbol + discount.toFixed(2));
+        } else if (discount_type === 'Percentage') {
+
+            discountAmount = (package_amt * discount) / 100; // For percentage discount
+            $('.discount').text(discount.toFixed(2) + '%');
         } else {
-            var discountAmount = (package_amt * discount) / 100;
+            $('.discount').text(symbol + discount.toFixed(2));
         }
 
-
-        // Calculate the amount after discount
+        // Calculate the amount after applying the discount
         var amountAfterDiscount = package_amt - discountAmount;
-
         // Calculate the GST amount based on the amount after discount
-        var gstAmount = (amountAfterDiscount * gst_tax) / 100;
+        var gstAmount = (amountAfterDiscount * vat) / 100;
 
         // Calculate the total amount including GST
         var total_amt = amountAfterDiscount + gstAmount;
-        // Display the calculated total amount
-        $('.total_amt').text('$' + total_amt.toFixed(2)); // Format to 2 decimal places
+
+        // Display the calculated total amount with 2 decimal places
+        $('.total_amt').text(symbol + total_amt.toFixed(2));
+
+        // Optional: You can remove this alert in the final version
+
     }
+
     function toggleIBANField() {
         var selectedBranch = $.trim($('#branch_id option:selected').text()).toLowerCase();
         if (selectedBranch === 'dubai') {

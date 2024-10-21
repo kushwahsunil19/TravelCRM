@@ -91,7 +91,7 @@
                                         <th>City</th>
                                         <th>State</th>
                                         <th>Country</th>
-
+                                        <th>Amount</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -116,7 +116,7 @@
                                         <td>{{ $Supplier->city }}</td>
                                         <td>{{ $Supplier->state }}</td>
                                         <td>{{ $Supplier->country }}</td>
-
+                                        <td>{{ $Supplier->amount }}</td>
                                         <td>
 
                                             <div class="dropdown dropdown-action">
@@ -417,20 +417,38 @@
                                 </div>
                             </div>
 
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Amount</label>
+                                    <input type="number" min="0" class="form-control" name="amount"
+                                        placeholder="Enter Amount">
+                                    @if ($errors->has('amount'))
+                                    <span class="text-danger">{{ $errors->first('amount') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Description</label>
+                                    <textarea class="form-control" name="description" id="description" placeholder="Enter your description here..."></textarea>
 
-
-
+                                    @if ($errors->has('description'))
+                                    <span class="text-danger">{{ $errors->first('description') }}</span>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="modal-footer">
-                        <button type="reset" data-bs-dismiss="modal" class="btn btn-primary cancel me-2">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </form>
             </div>
+
+            <div class="modal-footer">
+                <button type="reset" data-bs-dismiss="modal" class="btn btn-primary cancel me-2">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+            </form>
         </div>
     </div>
+</div>
 </div>
 <!-- /Add Supplier Details Modal -->
 <!-- Edit Supplier Details Modal -->
@@ -528,18 +546,37 @@
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-6 col-sm-12">
-                                <div class="pass-group">
-                                    <div class="input-block">
-                                        <label>Country</label>
-                                        <input type="text" class="form-control" name="country" id="edit_country"
-                                            placeholder="Enter Country">
-                                        @if ($errors->has('country'))
-                                        <span class="text-danger">{{ $errors->first('country') }}</span>
-                                        @endif
-                                    </div>
+
+                                <div class="input-block">
+                                    <label>Country</label>
+                                    <input type="text" class="form-control" name="country" id="edit_country"
+                                        placeholder="Enter Country">
+                                    @if ($errors->has('country'))
+                                    <span class="text-danger">{{ $errors->first('country') }}</span>
+                                    @endif
+                                </div>
+
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Amount</label>
+                                    <input type="number" min="0" class="form-control" name="amount" id="edit_amount"
+                                        placeholder="Enter Amount">
+                                    @if ($errors->has('amount'))
+                                    <span class="text-danger">{{ $errors->first('amount') }}</span>
+                                    @endif
                                 </div>
                             </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Description</label>
+                                    <textarea class="form-control" name="description" id="edit_description" placeholder="Enter your description here..."></textarea>
 
+                                    @if ($errors->has('description'))
+                                    <span class="text-danger">{{ $errors->first('description') }}</span>
+                                    @endif
+                                </div>
+                            </div>
 
 
 
@@ -919,8 +956,13 @@
 <!-- Toastr JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdn.ckeditor.com/4.20.1/standard/ckeditor.js"></script>
 
 <script type="text/javascript">
+//     $(document).ready(function() {
+//     CKEDITOR.replace('description');
+//     CKEDITOR.replace('description_edit');
+// });
 $(document).ready(function() {
     toastr.options = {
         "closeButton": true,
@@ -989,6 +1031,8 @@ $(document).ready(function() {
                 $('#edit_city').val(data.city);
                 $('#edit_state').val(data.state);
                 $('#edit_country').val(data.country);
+                $('#edit_amount').val(data.amount);
+                $('#edit_description').val(data.description);
                 if (data.image) {
                     // Set the profile image source
                     $('#blahedit').attr('src', '{{ url("public/profile") }}/' + data

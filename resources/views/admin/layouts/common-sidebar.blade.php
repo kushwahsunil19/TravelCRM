@@ -684,7 +684,7 @@
                                     <li><a href="{{route('packages.index')}}"
                                             class="{{strpos($url,'packages') !== false ? 'active' : '' }}">Packages</a></li>
                                     <li><a href="{{route('suppliers.index')}}"
-                                            class="{{strpos($url,'suppliers') !== false ? 'active' : '' }}">Supplier</a>
+                                            class="{{strpos($url,'suppliers') !== false ? 'active' : '' }}">Suppliers</a>
                                     </li>
                                     <li><a href="{{route('partners.index')}}"
                                             class="{{strpos($url,'partners') !== false ? 'active' : '' }}">Partners/Agents</a>
