@@ -16,302 +16,60 @@
             <a href="#" class="sidebar-closes"><i class="fa-regular fa-circle-xmark"></i></a>
         </div>
         <div class="sidebar-body">
-            <form action="#" autocomplete="off">
-                <!-- Customer -->
-                <div class="accordion" id="accordionMain1">
-                    <div class="card-header-new" id="headingOne">
-                        <h6 class="filter-title">
-                            <a href="javascript:void(0);" class="w-100" data-bs-toggle="collapse"
-                                data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Customer
-                                <span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
-                            </a>
-                        </h6>
-                    </div>
-
-                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
-                        data-bs-parent="#accordionExample1">
-                        <div class="card-body-chat">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div id="checkBoxes1">
-                                        <div class="form-custom">
-                                            <input type="text" class="form-control" id="member_search1"
-                                                placeholder="Search Customer">
-                                            <span><img src="assets/img/icons/search.svg" alt="img"></span>
-                                        </div>
-                                        <div class="selectBox-cont">
-                                            <label class="custom_check w-100">
-                                                <input type="checkbox" name="username">
-                                                <span class="checkmark"></span> John Smith
-                                            </label>
-                                            <label class="custom_check w-100">
-                                                <input type="checkbox" name="username">
-                                                <span class="checkmark"></span> Johnny
-                                            </label>
-                                            <label class="custom_check w-100">
-                                                <input type="checkbox" name="username">
-                                                <span class="checkmark"></span> Robert
-                                            </label>
-                                            <label class="custom_check w-100">
-                                                <input type="checkbox" name="username">
-                                                <span class="checkmark"></span> Sharonda
-                                            </label>
-                                            <!-- View All -->
-                                            <div class="view-content">
-                                                <div class="viewall-One">
-                                                    <label class="custom_check w-100">
-                                                        <input type="checkbox" name="username">
-                                                        <span class="checkmark"></span> Pricilla
-                                                    </label>
-                                                    <label class="custom_check w-100">
-                                                        <input type="checkbox" name="username">
-                                                        <span class="checkmark"></span> Randall
-                                                    </label>
-                                                </div>
-                                                <div class="view-all">
-                                                    <a href="javascript:void(0);" class="viewall-button-One"><span
-                                                            class="me-2">View All</span><span><i
-                                                                class="fa fa-circle-chevron-down"></i></span></a>
-                                                </div>
-                                            </div>
-                                            <!-- /View All -->
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <form action="{{ route('invoices.index') }}" method="GET" autocomplete="off">
+                <!-- Invoice No Filter -->
+                <div class="form-group">
+                    <label for="invoice_no">Invoice No</label>
+                    <input type="text" name="invoice_no" id="invoice_no" class="form-control"
+                           placeholder="Enter invoice number" value="{{ request('invoice_no') }}">
                 </div>
-                <!-- /Customer -->
 
-                <!-- Invoice Number -->
-                <div class="accordion" id="accordionMain5">
-                    <div class="card-header-new" id="headingFive">
-                        <h6 class="filter-title">
-                            <a href="javascript:void(0);" class="w-100" data-bs-toggle="collapse"
-                                data-bs-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
-                                Invoice Number
-                                <span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
-                            </a>
-                        </h6>
-                    </div>
-
-                    <div id="collapseFive" class="collapse" aria-labelledby="headingFive"
-                        data-bs-parent="#accordionExample5">
-                        <div class="card-body-chat">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div id="checkBoxes5">
-                                        <div class="form-custom">
-                                            <input type="text" class="form-control" id="member_search"
-                                                placeholder="Search Invoice">
-                                            <span><img src="assets/img/icons/search.svg" alt="img"></span>
-                                        </div>
-                                        <div class="selectBox-cont">
-                                            <label class="custom_check w-100">
-                                                <input type="checkbox" name="username">
-                                                <span class="checkmark"></span> 4987
-                                            </label>
-                                            <label class="custom_check w-100">
-                                                <input type="checkbox" name="username">
-                                                <span class="checkmark"></span> 4988
-                                            </label>
-                                            <label class="custom_check w-100">
-                                                <input type="checkbox" name="username">
-                                                <span class="checkmark"></span> 4989
-                                            </label>
-                                            <label class="custom_check w-100">
-                                                <input type="checkbox" name="username">
-                                                <span class="checkmark"></span> 4990
-                                            </label>
-                                            <!-- View All -->
-                                            <div class="view-content">
-                                                <div class="viewall-One">
-                                                    <label class="custom_check w-100">
-                                                        <input type="checkbox" name="username">
-                                                        <span class="checkmark"></span> 4991
-                                                    </label>
-                                                    <label class="custom_check w-100">
-                                                        <input type="checkbox" name="username">
-                                                        <span class="checkmark"></span> 4992
-                                                    </label>
-                                                    <label class="custom_check w-100">
-                                                        <input type="checkbox" name="username">
-                                                        <span class="checkmark"></span> 4993
-                                                    </label>
-                                                </div>
-                                                <div class="view-all">
-                                                    <a href="javascript:void(0);" class="viewall-button-One"><span
-                                                            class="me-2">View All</span><span><i
-                                                                class="fa fa-circle-chevron-down"></i></span></a>
-                                                </div>
-                                            </div>
-                                            <!-- /View All -->
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Branch Filter -->
+                <div class="form-group">
+                    <label for="branch">Branch</label>
+                    <input type="text" name="branch" id="branch" class="form-control"
+                           placeholder="Enter branch" value="{{ request('branch') }}">
                 </div>
-                <!-- /Invoice Number -->
 
-                <!-- Select Date -->
-                <div class="accordion" id="accordionMain2">
-                    <div class="card-header-new" id="headingTwo">
-                        <h6 class="filter-title">
-                            <a href="javascript:void(0);" class="w-100 collapsed" data-bs-toggle="collapse"
-                                data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                                Select Date
-                                <span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
-                            </a>
-                        </h6>
-                    </div>
-
-                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
-                        data-bs-parent="#accordionExample2">
-                        <div class="card-body-chat">
-                            <div class="input-block mb-3">
-                                <label class="form-control-label">From</label>
-                                <div class="cal-icon">
-                                    <input type="email" class="form-control datetimepicker" placeholder="DD-MM-YYYY">
-                                </div>
-                            </div>
-                            <div class="input-block mb-3">
-                                <label class="form-control-label">To</label>
-                                <div class="cal-icon">
-                                    <input type="email" class="form-control datetimepicker" placeholder="DD-MM-YYYY">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Package Filter -->
+                <div class="form-group">
+                    <label for="package">Package</label>
+                    <input type="text" name="package" id="package" class="form-control"
+                           placeholder="Enter package name" value="{{ request('package') }}">
                 </div>
-                <!-- /Select Date -->
 
-                <!-- By Status -->
-                <div class="accordion" id="accordionMain3">
-                    <div class="card-header-new" id="headingThree">
-                        <h6 class="filter-title">
-                            <a href="javascript:void(0);" class="w-100 collapsed" data-bs-toggle="collapse"
-                                data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
-                                By Status
-                                <span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
-                            </a>
-                        </h6>
-                    </div>
-
-                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
-                        data-bs-parent="#accordionExample3">
-                        <div class="card-body-chat">
-                            <div id="checkBoxes2">
-                                <div class="selectBox-cont">
-                                    <label class="custom_check w-100">
-                                        <input type="checkbox" name="bystatus">
-                                        <span class="checkmark"></span> All Invoices
-                                    </label>
-                                    <label class="custom_check w-100">
-                                        <input type="checkbox" name="bystatus">
-                                        <span class="checkmark"></span> Paid
-                                    </label>
-                                    <label class="custom_check w-100">
-                                        <input type="checkbox" name="bystatus">
-                                        <span class="checkmark"></span> Overdue
-                                    </label>
-                                    <label class="custom_check w-100">
-                                        <input type="checkbox" name="bystatus">
-                                        <span class="checkmark"></span> cancelled
-                                    </label>
-                                    <label class="custom_check w-100">
-                                        <input type="checkbox" name="bystatus">
-                                        <span class="checkmark"></span> Partially Paid
-                                    </label>
-                                    <label class="custom_check w-100">
-                                        <input type="checkbox" name="bystatus">
-                                        <span class="checkmark"></span> Unpaid
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Invoice To Filter -->
+                <div class="form-group">
+                    <label for="invoice_to">Invoice To</label>
+                    <input type="text" name="invoice_to" id="invoice_to" class="form-control"
+                           placeholder="Enter invoice recipient" value="{{ request('invoice_to') }}">
                 </div>
-                <!-- /By Status -->
 
-                <!-- Category -->
-                <div class="accordion accordion-last" id="accordionMain4">
-                    <div class="card-header-new" id="headingFour">
-                        <h6 class="filter-title">
-                            <a href="javascript:void(0);" class="w-100 collapsed" data-bs-toggle="collapse"
-                                data-bs-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
-                                Category
-                                <span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
-                            </a>
-                        </h6>
-                    </div>
-
-                    <div id="collapseFour" class="collapse" aria-labelledby="headingFour"
-                        data-bs-parent="#accordionExample4">
-                        <div class="card-body-chat">
-                            <div id="checkBoxes3">
-                                <div class="selectBox-cont">
-                                    <label class="custom_check w-100">
-                                        <input type="checkbox" name="category">
-                                        <span class="checkmark"></span> Advertising
-                                    </label>
-                                    <label class="custom_check w-100">
-                                        <input type="checkbox" name="category">
-                                        <span class="checkmark"></span> Food
-                                    </label>
-                                    <label class="custom_check w-100">
-                                        <input type="checkbox" name="category">
-                                        <span class="checkmark"></span> Marketing
-                                    </label>
-                                    <label class="custom_check w-100">
-                                        <input type="checkbox" name="category">
-                                        <span class="checkmark"></span> Repairs
-                                    </label>
-                                    <!-- View All -->
-                                    <div class="view-content">
-                                        <div class="viewall-Two">
-                                            <label class="custom_check w-100">
-                                                <input type="checkbox" name="username">
-                                                <span class="checkmark"></span> Software
-                                            </label>
-                                            <label class="custom_check w-100">
-                                                <input type="checkbox" name="username">
-                                                <span class="checkmark"></span>Stationary
-                                            </label>
-                                            <label class="custom_check w-100">
-                                                <input type="checkbox" name="username">
-                                                <span class="checkmark"></span> Designing
-                                            </label>
-                                        </div>
-                                        <div class="view-all">
-                                            <a href="javascript:void(0);" class="viewall-button-Two"><span
-                                                    class="me-2">View All</span><span><i
-                                                        class="fa fa-circle-chevron-down"></i></span></a>
-                                        </div>
-                                    </div>
-                                    <!-- /View All -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Discount Type Filter -->
+                <div class="form-group">
+                    <label for="discount_type">Discount Type</label>
+                    <select name="discount_type" id="discount_type" class="form-control">
+                        <option value="" {{ request('discount_type') == '' ? 'selected' : '' }}>Choose Discount Type</option>
+                        <option value="Percentage" {{ request('discount_type') == 'Percentage' ? 'selected' : '' }}>Percentage</option>
+                        <option value="Fixed" {{ request('discount_type') == 'Fixed' ? 'selected' : '' }}>Fixed</option>
+                    </select>
                 </div>
-                <!-- /Category -->
 
-                <div class="filter-buttons">
-                    <button type="submit"
-                        class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary">
-                        Apply
-                    </button>
-                    <button type="submit"
-                        class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary">
-                        Reset
-                    </button>
+                <!-- Filter Buttons -->
+                <div style="margin-top:12px">
+                    <div class="filter-buttons">
+                        <!-- Apply Button -->
+                        <button type="submit" class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary">
+                            Apply
+                        </button>
+                        <!-- Reset Button -->
+                        <button type="button" class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary"
+                                onclick="resetForm()">
+                            Reset
+                        </button>
+                    </div>
                 </div>
             </form>
-
         </div>
     </div>
 </div>
@@ -862,5 +620,36 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var filterToggle = document.getElementById('filterToggle');
+        var filterSidebar = document.querySelector('.toggle-sidebar');
+
+        // Toggle sidebar visibility when the filter button is clicked
+        filterToggle.addEventListener('click', function (event) {
+            event.preventDefault();
+            filterSidebar.classList.toggle('active');
+        });
+
+        // Close sidebar when close button is clicked
+        var closeSidebar = document.querySelector('.sidebar-closes');
+        closeSidebar.addEventListener('click', function (event) {
+            event.preventDefault();
+            filterSidebar.classList.remove('active');
+        });
+    });
+
+    function resetForm() {
+        // Clear all the input fields
+        document.getElementById('invoice_no').value = '';
+        document.getElementById('branch').value = '';
+        document.getElementById('package').value = '';
+        document.getElementById('invoice_to').value = '';
+        document.getElementById('discount_type').value = '';
+
+        // Redirect to reset the filter and go back to the original page
+        window.location.href = '{{ route('invoices.index') }}';
+    }
+</script>
 <!-- /Theme Setting -->
 @endsection

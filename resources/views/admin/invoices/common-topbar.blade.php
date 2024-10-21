@@ -14,24 +14,51 @@ $url = $_SERVER['REQUEST_URI'];
                 <h5>Invoices</h5>
                 <div class="list-btn">
                     <ul class="filter-list">
-                        <!-- <li>
+                        
+                        <li>
 										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filter"><span class="me-2"><img src="assets/img/icons/filter-icon.svg" alt="filter"></span>Filter </a>
 									</li>
-									<li>
-										<a class="btn-filters" href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Settings"><span><i class="fe fe-settings"></i></span> </a>
-									</li> -->
-                        <li>
+									
+                                   <li>
+                                <div class="dropdown dropdown-action" data-bs-toggle="tooltip"
+                                     data-bs-placement="bottom" title="Download">
+                                    <a href="#" class="btn-filters" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span><i class="fe fe-download"></i></span>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                    
+                                   <ul>
+
+        <li>
+            <a class="d-flex align-items-center download-item" href="{{ route('invoice.downloadPDF', request()->query() )}}">
+                <i class="far fa-file-pdf me-2"></i> PDF
+            </a>
+        </li>
+        <li>
+                                                <a class="d-flex align-items-center download-item"
+                                                    href="{{ route('invoices.downloadCSV', request()->query()) }}">
+                                                    <i class="far fa-file-text me-2"></i>CSV
+                                                </a>
+                                            </li>
+
+</ul>
+
+
+
+ 
+
+
+                    <li>
                             <a class="btn btn-primary" href="{{route('invoices.create')}}"><i
                                     class="fa fa-plus-circle me-2" aria-hidden="true"></i>New Invoice</a>
                         </li>
-                    </ul>
                 </div>
             </div>
         </div>
         <!-- /Page Header -->
 
         <!-- Search Filter -->
-        <div id="filter_inputs" class="card filter-card">
+        <!-- <div id="filter_inputs" class="card filter-card">
             <div class="card-body pb-0">
                 <div class="row">
                     <div class="col-sm-6 col-md-3">
@@ -54,7 +81,7 @@ $url = $_SERVER['REQUEST_URI'];
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- /Search Filter -->
         @php
           $total_invoice_amt = 0;

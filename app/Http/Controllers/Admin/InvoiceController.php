@@ -11,12 +11,52 @@ class InvoiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    // public function index()
+    // {
+    //   $totalInvoice = Invoice::count();
+    //   $invoices = Invoice::with(['branch', 'partner', 'package','bank'])->paginate( $totalInvoice);
+    //   return view('admin.invoices.invoices',compact('invoices'));
+    // }
+
+    public function index(Request $request)
     {
-      $totalInvoice = Invoice::count();
-      $invoices = Invoice::with(['branch', 'partner', 'package','bank'])->paginate( $totalInvoice);
-      return view('admin.invoices.invoices',compact('invoices'));
+        // Build the query for fetching invoices with the necessary relationships
+        $query = Invoice::with(['branch', 'partner', 'package', 'bank']);
+    
+        // Apply filters based on request parameters
+        if ($request->filled('invoice_no')) {
+            $query->where('invoice_no', 'like', '%' . $request->invoice_no . '%');
+        }
+        if ($request->filled('branch')) {
+            $query->whereHas('branch', function ($q) use ($request) {
+                $q->where('city', 'like', '%' . $request->branch . '%');
+            });
+        }
+        if ($request->filled('package')) {
+            $query->whereHas('package', function ($q) use ($request) {
+                $q->where('package_name', 'like', '%' . $request->package . '%');
+            });
+        }
+        if ($request->filled('partner')) {
+            $query->whereHas('partner', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->partner . '%');
+            });
+        }
+        if ($request->filled('discount_type')) {
+            $query->where('discount_type', $request->discount_type);
+        }
+    
+        // Get the total number of invoices after applying filters
+        $totalInvoices = $query->count();
+    
+        // Paginate the filtered results (you can adjust the number per page as needed)
+        $invoices = $query->paginate(10); // Paginate the filtered results
+    
+        // Return the view with total invoices and paginated invoices
+        return view('admin.invoices.invoices', compact('invoices', 'totalInvoices'));
     }
+    
+    
      /**
      * Display a listing of the resource.
      */
@@ -189,80 +229,148 @@ class InvoiceController extends Controller
         return redirect()->route('invoices.index')
                          ->with('success', 'Invoice deleted successfully.');
     }
-
-
-    public function generateQuotationPDF($id)
-    {
-        // Fetch the quotation by ID from the database
-        $invoice = Invoice::with(['branch', 'partner', 'package','bank'])->findOrFail($id);
-      
-        // Get the package amount
-        $package_amt = $invoice->package->amount;
-
-        // GST Tax in percentage
-        $tax = $invoice->vat;
-
-        // Discount in percentage
-        $discount = $invoice->discount;
-        if($invoice->discount_type=='Fixed'){
-            $discount_amt =  $discount;
-        }else{
-            $discount_amt = ($package_amt * $discount) / 100;
-        }
-        // Calculate discount amount (discount percentage applied to the package amount)
-       
-
-        // Amount after discount
-        $amount_after_discount = $package_amt - $discount_amt;
-
-        // Calculate tax amount (GST percentage applied to the amount after discount)
-        $tax_amt = ($amount_after_discount * $tax) / 100;
-
-        // Total amount after applying discount and adding tax
-        $total_amt = $amount_after_discount + $tax_amt;
-
-        $currentDateTime = now()->format('Y-m-d_H-i-s');  // e.g., 2024-10-04_14-30-00
-        $items = [];
     
-        if ($invoice->package) {
-            $items[] = [
-                'package_name' => $invoice->package->package_name,
-                'description' => $invoice->package->description,
-                'amount' => $invoice->package->amount,
-            ];
+    public function downloadPDF(Request $request)
+    {
+        
+    
+        // Set the timezone to Indian Standard Time (IST)
+        date_default_timezone_set('Asia/Kolkata');
+    
+        // Build the query for fetching invoices with the necessary relationships
+        $query = Invoice::with(['branch', 'partner', 'package', 'bank']);
+    
+        // Apply filters based on request parameters
+        if ($request->filled('invoice_no')) {
+            $query->where('invoice_no', 'like', '%' . $request->invoice_no . '%');
+        }
+        if ($request->filled('branch')) {
+            $query->whereHas('branch', function ($q) use ($request) {
+                $q->where('city', 'like', '%' . $request->branch . '%');
+            });
+        }
+        if ($request->filled('package')) {
+            $query->whereHas('package', function ($q) use ($request) {
+                $q->where('package_name', 'like', '%' . $request->package . '%');
+            });
+        }
+        if ($request->filled('partner')) {
+            $query->whereHas('partner', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->partner . '%');
+            });
+        }
+        if ($request->filled('discount_type')) {
+            $query->where('discount_type', $request->discount_type);
+        }
+    
+        // Get the filtered data
+        $invoices = $query->get();
+    
+        // Check if invoices exist before generating the PDF
+        if ($invoices->isEmpty()) {
+            return redirect()->back()->with('error', 'No invoices found for the selected filters.');
+        }
+    
+        // Load the PDF view with filtered invoices data
+        $pdf = PDF::loadView('admin.invoices.invoice-pdf', compact('invoices'));
+    
+        // Format the date for the filename
+        $timestamp = date('Y-m-d_H-i-s');
+        $filename = 'invoice_report_' . $timestamp . '.pdf';
+    
+        // Return the PDF download
+        return $pdf->download($filename);
+    }
+
+    public function downloadCSV(Request $request)
+{
+    // Build the query for fetching invoices with the necessary relationships
+    $query = Invoice::with(['branch', 'partner', 'package', 'bank']);
+
+    // Apply filters based on request parameters
+    if ($request->filled('invoice_no')) {
+        $query->where('invoice_no', 'like', '%' . $request->invoice_no . '%');
+    }
+    if ($request->filled('branch')) {
+        $query->whereHas('branch', function ($q) use ($request) {
+            $q->where('city', 'like', '%' . $request->branch . '%');
+        });
+    }
+    if ($request->filled('package')) {
+        $query->whereHas('package', function ($q) use ($request) {
+            $q->where('package_name', 'like', '%' . $request->package . '%');
+        });
+    }
+    if ($request->filled('partner')) {
+        $query->whereHas('partner', function ($q) use ($request) {
+            $q->where('name', 'like', '%' . $request->partner . '%');
+        });
+    }
+    if ($request->filled('discount_type')) {
+        $query->where('discount_type', $request->discount_type);
+    }
+
+    // Get the filtered data
+    $invoices = $query->get();
+
+    // Check if invoices exist before generating the CSV
+    if ($invoices->isEmpty()) {
+        return redirect()->back()->with('error', 'No invoices found for the selected filters.');
+    }
+
+    // Define the CSV filename with a timestamp
+    $timestamp = date('Y-m-d_H-i-s');
+    $filename = "invoices_{$timestamp}.csv";
+
+    // Set the CSV headers
+    $headers = [
+        "Content-type"        => "text/csv",
+        "Content-Disposition" => "attachment; filename={$filename}",
+        "Pragma"              => "no-cache",
+        "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+        "Expires"             => "0"
+    ];
+
+    // Callback function to output the CSV content
+    $callback = function() use ($invoices) {
+        $file = fopen('php://output', 'w');
+
+        // Header row for CSV file
+        fputcsv($file, [
+            'Invoice No',
+            'Branch',
+            'Partner',
+            'Package',
+            'Discount Type',
+            'Discount',
+            'Vat',
+            'Total Amount'
+        ]);
+
+        // Data rows
+        foreach ($invoices as $invoice) {
+            fputcsv($file, [
+                $invoice->invoice_no,
+                $invoice->branch ? $invoice->branch->city : 'N/A',
+                $invoice->partner ? $invoice->partner->name : 'N/A',
+                $invoice->package ? $invoice->package->package_name : 'N/A',
+                $invoice->discount_type,
+                $invoice->discount,
+                $invoice->vat,
+                $invoice->package ? $invoice->package->amount : 'N/A'
+            ]);
         }
 
-        // Example: Adjust these fields based on your `quotations` table structure
-        $data = [
-            'branch_address'=>$invoice->branch->address,
-            'branch_name'=>$invoice->branch->branch_name,
-            'invoice_date' => now()->toDateString(),
-            'invoice_number' => $invoice->invoice_no,  // Assume there's an invoice number
-            'bill_to' => $invoice->partner->name,  // Assuming you have customer info in your invoice
-            'bill_email' => $invoice->partner->email,  // Assuming you have customer info in your invoice
-            'bill_mobile' => $invoice->partner->mobile,  // Assuming you have customer info in your invoice
-            'bill_city' => $invoice->partner->city,  // Assuming you have customer info in your invoice
-            'bill_state' => $invoice->partner->state,
-            'bill_country' => $invoice->partner->country,
-            'items' => $items ,  // Assuming a relationship or JSON field for items
-            'subtotal' =>  $package_amt ,
-            'discount'=> $discount,
-            'discount_type'=> $invoice->discount_type,
-            'tax' => $tax,  // Assuming a field for VAT
-            'total' =>  $total_amt,
-            'bank_name'=> isset($invoice->bank->bank_name)?$invoice->bank->bank_name:'',
-            'account_no'=> isset($invoice->bank->account_no)?$invoice->bank->account_no:'',
-            'bank_branch'=> isset($invoice->bank->branch_name)?$invoice->bank->branch_name:'',
-            'ifsc_code'=> isset($invoice->bank->ifsc_code)?$invoice->bank->ifsc_code:'',
-            'iban_no'=> isset($invoice->bank->iban_no)?$invoice->bank->iban_no:'',
-        ];
-        
-        // Load the view and pass data to it
-        $pdf = PDF::loadView('admin.invoices.invoice_format', $data);
+        fclose($file);
+    };
 
-        // Return the PDF file
-        return $pdf->download('Invoice-' . $currentDateTime . '.pdf');
-    }
+    // Return the CSV download response
+    return response()->stream($callback, 200, $headers);
+}
+
+    
+    
+    
     
     public function preview($id)
     {
