@@ -35,11 +35,19 @@ $url = $_SERVER['REQUEST_URI'];
             </a>
         </li>
         <li>
+<<<<<<< HEAD
             <a class="d-flex align-items-center download-item" href="{{ route('invoices.downloadCSV', request()->query() )}}">
                 <i class="far fa-file-pdf me-2"></i> CSV
             </a>
         </li>
 
+=======
+                                                <a class="d-flex align-items-center download-item"
+                                                    href="{{ route('invoices.downloadCSV', request()->query()) }}">
+                                                    <i class="far fa-file-text me-2"></i>CSV
+                                                </a>
+                                            </li>
+>>>>>>> d23585de407528246e065edfc1f379e10609c5ab
 
 </ul>
 
@@ -122,6 +130,7 @@ $url = $_SERVER['REQUEST_URI'];
                             <div class="dash-count">
                                 <div class="dash-title">Total Invoice</div>
                                 <div class="dash-counts">
+<<<<<<< HEAD
                                     <p>${{$total_invoice_amt}}</p>
                                 </div>
                             </div>
@@ -132,6 +141,18 @@ $url = $_SERVER['REQUEST_URI'];
                             <p class="inovice-trending text-success-light">02 <span class="ms-2"><i
                                         class="fe fe-trending-up"></i></span></p>
                         </div>
+=======
+                                    <p>{{ isset($invoices[0]->currency->symbol) ? $invoices[0]->currency->symbol : '₹' }}{{$total_invoice_amt}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="d-flex justify-content-between align-items-center">-->
+                        <!--    <p class="inovices-all">No of Invoice <span class="rounded-circle bg-light-gray">02</span>-->
+                        <!--    </p>-->
+                        <!--    <p class="inovice-trending text-success-light">02 <span class="ms-2"><i-->
+                        <!--                class="fe fe-trending-up"></i></span></p>-->
+                        <!--</div>-->
+>>>>>>> d23585de407528246e065edfc1f379e10609c5ab
                     </div>
                 </div>
             </div>
@@ -146,6 +167,7 @@ $url = $_SERVER['REQUEST_URI'];
                             <div class="dash-count">
                                 <div class="dash-title">Outstanding</div>
                                 <div class="dash-counts">
+<<<<<<< HEAD
                                     <p>${{$total_outstanding_amt}}</p>
                                 </div>
                             </div>
@@ -156,6 +178,18 @@ $url = $_SERVER['REQUEST_URI'];
                             <p class="inovice-trending text-success-light">04 <span class="ms-2"><i
                                         class="fe fe-trending-up"></i></span></p>
                         </div>
+=======
+                                    <p>{{ isset($invoices[0]->currency->symbol) ? $invoices[0]->currency->symbol : '₹' }}{{$total_outstanding_amt}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="d-flex justify-content-between align-items-center">-->
+                        <!--    <p class="inovices-all">No of Invoice <span class="rounded-circle bg-light-gray">03</span>-->
+                        <!--    </p>-->
+                        <!--    <p class="inovice-trending text-success-light">04 <span class="ms-2"><i-->
+                        <!--                class="fe fe-trending-up"></i></span></p>-->
+                        <!--</div>-->
+>>>>>>> d23585de407528246e065edfc1f379e10609c5ab
                     </div>
                 </div>
             </div>
@@ -170,6 +204,7 @@ $url = $_SERVER['REQUEST_URI'];
                             <div class="dash-count">
                                 <div class="dash-title">Total Overdue</div>
                                 <div class="dash-counts">
+<<<<<<< HEAD
                                     <p>${{$total_overdue_amt}}</p>
                                 </div>
                             </div>
@@ -180,6 +215,18 @@ $url = $_SERVER['REQUEST_URI'];
                             <p class="inovice-trending text-danger-light">03 <span class="ms-2"><i
                                         class="fe fe-trending-down"></i></span></p>
                         </div>
+=======
+                                    <p>{{ isset($invoices[0]->currency->symbol) ? $invoices[0]->currency->symbol : '₹' }}{{$total_overdue_amt}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="d-flex justify-content-between align-items-center">-->
+                        <!--    <p class="inovices-all">No of Invoice <span class="rounded-circle bg-light-gray">01</span>-->
+                        <!--    </p>-->
+                        <!--    <p class="inovice-trending text-danger-light">03 <span class="ms-2"><i-->
+                        <!--                class="fe fe-trending-down"></i></span></p>-->
+                        <!--</div>-->
+>>>>>>> d23585de407528246e065edfc1f379e10609c5ab
                     </div>
                 </div>
             </div>
@@ -195,6 +242,7 @@ $url = $_SERVER['REQUEST_URI'];
                             <div class="dash-count">
                                 <div class="dash-title">Cancelled</div>
                                 <div class="dash-counts">
+<<<<<<< HEAD
                                     <p>${{$total_cancelled_amt}}</p>
                                 </div>
                             </div>
@@ -205,6 +253,18 @@ $url = $_SERVER['REQUEST_URI'];
                             <p class="inovice-trending text-danger-light">05 <span class="ms-2"><i
                                         class="fe fe-trending-down"></i></span></p>
                         </div>
+=======
+                                    <p>{{ isset($invoices[0]->currency->symbol) ? $invoices[0]->currency->symbol : '₹' }}{{$total_cancelled_amt}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="d-flex justify-content-between align-items-center">-->
+                        <!--    <p class="inovices-all">No of Invoice <span class="rounded-circle bg-light-gray">04</span>-->
+                        <!--    </p>-->
+                        <!--    <p class="inovice-trending text-danger-light">05 <span class="ms-2"><i-->
+                        <!--                class="fe fe-trending-down"></i></span></p>-->
+                        <!--</div>-->
+>>>>>>> d23585de407528246e065edfc1f379e10609c5ab
                     </div>
                 </div>
             </div>
@@ -218,6 +278,7 @@ $url = $_SERVER['REQUEST_URI'];
                             <div class="dash-count">
                                 <div class="dash-title">Draft</div>
                                 <div class="dash-counts">
+<<<<<<< HEAD
                                     <p>${{$total_drapt_amt}}</p>
                                 </div>
                             </div>
@@ -228,6 +289,18 @@ $url = $_SERVER['REQUEST_URI'];
                             <p class="inovice-trending text-danger-light">02 <span class="ms-2"><i
                                         class="fe fe-trending-down"></i></span></p>
                         </div>
+=======
+                                    <p>{{ isset($invoices[0]->currency->symbol) ? $invoices[0]->currency->symbol : '₹' }}{{$total_drapt_amt}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="d-flex justify-content-between align-items-center">-->
+                        <!--    <p class="inovices-all">No of Invoice <span class="rounded-circle bg-light-gray">06</span>-->
+                        <!--    </p>-->
+                        <!--    <p class="inovice-trending text-danger-light">02 <span class="ms-2"><i-->
+                        <!--                class="fe fe-trending-down"></i></span></p>-->
+                        <!--</div>-->
+>>>>>>> d23585de407528246e065edfc1f379e10609c5ab
                     </div>
                 </div>
             </div>
@@ -242,6 +315,7 @@ $url = $_SERVER['REQUEST_URI'];
                             <div class="dash-count">
                                 <div class="dash-title">Recurring</div>
                                 <div class="dash-counts">
+<<<<<<< HEAD
                                     <p>${{ $total_recurring_amt}}</p>
                                 </div>
                             </div>
@@ -252,6 +326,18 @@ $url = $_SERVER['REQUEST_URI'];
                             <p class="inovice-trending text-success-light">02 <span class="ms-2"><i
                                         class="fe fe-trending-up"></i></span></p>
                         </div>
+=======
+                                    <p>{{ isset($invoices[0]->currency->symbol) ? $invoices[0]->currency->symbol : '₹' }}{{ $total_recurring_amt}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="d-flex justify-content-between align-items-center">-->
+                        <!--    <p class="inovices-all">No of Invoice <span class="rounded-circle bg-light-gray">03</span>-->
+                        <!--    </p>-->
+                        <!--    <p class="inovice-trending text-success-light">02 <span class="ms-2"><i-->
+                        <!--                class="fe fe-trending-up"></i></span></p>-->
+                        <!--</div>-->
+>>>>>>> d23585de407528246e065edfc1f379e10609c5ab
                     </div>
                 </div>
             </div>
@@ -356,10 +442,17 @@ $url = $_SERVER['REQUEST_URI'];
                                         </td>
 
                                         <td>{{ $invoice->discount_type }}</td>
+<<<<<<< HEAD
                                         <td>{{ $invoice->discount }}{{ ($invoice->discount_type=='Fixed')?'':'%'}}
                                         </td>
                                         <td>{{ $invoice->vat }}%</td>
                                         <td>{{ $total_amt }}</td>
+=======
+                                        <td>{{ ($invoice->discount_type=='Fixed') ? $invoice->currency->symbol : '' }}{{ $invoice->discount }}{{ ($invoice->discount_type=='Fixed')?'':'%'}}
+                                        </td>
+                                        <td>{{ $invoice->vat }}%</td>
+                                        <td>{{ isset($invoice->currency->symbol) ? $invoice->currency->symbol : '₹' }}{{ $total_amt }}</td>
+>>>>>>> d23585de407528246e065edfc1f379e10609c5ab
                                         <td>
 
                                             <div class="dropdown dropdown-action">
