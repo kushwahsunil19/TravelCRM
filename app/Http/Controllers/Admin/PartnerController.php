@@ -9,11 +9,39 @@ use App\Models\{Partner};
 use Yajra\DataTables\Facades\DataTables;
 class PartnerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $partners = Partner::all();
+        // Initialize a query builder for Partner
+        $query = Partner::query();
+    
+        // Apply filters based on request parameters
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+        if ($request->filled('email')) {
+            $query->where('email', 'like', '%' . $request->email . '%');
+        }
+        if ($request->filled('mobile')) {
+            $query->where('mobile', 'like', '%' . $request->mobile . '%');
+        }
+        if ($request->filled('city')) {
+            $query->where('city', 'like', '%' . $request->city . '%');
+        }
+        if ($request->filled('state')) {
+            $query->where('state', 'like', '%' . $request->state . '%');
+        }
+        if ($request->filled('country')) {
+            $query->where('country', 'like', '%' . $request->country . '%');
+        }
+    
+        // Retrieve the filtered partners
+        $partners = $query->get();
+    
+        // Return the view with filtered partners
         return view('admin.partners.partners', compact('partners'));
     }
+    
+    
 
     public function create()
     {

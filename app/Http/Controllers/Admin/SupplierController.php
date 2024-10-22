@@ -8,9 +8,39 @@ use App\Models\Supplier;
 
 class SupplierController extends Controller
 {
-    public function index()
+    public function index(Request $request) // Add Request parameter
     {
-        $Suppliers = Supplier::all();
+        // Initialize query
+        $query = Supplier::query();
+
+        // Apply filters based on request input
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+
+        if ($request->filled('email')) {
+            $query->where('email', 'like', '%' . $request->email . '%');
+        }
+
+        if ($request->filled('mobile')) {
+            $query->where('mobile', 'like', '%' . $request->mobile . '%');
+        }
+
+        if ($request->filled('city')) {
+            $query->where('city', 'like', '%' . $request->city . '%');
+        }
+
+        if ($request->filled('state')) {
+            $query->where('state', 'like', '%' . $request->state . '%');
+        }
+
+        if ($request->filled('country')) {
+            $query->where('country', 'like', '%' . $request->country . '%');
+        }
+
+        // Get the filtered suppliers
+        $Suppliers = $query->get();
+
         return view('admin.suppliers.index', compact('Suppliers'));
     }
 

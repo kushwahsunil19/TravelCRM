@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\{AuthController,ForgotPasswordController,ProfileController,UserController,QuotationController,ItineraryController,PartnerController,BranchController,PackageController,CurrencyController,RolesPermissionController,VendorController,InvoiceController,SupplierController,QuotationReportController};
+use App\Http\Controllers\Admin\{AuthController,ForgotPasswordController,ProfileController,UserController,QuotationController,ItineraryController,PartnerController,BranchController,PackageController,CurrencyController,RolesPermissionController,VendorController,InvoiceController,SupplierController,QuotationReportController,SupplierReportController,PartnerReportController};
 
 /*
 |--------------------------------------------------------------------------
@@ -96,7 +96,24 @@ Route::middleware(['auth'])->group(function() {
 
     Route::get('/pdf', [InvoiceController::class, 'downloadPDF'])->name('invoice.downloadPDF');
 
-// Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/supplier-report', [SupplierReportController::class, 'index'])->name('supplier.supplier-report');
+
+
+    // Route to download the supplier report as a PDF
+    Route::get('/supplier-report/pdf', [SupplierReportController::class, 'downloadPDF'])->name('supplier-report.downloadPDF');
+
+
+    Route::get('/partners-report', [PartnerReportController::class, 'index'])->name('partners.partners-report');
+  // Route to download the partner report as PDF
+  Route::get('/partners-report/pdf', [PartnerReportController::class, 'downloadPDF'])->name('partners.partners-report.downloadPDF');
+    
+  // Route to download the partner report as CSV
+  Route::get('/partners-report/csv', [PartnerReportController::class, 'downloadCSV'])->name('partners.partners-report.downloadCSV');
+
+
+
+    // Route to download the supplier report as a CSV
+    Route::get('/supplier-report/downloadCSV', [SupplierReportController::class, 'downloadCSV'])->name('supplier-report.downloadCSV');
 // Route::post('/users', [UserController::class, 'store'])->name('users.store');
 // Route::get('users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
 // Route::put('users/{id}', [UserController::class, 'update'])->name('users.update');
