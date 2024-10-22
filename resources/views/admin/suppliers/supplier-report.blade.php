@@ -12,38 +12,33 @@
         <!-- Page Header -->
         <div class="page-header">
             <div class="content-page-header">
-                <h5>Partners/Agent</h5>
+                <h5>Suppliers Report</h5>
                 <div class="list-btn">
                     <ul class="filter-list">
-                     <li>
+                       <li>
 										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip"
 											data-bs-placement="bottom" title="Filter"><span class="me-2"><img src="assets/img/icons/filter-icon.svg" alt="filter"></span>Filter </a>
 									</li>
-								   <!-- 	<li>
+									 <li>
 										<div class="dropdown dropdown-action" data-bs-toggle="tooltip" data-bs-placement="top" title="Download">
 											<a href="#" class="btn-filters" data-bs-toggle="dropdown" aria-expanded="false"><span><i class="fe fe-download"></i></span></a>
 											<div class="dropdown-menu dropdown-menu-end">
 												<ul class="d-block">
 													<li>
-														<a class="d-flex align-items-center download-item" href="javascript:void(0);" download><i class="far fa-file-pdf me-2"></i>PDF</a>
+														<a class="d-flex align-items-center download-item" href="{{route('supplier-report.downloadPDF')}}" ><i class="far fa-file-pdf me-2"></i>PDF</a>
 													</li>
-													<li>
-														<a class="d-flex align-items-center download-item" href="javascript:void(0);" download><i class="far fa-file-text me-2"></i>CVS</a>
-													</li>
+                                                    <li>
+    <a class="d-flex align-items-center download-item" href="{{ route('supplier-report.downloadCSV') }}" download>
+        <i class="far fa-file-text me-2"></i>CSV
+    </a>
+</li>
+
 												</ul>
 											</div>
 										</div>														
 									</li>
-									<li>
-										<a class="btn-filters" href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print"><span><i class="fe fe-printer"></i></span> </a>
-									</li>
-									<li>
-										<a class="btn btn-import" href="javascript:void(0);"><span><i class="fe fe-check-square me-2"></i>Import Customer</span></a>
-									</li> -->
-                        <li>
-                            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#partner_details"><i
-                                    class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add Partner</a>
-                        </li>
+									
+                        
                     </ul>
                 </div>
             </div>
@@ -51,8 +46,30 @@
         <!-- /Page Header -->
 
         <!-- Search Filter -->
-  
-
+        <div id="filter_inputs" class="card filter-card">
+            <div class="card-body pb-0">
+                <div class="row">
+                    <div class="col-sm-6 col-md-3">
+                        <div class="input-block mb-3">
+                            <label>Name</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="input-block mb-3">
+                            <label>Email</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="input-block mb-3">
+                            <label>Phone</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- /Search Filter -->
 
         <div class="row">
@@ -69,32 +86,32 @@
                                         <th>City</th>
                                         <th>State</th>
                                         <th>Country</th>
-
+                                        <th>Amount</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($partners as $partner)
+                                    @forelse ($Suppliers as $Supplier)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td> <!-- Serial number -->
                                         <td>
                                             <h2 class="table-avatar">
                                                 @php
-                                                $avatar = $partner->image ? url('public/profile/' . $partner->image) :
+                                                $avatar = $Supplier->image ? url('public/profile/' . $Supplier->image) :
                                                 url('public/assets/img/profiles/default.png');
                                                 @endphp
                                                 <a href="" class="avatar avatar-md me-2"><img
                                                         class="avatar-img rounded-circle" src="{{$avatar}}"
                                                         alt="User Image"></a>
-                                                <a href="">{{ $partner->name }} <span><span class="__cf_email__"
-                                                            data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $partner->email }}]</span></span></a>
+                                                <a href="">{{ $Supplier->name }} <span><span class="__cf_email__"
+                                                            data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $Supplier->email }}]</span></span></a>
 
-                                        <td>{{ $partner->mobile }}</td>
+                                        <td>{{ $Supplier->mobile }}</td>
 
-                                        <td>{{ $partner->city }}</td>
-                                        <td>{{ $partner->state }}</td>
-                                        <td>{{ $partner->country }}</td>
-
+                                        <td>{{ $Supplier->city }}</td>
+                                        <td>{{ $Supplier->state }}</td>
+                                        <td>{{ $Supplier->country }}</td>
+                                        <td>{{ $Supplier->amount }}</td>
                                         <td>
 
                                             <div class="dropdown dropdown-action">
@@ -103,18 +120,18 @@
                                                 <div class="dropdown-menu dropdown-menu-end">
                                                     <ul>
                                                         <li>
-                                                            <a class="dropdown-item edit_partner"
-                                                                data-id="{{$partner->id}}"><i
+                                                            <a class="dropdown-item edit_Supplier"
+                                                                data-id="{{$Supplier->id}}"><i
                                                                     class="far fa-edit me-2"></i>Edit</a>
                                                         </li>
                                                         <li>
                                                             <a class="dropdown-item" href="javascript:void(0);"
                                                                 data-bs-toggle="modal"
-                                                                data-bs-target="#delete_modal{{$partner->id}}"><i
+                                                                data-bs-target="#delete_modal{{$Supplier->id}}"><i
                                                                     class="far fa-trash-alt me-2"></i>Delete</a>
                                                         </li>
                                                         <!-- <li>
-																		<a class="dropdown-item" href="{{ route('partners.show', $partner->id) }}"><i class="far fa-eye me-2"></i>View</a>
+																		<a class="dropdown-item" href="{{ route('suppliers.show', $Supplier->id) }}"><i class="far fa-eye me-2"></i>View</a>
 																	</li> -->
                                                         <!-- <li>
 																		<a class="dropdown-item" href="active-customers.html"><i class="fa-solid fa-power-off me-2"></i>Activate</a>
@@ -126,20 +143,20 @@
                                                 </div>
                                             </div>
                                             <!-- Delete Items Modal -->
-                                            <div class="modal custom-modal fade" id="delete_modal{{$partner->id}}"
+                                            <div class="modal custom-modal fade" id="delete_modal{{$Supplier->id}}"
                                                 role="dialog">
                                                 <div class="modal-dialog modal-dialog-centered modal-md">
                                                     <div class="modal-content">
                                                         <div class="modal-body">
                                                             <div class="form-header">
-                                                                <h3>Delete Partner</h3>
+                                                                <h3>Delete Supplier</h3>
                                                                 <p>Are you sure want to delete?</p>
                                                             </div>
                                                             <div class="modal-btn delete-action">
                                                                 <div class="row">
                                                                     <div class="col-6">
                                                                         <form
-                                                                            action="{{ route('partners.destroy', $partner->id) }}"
+                                                                            action="{{ route('suppliers.destroy', $Supplier->id) }}"
                                                                             method="POST" style="display:inline;">
                                                                             @csrf
                                                                             @method('DELETE')
@@ -165,7 +182,7 @@
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="9" class="text-center">No partners found.</td>
+                                        <td colspan="9" class="text-center">No Suppliers found.</td>
                                     </tr>
                                     @endforelse
                                 </tbody>
@@ -181,71 +198,53 @@
 <!-- /Page Wrapper -->
 
 <!-- Add Asset -->
-<div class="toggle-sidebar">
+<div class="toggle-sidebar ledge">
     <div class="sidebar-layout-filter">
-        <div class="sidebar-header">
-            <h5>Filter</h5>
+        <div class="sidebar-header ledge">
+            <h5>Suppliers</h5>
             <a href="#" class="sidebar-closes"><i class="fa-regular fa-circle-xmark"></i></a>
         </div>
+       
         <div class="sidebar-body">
-            <form action="{{ route('partners.index') }}" method="GET" autocomplete="off">
-                <!-- Name Filter -->
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" name="name" id="name" class="form-control"
-                           placeholder="Enter name" value="{{ request('name') }}">
-                </div>
+        <form action="{{ route('supplier.supplier-report') }}" method="GET" autocomplete="off">
 
-                <!-- Email Filter -->
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="text" name="email" id="email" class="form-control"
-                           placeholder="Enter email" value="{{ request('email') }}">
-                </div>
+    <!-- Name Filter -->
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" name="name" id="name" class="form-control"
+               placeholder="Enter name" value="{{ request('name') }}">
+    </div>
 
-                <!-- Phone Filter -->
-                <div class="form-group">
-                    <label for="mobile">Phone</label>
-                    <input type="text" name="mobile" id="mobile" class="form-control"
-                           placeholder="Enter phone number" value="{{ request('mobile') }}">
-                </div>
+    <!-- Email Filter -->
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="text" name="email" id="email" class="form-control"
+               placeholder="Enter email" value="{{ request('email') }}">
+    </div>
 
-                <!-- City Filter -->
-                <div class="form-group">
-                    <label for="city">City</label>
-                    <input type="text" name="city" id="city" class="form-control"
-                           placeholder="Enter city" value="{{ request('city') }}">
-                </div>
+    <!-- Phone Filter -->
+    <div class="form-group">
+        <label for="mobile">Phone</label>
+        <input type="text" name="mobile" id="mobile" class="form-control"
+               placeholder="Enter phone number" value="{{ request('mobile') }}">
+    </div>
 
-                <!-- State Filter -->
-                <div class="form-group">
-                    <label for="state">State</label>
-                    <input type="text" name="state" id="state" class="form-control"
-                           placeholder="Enter state" value="{{ request('state') }}">
-                </div>
+    <!-- Add other filters as necessary -->
 
-                <!-- Country Filter -->
-                <div class="form-group">
-                    <label for="country">Country</label>
-                    <input type="text" name="country" id="country" class="form-control"
-                           placeholder="Enter country" value="{{ request('country') }}">
-                </div>
+    <!-- Filter Buttons -->
+    <div style="margin-top:12px">
+        <div class="filter-buttons">
+            <button type="submit" class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary">
+                Apply
+            </button>
+            <button type="button" class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary"
+                    onclick="resetForm()">
+                Reset
+            </button>
+        </div>
+    </div>
+</form>
 
-                <!-- Filter Buttons -->
-                <div style="margin-top:12px">
-                    <div class="filter-buttons">
-                        <!-- Apply Button -->
-                        <button type="submit" class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary">
-                            Apply
-                        </button>
-                        <!-- Reset Button -->
-                        <button type="button" class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary"
-                                onclick="resetForm()">
-                            Reset
-                        </button>
-                    </div>
-                </div>
-            </form>
         </div>
     </div>
 </div>
@@ -255,18 +254,18 @@
 
 </div>
 <!-- /Main Wrapper -->
-<!-- Add Partner Details Modal -->
-<div class="modal custom-modal modal-lg fade" id="partner_details" role="dialog">
+<!-- Add Supplier Details Modal -->
+<div class="modal custom-modal modal-lg fade" id="Supplier_details" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
                 <div class="form-header modal-header-title text-start mb-0">
-                    <h4 class="mb-0">Add Partner Details</h4>
+                    <h4 class="mb-0">Add Supplier Details</h4>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="partner_details_form" action="{{ route('partners.store') }}" method="POST"
+                <form id="Supplier_details_form" action="{{ route('suppliers.store') }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
                     <!-- Include CSRF token for security -->
@@ -356,39 +355,57 @@
                                 </div>
                             </div>
 
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Amount</label>
+                                    <input type="number" min="0" class="form-control" name="amount"
+                                        placeholder="Enter Amount">
+                                    @if ($errors->has('amount'))
+                                    <span class="text-danger">{{ $errors->first('amount') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Description</label>
+                                    <textarea class="form-control" name="description" id="description" placeholder="Enter your description here..."></textarea>
 
-
-
+                                    @if ($errors->has('description'))
+                                    <span class="text-danger">{{ $errors->first('description') }}</span>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="modal-footer">
-                        <button type="reset" data-bs-dismiss="modal" class="btn btn-primary cancel me-2">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </form>
             </div>
+
+            <div class="modal-footer">
+                <button type="reset" data-bs-dismiss="modal" class="btn btn-primary cancel me-2">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+            </form>
         </div>
     </div>
 </div>
-<!-- /Add Partner Details Modal -->
-<!-- Edit Partner Details Modal -->
-<div class="modal custom-modal modal-lg fade" id="edit_partner_details" role="dialog">
+</div>
+<!-- /Add Supplier Details Modal -->
+<!-- Edit Supplier Details Modal -->
+<div class="modal custom-modal modal-lg fade" id="edit_Supplier_details" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
                 <div class="form-header modal-header-title text-start mb-0">
-                    <h4 class="mb-0">Add Partner Details</h4>
+                    <h4 class="mb-0">Add Supplier Details</h4>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
 
-                <form id="edit_partner_details_form" method="POST" enctype="multipart/form-data">
+                <form id="edit_Supplier_details_form" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <!-- Spoofing PUT for update -->
-                    <input type="hidden" name="partner_id" id="partner_id">
+                    <input type="hidden" name="Supplier_id" id="Supplier_id">
                     <!-- Include CSRF token for security -->
                     <div class="row">
                         <div class="profile-picture">
@@ -467,18 +484,37 @@
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-6 col-sm-12">
-                                <div class="pass-group">
-                                    <div class="input-block">
-                                        <label>Country</label>
-                                        <input type="text" class="form-control" name="country" id="edit_country"
-                                            placeholder="Enter Country">
-                                        @if ($errors->has('country'))
-                                        <span class="text-danger">{{ $errors->first('country') }}</span>
-                                        @endif
-                                    </div>
+
+                                <div class="input-block">
+                                    <label>Country</label>
+                                    <input type="text" class="form-control" name="country" id="edit_country"
+                                        placeholder="Enter Country">
+                                    @if ($errors->has('country'))
+                                    <span class="text-danger">{{ $errors->first('country') }}</span>
+                                    @endif
+                                </div>
+
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Amount</label>
+                                    <input type="number" min="0" class="form-control" name="amount" id="edit_amount"
+                                        placeholder="Enter Amount">
+                                    @if ($errors->has('amount'))
+                                    <span class="text-danger">{{ $errors->first('amount') }}</span>
+                                    @endif
                                 </div>
                             </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Description</label>
+                                    <textarea class="form-control" name="description" id="edit_description" placeholder="Enter your description here..."></textarea>
 
+                                    @if ($errors->has('description'))
+                                    <span class="text-danger">{{ $errors->first('description') }}</span>
+                                    @endif
+                                </div>
+                            </div>
 
 
 
@@ -494,7 +530,7 @@
         </div>
     </div>
 </div>
-<!-- /Edit Partner Details Modal -->
+<!-- /Edit Supplier Details Modal -->
 <!--Theme Setting -->
 <div class="settings-icon">
     <span data-bs-toggle="offcanvas" data-bs-target="#theme-settings-offcanvas"
@@ -858,8 +894,13 @@
 <!-- Toastr JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdn.ckeditor.com/4.20.1/standard/ckeditor.js"></script>
 
 <script type="text/javascript">
+//     $(document).ready(function() {
+//     CKEDITOR.replace('description');
+//     CKEDITOR.replace('description_edit');
+// });
 $(document).ready(function() {
     toastr.options = {
         "closeButton": true,
@@ -877,7 +918,7 @@ $(document).ready(function() {
         "showMethod": "fadeIn", // Use fadeIn or slideDown
         "hideMethod": "fadeOut" // Use fadeOut or slideUp
     };
-    $('#partner_details_form').on('submit', function(e) {
+    $('#Supplier_details_form').on('submit', function(e) {
         e.preventDefault(); // Prevent the form from submitting normally
 
         var formData = new FormData(this); // Create FormData object from the form
@@ -891,8 +932,8 @@ $(document).ready(function() {
             success: function(response) {
                 toastr.success(response.message); // Display success message
                 // Optionally, reset the form or close the modal
-                // $('#partner_details').modal('hide'); // Close modal
-                $('#partner_details_form')[0].reset(); // Reset the form
+                // $('#Supplier_details').modal('hide'); // Close modal
+                $('#Supplier_details_form')[0].reset(); // Reset the form
                 setTimeout(function() {
                     window.location.reload(); // Reload the page after the delay
                 }, 3000); // 5-second delay
@@ -910,24 +951,26 @@ $(document).ready(function() {
         });
     });
 
-    $(document).on('click', '.edit_partner', function() {
+    $(document).on('click', '.edit_Supplier', function() {
         var id = $(this).data('id'); // Get user ID from the button
         // Make an AJAX request to fetch the user data
         $.ajax({
-            url: '{{ route("partners.edit", ":id") }}'.replace(':id',
+            url: '{{ route("suppliers.edit", ":id") }}'.replace(':id',
                 id), // Replace ':id' with the actual user ID
             type: 'GET',
             success: function(response) {
                 var data = response.data;
 
                 // Populate the form fields with the fetched data
-                $('#partner_id').val(data.id); // Hidden user ID
+                $('#Supplier_id').val(data.id); // Hidden user ID
                 $('#edit_name').val(data.name);
                 $('#edit_email').val(data.email);
                 $('#edit_mobile').val(data.mobile);
                 $('#edit_city').val(data.city);
                 $('#edit_state').val(data.state);
                 $('#edit_country').val(data.country);
+                $('#edit_amount').val(data.amount);
+                $('#edit_description').val(data.description);
                 if (data.image) {
                     // Set the profile image source
                     $('#blahedit').attr('src', '{{ url("public/profile") }}/' + data
@@ -938,22 +981,22 @@ $(document).ready(function() {
                         '{{ url("public/assets/img/profiles/default.png") }}');
                 }
                 // Open the modal
-                $('#edit_partner_details').modal('show');
+                $('#edit_Supplier_details').modal('show');
             },
             error: function(xhr) {
                 toastr.error('Error fetching user data.');
             }
         });
     });
-    // Edit Partner
-    $('#edit_partner_details_form').on('submit', function(e) {
+    // Edit Supplier
+    $('#edit_Supplier_details_form').on('submit', function(e) {
         e.preventDefault(); // Prevent the form from submitting normally
 
         var formData = new FormData(this); // FormData for file uploads
-        var id = $('#partner_id').val(); // Get user ID from hidden input
+        var id = $('#Supplier_id').val(); // Get user ID from hidden input
 
         $.ajax({
-            url: '{{ route("partners.update", ":id") }}'.replace(':id', id), // Update route
+            url: '{{ route("suppliers.update", ":id") }}'.replace(':id', id), // Update route
             type: 'POST', // POST method with method override
             data: formData,
             contentType: false,
@@ -964,7 +1007,7 @@ $(document).ready(function() {
             success: function(response) {
                 toastr.success(response.message);
                 // Clear the existing table body            
-                // $('#edit_partner_details').modal('hide'); // Close modal after success
+                // $('#edit_Supplier_details').modal('hide'); // Close modal after success
                 setTimeout(function() {
                     window.location.reload(); // Reload the page after the delay
                 }, 3000);
@@ -986,34 +1029,20 @@ $(document).ready(function() {
 </script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var filterToggle = document.getElementById('filterToggle'); // Make sure you have this element
-        var filterSidebar = document.querySelector('.toggle-sidebar');
-
-        filterToggle.addEventListener('click', function (event) {
-            event.preventDefault();
-            filterSidebar.classList.toggle('active');
-        });
-
-        // Close button functionality
-        var closeSidebar = document.querySelector('.sidebar-closes');
-        closeSidebar.addEventListener('click', function (event) {
-            event.preventDefault();
-            filterSidebar.classList.remove('active');
-        });
-    });
-
     function resetForm() {
-        // Clear the input values
-        document.getElementById('name').value = '';
-        document.getElementById('email').value = '';
-        document.getElementById('mobile').value = '';
-        document.getElementById('city').value = '';
-        document.getElementById('state').value = '';
-        document.getElementById('country').value = '';
+        
+        document.querySelector('input[name="name"]').value = '';
+        document.querySelector('input[name="email"]').value = '';
+        document.querySelector('input[name="mobile"]').value = '';
+        document.querySelector('input[name="city"]').value = '';
+        document.querySelector('input[name="state"]').value = '';
+        document.querySelector('input[name="country"]').value = '';
 
-        // Redirect to the main partners page to reset filters
-        window.location.href = '{{ route('partners.index') }}';
+        // Redirect to the main suppliers page to reset filters
+        window.location.href = '{{ route('supplier.supplier-report') }}';
+
     }
 </script>
+
+
 @endsection

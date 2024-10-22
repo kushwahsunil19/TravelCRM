@@ -11,12 +11,50 @@ class InvoiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-      $totalInvoice = Invoice::count();
-      $invoices = Invoice::with(['branch', 'partner', 'package','bank','currency'])->paginate( $totalInvoice);
-      return view('admin.invoices.invoices',compact('invoices'));
-    }
+    // public function index()
+    // {
+    //   $totalInvoice = Invoice::count();
+    //   $invoices = Invoice::with(['branch', 'partner', 'package','bank'])->paginate( $totalInvoice);
+    //   return view('admin.invoices.invoices',compact('invoices'));
+
+      public function index(Request $request)
+      {
+          // Build the query for fetching invoices with the necessary relationships
+          $query = Invoice::with(['branch', 'partner', 'package', 'bank','currency']);
+      
+          // Apply filters based on request parameters
+          if ($request->filled('invoice_no')) {
+              $query->where('invoice_no', 'like', '%' . $request->invoice_no . '%');
+          }
+          if ($request->filled('branch')) {
+              $query->whereHas('branch', function ($q) use ($request) {
+                  $q->where('city', 'like', '%' . $request->branch . '%');
+              });
+          }
+          if ($request->filled('package')) {
+              $query->whereHas('package', function ($q) use ($request) {
+                  $q->where('package_name', 'like', '%' . $request->package . '%');
+              });
+          }
+          if ($request->filled('partner')) {
+              $query->whereHas('partner', function ($q) use ($request) {
+                  $q->where('name', 'like', '%' . $request->partner . '%');
+              });
+          }
+          if ($request->filled('discount_type')) {
+              $query->where('discount_type', $request->discount_type);
+          }
+      
+          // Get the total number of invoices after applying filters
+          $totalInvoices = $query->count();
+      
+          // Paginate the filtered results (you can adjust the number per page as needed)
+          $invoices = $query->paginate(10); // Paginate the filtered results
+      
+          // Return the view with total invoices and paginated invoices
+          return view('admin.invoices.invoices', compact('invoices', 'totalInvoices'));
+      }
+    
      /**
      * Display a listing of the resource.
      */
@@ -193,7 +231,57 @@ class InvoiceController extends Controller
         return redirect()->route('invoices.index')
                          ->with('success', 'Invoice deleted successfully.');
     }
-
+    public function downloadPDF(Request $request)
+    {
+        
+    
+        // Set the timezone to Indian Standard Time (IST)
+        date_default_timezone_set('Asia/Kolkata');
+    
+        // Build the query for fetching invoices with the necessary relationships
+        $query = Invoice::with(['branch', 'partner', 'package', 'bank']);
+    
+        // Apply filters based on request parameters
+        if ($request->filled('invoice_no')) {
+            $query->where('invoice_no', 'like', '%' . $request->invoice_no . '%');
+        }
+        if ($request->filled('branch')) {
+            $query->whereHas('branch', function ($q) use ($request) {
+                $q->where('city', 'like', '%' . $request->branch . '%');
+            });
+        }
+        if ($request->filled('package')) {
+            $query->whereHas('package', function ($q) use ($request) {
+                $q->where('package_name', 'like', '%' . $request->package . '%');
+            });
+        }
+        if ($request->filled('partner')) {
+            $query->whereHas('partner', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->partner . '%');
+            });
+        }
+        if ($request->filled('discount_type')) {
+            $query->where('discount_type', $request->discount_type);
+        }
+    
+        // Get the filtered data
+        $invoices = $query->get();
+    
+        // Check if invoices exist before generating the PDF
+        if ($invoices->isEmpty()) {
+            return redirect()->back()->with('error', 'No invoices found for the selected filters.');
+        }
+    
+        // Load the PDF view with filtered invoices data
+        $pdf = PDF::loadView('admin.invoices.invoice-pdf', compact('invoices'));
+    
+        // Format the date for the filename
+        $timestamp = date('Y-m-d_H-i-s');
+        $filename = 'invoice_report_' . $timestamp . '.pdf';
+    
+        // Return the PDF download
+        return $pdf->download($filename);
+    }
 
     public function generateQuotationPDF($id)
     {
@@ -236,7 +324,7 @@ class InvoiceController extends Controller
             ];
         }
 
-        // Example: Adjust these fields based on your `quotations` table structure
+        // Example: Adjust these fields based on your quotations table structure
         $data = [
             'currency_code'=>$invoice->currency->code,
             'curreny_symbol'=>$invoice->currency->symbol,
@@ -311,7 +399,7 @@ class InvoiceController extends Controller
             ];
         }
 
-        // Example: Adjust these fields based on your `invoices` table structure
+        // Example: Adjust these fields based on your invoices table structure
         $data = [
             'currency_code'=>$invoice->currency->code,
             'curreny_symbol'=>$invoice->currency->symbol,

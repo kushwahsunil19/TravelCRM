@@ -839,6 +839,8 @@
                                     <li><a href="#">Sales Report</a></li>
                                     <!-- <li><a href="#">Sales Return Report</a></li> -->
                                     <li><a href="{{route('quotation-report.index')}}">Quotation Report</a></li>
+                                    <li><a href="{{route('supplier.supplier-report')}}">Supplier Report</a></li>
+                                    <li><a href="{{route('partners.partners-report')}}">Partner Report</a></li>
                                     <li><a href="#">Payment Report</a></li>
                                     <!-- <li><a href="stock-report.html">Stock Report</a></li> -->
                                     <!-- <li><a href="low-stock-report.html">Low Stock Report</a></li>
