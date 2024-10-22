@@ -14,7 +14,7 @@
         <!-- Page Header -->
        
                         <!-- <li>
-										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filter"><span class="me-2"><img src="assets/img/icons/filter-icon.svg" alt="Filter"></span>Filter </a>
+										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filter"><span class="me-2"><img src="{{url('public/assets/img/icons/filter-icon.svg')}}" alt="Filter"></span>Filter </a>
 									</li> -->
 									<!-- <li>
 										<a class="btn-filters" href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Settings"><span><i class="fe fe-settings"></i></span> </a>
@@ -31,7 +31,7 @@
                     <li>
                                 <a class="btn btn-filters w-auto popup-toggle" id="filterToggle"
                                    data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filter">
-                                    <span class="me-2"><img src="assets/img/icons/filter-icon.svg"
+                                    <span class="me-2"><img src="{{url('public/assets/img/icons/filter-icon.svg')}}"
                                                             alt="filter"></span>Filter
                                 </a>
                             </li>
@@ -60,7 +60,7 @@
                                 </div>
                             </li>  
                         <!-- <li>
-										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filter"><span class="me-2"><img src="assets/img/icons/filter-icon.svg" alt="Filter"></span>Filter </a>
+										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filter"><span class="me-2"><img src="{{url('public/assets/img/icons/filter-icon.svg')}}" alt="Filter"></span>Filter </a>
 									</li> -->
 									<!-- <li>
 										<a class="btn-filters" href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Settings"><span><i class="fe fe-settings"></i></span> </a>

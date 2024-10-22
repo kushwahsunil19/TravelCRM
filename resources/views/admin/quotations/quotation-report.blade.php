@@ -1,9 +1,10 @@
 @extends('admin.layouts.master')
 @section('content')
 
+
 <!-- Main Wrapper -->
-<div class="main-wrapper">
-    @include('admin.layouts.common-sidebar')
+@include('admin.layouts.common-sidebar')
+<!-- /Main Wrapper -->
 
     <!-- Page Content -->
     <div class="page-wrapper">

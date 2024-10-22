@@ -16,7 +16,7 @@ $url = $_SERVER['REQUEST_URI'];
                     <ul class="filter-list">
                         
                         <li>
-										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filter"><span class="me-2"><img src="assets/img/icons/filter-icon.svg" alt="filter"></span>Filter </a>
+										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filter"><span class="me-2"><img src="{{url('public/assets/img/icons/filter-icon.svg')}}" alt="filter"></span>Filter </a>
 									</li>
 									
                                    <li>

@@ -838,9 +838,9 @@
                                         <li><a href="purchase-return.html">Purchase Return Report</a></li> -->
                                     <li><a href="#">Sales Report</a></li>
                                     <!-- <li><a href="#">Sales Return Report</a></li> -->
-                                    <li><a href="{{route('quotation-report.index')}}">Quotation Report</a></li>
-                                    <li><a href="{{route('supplier.supplier-report')}}">Supplier Report</a></li>
-                                    <li><a href="{{route('partners.partners-report')}}">Partner Report</a></li>
+                                    <li><a href="{{route('quotation-report.index')}}" class="{{strpos($url,'quotation-report') !== false ? 'active' : '' }}">Quotation Report</a></li>
+                                    <li><a href="{{route('supplier.supplier-report')}}"  class="{{strpos($url,'supplier-report') !== false ? 'active' : '' }}">Supplier Report</a></li>
+                                    <li><a href="{{route('partners.partners-report')}}" class="{{strpos($url,'partners-report') !== false ? 'active' : '' }}">Partner Report</a></li>
                                     <li><a href="#">Payment Report</a></li>
                                     <!-- <li><a href="stock-report.html">Stock Report</a></li> -->
                                     <!-- <li><a href="low-stock-report.html">Low Stock Report</a></li>

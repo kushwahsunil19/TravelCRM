@@ -32,7 +32,7 @@
                 <div class="list-btn">
                     <ul class="filter-list">
                         <!-- <li>
-										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Filter"><span class="me-2"><img src="public/assets/img/icons/filter-icon.svg" alt="filter"></span>Filter </a>
+										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Filter"><span class="me-2"><img src="public/{{url('public/assets/img/icons/filter-icon.svg')}}" alt="filter"></span>Filter </a>
 									</li> -->
                         @if(collect(getPermission())->contains('name', 'create-user'))
                         <li>
