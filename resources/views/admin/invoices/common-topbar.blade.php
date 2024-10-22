@@ -242,7 +242,7 @@ $url = $_SERVER['REQUEST_URI'];
                                 <li><a href="{{route('invoices.invoices-paid')}}"
                                         class="{{strpos($url,'invoices-paid') !== false ? 'active' : '' }}">Paid</a>
                                 </li>
-                                <li><a href="{{route('invoices.invoices-overdue')}}"
+                                <!-- <li><a href="{{route('invoices.invoices-overdue')}}"
                                         class="{{strpos($url,'invoices-overdue') !== false ? 'active' : '' }}">Overdue</a>
                                 </li>
                                 <li><a href="{{route('invoices.invoices-cancelled')}}"
@@ -259,7 +259,7 @@ $url = $_SERVER['REQUEST_URI'];
                                 </li>
                                 <li><a href="{{route('invoices.invoices-draft')}}"
                                         class="{{strpos($url,'invoices-draft') !== false ? 'active' : '' }}">Draft</a>
-                                </li>
+                                </li> -->
                             </ul>
                         </div>
                     </div>

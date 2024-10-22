@@ -11,75 +11,284 @@
     <div class="content container-fluid">
         <!-- Page Header -->
         <div class="page-header">
-            <div class="content-page-header ">
-                <h5>Roles & Permission</h5>
-                <div class="list-btn">
-                    <ul class="filter-list">
-                        <!-- <li>
-										<div class="short-filter">
-											<img class="me-2" src="assets/img/icons/sort.svg" alt="Sort by select">
-											<div class="sort-by sort-by-ticket">
-												<select class="sort select">
-												<option>Sort by: Date</option>
-												<option>Sort by: Date 1</option>
-												<option>Sort by: Date 2</option>
-												</select>
-											</div>
-										</div>
+            <div class="content-page-header">
+                <h5>Profit & Loss</h5>
+                <div class="page-content">
+                    <div class="list-btn">
+                        <ul class="filter-list">
+                            <!-- <li>
+										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip"
+											data-bs-placement="bottom" title="Filter"><span class="me-2"><img
+													src="assets/img/icons/filter-icon.svg" alt="filter"></span>Filter
+										</a>
 									</li>
 									<li>
-										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Filter"><span class="me-2"><img src="assets/img/icons/filter-icon.svg" alt="filter"></span>Filter </a>
+										<div class="dropdown dropdown-action" data-bs-toggle="tooltip"
+											data-bs-placement="bottom" title="Download">
+											<a href="#" class="btn-filters" data-bs-toggle="dropdown"
+												aria-expanded="false"><span><i class="fe fe-download"></i></span></a>
+											<div class="dropdown-menu dropdown-menu-end">
+												<ul class="d-block">
+													<li>
+														<a class="d-flex align-items-center download-item"
+															href="javascript:void(0);" download><i
+																class="far fa-file-pdf me-2"></i>PDF</a>
+													</li>
+													<li>
+														<a class="d-flex align-items-center download-item"
+															href="javascript:void(0);" download><i
+																class="far fa-file-text me-2"></i>CVS</a>
+													</li>
+												</ul>
+											</div>
+										</div>
 									</li> -->
-                        @if(collect(getPermission())->contains('name', 'create-role'))
-                        <li>
-                            <a class="btn btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#add_role"><i
-                                    class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add Roles</a>
-                        </li>
-                        @endif
-                    </ul>
+                            <!-- <li>
+										<a class="btn-filters" href="javascript:void(0);" data-bs-toggle="tooltip"
+											data-bs-placement="bottom" title="Print"><span><i
+													class="fe fe-printer"></i></span> </a>
+									</li> -->
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
         <!-- /Page Header -->
+
+        <div class="profit-menu">
+            <div class="row">
+                <div class="col-lg-2 col-md-6 col-sm-12">
+                    <div class="input-block mb-3">
+                        <label>Period</label>
+                        <ul class="form-group">
+                            <li>
+                                <select class="select ">
+                                    <option>This Year</option>
+                                </select>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 col-sm-12">
+                    <div class="input-block mb-3">
+                        <label>From</label>
+                        <div class="cal-icon cal-icon-info">
+                            <input type="text" class="datetimepicker form-control" placeholder="01 Jan 2023">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 col-sm-12">
+                    <div class="input-block mb-3">
+                        <label>To</label>
+                        <div class="cal-icon cal-icon-info">
+                            <input type="text" class="datetimepicker form-control" placeholder="31 Mar 2023">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 col-sm-12 ">
+                    <div class="input-block mb-3">
+                        <label>Display Columns by</label>
+                        <ul class="form-group">
+                            <li>
+                                <select class="select ">
+                                    <option>Month</option>
+                                </select>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 col-sm-12">
+                    <div class="input-block mb-3">
+                        <label>Accounting Method</label>
+                        <ul class="form-group">
+                            <li>
+                                <select class="select ">
+                                    <option>Accrual</option>
+                                </select>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 col-sm-12">
+                    <a class="btn btn-primary loss" href="#">
+                        Run</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Filter -->
+        <div id="filter_inputs" class="card filter-card">
+            <div class="card-body pb-0">
+                <div class="row">
+                    <div class="col-sm-6 col-md-3">
+                        <div class="input-block mb-3">
+                            <label>Name</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="input-block mb-3">
+                            <label>Email</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="input-block mb-3">
+                            <label>Phone</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Search Filter -->
 
         <div class="row">
             <div class="col-sm-12">
                 <div class="card-table">
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-center table-hover datatable">
-                                <thead class="thead-light">
+                            <div class="table-profit-loss">
+                                <table class="table table-center ">
+                                    <thead class="thead-light loss">
+                                        <tr>
+                                        
+											<th>Branch</th>
+											<th>Package</th>
+                                            <th>Month</th>
+                                            <th>Year</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Role Name</th>
-                                        <th>Created at</th>
-                                        <th Class="no-sort">Actions</th>
+                                        <td class="profit space" colspan="5">
+                                            <table class="table table-center profit">
+                                                <thead class="profitloss-heading">
+                                                    <tr>
+                                                        <th class="table-profit-head" colspan="5">Income</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+													@php  $total_invoice_amt = 0; @endphp
+                                                    @forelse ($invoices as $invoice)
+
+                                                    @php
+													$symbol = isset($invoice->currency->symbol) ? $invoice->currency->symbol : '₹';
+                                                    $package_amt = $invoice->package->amount;
+                                                    // GST Tax in percentage
+                                                    $tax = $invoice->vat;
+                                                    // Discount in percentage
+                                                    $discount = $invoice->discount;
+
+                                                    if($invoice->discount_type=='Fixed'){
+                                                    $discount_amt = $discount;
+                                                    }else{
+                                                    $discount_amt = ($package_amt * $discount) / 100;
+                                                    }
+                                                    // Amount after discount
+                                                    $amount_after_discount = $package_amt - $discount_amt;
+                                                    $tax_amt = ($amount_after_discount * $tax) / 100;
+                                                    $total_amt = $amount_after_discount + $tax_amt;
+													$total_invoice_amt += $total_amt;
+                                                    @endphp
+                                                    <tr class="proft-head">
+                                                        <td>{{ isset($invoice->branch->branch_name)?$invoice->branch->branch_name:'' }}</td>
+                                                        <td>{{ isset($invoice->package->package_name)?$invoice->package->package_name:'' }}</td>
+                                                        <td>March</td>
+                                                        <td>2024</td>
+                                                        <td>{{ isset($invoice->currency->symbol) ? $invoice->currency->symbol : '₹' }}{{ $total_amt }}</td>
+                                                    </tr>
+													@empty
+                                    <tr>
+                                        <td colspan="9" class="text-center">No invoices found.</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($roles as $role)
-                                    <tr>
-                                        <td>{{ $role->id }}</td>
-                                        <td>{{ $role->name }}</td>
-                                        <td>{{ $role->created_at->format('d M Y, h:i A') }}</td>
-                                        <td class="d-flex align-items-center">
-                                            @if(collect(getPermission())->contains('name', 'edit-role'))
-                                            <a class="btn btn-greys me-2 edit_role" data-id="{{$role->id}}">
-                                                <i class="fa fa-edit me-1"></i> Edit Role
-                                            </a>
-                                            @endif
-                                            @if(collect(getPermission())->contains('name', 'view-role'))
-                                            <a href="{{ route('permission.details', $role->id) }}"
-                                                class="btn btn-greys me-2">
-                                                <i class="fa fa-shield me-1"></i> Permissions
-                                            </a>
-                                            @endif
+                                    @endforelse
+                                                </tbody>
+
+                                                <tr class="profitloss-bg">
+                                                    <td>
+                                                        <h6>Total Income</h6>
+                                                    </td>
+                                                    <td>
+                                                        
+                                                    </td>
+                                                    <td>
+                                                      
+                                                    </td>
+                                                    <td>
+                                                      
+                                                    </td>
+                                                    <td>
+                                                        {{$symbol}}{{ $total_amt }}
+                                                    </td>
+                                                </tr>
+                                            </table>
                                         </td>
                                     </tr>
-                                    @endforeach
+                                    <tr>
+                                        <td class="loss-space" colspan="5">
+                                            <table class="table table-center profit">
+                                                <thead class="profitloss-heading">
+                                                    <tr>
+                                                        <th class="table-profit-head" colspan="5">Expenses</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Exchange Gain or Losses</td>
+                                                        <td>$0.00</td>
+                                                        <td>$0.00</td>
+                                                        <td>$0.00</td>
+                                                        <td>$0.00</td>
+                                                    </tr>
+                                                    <tr class="proft-head">
+                                                        <td>Stripe Fees</td>
+                                                        <td>$2,81,687.00</td>
+                                                        <td>$3,73,518.00</td>
+                                                        <td>$2,17,936.00</td>
+                                                        <td>$8,73,141.00</td>
+                                                    </tr>
+                                                </tbody>
 
-                            </table>
-
+                                                <tr class="profitloss-bg">
+                                                    <td>
+                                                        <h6>Total Expense</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6>$2,58,136.00</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6>$1,38,471.00</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6>$2,61,682.00</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6>$6,58,289.00</h6>
+                                                    </td>
+                                                </tr>
+                                                <tr class="profitloss-bg">
+                                                    <td>
+                                                        <h6>Net Income</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6>$2,69,276.00</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6>$2,75,638.00</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6>$2,51,629.00</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6>$7,96,543.00</h6>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -124,27 +333,36 @@
                                         <div class="selectBox-cont">
                                             <label class="custom_check w-100">
                                                 <input type="checkbox" name="username">
-                                                <span class="checkmark"></span> Admin
+                                                <span class="checkmark"></span> Michael
                                             </label>
                                             <label class="custom_check w-100">
                                                 <input type="checkbox" name="username">
-                                                <span class="checkmark"></span> Customer
+                                                <span class="checkmark"></span> Richard
+                                            </label>
+                                            <label class="custom_check w-100">
+                                                <input type="checkbox" name="username">
+                                                <span class="checkmark"></span> Joseph
+                                            </label>
+                                            <label class="custom_check w-100">
+                                                <input type="checkbox" name="username">
+                                                <span class="checkmark"></span> David
                                             </label>
                                             <!-- View All -->
                                             <div class="view-content">
                                                 <div class="viewall-One">
                                                     <label class="custom_check w-100">
                                                         <input type="checkbox" name="username">
-                                                        <span class="checkmark"></span> Shop Owner
+                                                        <span class="checkmark"></span> Benjamin
                                                     </label>
                                                     <label class="custom_check w-100">
                                                         <input type="checkbox" name="username">
-                                                        <span class="checkmark"></span> Receptionist
+                                                        <span class="checkmark"></span> Steven
                                                     </label>
                                                 </div>
                                                 <div class="view-all">
                                                     <a href="javascript:void(0);" class="viewall-button-One"><span
-                                                            class="me-2">View All</span><span><i
+                                                            class="me-2">View
+                                                            All</span><span><i
                                                                 class="fa fa-circle-chevron-down"></i></span></a>
                                                 </div>
                                             </div>
@@ -202,131 +420,32 @@
 </div>
 <!--/Add Asset -->
 
-<!-- Add Role Modal -->
-
-<div class="modal custom-modal fade" id="add_role" role="dialog">
+<!-- Delete Items Modal -->
+<div class="modal custom-modal fade" id="delete_modal" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
-            <div class="modal-header border-0 pb-0">
-                <div class="form-header modal-header-title text-start mb-0">
-                    <h4 class="mb-0">Add Role</h4>
+            <div class="modal-body">
+                <div class="form-header">
+                    <h3>Delete Customer</h3>
+                    <p>Are you sure want to delete?</p>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-
-                </button>
+                <div class="modal-btn delete-action">
+                    <div class="row">
+                        <div class="col-6">
+                            <button type="reset" data-bs-dismiss="modal"
+                                class="w-100 btn btn-primary paid-continue-btn">Delete</button>
+                        </div>
+                        <div class="col-6">
+                            <button type="submit" data-bs-dismiss="modal"
+                                class="w-100 btn btn-primary paid-cancel-btn">Cancel</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <form action="{{route('roles-permission.store')}}" id="role_details_form" method="POST">
-                @csrf
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12">
-                            <div class="input-block mb-0">
-                                <label>Role Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="role_name" placeholder="Enter Role Name">
-                                @if ($errors->has('name'))
-                                <span class="text-danger">{{ $errors->first('name') }}</span>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12">
-                            <div class="input-block mb-0">
-                                <label>Permission <span class="text-danger">*</span></label>
-                                <select class="form-select @error('permissions') is-invalid @enderror" multiple
-                                    aria-label="Permissions" id="permissions" name="permissions[]"
-                                    style="height: 210px;">
-
-                                    @forelse ($permissions as $permission)
-                                    <option value="{{ $permission->id }}"
-                                        {{ in_array($permission->id, old('permissions') ?? []) ? 'selected' : '' }}>
-                                        {{ $permission->name }}
-                                    </option>
-                                    @empty
-
-                                    @endforelse
-                                </select>
-                                @if ($errors->has('permissions'))
-                                <span class="text-danger">{{ $errors->first('permissions') }}</span>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-
-                </div>
-            </form>
         </div>
     </div>
 </div>
-<!-- /Add Role Modal -->
-
-<!-- Edit Role Modal -->
-<div class="modal custom-modal fade" id="edit_role" role="dialog">
-    <div class="modal-dialog modal-dialog-centered modal-md">
-        <div class="modal-content">
-            <div class="modal-header border-0 pb-0">
-                <div class="form-header modal-header-title text-start mb-0">
-                    <h4 class="mb-0">Edit Role</h4>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-
-                </button>
-            </div>
-            <form id="edit_role_details_form" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
-                <!-- Spoofing PUT for update -->
-                <input type="hidden" name="role_id" id="role_id">
-                <!-- Include CSRF token for security -->
-
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12">
-                            <div class="input-block mb-0">
-                                <label>Role Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" Value="" name="role_name" id="edit_name"
-                                    placeholder="Enter Role Name">
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12">
-                            <div class="input-block mb-0">
-                                <label>Permission <span class="text-danger">*</span></label>
-                                <select class="form-select @error('permissions') is-invalid @enderror" multiple
-                                    aria-label="Permissions" id="edit_permissions" name="permissions[]"
-                                    style="height: 210px;">
-                                    @forelse ($permissions as $permission)
-                                    <option value="{{ $permission->id }}"
-                                        {{ isset($rolePermissions) && in_array($permission->id, $rolePermissions) ? 'selected' : '' }}>
-                                        {{ $permission->name }}
-                                    </option>
-                                    @empty
-                                    <option value="">No permissions available</option>
-                                    @endforelse
-                                </select>
-                                @if ($errors->has('permissions'))
-                                <span class="text-danger">{{ $errors->first('permissions') }}</span>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<!-- /Edit Role Modal -->
+<!-- /Delete Items Modal -->
 
 </div>
 <!-- /Main Wrapper -->
@@ -688,139 +807,4 @@
     </div>
 </div>
 <!-- /Theme Setting -->
-
-<!-- Include Toastr CSS -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-
-
-<!-- Toastr JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function() {
-    toastr.options = {
-        "closeButton": true,
-        "debug": false,
-        "newestOnTop": true,
-        "progressBar": true,
-        "positionClass": "toast-top-right", // Position of the toast
-        "preventDuplicates": false,
-        "showDuration": "300",
-        "hideDuration": "1000",
-        "timeOut": "5000", // Duration for which the toast is shown
-        "extendedTimeOut": "1000",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn", // Use fadeIn or slideDown
-        "hideMethod": "fadeOut" // Use fadeOut or slideUp
-    };
-    $('#role_details_form').on('submit', function(e) {
-
-        e.preventDefault(); // Prevent the form from submitting normally
-
-        var formData = new FormData(this); // Create FormData object from the form
-
-        $.ajax({
-            url: $(this).attr('action'), // Get the action URL from the form
-            type: 'POST',
-            data: formData, // Send FormData object
-            contentType: false, // Important for file upload
-            processData: false, // Important for file upload
-            success: function(response) {
-                toastr.success(response.message); // Display success message
-                // Optionally, reset the form or close the modal
-                // $('#branch_details').modal('hide'); // Close modal
-                $('#role_details_form')[0].reset(); // Reset the form
-                setTimeout(function() {
-                    window.location.reload(); // Reload the page after the delay
-                }, 3000); // 5-second delay
-
-            },
-            error: function(xhr) {
-                if (xhr.responseJSON.errors) {
-                    $.each(xhr.responseJSON.errors, function(key, value) {
-                        toastr.error(value[0]); // Display each error message
-                    });
-                } else {
-                    // toastr.error('Error uploading profile.'); // Generic error message
-                }
-            }
-        });
-    });
-
-    $(document).on('click', '.edit_role', function() {
-        var id = $(this).data('id'); // Get user ID from the button
-
-        // Make an AJAX request to fetch the user data
-        $.ajax({
-            url: '{{ route("roles-permission.edit", ":id") }}'.replace(':id',
-                id), // Replace ':id' with the actual user ID
-            type: 'GET',
-            success: function(response) {
-                var data = response.data;
-                var rolePermissions = response.rolePermissions;
-                // Populate the form fields with the fetched data
-                $('#role_id').val(data.id); // Hidden user ID
-                $('#edit_name').val(data.name);
-                // Clear the existing selections in the multi-select
-                $('#edit_permissions').val(rolePermissions).trigger('change');
-                $('#edit_role').modal('show');
-            },
-            error: function(xhr) {
-                toastr.error('Error fetching user data.');
-            }
-        });
-    });
-    // Edit package
-    $('#edit_role_details_form').on('submit', function(e) {
-        e.preventDefault(); // Prevent the form from submitting normally
-
-        var formData = new FormData(this); // FormData for file uploads
-        var id = $('#role_id').val(); // Get user ID from hidden input
-
-        $.ajax({
-            url: '{{ route("roles-permission.update", ":id") }}'.replace(':id',
-                id), // Update route
-            type: 'POST', // POST method with method override
-            data: formData,
-            contentType: false,
-            processData: false,
-            headers: {
-                'X-HTTP-Method-Override': 'PUT' // Spoofing PUT
-            },
-            success: function(response) {
-                toastr.success(response.message);
-                // Clear the existing table body            
-                // $('#edt_branch_details').modal('hide'); // Close modal after success
-                setTimeout(function() {
-                    window.location.reload(); // Reload the page after the delay
-                }, 3000);
-            },
-            error: function(xhr) {
-                // Display error messages from the server if any
-                let errors = xhr.responseJSON.errors;
-                if (errors) {
-                    $.each(errors, function(key, value) {
-                        toastr.error(value[0]);
-                    });
-                } else {
-                    toastr.error('Error updating user.');
-                }
-            }
-        });
-    });
-    $('#permissions').select2({
-        placeholder: "Select permissions",
-        allowClear: true
-    });
-    $('#edit_permissions').select2({
-        placeholder: "Select permissions",
-        allowClear: true
-    });
-
-});
-</script>
 @endsection

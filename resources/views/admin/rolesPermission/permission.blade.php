@@ -43,6 +43,7 @@
                                             <th>#</th>
                                             <th>Modules</th>
                                             <th>Sub Modules</th>
+                                            <th>List</th>
                                             <th>Create</th>
                                             <th>Edit</th>
                                             <th>Delete</th>
@@ -58,7 +59,7 @@
                                             <td>{{ $module }}</td>
                                             <td>{{ $module }}</td>
 
-                                            @foreach(['create', 'edit', 'delete', 'view'] as $action)
+                                            @foreach(['list','create', 'edit', 'delete', 'view'] as $action)
                                             <td>
                                                 <label class="custom_check">
                                                     <input type="checkbox" name="permissions[]"
