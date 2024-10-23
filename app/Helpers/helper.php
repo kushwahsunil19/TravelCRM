@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Spatie\Permission\Models\Role;
+
 if (!function_exists('getPermission')) {
     function getPermission()
     {
@@ -10,6 +12,20 @@ if (!function_exists('getPermission')) {
     }
 }
 
+
+if (!function_exists('getRolePermissions')) {
+    function getRolePermissions()
+    {
+        $roles = Role::all();
+        $data = []; // Initialize the data array
+
+        foreach ($roles as $role) {
+        // Create an array entry for each role with its permissions
+         $data[$role->name] = $role->permissions->pluck('name')->toArray(); // Collect permissions for each role
+        }
+        return $data;
+    }
+}
 if (!function_exists('getAuth')) {
     /**
      * Generate a random string of specified length.

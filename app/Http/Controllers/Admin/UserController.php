@@ -77,30 +77,40 @@ class UserController extends Controller
             })
             
           
-            ->addColumn('action', function($user) {
-                return '
-                <div class="dropdown dropdown-action">
+          ->addColumn('action', function($user) {
+    $editPermission = collect(getPermission())->contains('name', 'edit-user'); // Check if user has edit-user permission
+    $deletePermission = collect(getPermission())->contains('name', 'delete-user'); // Check for delete permission
+
+    $actions = '<div class="dropdown dropdown-action">
                     <a href="#" class="btn-action-icon" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-ellipsis-v"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end">
-                        <ul>
-                            <li>
-                                <a class="dropdown-item edit-user" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#edit_user" data-id="'.$user->id.'">
-                                    <i class="far fa-edit me-2"></i>Edit
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item delete-user" href="javascript:void(0);"  data-id="'.$user->id.'">
-                                    <i class="far fa-trash-alt me-2"></i>Delete
-                                </a>
-                            </li>
-                          
-                        </ul>
-                    </div>
-                </div>';
-            })
-            
+                        <ul>';
+
+    // Add Edit option only if the user has edit permission
+    if ($editPermission) {
+        $actions .= '<li>
+                        <a class="dropdown-item edit-user" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#edit_user" data-id="'.$user->id.'">
+                            <i class="far fa-edit me-2"></i>Edit
+                        </a>
+                    </li>';
+    }
+
+    // Add Delete option only if the user has delete permission
+    if ($deletePermission) {
+        $actions .= '<li>
+                        <a class="dropdown-item delete-user" href="javascript:void(0);" data-id="'.$user->id.'">
+                            <i class="far fa-trash-alt me-2"></i>Delete
+                        </a>
+                    </li>';
+    }
+
+    $actions .= '</ul></div></div>';
+
+    return $actions;
+})
+
             ->rawColumns(['first_name', 'role', 'action', 'status']) // Mark 'first_name' as raw HTML
             ->make(true);
         }

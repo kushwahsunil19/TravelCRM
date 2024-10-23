@@ -28,12 +28,14 @@
 										</div>
 									</li>
 									<li>
-										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Filter"><span class="me-2"><img src="assets/img/icons/filter-icon.svg" alt="filter"></span>Filter </a>
+										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Filter"><span class="me-2"><img src="{{url('public/assets/img/icons/filter-icon.svg')}}" alt="filter"></span>Filter </a>
 									</li> -->
+                        @if(collect(getPermission())->contains('name', 'create-role'))
                         <li>
                             <a class="btn btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#add_role"><i
                                     class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add Roles</a>
                         </li>
+                        @endif
                     </ul>
                 </div>
             </div>
@@ -61,13 +63,17 @@
                                         <td>{{ $role->name }}</td>
                                         <td>{{ $role->created_at->format('d M Y, h:i A') }}</td>
                                         <td class="d-flex align-items-center">
-                                            <a  class="btn btn-greys me-2 edit_role" data-id="{{$role->id}}">
+                                            @if(collect(getPermission())->contains('name', 'edit-role'))
+                                            <a class="btn btn-greys me-2 edit_role" data-id="{{$role->id}}">
                                                 <i class="fa fa-edit me-1"></i> Edit Role
                                             </a>
+                                            @endif
+                                            @if(collect(getPermission())->contains('name', 'view-role'))
                                             <a href="{{ route('permission.details', $role->id) }}"
                                                 class="btn btn-greys me-2">
                                                 <i class="fa fa-shield me-1"></i> Permissions
                                             </a>
+                                            @endif
                                         </td>
                                     </tr>
                                     @endforeach
@@ -216,7 +222,7 @@
                         <div class="col-lg-12 col-md-12">
                             <div class="input-block mb-0">
                                 <label>Role Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="role_name" placeholder="Enter Role Name" >
+                                <input type="text" class="form-control" name="role_name" placeholder="Enter Role Name">
                                 @if ($errors->has('name'))
                                 <span class="text-danger">{{ $errors->first('name') }}</span>
                                 @endif
@@ -229,8 +235,8 @@
                                 <label>Permission <span class="text-danger">*</span></label>
                                 <select class="form-select @error('permissions') is-invalid @enderror" multiple
                                     aria-label="Permissions" id="permissions" name="permissions[]"
-                                    style="height: 210px;" >
-                                    
+                                    style="height: 210px;">
+
                                     @forelse ($permissions as $permission)
                                     <option value="{{ $permission->id }}"
                                         {{ in_array($permission->id, old('permissions') ?? []) ? 'selected' : '' }}>
@@ -283,33 +289,33 @@
                             <div class="input-block mb-0">
                                 <label>Role Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" Value="" name="role_name" id="edit_name"
-                                    placeholder="Enter Role Name" >
-                                  
+                                    placeholder="Enter Role Name">
+
                             </div>
                         </div>
                     </div>
-                   <div class="row">
-                    <div class="col-lg-12 col-md-12">
-                        <div class="input-block mb-0">
-                            <label>Permission <span class="text-danger">*</span></label>
-                            <select class="form-select @error('permissions') is-invalid @enderror" multiple
-                                aria-label="Permissions" id="edit_permissions" name="permissions[]"
-                                style="height: 210px;">
-                                @forelse ($permissions as $permission)
-                                <option value="{{ $permission->id }}"
-                                    {{ isset($rolePermissions) && in_array($permission->id, $rolePermissions) ? 'selected' : '' }}>
-                                    {{ $permission->name }}
-                                </option>
-                                @empty
-                                <option value="">No permissions available</option>
-                                @endforelse
-                            </select>
-                            @if ($errors->has('permissions'))
-                            <span class="text-danger">{{ $errors->first('permissions') }}</span>
-                            @endif
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="input-block mb-0">
+                                <label>Permission <span class="text-danger">*</span></label>
+                                <select class="form-select @error('permissions') is-invalid @enderror" multiple
+                                    aria-label="Permissions" id="edit_permissions" name="permissions[]"
+                                    style="height: 210px;">
+                                    @forelse ($permissions as $permission)
+                                    <option value="{{ $permission->id }}"
+                                        {{ isset($rolePermissions) && in_array($permission->id, $rolePermissions) ? 'selected' : '' }}>
+                                        {{ $permission->name }}
+                                    </option>
+                                    @empty
+                                    <option value="">No permissions available</option>
+                                    @endforelse
+                                </select>
+                                @if ($errors->has('permissions'))
+                                <span class="text-danger">{{ $errors->first('permissions') }}</span>
+                                @endif
+                            </div>
                         </div>
                     </div>
-                </div>
 
                 </div>
                 <div class="modal-footer">
@@ -712,7 +718,7 @@ $(document).ready(function() {
         "hideMethod": "fadeOut" // Use fadeOut or slideUp
     };
     $('#role_details_form').on('submit', function(e) {
-      
+
         e.preventDefault(); // Prevent the form from submitting normally
 
         var formData = new FormData(this); // Create FormData object from the form
@@ -739,7 +745,7 @@ $(document).ready(function() {
                         toastr.error(value[0]); // Display each error message
                     });
                 } else {
-                   // toastr.error('Error uploading profile.'); // Generic error message
+                    // toastr.error('Error uploading profile.'); // Generic error message
                 }
             }
         });
@@ -747,7 +753,7 @@ $(document).ready(function() {
 
     $(document).on('click', '.edit_role', function() {
         var id = $(this).data('id'); // Get user ID from the button
-       
+
         // Make an AJAX request to fetch the user data
         $.ajax({
             url: '{{ route("roles-permission.edit", ":id") }}'.replace(':id',

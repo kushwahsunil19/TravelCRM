@@ -20,7 +20,8 @@
                             <img src="{{url('public/assets/img/logo2.png')}}" class="img-fluid logo-blue" alt="Logo">
                         </a>
                         <a href="{{route('dashboard')}}">
-                            <img src="{{url('public/assets/img/logo-small.png')}}" class="img-fluid logo-small" alt="Logo">
+                            <img src="{{url('public/assets/img/logo-small.png')}}" class="img-fluid logo-small"
+                                alt="Logo">
                         </a>
                     </div>
                 </div>
@@ -213,6 +214,12 @@
             $url = explode('/',$url);
             $endurl = end($url);
             $url = $_SERVER['REQUEST_URI'];
+
+            // Fetch the current user's role
+            $userRole = auth()->user()->roles->first()->name; // Assuming the user has one role
+            // Get the role permissions using the helper function
+            $rolePermissions = getRolePermissions();
+
             @endphp
 
             <!-- Sidebar -->
@@ -223,8 +230,8 @@
                             <ul class="list-inline-item list-unstyled links">
                                 <li class="menu-title"><span>Main</span></li>
                                 <li class="submenu">
-                                    <a href="{{route('dashboard')}}"><i class="fe fe-home"></i> <span> Dashboard</span> <span
-                                            class="menu-arrow"></span></a>
+                                    <a href="{{route('dashboard')}}"><i class="fe fe-home"></i> <span> Dashboard</span>
+                                        <span class="menu-arrow"></span></a>
 
                                     <!-- <ul>
                                             <li><a href="{{route('dashboard')}}" class="active">Admin Dashboard</a></li>
@@ -302,8 +309,10 @@
                                     <a href="#"><i class="fe fe-file-plus"></i><span>Signature</span> <span
                                             class="menu-arrow"></span></a>
                                     <ul>
-                                        <li><a href="#"><i class="fe fe-clipboard"></i> <span>List of Signature</span></a></li>
-                                        <li><a href="#"><i class="fe fe-box"></i> <span>Signature Invoice</span></a></li>
+                                        <li><a href="#"><i class="fe fe-clipboard"></i> <span>List of
+                                                    Signature</span></a></li>
+                                        <li><a href="#"><i class="fe fe-box"></i> <span>Signature Invoice</span></a>
+                                        </li>
 
                                     </ul>
                                 </li>
@@ -349,7 +358,8 @@
 
                                 <li class="menu-title"><span>Quotations</span></li>
                                 <li>
-                                    <a href="quotations.html"><i class="fe fe-clipboard"></i> <span>Quotations</span></a>
+                                    <a href="quotations.html"><i class="fe fe-clipboard"></i>
+                                        <span>Quotations</span></a>
                                 </li>
                                 <li>
                                     <a href="delivery-challans.html"><i class="fe fe-file-text"></i> <span>Delivery
@@ -389,7 +399,8 @@
                                             Permission</span></a>
                                 </li>
                                 <li>
-                                    <a href="delete-account-request.html"><i class="fe fe-trash-2"></i> <span>Delete Account
+                                    <a href="delete-account-request.html"><i class="fe fe-trash-2"></i> <span>Delete
+                                            Account
                                             Request</span></a>
                                 </li>
 
@@ -592,12 +603,12 @@
                                     <a href="#"><i class="fe fe-file-text"></i> <span>Documentation</span></a>
                                 </li>
                                 <li>
-                                    <a href="javascript:void(0);"><i class="fe fe-lock"></i> <span>Change Log</span> <span
-                                            class="badge badge-primary ms-auto">v2.0</span></a>
+                                    <a href="javascript:void(0);"><i class="fe fe-lock"></i> <span>Change Log</span>
+                                        <span class="badge badge-primary ms-auto">v2.0</span></a>
                                 </li>
                                 <li class="submenu">
-                                    <a href="javascript:void(0);"><i class="fa fa-list"></i> <span>Multi Level</span> <span
-                                            class="menu-arrow"></span></a>
+                                    <a href="javascript:void(0);"><i class="fa fa-list"></i> <span>Multi Level</span>
+                                        <span class="menu-arrow"></span></a>
                                     <ul style="display: none;">
                                         <li class="submenu">
                                             <a href="javascript:void(0);"> <span>Level 1</span> <span
@@ -664,13 +675,21 @@
                             </li> -->
                             <!-- /Customers -->
                             <!-- Masters -->
-                            
-                        
+
+
                             <li class="menu-title"><span>Main </span></li>
                             <li>
-                            <a href="{{route('dashboard')}}"><i class="fe fe-home"></i> <span> Dashboard</span></a>
+                                <a href="{{route('dashboard')}}"><i class="fe fe-home"></i> <span> Dashboard</span></a>
                             </li>
-                        
+                        <!-- Invoices Section -->
+                        @if(isset($rolePermissions[$userRole]))
+                            @php
+                                $listRole = in_array('list-role', $rolePermissions[$userRole]);
+                                $listUser = in_array('list-user', $rolePermissions[$userRole]);
+                                $listInovice = in_array('list-invoice', $rolePermissions[$userRole]);
+                                $listQuotation = in_array('list-quotation', $rolePermissions[$userRole]);
+                              
+                            @endphp
                             @role('Administrator')
                             <li class="menu-title"><span>Manage Master </span></li>
 
@@ -680,9 +699,11 @@
                                         Manage</span><span class="menu-arrow"></span></a>
                                 <ul style="display: none;">
                                     <li><a href="{{route('branches.index')}}"
-                                            class="{{strpos($url,'branches') !== false ? 'active' : '' }}">Branches </a></li>
+                                            class="{{strpos($url,'branches') !== false ? 'active' : '' }}">Branches </a>
+                                    </li>
                                     <li><a href="{{route('packages.index')}}"
-                                            class="{{strpos($url,'packages') !== false ? 'active' : '' }}">Packages</a></li>
+                                            class="{{strpos($url,'packages') !== false ? 'active' : '' }}">Packages</a>
+                                    </li>
                                     <li><a href="{{route('suppliers.index')}}"
                                             class="{{strpos($url,'suppliers') !== false ? 'active' : '' }}">Suppliers</a>
                                     </li>
@@ -695,11 +716,11 @@
 
                                 </ul>
                             </li>
-
+                            @endrole
 
                             <!-- Quotations -->
-
-                            <li class="menu-title"><span>Manage Quotations </span></li>
+                             @if($listQuotation)
+                            <li class="menu-title"><span>Manage Quotations  </span></li>
 
                             <li class="submenu">
 
@@ -708,30 +729,17 @@
                                 <ul style="display: none;">
 
                                     <li><a href="{{route('quotations.index')}}"
-                                            class="{{strpos($url,'quotations') !== false ? 'active' : '' }}">Quotations</a></li>
+                                            class="{{strpos($url,'quotations') !== false ? 'active' : '' }}">Quotations</a>
+                                    </li>
 
                                 </ul>
                             </li>
-                            @endrole
+                            @endif
+                      
 
-                            @role('Sales')
-                        
-                            <li class="submenu">
+                         
 
-                                <a href="{{route('quotations.index')}}"><i class="fe fe-file"></i> <span>Manage
-                                        Quotations</span><span class="menu-arrow"></span></a>
-                                <ul style="display: none;">
-
-                                    <li><a href="{{route('quotations.index')}}"
-                                            class="{{strpos($url,'quotations') !== false ? 'active' : '' }}">Quotations</a></li>
-
-                                </ul>
-                            </li>
-                            @endrole
-
-                            @role('Operations')
-                        
-                            @endrole
+                          
 
                             <!-- Quotations -->
 
@@ -758,19 +766,24 @@
                                     <a  href="signature-invoice.html"><i class="fe fe-box"></i> <span>Signature Invoice</span></a>
                                 </li> -->
                             <!-- /Signature -->
-                            @role('Administrator')
+                       
+                            @if($listInovice)
                             <!-- Sales -->
                             <li class="menu-title"><span>Sales</span></li>
                             <li class="submenu">
 
-                                <a href="{{route('invoices.index')}}"><i class="fe fe-file"></i> <span>Invoices</span><span class="menu-arrow"></span></a>
+                                <a href="{{route('invoices.index')}}"><i class="fe fe-file"></i>
+                                    <span>Invoices</span><span class="menu-arrow"></span></a>
                                 <ul style="display: none;">
-                                    <li><a href="{{route('invoices.index')}}" class="{{strpos($url,'invoices') !== false ? 'active' : '' }}">Invoices List</a></li>
+                                    <li><a href="{{route('invoices.index')}}"
+                                            class="{{strpos($url,'invoices') !== false ? 'active' : '' }}">Invoices
+                                            List</a></li>
                                     <!-- <li><a href="#">Invoice Details (Admin)</a></li>
                                     <li><a href="#">Invoice Details (Customer)</a></li>
                                     <li><a href="#">Invoice Templates</a></li> -->
                                 </ul>
                             </li>
+                            @endif
                             <!-- <li>
                                     <a href="recurring-invoices.html"><i class="fe fe-clipboard"></i> <span>Recurring Invoices</span></a>
                                 </li>
@@ -791,7 +804,7 @@
                                     <a href="debit-notes.html"><i class="fe fe-file-text"></i> <span>Debit Notes</span></a>
                                 </li> -->
                             <!-- /Purchases -->
-
+                            @role('Administrator')
                             <!-- Finance & Accounts -->
                             <li class="menu-title"><span>Finance & Accounts</span></li>
                             <li>
@@ -817,39 +830,49 @@
                             <li>
                                 <a href="#"><i class="fe fe-credit-card"></i> <span>Payment Summary</span></a>
                             <li class="submenu">
-                                <a href="#"><i class="fe fe-box"></i><span>Reports</span> <span class="menu-arrow"></span></a>
+                                <a href="#"><i class="fe fe-box"></i><span>Reports</span> <span
+                                        class="menu-arrow"></span></a>
                                 <ul>
                                     <li><a href="#">Expense Report</a></li>
                                     <!-- <li><a href="purchase-report.html">Purchase Report</a></li>
                                         <li><a href="purchase-return.html">Purchase Return Report</a></li> -->
                                     <li><a href="#">Sales Report</a></li>
                                     <!-- <li><a href="#">Sales Return Report</a></li> -->
-                                    <li><a href="{{route('quotation-report.index')}}">Quotation Report</a></li>
-                                    <li><a href="{{route('supplier.supplier-report')}}">Supplier Report</a></li>
-                                    <li><a href="{{route('partners.partners-report')}}">Partner Report</a></li>
+                                    <li><a href="{{route('quotation-report.index')}}" class="{{strpos($url,'quotation-report') !== false ? 'active' : '' }}">Quotation Report</a></li>
+                                    <li><a href="{{route('supplier.supplier-report')}}"  class="{{strpos($url,'supplier-report') !== false ? 'active' : '' }}">Supplier Report</a></li>
+                                    <li><a href="{{route('partners.partners-report')}}" class="{{strpos($url,'partners-report') !== false ? 'active' : '' }}">Partner Report</a></li>
                                     <li><a href="#">Payment Report</a></li>
                                     <!-- <li><a href="stock-report.html">Stock Report</a></li> -->
                                     <!-- <li><a href="low-stock-report.html">Low Stock Report</a></li>
                                         <li><a href="income-report.html">Income Report</a></li>
                                         <li><a href="tax-purchase.html">Tax Report</a></li> -->
-                                    <li><a href="#">Profit & Loss</a></li>
+                                    <li><a href="{{route('profit-loss.index')}}">Profit & Loss</a></li>
                                 </ul>
                             </li>
                             </li>
                             <!-- /Reports -->
-
+                            @endrole
+                            @if($listUser)
                             <!-- User Management -->
                             <li class="menu-title"><span>User Management</span></li>
                             <li>
-                                <a href="{{url('users')}}" class="{{strpos($url,'users') !== false ? 'active' : '' }}"><i
+                                <a href="{{url('users')}}"
+                                    class="{{strpos($url,'users') !== false ? 'active' : '' }}"><i
                                         class="fe fe-user"></i> <span>Users</span></a>
                             </li>
+                            @endif
+                            @if($listRole)
                             <li>
-                                <a href="{{url('roles-permission')}}" class="{{strpos($url,'roles-permission') !== false ? 'active' : '' }}"><i class="fe fe-clipboard"></i> <span>Roles & Permission</span></a>
+                                <a href="{{url('roles-permission')}}"
+                                    class="{{strpos($url,'roles-permission') !== false ? 'active' : '' }}"><i
+                                        class="fe fe-clipboard"></i> <span>Roles & Permission</span></a>
                             </li>
-                            <li>
+                           @endif
+
+                            <!-- <li>
                                 <a href="#"><i class="fe fe-trash-2"></i> <span>Delete Account Request</span></a>
-                            </li>
+                            </li> -->
+
                             <!-- /User Management -->
 
                             <!-- Membership) -->
@@ -1081,16 +1104,8 @@
                                     </ul>
                                 </li> -->
                             <!-- Extras -->
-                            <li class="submenu">
-
-                                <a href="#"><i class="fe fe-settings"></i> <span>Settings</span><span
-                                        class="menu-arrow"></span></a>
-                                <ul style="display: none;">
-                                    <li><a href="#">Permission</a></li>
-
-                                </ul>
-                            </li>
-                            @endrole
+                           
+                            @endif
                         </ul>
                     </div>
                 </div>

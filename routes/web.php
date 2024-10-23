@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\{AuthController,ForgotPasswordController,ProfileController,UserController,QuotationController,ItineraryController,PartnerController,BranchController,PackageController,CurrencyController,RolesPermissionController,VendorController,InvoiceController,SupplierController,QuotationReportController,SupplierReportController,PartnerReportController};
-
+use App\Http\Controllers\Admin\ProfitAndLoss;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -91,7 +91,8 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/admin/quotations/download-csv', [QuotationReportController::class, 'downloadCSV'])->name('quotations.downloadCSV');
     Route::get('/admin/quotations/download-pdf', [QuotationReportController::class, 'downloadPDF'])->name('quotations.downloadPDF');
     Route::resource('quotation-report', QuotationReportController::class);
-    
+    Route::resource('profit-loss', ProfitAndLoss::class);
+
     // Route::post('quotations/{id}/restore', [QuotationController::class, 'restore'])->name('quotations.restore');
 
     Route::get('/pdf', [InvoiceController::class, 'downloadPDF'])->name('invoice.downloadPDF');

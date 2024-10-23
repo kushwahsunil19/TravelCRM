@@ -18,22 +18,35 @@ class RoleSeeder extends Seeder
         $operationsManager = Role::create(['name' => 'Operations']);
 
         $admin->givePermissionTo([
+            'list-role',
+            'create-role',
+            'edit-role',
+            'view-role',
+            'delete-role',
+            'list-user',
             'create-user',
             'edit-user',
             'view-user',
-            'delete-user',          
+            'delete-user',      
+            'list-quotation',    
             'create-quotation',
             'edit-quotation',
             'view-quotation',
-            'delete-quotation'
+            'delete-quotation',
+            'list-invoice', 
+            'create-invoice',
+            'edit-invoice',
+            'view-invoice',
+            'delete-invoice'
         ]);
 
-        $salse->givePermissionTo([
-            'create-quotation',
-            'edit-quotation',
-            'view-quotation',
-            'delete-quotation'
-        ]); 
+        // $salse->givePermissionTo([
+        //     'list-quotation',
+        //     'create-quotation',
+        //     'edit-quotation',
+        //     'view-quotation',
+        //     'delete-quotation'
+        // ]); 
        
     }
 }

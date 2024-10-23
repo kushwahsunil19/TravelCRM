@@ -16,7 +16,7 @@ $url = $_SERVER['REQUEST_URI'];
                     <ul class="filter-list">
                         
                         <li>
-										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filter"><span class="me-2"><img src="assets/img/icons/filter-icon.svg" alt="filter"></span>Filter </a>
+										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filter"><span class="me-2"><img src="{{url('public/assets/img/icons/filter-icon.svg')}}" alt="filter"></span>Filter </a>
 									</li>
 									
                                    <li>
@@ -269,7 +269,7 @@ $url = $_SERVER['REQUEST_URI'];
                                 <li><a href="{{route('invoices.invoices-paid')}}"
                                         class="{{strpos($url,'invoices-paid') !== false ? 'active' : '' }}">Paid</a>
                                 </li>
-                                <li><a href="{{route('invoices.invoices-overdue')}}"
+                                <!-- <li><a href="{{route('invoices.invoices-overdue')}}"
                                         class="{{strpos($url,'invoices-overdue') !== false ? 'active' : '' }}">Overdue</a>
                                 </li>
                                 <li><a href="{{route('invoices.invoices-cancelled')}}"
@@ -286,7 +286,7 @@ $url = $_SERVER['REQUEST_URI'];
                                 </li>
                                 <li><a href="{{route('invoices.invoices-draft')}}"
                                         class="{{strpos($url,'invoices-draft') !== false ? 'active' : '' }}">Draft</a>
-                                </li>
+                                </li> -->
                             </ul>
                         </div>
                     </div>

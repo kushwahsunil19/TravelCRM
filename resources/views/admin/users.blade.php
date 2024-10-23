@@ -8,20 +8,19 @@
 
 <!-- /Sidebar -->
 <style>
-        .dataTables_length label:before {
+.dataTables_length label:before {
     content: "Show";
     margin-right: 5px;
     font-size: 14px;
     visibility: hidden !important;
-    }
-    
-    .dataTables_length label:after {
+}
+
+.dataTables_length label:after {
     content: "Entries";
     margin-left: 5px;
     font-size: 14px;
     visibility: hidden !important;
-    }
-
+}
 </style>
 <!-- Page Wrapper -->
 <div class="page-wrapper">
@@ -33,13 +32,15 @@
                 <div class="list-btn">
                     <ul class="filter-list">
                         <!-- <li>
-										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Filter"><span class="me-2"><img src="public/assets/img/icons/filter-icon.svg" alt="filter"></span>Filter </a>
+										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Filter"><span class="me-2"><img src="public/{{url('public/assets/img/icons/filter-icon.svg')}}" alt="filter"></span>Filter </a>
 									</li> -->
+                        @if(collect(getPermission())->contains('name', 'create-user'))
                         <li>
                             <a class="btn btn-primary" href="javascript:void(0);" data-bs-toggle="modal"
                                 data-bs-target="#add_user"><i class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add
                                 user</a>
                         </li>
+                        @endif
                     </ul>
                 </div>
             </div>
@@ -261,8 +262,8 @@
                                     <div class="profile-picture">
                                         <div class="upload-profile">
                                             <div class="profile-img">
-                                                <img id="blah" class="avatar"
-                                                    src="assets/img/profiles/avatar-14.jpg" alt="profile-img">
+                                                <img id="blah" class="avatar" src="assets/img/profiles/avatar-14.jpg"
+                                                    alt="profile-img">
                                             </div>
                                             <div class="add-profile">
                                                 <h5>Upload a New Photo</h5>
@@ -915,7 +916,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: {
-            url: '{{ route('users.index') }}',
+            url: '{{ route("users.index") }}',
             type: 'GET'
         },
         columns: [{

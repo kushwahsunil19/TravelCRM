@@ -6,11 +6,15 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\{Quotation,Invoice,Branch,Partner,Package,Bank,Currency};
 use PDF;
+use Spatie\Permission\Models\Role;
+
 class QuotationController extends Controller
 {
     public function __construct()
     {
        $this->middleware('auth');
+    //    $this->middleware('permission:list-quotation', ['only' => ['index']]);
+
     //    $this->middleware('permission:create-quotation|edit-quotation|delete-quotation', ['only' => ['index','show']]);
     //    $this->middleware('permission:create-quotation', ['only' => ['create','store']]);
     //    $this->middleware('permission:edit-quotation', ['only' => ['edit','update']]);

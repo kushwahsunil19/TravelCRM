@@ -15,30 +15,37 @@
                 <h5>Suppliers Report</h5>
                 <div class="list-btn">
                     <ul class="filter-list">
-                       <li>
-										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip"
-											data-bs-placement="bottom" title="Filter"><span class="me-2"><img src="assets/img/icons/filter-icon.svg" alt="filter"></span>Filter </a>
-									</li>
-									 <li>
-										<div class="dropdown dropdown-action" data-bs-toggle="tooltip" data-bs-placement="top" title="Download">
-											<a href="#" class="btn-filters" data-bs-toggle="dropdown" aria-expanded="false"><span><i class="fe fe-download"></i></span></a>
-											<div class="dropdown-menu dropdown-menu-end">
-												<ul class="d-block">
-													<li>
-														<a class="d-flex align-items-center download-item" href="{{route('supplier-report.downloadPDF')}}" ><i class="far fa-file-pdf me-2"></i>PDF</a>
-													</li>
-                                                    <li>
-    <a class="d-flex align-items-center download-item" href="{{ route('supplier-report.downloadCSV') }}" download>
-        <i class="far fa-file-text me-2"></i>CSV
-    </a>
-</li>
+                        <li>
+                            <a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip"
+                                data-bs-placement="bottom" title="Filter"><span class="me-2"><img
+                                        src="{{url('public/assets/img/icons/filter-icon.svg')}}"
+                                        alt="filter"></span>Filter </a>
+                        </li>
+                        <li>
+                            <div class="dropdown dropdown-action" data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Download">
+                                <a href="#" class="btn-filters" data-bs-toggle="dropdown" aria-expanded="false"><span><i
+                                            class="fe fe-download"></i></span></a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <ul class="d-block">
+                                        <li>
+                                            <a class="d-flex align-items-center download-item"
+                                                href="{{route('supplier-report.downloadPDF')}}"><i
+                                                    class="far fa-file-pdf me-2"></i>PDF</a>
+                                        </li>
+                                        <li>
+                                            <a class="d-flex align-items-center download-item"
+                                                href="{{ route('supplier-report.downloadCSV') }}" download>
+                                                <i class="far fa-file-text me-2"></i>CSV
+                                            </a>
+                                        </li>
 
-												</ul>
-											</div>
-										</div>														
-									</li>
-									
-                        
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+
+
                     </ul>
                 </div>
             </div>
@@ -204,46 +211,48 @@
             <h5>Suppliers</h5>
             <a href="#" class="sidebar-closes"><i class="fa-regular fa-circle-xmark"></i></a>
         </div>
-       
+
         <div class="sidebar-body">
-        <form action="{{ route('supplier.supplier-report') }}" method="GET" autocomplete="off">
+            <form action="{{ route('supplier.supplier-report') }}" method="GET" autocomplete="off">
 
-    <!-- Name Filter -->
-    <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" name="name" id="name" class="form-control"
-               placeholder="Enter name" value="{{ request('name') }}">
-    </div>
+                <!-- Name Filter -->
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" id="name" class="form-control" placeholder="Enter name"
+                        value="{{ request('name') }}">
+                </div>
 
-    <!-- Email Filter -->
-    <div class="form-group">
-        <label for="email">Email</label>
-        <input type="text" name="email" id="email" class="form-control"
-               placeholder="Enter email" value="{{ request('email') }}">
-    </div>
+                <!-- Email Filter -->
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="text" name="email" id="email" class="form-control" placeholder="Enter email"
+                        value="{{ request('email') }}">
+                </div>
 
-    <!-- Phone Filter -->
-    <div class="form-group">
-        <label for="mobile">Phone</label>
-        <input type="text" name="mobile" id="mobile" class="form-control"
-               placeholder="Enter phone number" value="{{ request('mobile') }}">
-    </div>
+                <!-- Phone Filter -->
+                <div class="form-group">
+                    <label for="mobile">Phone</label>
+                    <input type="text" name="mobile" id="mobile" class="form-control" placeholder="Enter phone number"
+                        value="{{ request('mobile') }}">
+                </div>
 
-    <!-- Add other filters as necessary -->
+                <!-- Add other filters as necessary -->
 
-    <!-- Filter Buttons -->
-    <div style="margin-top:12px">
-        <div class="filter-buttons">
-            <button type="submit" class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary">
-                Apply
-            </button>
-            <button type="button" class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary"
-                    onclick="resetForm()">
-                Reset
-            </button>
-        </div>
-    </div>
-</form>
+                <!-- Filter Buttons -->
+                <div style="margin-top:12px">
+                    <div class="filter-buttons">
+                        <button type="submit"
+                            class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary">
+                            Apply
+                        </button>
+                        <button type="button"
+                            class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary"
+                            onclick="resetForm()">
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
 
         </div>
     </div>
@@ -368,7 +377,8 @@
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="input-block mb-3">
                                     <label>Description</label>
-                                    <textarea class="form-control" name="description" id="description" placeholder="Enter your description here..."></textarea>
+                                    <textarea class="form-control" name="description" id="description"
+                                        placeholder="Enter your description here..."></textarea>
 
                                     @if ($errors->has('description'))
                                     <span class="text-danger">{{ $errors->first('description') }}</span>
@@ -508,7 +518,8 @@
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="input-block mb-3">
                                     <label>Description</label>
-                                    <textarea class="form-control" name="description" id="edit_description" placeholder="Enter your description here..."></textarea>
+                                    <textarea class="form-control" name="description" id="edit_description"
+                                        placeholder="Enter your description here..."></textarea>
 
                                     @if ($errors->has('description'))
                                     <span class="text-danger">{{ $errors->first('description') }}</span>
@@ -1029,19 +1040,19 @@ $(document).ready(function() {
 </script>
 
 <script>
-    function resetForm() {
-        
-        document.querySelector('input[name="name"]').value = '';
-        document.querySelector('input[name="email"]').value = '';
-        document.querySelector('input[name="mobile"]').value = '';
-        document.querySelector('input[name="city"]').value = '';
-        document.querySelector('input[name="state"]').value = '';
-        document.querySelector('input[name="country"]').value = '';
+function resetForm() {
 
-        // Redirect to the main suppliers page to reset filters
-        window.location.href = '{{ route('supplier.supplier-report') }}';
+    document.querySelector('input[name="name"]').value = '';
+    document.querySelector('input[name="email"]').value = '';
+    document.querySelector('input[name="mobile"]').value = '';
+    document.querySelector('input[name="city"]').value = '';
+    document.querySelector('input[name="state"]').value = '';
+    document.querySelector('input[name="country"]').value = '';
 
-    }
+    // Redirect to the main suppliers page to reset filters
+    window.location.href = {{ route('supplier.supplier-report') }};
+
+}
 </script>
 
 
