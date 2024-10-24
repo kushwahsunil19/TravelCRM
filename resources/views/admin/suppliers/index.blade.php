@@ -12,6 +12,11 @@
     align-items: center;
     justify-content: center;
 }
+.edit-remove-field {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 </style>
 <!-- Page Wrapper -->
 <div class="page-wrapper">
@@ -1237,9 +1242,9 @@ document.getElementById('edit-dynamic-fields-wrapper').addEventListener('click',
             type: 'GET', // Using GET instead of DELETE
             success: function(response) {
                 if (response.success) {
-                    toastr.success(response.message);
+                    // toastr.success(response.message);
                 } else {
-                    toastr.success(response.message);
+                    // toastr.success(response.message);
                 }
             },
             error: function(xhr) {
