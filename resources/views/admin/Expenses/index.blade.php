@@ -6,25 +6,13 @@
 @include('admin.layouts.common-sidebar')
 <!-- /Main Wrapper -->
 
-<style>
-.remove-field {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.edit-remove-field {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-</style>
 <!-- Page Wrapper -->
 <div class="page-wrapper">
     <div class="content container-fluid">
         <!-- Page Header -->
         <div class="page-header">
             <div class="content-page-header">
-                <h5>Suppliers</h5>
+                <h5>Expenses</h5>
                 <div class="list-btn">
                     <ul class="filter-list">
                         <li>
@@ -33,31 +21,31 @@
                                         src="{{url('public/assets/img/icons/filter-icon.svg')}}"
                                         alt="filter"></span>Filter </a>
                         </li>
-                        <!-- <li>
-										<div class="dropdown dropdown-action" data-bs-toggle="tooltip" data-bs-placement="top" title="Download">
-											<a href="#" class="btn-filters" data-bs-toggle="dropdown" aria-expanded="false"><span><i class="fe fe-download"></i></span></a>
-											<div class="dropdown-menu dropdown-menu-end">
-												<ul class="d-block">
-													<li>
-														<a class="d-flex align-items-center download-item" href="javascript:void(0);" download><i class="far fa-file-pdf me-2"></i>PDF</a>
-													</li>
-													<li>
-														<a class="d-flex align-items-center download-item" href="javascript:void(0);" download><i class="far fa-file-text me-2"></i>CVS</a>
-													</li>
-												</ul>
-											</div>
-										</div>														
-									</li>
-									<li>
-										<a class="btn-filters" href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print"><span><i class="fe fe-printer"></i></span> </a>
-									</li>
-									<li>
-										<a class="btn btn-import" href="javascript:void(0);"><span><i class="fe fe-check-square me-2"></i>Import Customer</span></a>
-									</li> -->
                         <li>
-                            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Supplier_details"><i
-                                    class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add Supplier</a>
+                            <div class="dropdown dropdown-action" data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Download">
+                                <a href="#" class="btn-filters" data-bs-toggle="dropdown" aria-expanded="false"><span><i
+                                            class="fe fe-download"></i></span></a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <ul class="d-block">
+                                        <li>
+                                            <a class="d-flex align-items-center download-item"
+                                                href="{{route('supplier-report.downloadPDF')}}"><i
+                                                    class="far fa-file-pdf me-2"></i>PDF</a>
+                                        </li>
+                                        <li>
+                                            <a class="d-flex align-items-center download-item"
+                                                href="{{ route('supplier-report.downloadCSV') }}" download>
+                                                <i class="far fa-file-text me-2"></i>CSV
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
                         </li>
+
+
                     </ul>
                 </div>
             </div>
@@ -150,14 +138,14 @@
                                                                     class="far fa-trash-alt me-2"></i>Delete</a>
                                                         </li>
                                                         <!-- <li>
-                                                                                                                                                                                                                        <a class="dropdown-item" href="{{ route('suppliers.show', $Supplier->id) }}"><i class="far fa-eye me-2"></i>View</a>
-                                                                                                                                                                                                                    </li> -->
+																		<a class="dropdown-item" href="{{ route('suppliers.show', $Supplier->id) }}"><i class="far fa-eye me-2"></i>View</a>
+																	</li> -->
                                                         <!-- <li>
-                                                                                                                                                                                                                        <a class="dropdown-item" href="active-customers.html"><i class="fa-solid fa-power-off me-2"></i>Activate</a>
-                                                                                                                                                                                                                    </li>
-                                                                                                                                                                                                                    <li>
-                                                                                                                                                                                                                        <a class="dropdown-item" href="deactive-customers.html"><i class="far fa-bell-slash me-2"></i>Deactivate</a>
-                                                                                                                                                                                                                    </li> -->
+																		<a class="dropdown-item" href="active-customers.html"><i class="fa-solid fa-power-off me-2"></i>Activate</a>
+																	</li>
+																	<li>
+																		<a class="dropdown-item" href="deactive-customers.html"><i class="far fa-bell-slash me-2"></i>Deactivate</a>
+																	</li> -->
                                                     </ul>
                                                 </div>
                                             </div>
@@ -225,7 +213,8 @@
         </div>
 
         <div class="sidebar-body">
-            <form action="{{ route('suppliers.index') }}" method="GET" autocomplete="off">
+            <form action="{{ route('supplier.supplier-report') }}" method="GET" autocomplete="off">
+
                 <!-- Name Filter -->
                 <div class="form-group">
                     <label for="name">Name</label>
@@ -290,7 +279,6 @@
                     @csrf
                     <!-- Include CSRF token for security -->
                     <div class="row">
-                        <!-- Profile Picture Section -->
                         <div class="profile-picture">
                             <div class="upload-profile">
                                 <div class="profile-img">
@@ -306,117 +294,96 @@
                                     Upload <input type="file" name="image"
                                         onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])">
                                 </label>
+                                <!-- <a class="btn btn-remove">Remove</a> -->
                             </div>
                         </div>
 
-
-
-                        <!-- Supplier Details Fields (Name, Email, etc.) -->
-                        <div class="col-lg-4 col-md-6 col-sm-12">
-                            <div class="input-block mb-3">
-                                <label>Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="name" placeholder="Enter Name">
-                                @if ($errors->has('name'))
-                                <span class="text-danger">{{ $errors->first('name') }}</span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-6 col-sm-12">
-                            <div class="input-block mb-3">
-                                <label>Email <span class="text-danger">*</span></label>
-                                <input type="email" class="form-control" name="email" placeholder="Enter Email Address">
-                                @if ($errors->has('email'))
-                                <span class="text-danger">{{ $errors->first('email') }}</span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-6 col-sm-12">
-                            <div class="input-block mb-3">
-                                <label>Mobile <span class="text-danger">*</span></label>
-                                <input type="text" id="mobile_code" name="mobile" class="form-control"
-                                    placeholder="Phone Number">
-                                @if ($errors->has('mobile'))
-                                <span class="text-danger">{{ $errors->first('mobile') }}</span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-6 col-sm-12">
-                            <div class="input-block mb-3">
-                                <label>City</label>
-                                <input type="text" class="form-control" name="city" placeholder="Enter City">
-                                @if ($errors->has('city'))
-                                <span class="text-danger">{{ $errors->first('city') }}</span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-6 col-sm-12">
-                            <div class="input-block">
-                                <label>State</label>
-                                <input type="text" class="form-control" name="state" placeholder="Enter State">
-                                @if ($errors->has('state'))
-                                <span class="text-danger">{{ $errors->first('state') }}</span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-6 col-sm-12">
-                            <div class="input-block">
-                                <label>Country</label>
-                                <input type="text" class="form-control" name="country" placeholder="Enter Country">
-                                @if ($errors->has('country'))
-                                <span class="text-danger">{{ $errors->first('country') }}</span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- Dynamic Title and Rupees Fields -->
-
-
-                        <div class="col-lg-12">
-                            <div id="dynamic-fields-wrapper">
-                                <div class="row mb-3 dynamic-fields">
-                                    <div class="col-lg-6">
-                                        <label>Title</label>
-                                        <input type="text" name="title[]" class="form-control"
-                                            placeholder="Enter Title">
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <label>Amount</label>
-                                        <input type="number" name="amount[]" class="form-control amount-input"
-                                            placeholder="Enter Rupees" min="0" oninput="calculateSum()">
-                                    </div>
-
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="name" placeholder="Enter Name">
+                                    @if ($errors->has('name'))
+                                    <span class="text-danger">{{ $errors->first('name') }}</span>
+                                    @endif
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-secondary" id="add-more-fields">Add More</button>
-                        </div>
 
-                        <!-- Total Amount Field -->
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <div class="input-block mb-3">
-                                <label>Total Amount</label>
-                                <input type="number" id="total-amount" name="total_amount" class="form-control"
-                                    placeholder="Total Amount" readonly>
-                                @if ($errors->has('amount'))
-                                <span class="text-danger">{{ $errors->first('amount') }}</span>
-                                @endif
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Email <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" name="email"
+                                        placeholder="Enter Email Address">
+                                    @if ($errors->has('email'))
+                                    <span class="text-danger">{{ $errors->first('email') }}</span>
+                                    @endif
+                                </div>
                             </div>
-                        </div>
+
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Mobile <span class="text-danger">*</span></label>
+                                    <input type="text" id="mobile_code" name="mobile" class="form-control"
+                                        placeholder="Phone Number" name="name">
+                                    @if ($errors->has('mobile'))
+                                    <span class="text-danger">{{ $errors->first('mobile') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>City</label>
+                                    <input type="text" class="form-control" name="city" placeholder="Enter City">
+                                    @if ($errors->has('city'))
+                                    <span class="text-danger">{{ $errors->first('city') }}</span>
+                                    @endif
+                                </div>
+                            </div>
 
 
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="input-block">
+                                    <label>State</label>
+                                    <input type="text" class="form-control" name="state" placeholder="Enter State">
+                                    @if ($errors->has('state'))
+                                    <span class="text-danger">{{ $errors->first('state') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="pass-group">
+                                    <div class="input-block">
+                                        <label>Country</label>
+                                        <input type="text" class="form-control" name="country"
+                                            placeholder="Enter Country">
+                                        @if ($errors->has('country'))
+                                        <span class="text-danger">{{ $errors->first('country') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
 
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <div class="input-block mb-3">
-                                <label>Description</label>
-                                <textarea class="form-control" name="description" id="description"
-                                    placeholder="Enter your description here..."></textarea>
-                                @if ($errors->has('description'))
-                                <span class="text-danger">{{ $errors->first('description') }}</span>
-                                @endif
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Amount</label>
+                                    <input type="number" min="0" class="form-control" name="amount"
+                                        placeholder="Enter Amount">
+                                    @if ($errors->has('amount'))
+                                    <span class="text-danger">{{ $errors->first('amount') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Description</label>
+                                    <textarea class="form-control" name="description" id="description"
+                                        placeholder="Enter your description here..."></textarea>
+
+                                    @if ($errors->has('description'))
+                                    <span class="text-danger">{{ $errors->first('description') }}</span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -538,28 +505,16 @@
                                 </div>
 
                             </div>
-
-                            <div class="col-lg-12">
-                                <div id="edit-dynamic-fields-wrapper">
-                                    <div class="row mb-3 dynamic-fields">
-
-                                    </div>
-                                </div>
-                                <button type="button" class="btn btn-secondary" id="edit-add-more-fields">Add
-                                    More</button>
-                            </div>
-                            <!-- Total Amount Field -->
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="input-block mb-3">
-                                    <label>Total Amount</label>
-                                    <input type="number" id="edit_total_amount" name="total_amount"
-                                        class="form-control" placeholder="Total Amount" readonly>
+                                    <label>Amount</label>
+                                    <input type="number" min="0" class="form-control" name="amount" id="edit_amount"
+                                        placeholder="Enter Amount">
                                     @if ($errors->has('amount'))
                                     <span class="text-danger">{{ $errors->first('amount') }}</span>
                                     @endif
                                 </div>
                             </div>
-
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="input-block mb-3">
                                     <label>Description</label>
@@ -991,7 +946,7 @@ $(document).ready(function() {
                 // $('#Supplier_details').modal('hide'); // Close modal
                 $('#Supplier_details_form')[0].reset(); // Reset the form
                 setTimeout(function() {
-                    // window.location.reload(); // Reload the page after the delay
+                    window.location.reload(); // Reload the page after the delay
                 }, 3000); // 5-second delay
 
             },
@@ -1008,17 +963,17 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '.edit_Supplier', function() {
-        var id = $(this).data('id'); // Get supplier ID from the button
-        // Make an AJAX request to fetch the supplier data
+        var id = $(this).data('id'); // Get user ID from the button
+        // Make an AJAX request to fetch the user data
         $.ajax({
             url: '{{ route("suppliers.edit", ":id") }}'.replace(':id',
-            id), // Replace ':id' with the actual supplier ID
+                id), // Replace ':id' with the actual user ID
             type: 'GET',
             success: function(response) {
                 var data = response.data;
 
                 // Populate the form fields with the fetched data
-                $('#Supplier_id').val(data.id); // Hidden supplier ID
+                $('#Supplier_id').val(data.id); // Hidden user ID
                 $('#edit_name').val(data.name);
                 $('#edit_email').val(data.email);
                 $('#edit_mobile').val(data.mobile);
@@ -1027,72 +982,24 @@ $(document).ready(function() {
                 $('#edit_country').val(data.country);
                 $('#edit_amount').val(data.amount);
                 $('#edit_description').val(data.description);
-
-                // Handle supplier image
                 if (data.image) {
-                    $('#blahedit').attr('src', '{{ url("public/profile") }}/' + data.image);
+                    // Set the profile image source
+                    $('#blahedit').attr('src', '{{ url("public/profile") }}/' + data
+                        .image);
                 } else {
+                    // Set to default image if no profile exists
                     $('#blahedit').attr('src',
                         '{{ url("public/assets/img/profiles/default.png") }}');
                 }
-
-                // Clear existing dynamic expense fields
-                $('#edit_dynamic-fields-wrapper').empty();
-
-                // Populate dynamic fields with existing expenses if any
-                if (data.expenses && data.expenses.length > 0) {
-                    let editTotalAmount = 0;
-                    data.expenses.forEach(function(expense) {
-                        editTotalAmount += parseFloat(expense.amount);
-                        addDynamicField(expense.title, expense.amount,expense.id); // Add each expense to the dynamic fields
-
-                    });
-                    $('#edit_total_amount').val(editTotalAmount.toFixed(2)); 
-                } else {
-                    // If no expenses, add an empty field
-                    addDynamicField();
-                }
-               // Display total with 2 decimal precision
-
                 // Open the modal
                 $('#edit_Supplier_details').modal('show');
             },
             error: function(xhr) {
-                toastr.error('Error fetching supplier data.');
+                toastr.error('Error fetching user data.');
             }
         });
     });
-
-    // Function to Edit add dynamic expense fields
- 
-    function addDynamicField(title = '', amount = '', id = '') {
-    
-        const newField = `
-
-        <div class="row mb-3 dynamic-fields">
-            <div class="col-lg-6">
-                <label>Title</label>
-                  <input type="hidden" name="exp_id[]" class="form-control" value="${id}">
-                <input type="text" name="title[]" class="form-control" value="${title}" placeholder="Enter Title">
-            </div>
-            <div class="col-lg-5">
-                <label>Amount</label>
-                <input type="number" name="amount[]" class="form-control edit-amount-input" value="${amount}" placeholder="Enter Amount" min="0" oninput="editCalculateSum()">
-            </div>
-        
-            <div class="col-lg-1 mt-4 d-flex justify-content-end">
-                <span class="edit-remove-field" style="cursor: pointer; color: red; margin-left: 10px;">
-                    <i class="fas fa-minus-circle"  data-id="${id}"></i>
-                </span>
-            </div>
-        </div>`;
-       
-        $('#edit-dynamic-fields-wrapper').append(newField);
-        
-    }
-    
-   
-   
+    // Edit Supplier
     $('#edit_Supplier_details_form').on('submit', function(e) {
         e.preventDefault(); // Prevent the form from submitting normally
 
@@ -1130,20 +1037,11 @@ $(document).ready(function() {
         });
     });
 });
-
-function calculateSum() {
-    let total = 0;
-    // Iterate over all amount inputs and sum their values
-    document.querySelectorAll('.amount-input').forEach(function(input) {
-        total += parseFloat(input.value) || 0; // Handle NaN values by treating them as 0
-    });
-    document.getElementById('total-amount').value = total; // Update total amount field
-}
 </script>
 
 <script>
 function resetForm() {
-    // Clear all input fields
+
     document.querySelector('input[name="name"]').value = '';
     document.querySelector('input[name="email"]').value = '';
     document.querySelector('input[name="mobile"]').value = '';
@@ -1152,125 +1050,9 @@ function resetForm() {
     document.querySelector('input[name="country"]').value = '';
 
     // Redirect to the main suppliers page to reset filters
-    window.location.href = '{{ route('suppliers.index') }}';
+    window.location.href = {{ route('supplier.supplier-report') }};
+
 }
-</script>
-
-<script>
-// Function to calculate the sum of the amounts
-function calculateSum() {
-    let total = 0;
-    // Iterate over all amount inputs and sum their values
-    document.querySelectorAll('.amount-input').forEach(function(input) {
-        total += parseFloat(input.value) || 0; // Handle NaN values by treating them as 0
-    });
-    document.getElementById('total-amount').value = total; // Update total amount field
-}
-
-// Add More Fields
-document.getElementById('add-more-fields').addEventListener('click', function() {
-    const newField = document.createElement('div');
-    newField.className = 'row mb-3 dynamic-fields'; // Same class for styling
-
-    newField.innerHTML = `
-        <div class="col-lg-6">
-            <label>Title</label>
-            <input type="text" name="title[]" class="form-control" placeholder="Enter Title">
-        </div>
-        <div class="col-lg-5">
-            <label>Amount</label>
-            <input type="number" name="amount[]" class="form-control amount-input" placeholder="Enter Rupees" min="0" oninput="calculateSum()">
-        </div>
-        <div class="col-lg-1 mt-4 d-flex justify-content-end">
-            <span class="remove-field" style="cursor: pointer; color: red; margin-left: 10px;">
-                <i class="fas fa-minus-circle"></i> <!-- Font Awesome minus icon -->
-            </span>
-        </div>
-    `;
-
-    document.getElementById('dynamic-fields-wrapper').appendChild(newField);
-});
-// Remove Field
-document.getElementById('dynamic-fields-wrapper').addEventListener('click', function(e) {
-    if (e.target && e.target.classList.contains('remove-field') || e.target.closest('.remove-field')) {
-        e.target.closest('.dynamic-fields').remove(); // Remove the closest dynamic fields container
-        calculateSum(); // Recalculate total amount
-    }
-});
-
-//edit Add More Fields
-document.getElementById('edit-add-more-fields').addEventListener('click', function() {
-    const newField = document.createElement('div');
-    newField.className = 'row mb-3 dynamic-fields'; // Same class for styling
-
-    newField.innerHTML = `
-        <div class="col-lg-6">
-            <label>Title</label>
-            <input type="text" name="title[]" class="form-control" placeholder="Enter Title">
-        </div>
-        <div class="col-lg-5">
-            <label>Amount</label>
-            <input type="number" name="amount[]" class="form-control edit-amount-input" placeholder="Enter Rupees" min="0" oninput="editCalculateSum()">
-        </div>
-        <div class="col-lg-1 mt-4 d-flex justify-content-end">
-            <span class="edit-remove-field"  style="cursor: pointer; color: red; margin-left: 10px;">
-                <i class="fas fa-minus-circle"></i> <!-- Font Awesome minus icon -->
-            </span>
-        </div>
-    `;
-
-    document.getElementById('edit-dynamic-fields-wrapper').appendChild(newField);
-});
-// Edit page Remove Field
-document.getElementById('edit-dynamic-fields-wrapper').addEventListener('click', function(e) {
-    // Check if the click is on the span or its child (the icon)
-    let removeField = e.target.closest('.edit-remove-field');
-
-    if (removeField) {
-        // Check if the clicked element or its child has the data-id
-        let dataId = removeField.querySelector('i').getAttribute('data-id');
-        
-        // Remove the closest dynamic field container
-        removeField.closest('.dynamic-fields').remove();
-        
-        // Recalculate the total amount
-        editCalculateSum();
-
-        // Send AJAX request to delete the record
-        $.ajax({
-            url: '{{ route("suplyer.delete-exp", ":id") }}'.replace(':id', dataId),
-            type: 'GET', // Using GET instead of DELETE
-            success: function(response) {
-                if (response.success) {
-                    // toastr.success(response.message);
-                } else {
-                    // toastr.success(response.message);
-                }
-            },
-            error: function(xhr) {
-                alert('An error occurred while deleting the record');
-                console.log(xhr.responseText);
-            }
-        });
-    }
-});
-
- // Function to calculate the sum of all amount fields
- function editCalculateSum() {
-        let editTotalAmount = 0;
-      
-        // Loop through all the amount inputs and sum their values
-        $('.edit-amount-input').each(function() {
-         
-            const amount = parseFloat($(this).val());
-            if (!isNaN(amount)) {
-                editTotalAmount += amount;
-            }
-        });
-
-        // Update the total amount in the edit_total_amount field
-        $('#edit_total_amount').val(editTotalAmount.toFixed(2)); // Set total with 2 decimal precision
-    }
 </script>
 
 
