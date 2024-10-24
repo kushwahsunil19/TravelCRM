@@ -350,7 +350,7 @@
                                 invoice
                                 <li class="menu-title"><span>Finance & Accounts</span></li>
                                 <li>
-                                    <a href="#"><i class="fe fe-file-plus"></i> <span>Expenses</span></a>
+                                    <a href=""><i class="fe fe-file-plus"></i> <span>Expenses</span></a>
                                 </li>
                                 <li>
                                     <a href="#"><i class="fe fe-credit-card"></i> <span>Payments</span></a>
@@ -808,7 +808,7 @@
                             <!-- Finance & Accounts -->
                             <li class="menu-title"><span>Finance & Accounts</span></li>
                             <li>
-                                <a href="#"><i class="fe fe-file-plus"></i> <span>Expenses</span></a>
+                                <a href="{{route('Expenses.index')}}"><i class="fe fe-file-plus"></i> <span>Expenses</span></a>
                             </li>
                             <li>
                                 <a href="#"><i class="fe fe-credit-card"></i> <span>Payments</span></a>

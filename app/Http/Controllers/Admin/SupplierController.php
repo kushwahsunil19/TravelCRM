@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\SupplierExpense;
 use Illuminate\Http\Request;
 use App\Models\Supplier;
+
 
 class SupplierController extends Controller
 {
@@ -39,7 +41,7 @@ class SupplierController extends Controller
         }
 
         // Get the filtered suppliers
-        $Suppliers = $query->get();
+        $Suppliers = $query->with('expenses')->get();
 
         return view('admin.suppliers.index', compact('Suppliers'));
     }
@@ -49,36 +51,108 @@ class SupplierController extends Controller
         return view('admin.suppliers.add-Supplier');
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'mobile' => 'required|numeric|digits_between:10,15|regex:/^(?:\+?\d{1,3})?\d{10,15}$/',
-            'email' => 'required|email|unique:suppliers',
-            'city' => 'nullable|string|max:255',
-            'state' => 'nullable|string|max:255',
-            'country' => 'nullable|string|max:255',
-            'amount' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+            
+    //         'name' => 'required|string|max:255',
+    //         'mobile' => 'required|numeric|digits_between:10,15|regex:/^(?:\+?\d{1,3})?\d{10,15}$/',
+    //         'email' => 'required|email|unique:suppliers',
+    //         'city' => 'nullable|string|max:255',
+    //         'state' => 'nullable|string|max:255',
+    //         'country' => 'nullable|string|max:255',
+    //         'total_amount' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
 
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        $supplier = new Supplier($request->all());
+    //         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    //     ]);
+    //    $input = $request->all();
+    //    $input['amount'] = $input['total_amount'];
+    //    $supplier = new Supplier($input);
         
       
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
+    //     if ($request->hasFile('image')) {
+    //         $file = $request->file('image');
           
-            $fileName = time() . '.' . $file->getClientOriginalExtension(); // Create a unique file name
-            $file->move(public_path('profile'), $fileName); // Move the file to the public/profile directory
-            $supplier->image = $fileName;
-        }
+    //         $fileName = time() . '.' . $file->getClientOriginalExtension(); // Create a unique file name
+    //         $file->move(public_path('profile'), $fileName); // Move the file to the public/profile directory
+    //         $supplier->image = $fileName;
+    //     }
 
-        $supplier->save();
-        $SupplierDetails = Supplier::latest()->get();
-        return response()->json(['status'=>true,'data'=>$SupplierDetails ,'message' => 'Supplier details added successfully']);
+    //     $supplier->save();
+    //     $titles = $request->title; // Titles array from form
+    //     $amount = $request->amount; // Rupees array from form
+    
+      
+    //     foreach ($titles as $key => $title) {
+    //         $data[] = [
+    //             'suplyer_id' => $supplier->id,
+    //             'title' => $title,
+    //             'amount' => $amount[$key] ?? 0,
+    //         ];
+    //     }
+
+    //     // print_r($data); die;
+       
+        
+    //     SupplierExpense::insert($data);
+    //     $SupplierDetails = Supplier::latest()->get();
+    //     return response()->json(['status'=>true,'data'=>$SupplierDetails ,'message' => 'Supplier details added successfully']);
  
+    // }
+
+    public function store(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'mobile' => 'required|numeric|digits_between:10,15|regex:/^(?:\+?\d{1,3})?\d{10,15}$/',
+        'email' => 'required|email|unique:suppliers',
+        'city' => 'nullable|string|max:255',
+        'state' => 'nullable|string|max:255',
+        'country' => 'nullable|string|max:255',
+        'total_amount' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    // Create a new supplier
+    $input = $request->all();
+    $input['amount'] = $input['total_amount'];
+    $supplier = new Supplier($input);
+
+    // Handle the image upload
+    if ($request->hasFile('image')) {
+        $file = $request->file('image');
+        $fileName = time() . '.' . $file->getClientOriginalExtension(); // Create a unique file name
+        $file->move(public_path('profile'), $fileName); // Move the file to the public/profile directory
+        $supplier->image = $fileName;
     }
+
+    // Save the supplier
+    $supplier->save();
+
+    // Process expense titles and amounts
+    $titles = $request->title; // Titles array from form
+    $amounts = $request->amount; // Amount array from form
+
+    // Prepare expense data for batch insert
+    $data = [];
+    foreach ($titles as $key => $title) {
+        $data[] = [
+            'suplyer_id' => $supplier->id,
+            'title' => $title,
+            'amount' => $amounts[$key] ?? 0,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+    }
+
+    // Insert all expenses at once
+    SupplierExpense::insert($data);
+
+    // Return success response
+    $SupplierDetails = Supplier::latest()->get();
+    return response()->json(['status' => true, 'data' => $SupplierDetails, 'message' => 'Supplier details added successfully']);
+}
+
 
     public function show(Supplier $Supplier)
     {
@@ -87,6 +161,10 @@ class SupplierController extends Controller
 
     public function edit(Supplier $Supplier)
     {
+        $Supplier->load(relations: 'expenses');
+
+      
+        
         return response()->json(['status'=>true,'data'=>$Supplier ,'message' => 'Supplier details successfully']);
 
         // return view('admin.Suppliers.edit-Supplier', compact('Supplier'));
