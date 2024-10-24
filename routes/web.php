@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\admin\ExpensesController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\{AuthController,ForgotPasswordController,ProfileController,UserController,QuotationController,ItineraryController,PartnerController,BranchController,PackageController,CurrencyController,RolesPermissionController,VendorController,InvoiceController,SupplierController,QuotationReportController,SupplierReportController,PartnerReportController};
+use App\Http\Controllers\Admin\{AuthController,ForgotPasswordController,ProfileController,UserController,QuotationController,ItineraryController,PartnerController,BranchController,PackageController,CurrencyController,RolesPermissionController,VendorController,InvoiceController,SupplierController,QuotationReportController,SupplierReportController,PartnerReportController,StaffwiseController};
 use App\Http\Controllers\Admin\ProfitAndLoss;
 /*
 |--------------------------------------------------------------------------
@@ -123,6 +123,17 @@ Route::get('/Expenses',[ExpensesController::class,'index'])->name('Expenses.inde
 // Route::delete('users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
     Route::post('/assing-role', [UserController::class, 'updateRole'])->name('users.updateRole');
+
+
+    //staff-wise report
+
+    Route::get('/staff-wise-report', [StaffwiseController::class, 'index'])->name('staff-wise-report.index');
+
+// Route to download the report as a PDF
+Route::get('/staff-wise-report/download-pdf', [StaffwiseController::class, 'downloadPDF'])->name('staff-wise-report.downloadPDF');
+
+// Route to download the report as a CSV
+Route::get('/staff-wise-report/download-csv', [StaffwiseController::class, 'downloadCSV'])->name('staff-wise-report.downloadCSV');
 
 // Route for fetching users data via AJAX
 
