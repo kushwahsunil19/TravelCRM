@@ -7,11 +7,11 @@
 <!-- /Main Wrapper -->
 
 <style>
-    .remove-field {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+.remove-field {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 </style>
 <!-- Page Wrapper -->
 <div class="page-wrapper">
@@ -106,98 +106,98 @@
                                 </thead>
                                 <tbody>
                                     @forelse ($Suppliers as $Supplier)
-                                                                        <tr>
-                                                                            <td>{{ $loop->iteration }}</td> <!-- Serial number -->
-                                                                            <td>
-                                                                                <h2 class="table-avatar">
-                                                                                    @php
-                                                                                        $avatar = $Supplier->image ? url('public/profile/' . $Supplier->image) :
-                                                                                            url('public/assets/img/profiles/default.png');
-                                                                                    @endphp
-                                                                                    <a href="" class="avatar avatar-md me-2"><img
-                                                                                            class="avatar-img rounded-circle" src="{{$avatar}}"
-                                                                                            alt="User Image"></a>
-                                                                                    <a href="">{{ $Supplier->name }} <span><span class="__cf_email__"
-                                                                                                data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $Supplier->email }}]</span></span></a>
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td> <!-- Serial number -->
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                @php
+                                                $avatar = $Supplier->image ? url('public/profile/' . $Supplier->image) :
+                                                url('public/assets/img/profiles/default.png');
+                                                @endphp
+                                                <a href="" class="avatar avatar-md me-2"><img
+                                                        class="avatar-img rounded-circle" src="{{$avatar}}"
+                                                        alt="User Image"></a>
+                                                <a href="">{{ $Supplier->name }} <span><span class="__cf_email__"
+                                                            data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $Supplier->email }}]</span></span></a>
 
-                                                                            <td>{{ $Supplier->mobile }}</td>
+                                        <td>{{ $Supplier->mobile }}</td>
 
-                                                                            <td>{{ $Supplier->city }}</td>
-                                                                            <td>{{ $Supplier->state }}</td>
-                                                                            <td>{{ $Supplier->country }}</td>
-                                                                            <td>{{ $Supplier->amount }}</td>
-                                                                            <td>
+                                        <td>{{ $Supplier->city }}</td>
+                                        <td>{{ $Supplier->state }}</td>
+                                        <td>{{ $Supplier->country }}</td>
+                                        <td>{{ $Supplier->amount }}</td>
+                                        <td>
 
-                                                                                <div class="dropdown dropdown-action">
-                                                                                    <a href="#" class=" btn-action-icon " data-bs-toggle="dropdown"
-                                                                                        aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
-                                                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                                                        <ul>
-                                                                                            <li>
-                                                                                                <a class="dropdown-item edit_Supplier"
-                                                                                                    data-id="{{$Supplier->id}}"><i
-                                                                                                        class="far fa-edit me-2"></i>Edit</a>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <a class="dropdown-item" href="javascript:void(0);"
-                                                                                                    data-bs-toggle="modal"
-                                                                                                    data-bs-target="#delete_modal{{$Supplier->id}}"><i
-                                                                                                        class="far fa-trash-alt me-2"></i>Delete</a>
-                                                                                            </li>
-                                                                                            <!-- <li>
+                                            <div class="dropdown dropdown-action">
+                                                <a href="#" class=" btn-action-icon " data-bs-toggle="dropdown"
+                                                    aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
+                                                <div class="dropdown-menu dropdown-menu-end">
+                                                    <ul>
+                                                        <li>
+                                                            <a class="dropdown-item edit_Supplier"
+                                                                data-id="{{$Supplier->id}}"><i
+                                                                    class="far fa-edit me-2"></i>Edit</a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item" href="javascript:void(0);"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#delete_modal{{$Supplier->id}}"><i
+                                                                    class="far fa-trash-alt me-2"></i>Delete</a>
+                                                        </li>
+                                                        <!-- <li>
                                                                                                                                                                                                                         <a class="dropdown-item" href="{{ route('suppliers.show', $Supplier->id) }}"><i class="far fa-eye me-2"></i>View</a>
                                                                                                                                                                                                                     </li> -->
-                                                                                            <!-- <li>
+                                                        <!-- <li>
                                                                                                                                                                                                                         <a class="dropdown-item" href="active-customers.html"><i class="fa-solid fa-power-off me-2"></i>Activate</a>
                                                                                                                                                                                                                     </li>
                                                                                                                                                                                                                     <li>
                                                                                                                                                                                                                         <a class="dropdown-item" href="deactive-customers.html"><i class="far fa-bell-slash me-2"></i>Deactivate</a>
                                                                                                                                                                                                                     </li> -->
-                                                                                        </ul>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <!-- Delete Items Modal -->
-                                                                                <div class="modal custom-modal fade" id="delete_modal{{$Supplier->id}}"
-                                                                                    role="dialog">
-                                                                                    <div class="modal-dialog modal-dialog-centered modal-md">
-                                                                                        <div class="modal-content">
-                                                                                            <div class="modal-body">
-                                                                                                <div class="form-header">
-                                                                                                    <h3>Delete Supplier</h3>
-                                                                                                    <p>Are you sure want to delete?</p>
-                                                                                                </div>
-                                                                                                <div class="modal-btn delete-action">
-                                                                                                    <div class="row">
-                                                                                                        <div class="col-6">
-                                                                                                            <form
-                                                                                                                action="{{ route('suppliers.destroy', $Supplier->id) }}"
-                                                                                                                method="POST" style="display:inline;">
-                                                                                                                @csrf
-                                                                                                                @method('DELETE')
-                                                                                                                <button type="submit"
-                                                                                                                    data-bs-dismiss="modal"
-                                                                                                                    class="w-100 btn btn-danger paid-continue-btn">Delete</button>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <!-- Delete Items Modal -->
+                                            <div class="modal custom-modal fade" id="delete_modal{{$Supplier->id}}"
+                                                role="dialog">
+                                                <div class="modal-dialog modal-dialog-centered modal-md">
+                                                    <div class="modal-content">
+                                                        <div class="modal-body">
+                                                            <div class="form-header">
+                                                                <h3>Delete Supplier</h3>
+                                                                <p>Are you sure want to delete?</p>
+                                                            </div>
+                                                            <div class="modal-btn delete-action">
+                                                                <div class="row">
+                                                                    <div class="col-6">
+                                                                        <form
+                                                                            action="{{ route('suppliers.destroy', $Supplier->id) }}"
+                                                                            method="POST" style="display:inline;">
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            <button type="submit"
+                                                                                data-bs-dismiss="modal"
+                                                                                class="w-100 btn btn-danger paid-continue-btn">Delete</button>
 
-                                                                                                            </form>
+                                                                        </form>
 
-                                                                                                        </div>
-                                                                                                        <div class="col-6">
-                                                                                                            <button type="submit" data-bs-dismiss="modal"
-                                                                                                                class="w-100 btn btn-primary paid-cancel-btn">Cancel</button>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <!-- /Delete Items Modal -->
-                                                                            </td>
-                                                                        </tr>
+                                                                    </div>
+                                                                    <div class="col-6">
+                                                                        <button type="submit" data-bs-dismiss="modal"
+                                                                            class="w-100 btn btn-primary paid-cancel-btn">Cancel</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- /Delete Items Modal -->
+                                        </td>
+                                    </tr>
                                     @empty
-                                        <tr>
-                                            <td colspan="9" class="text-center">No Suppliers found.</td>
-                                        </tr>
+                                    <tr>
+                                        <td colspan="9" class="text-center">No Suppliers found.</td>
+                                    </tr>
                                     @endforelse
                                 </tbody>
                             </table>
@@ -312,7 +312,7 @@
                                 <label>Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="name" placeholder="Enter Name">
                                 @if ($errors->has('name'))
-                                    <span class="text-danger">{{ $errors->first('name') }}</span>
+                                <span class="text-danger">{{ $errors->first('name') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -322,7 +322,7 @@
                                 <label>Email <span class="text-danger">*</span></label>
                                 <input type="email" class="form-control" name="email" placeholder="Enter Email Address">
                                 @if ($errors->has('email'))
-                                    <span class="text-danger">{{ $errors->first('email') }}</span>
+                                <span class="text-danger">{{ $errors->first('email') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -333,7 +333,7 @@
                                 <input type="text" id="mobile_code" name="mobile" class="form-control"
                                     placeholder="Phone Number">
                                 @if ($errors->has('mobile'))
-                                    <span class="text-danger">{{ $errors->first('mobile') }}</span>
+                                <span class="text-danger">{{ $errors->first('mobile') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -343,7 +343,7 @@
                                 <label>City</label>
                                 <input type="text" class="form-control" name="city" placeholder="Enter City">
                                 @if ($errors->has('city'))
-                                    <span class="text-danger">{{ $errors->first('city') }}</span>
+                                <span class="text-danger">{{ $errors->first('city') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -353,7 +353,7 @@
                                 <label>State</label>
                                 <input type="text" class="form-control" name="state" placeholder="Enter State">
                                 @if ($errors->has('state'))
-                                    <span class="text-danger">{{ $errors->first('state') }}</span>
+                                <span class="text-danger">{{ $errors->first('state') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -363,7 +363,7 @@
                                 <label>Country</label>
                                 <input type="text" class="form-control" name="country" placeholder="Enter Country">
                                 @if ($errors->has('country'))
-                                    <span class="text-danger">{{ $errors->first('country') }}</span>
+                                <span class="text-danger">{{ $errors->first('country') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -397,7 +397,7 @@
                                 <input type="number" id="total-amount" name="total_amount" class="form-control"
                                     placeholder="Total Amount" readonly>
                                 @if ($errors->has('amount'))
-                                    <span class="text-danger">{{ $errors->first('amount') }}</span>
+                                <span class="text-danger">{{ $errors->first('amount') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -410,7 +410,7 @@
                                 <textarea class="form-control" name="description" id="description"
                                     placeholder="Enter your description here..."></textarea>
                                 @if ($errors->has('description'))
-                                    <span class="text-danger">{{ $errors->first('description') }}</span>
+                                <span class="text-danger">{{ $errors->first('description') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -472,7 +472,7 @@
                                     <input type="text" class="form-control" name="name" id="edit_name"
                                         placeholder="Enter Name">
                                     @if ($errors->has('name'))
-                                        <span class="text-danger">{{ $errors->first('name') }}</span>
+                                    <span class="text-danger">{{ $errors->first('name') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -483,7 +483,7 @@
                                     <input type="email" class="form-control" name="email" id="edit_email"
                                         placeholder="Enter Email Address">
                                     @if ($errors->has('email'))
-                                        <span class="text-danger">{{ $errors->first('email') }}</span>
+                                    <span class="text-danger">{{ $errors->first('email') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -494,7 +494,7 @@
                                     <input type="text" name="mobile" class="form-control" placeholder="Phone Number"
                                         id="edit_mobile">
                                     @if ($errors->has('mobile'))
-                                        <span class="text-danger">{{ $errors->first('mobile') }}</span>
+                                    <span class="text-danger">{{ $errors->first('mobile') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -505,7 +505,7 @@
                                     <input type="text" class="form-control" name="city" id="edit_city"
                                         placeholder="Enter City">
                                     @if ($errors->has('city'))
-                                        <span class="text-danger">{{ $errors->first('city') }}</span>
+                                    <span class="text-danger">{{ $errors->first('city') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -517,7 +517,7 @@
                                     <input type="text" class="form-control" name="state" id="edit_state"
                                         placeholder="Enter State">
                                     @if ($errors->has('state'))
-                                        <span class="text-danger">{{ $errors->first('state') }}</span>
+                                    <span class="text-danger">{{ $errors->first('state') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -528,14 +528,32 @@
                                     <input type="text" class="form-control" name="country" id="edit_country"
                                         placeholder="Enter Country">
                                     @if ($errors->has('country'))
-                                        <span class="text-danger">{{ $errors->first('country') }}</span>
+                                    <span class="text-danger">{{ $errors->first('country') }}</span>
                                     @endif
                                 </div>
 
                             </div>
-                            <div id="edit_dynamic-fields-wrapper"></div>
 
-                            
+                            <div class="col-lg-12">
+                                <div id="edit-dynamic-fields-wrapper">
+                                    <div class="row mb-3 dynamic-fields">
+
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-secondary" id="edit-add-more-fields">Add
+                                    More</button>
+                            </div>
+                            <!-- Total Amount Field -->
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="input-block mb-3">
+                                    <label>Total Amount</label>
+                                    <input type="number" id="edit_total_amount" name="total_amount"
+                                        class="form-control" placeholder="Total Amount" readonly>
+                                    @if ($errors->has('amount'))
+                                    <span class="text-danger">{{ $errors->first('amount') }}</span>
+                                    @endif
+                                </div>
+                            </div>
 
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="input-block mb-3">
@@ -544,7 +562,7 @@
                                         placeholder="Enter your description here..."></textarea>
 
                                     @if ($errors->has('description'))
-                                        <span class="text-danger">{{ $errors->first('description') }}</span>
+                                    <span class="text-danger">{{ $errors->first('description') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -930,226 +948,229 @@
 <script src="https://cdn.ckeditor.com/4.20.1/standard/ckeditor.js"></script>
 
 <script type="text/javascript">
-    //     $(document).ready(function() {
-    //     CKEDITOR.replace('description');
-    //     CKEDITOR.replace('description_edit');
-    // });
-    $(document).ready(function () {
-        toastr.options = {
-            "closeButton": true,
-            "debug": false,
-            "newestOnTop": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right", // Position of the toast
-            "preventDuplicates": false,
-            "showDuration": "300",
-            "hideDuration": "1000",
-            "timeOut": "5000", // Duration for which the toast is shown
-            "extendedTimeOut": "1000",
-            "showEasing": "swing",
-            "hideEasing": "linear",
-            "showMethod": "fadeIn", // Use fadeIn or slideDown
-            "hideMethod": "fadeOut" // Use fadeOut or slideUp
-        };
-        $('#Supplier_details_form').on('submit', function (e) {
-            e.preventDefault(); // Prevent the form from submitting normally
+//     $(document).ready(function() {
+//     CKEDITOR.replace('description');
+//     CKEDITOR.replace('description_edit');
+// });
+$(document).ready(function() {
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right", // Position of the toast
+        "preventDuplicates": false,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000", // Duration for which the toast is shown
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn", // Use fadeIn or slideDown
+        "hideMethod": "fadeOut" // Use fadeOut or slideUp
+    };
+    $('#Supplier_details_form').on('submit', function(e) {
+        e.preventDefault(); // Prevent the form from submitting normally
 
-            var formData = new FormData(this); // Create FormData object from the form
+        var formData = new FormData(this); // Create FormData object from the form
 
-            $.ajax({
-                url: $(this).attr('action'), // Get the action URL from the form
-                type: 'POST',
-                data: formData, // Send FormData object
-                contentType: false, // Important for file upload
-                processData: false, // Important for file upload
-                success: function (response) {
-                    toastr.success(response.message); // Display success message
-                    // Optionally, reset the form or close the modal
-                    // $('#Supplier_details').modal('hide'); // Close modal
-                    $('#Supplier_details_form')[0].reset(); // Reset the form
-                    setTimeout(function () {
-                        // window.location.reload(); // Reload the page after the delay
-                    }, 3000); // 5-second delay
+        $.ajax({
+            url: $(this).attr('action'), // Get the action URL from the form
+            type: 'POST',
+            data: formData, // Send FormData object
+            contentType: false, // Important for file upload
+            processData: false, // Important for file upload
+            success: function(response) {
+                toastr.success(response.message); // Display success message
+                // Optionally, reset the form or close the modal
+                // $('#Supplier_details').modal('hide'); // Close modal
+                $('#Supplier_details_form')[0].reset(); // Reset the form
+                setTimeout(function() {
+                    // window.location.reload(); // Reload the page after the delay
+                }, 3000); // 5-second delay
 
-                },
-                error: function (xhr) {
-                    if (xhr.responseJSON.errors) {
-                        $.each(xhr.responseJSON.errors, function (key, value) {
-                            toastr.error(value[0]); // Display each error message
-                        });
-                    } else {
-                        toastr.error('Error uploading profile.'); // Generic error message
-                    }
+            },
+            error: function(xhr) {
+                if (xhr.responseJSON.errors) {
+                    $.each(xhr.responseJSON.errors, function(key, value) {
+                        toastr.error(value[0]); // Display each error message
+                    });
+                } else {
+                    toastr.error('Error uploading profile.'); // Generic error message
                 }
-            });
+            }
         });
+    });
 
-        $(document).on('click', '.edit_Supplier', function () {
-            var id = $(this).data('id'); // Get supplier ID from the button
-            // Make an AJAX request to fetch the supplier data
-            $.ajax({
-                url: '{{ route("suppliers.edit", ":id") }}'.replace(':id', id), // Replace ':id' with the actual supplier ID
-                type: 'GET',
-                success: function (response) {
-                    var data = response.data;
+    $(document).on('click', '.edit_Supplier', function() {
+        var id = $(this).data('id'); // Get supplier ID from the button
+        // Make an AJAX request to fetch the supplier data
+        $.ajax({
+            url: '{{ route("suppliers.edit", ":id") }}'.replace(':id',
+            id), // Replace ':id' with the actual supplier ID
+            type: 'GET',
+            success: function(response) {
+                var data = response.data;
 
-                    // Populate the form fields with the fetched data
-                    $('#Supplier_id').val(data.id); // Hidden supplier ID
-                    $('#edit_name').val(data.name);
-                    $('#edit_email').val(data.email);
-                    $('#edit_mobile').val(data.mobile);
-                    $('#edit_city').val(data.city);
-                    $('#edit_state').val(data.state);
-                    $('#edit_country').val(data.country);
-                    $('#edit_amount').val(data.amount);
-                    $('#edit_description').val(data.description);
-                   
-                    // Handle supplier image
-                    if (data.image) {
-                        $('#blahedit').attr('src', '{{ url("public/profile") }}/' + data.image);
-                    } else {
-                        $('#blahedit').attr('src', '{{ url("public/assets/img/profiles/default.png") }}');
-                    }
+                // Populate the form fields with the fetched data
+                $('#Supplier_id').val(data.id); // Hidden supplier ID
+                $('#edit_name').val(data.name);
+                $('#edit_email').val(data.email);
+                $('#edit_mobile').val(data.mobile);
+                $('#edit_city').val(data.city);
+                $('#edit_state').val(data.state);
+                $('#edit_country').val(data.country);
+                $('#edit_amount').val(data.amount);
+                $('#edit_description').val(data.description);
 
-                    // Clear existing dynamic expense fields
-                    $('#edit_dynamic-fields-wrapper').empty();
-
-                    // Populate dynamic fields with existing expenses if any
-                    if (data.expenses && data.expenses.length > 0) {
-                        data.expenses.forEach(function (expense) {
-                           
-                           addDynamicField(expense.title, expense.amount); // Add each expense to the dynamic fields
-                       
-                        });
-                    } else {
-                        // If no expenses, add an empty field
-                        addDynamicField();
-                    }
-
-                    // Open the modal
-                    $('#edit_Supplier_details').modal('show');
-                },
-                error: function (xhr) {
-                    toastr.error('Error fetching supplier data.');
+                // Handle supplier image
+                if (data.image) {
+                    $('#blahedit').attr('src', '{{ url("public/profile") }}/' + data.image);
+                } else {
+                    $('#blahedit').attr('src',
+                        '{{ url("public/assets/img/profiles/default.png") }}');
                 }
-            });
+
+                // Clear existing dynamic expense fields
+                $('#edit_dynamic-fields-wrapper').empty();
+
+                // Populate dynamic fields with existing expenses if any
+                if (data.expenses && data.expenses.length > 0) {
+                    let editTotalAmount = 0;
+                    data.expenses.forEach(function(expense) {
+                        editTotalAmount += parseFloat(expense.amount);
+                        addDynamicField(expense.title, expense.amount,expense.id); // Add each expense to the dynamic fields
+
+                    });
+                    $('#edit_total_amount').val(editTotalAmount.toFixed(2)); 
+                } else {
+                    // If no expenses, add an empty field
+                    addDynamicField();
+                }
+               // Display total with 2 decimal precision
+
+                // Open the modal
+                $('#edit_Supplier_details').modal('show');
+            },
+            error: function(xhr) {
+                toastr.error('Error fetching supplier data.');
+            }
         });
+    });
 
-        // Function to add dynamic expense fields
-        function addDynamicField(title = '', amount = '') {
-
-            const newField = `
+    // Function to Edit add dynamic expense fields
+ 
+    function addDynamicField(title = '', amount = '', id = '') {
+    
+        const newField = `
 
         <div class="row mb-3 dynamic-fields">
             <div class="col-lg-6">
                 <label>Title</label>
+                  <input type="hidden" name="exp_id[]" class="form-control" value="${id}">
                 <input type="text" name="title[]" class="form-control" value="${title}" placeholder="Enter Title">
             </div>
             <div class="col-lg-5">
                 <label>Amount</label>
-                <input type="number" name="amount[]" class="form-control amount-input" value="${amount}" placeholder="Enter Amount" min="0" oninput="calculateSum()">
+                <input type="number" name="amount[]" class="form-control edit-amount-input" value="${amount}" placeholder="Enter Amount" min="0" oninput="editCalculateSum()">
             </div>
-            <div class="col-lg-12 col-md-12 col-sm-12">
-                            <div class="input-block mb-3">
-                                <label>Total Amount</label>
-                                <input type="number" id="total-amount" name="total_amount" class="form-control"
-                                    placeholder="Total Amount" readonly>
-                                @if ($errors->has('amount'))
-                                    <span class="text-danger">{{ $errors->first('amount') }}</span>
-                                @endif
-                            </div>
-                        </div>
+        
             <div class="col-lg-1 mt-4 d-flex justify-content-end">
-                <span class="remove-field" style="cursor: pointer; color: red; margin-left: 10px;">
-                    <i class="fas fa-minus-circle"></i>
+                <span class="edit-remove-field" style="cursor: pointer; color: red; margin-left: 10px;">
+                    <i class="fas fa-minus-circle"  data-id="${id}"></i>
                 </span>
             </div>
         </div>`;
+       
+        $('#edit-dynamic-fields-wrapper').append(newField);
+        
+    }
+    
+   
+   
+    $('#edit_Supplier_details_form').on('submit', function(e) {
+        e.preventDefault(); // Prevent the form from submitting normally
 
-            $('#edit_dynamic-fields-wrapper').append(newField);
-        }
-        $('#edit_Supplier_details_form').on('submit', function (e) {
-            e.preventDefault(); // Prevent the form from submitting normally
+        var formData = new FormData(this); // FormData for file uploads
+        var id = $('#Supplier_id').val(); // Get user ID from hidden input
 
-            var formData = new FormData(this); // FormData for file uploads
-            var id = $('#Supplier_id').val(); // Get user ID from hidden input
-
-            $.ajax({
-                url: '{{ route("suppliers.update", ":id") }}'.replace(':id', id), // Update route
-                type: 'POST', // POST method with method override
-                data: formData,
-                contentType: false,
-                processData: false,
-                headers: {
-                    'X-HTTP-Method-Override': 'PUT' // Spoofing PUT
-                },
-                success: function (response) {
-                    toastr.success(response.message);
-                    // Clear the existing table body            
-                    // $('#edit_Supplier_details').modal('hide'); // Close modal after success
-                    setTimeout(function () {
-                        window.location.reload(); // Reload the page after the delay
-                    }, 3000);
-                },
-                error: function (xhr) {
-                    // Display error messages from the server if any
-                    let errors = xhr.responseJSON.errors;
-                    if (errors) {
-                        $.each(errors, function (key, value) {
-                            toastr.error(value[0]);
-                        });
-                    } else {
-                        toastr.error('Error updating user.');
-                    }
+        $.ajax({
+            url: '{{ route("suppliers.update", ":id") }}'.replace(':id', id), // Update route
+            type: 'POST', // POST method with method override
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: {
+                'X-HTTP-Method-Override': 'PUT' // Spoofing PUT
+            },
+            success: function(response) {
+                toastr.success(response.message);
+                // Clear the existing table body            
+                // $('#edit_Supplier_details').modal('hide'); // Close modal after success
+                setTimeout(function() {
+                    window.location.reload(); // Reload the page after the delay
+                }, 3000);
+            },
+            error: function(xhr) {
+                // Display error messages from the server if any
+                let errors = xhr.responseJSON.errors;
+                if (errors) {
+                    $.each(errors, function(key, value) {
+                        toastr.error(value[0]);
+                    });
+                } else {
+                    toastr.error('Error updating user.');
                 }
-            });
+            }
         });
     });
-    function calculateSum() {
-        let total = 0;
-        // Iterate over all amount inputs and sum their values
-        document.querySelectorAll('.amount-input').forEach(function (input) {
-            total += parseFloat(input.value) || 0; // Handle NaN values by treating them as 0
-        });
-        document.getElementById('total-amount').value = total; // Update total amount field
-    }
+});
+
+function calculateSum() {
+    let total = 0;
+    // Iterate over all amount inputs and sum their values
+    document.querySelectorAll('.amount-input').forEach(function(input) {
+        total += parseFloat(input.value) || 0; // Handle NaN values by treating them as 0
+    });
+    document.getElementById('total-amount').value = total; // Update total amount field
+}
 </script>
 
 <script>
-    function resetForm() {
-        // Clear all input fields
-        document.querySelector('input[name="name"]').value = '';
-        document.querySelector('input[name="email"]').value = '';
-        document.querySelector('input[name="mobile"]').value = '';
-        document.querySelector('input[name="city"]').value = '';
-        document.querySelector('input[name="state"]').value = '';
-        document.querySelector('input[name="country"]').value = '';
+function resetForm() {
+    // Clear all input fields
+    document.querySelector('input[name="name"]').value = '';
+    document.querySelector('input[name="email"]').value = '';
+    document.querySelector('input[name="mobile"]').value = '';
+    document.querySelector('input[name="city"]').value = '';
+    document.querySelector('input[name="state"]').value = '';
+    document.querySelector('input[name="country"]').value = '';
 
-        // Redirect to the main suppliers page to reset filters
-        window.location.href = '{{ route('suppliers.index') }}';
-    }
+    // Redirect to the main suppliers page to reset filters
+    window.location.href = '{{ route('suppliers.index') }}';
+}
 </script>
 
 <script>
-    // Function to calculate the sum of the amounts
-    function calculateSum() {
-        let total = 0;
-        // Iterate over all amount inputs and sum their values
-        document.querySelectorAll('.amount-input').forEach(function (input) {
-            total += parseFloat(input.value) || 0; // Handle NaN values by treating them as 0
-        });
-        document.getElementById('total-amount').value = total; // Update total amount field
-    }
+// Function to calculate the sum of the amounts
+function calculateSum() {
+    let total = 0;
+    // Iterate over all amount inputs and sum their values
+    document.querySelectorAll('.amount-input').forEach(function(input) {
+        total += parseFloat(input.value) || 0; // Handle NaN values by treating them as 0
+    });
+    document.getElementById('total-amount').value = total; // Update total amount field
+}
 
-    // Add More Fields
-    document.getElementById('add-more-fields').addEventListener('click', function () {
-        const newField = document.createElement('div');
-        newField.className = 'row mb-3 dynamic-fields'; // Same class for styling
+// Add More Fields
+document.getElementById('add-more-fields').addEventListener('click', function() {
+    const newField = document.createElement('div');
+    newField.className = 'row mb-3 dynamic-fields'; // Same class for styling
 
-        newField.innerHTML = `
+    newField.innerHTML = `
         <div class="col-lg-6">
             <label>Title</label>
-            <input type="text" name="titles[]" class="form-control" placeholder="Enter Title">
+            <input type="text" name="title[]" class="form-control" placeholder="Enter Title">
         </div>
         <div class="col-lg-5">
             <label>Amount</label>
@@ -1162,20 +1183,90 @@
         </div>
     `;
 
-        document.getElementById('dynamic-fields-wrapper').appendChild(newField);
-    });
+    document.getElementById('dynamic-fields-wrapper').appendChild(newField);
+});
+// Remove Field
+document.getElementById('dynamic-fields-wrapper').addEventListener('click', function(e) {
+    if (e.target && e.target.classList.contains('remove-field') || e.target.closest('.remove-field')) {
+        e.target.closest('.dynamic-fields').remove(); // Remove the closest dynamic fields container
+        calculateSum(); // Recalculate total amount
+    }
+});
 
-    // Remove Field
-    document.getElementById('dynamic-fields-wrapper').addEventListener('click', function (e) {
-        if (e.target && e.target.classList.contains('remove-field') || e.target.closest('.remove-field')) {
-            e.target.closest('.dynamic-fields').remove(); // Remove the closest dynamic fields container
-            calculateSum(); // Recalculate total amount
-        }
-    });
+//edit Add More Fields
+document.getElementById('edit-add-more-fields').addEventListener('click', function() {
+    const newField = document.createElement('div');
+    newField.className = 'row mb-3 dynamic-fields'; // Same class for styling
 
+    newField.innerHTML = `
+        <div class="col-lg-6">
+            <label>Title</label>
+            <input type="text" name="title[]" class="form-control" placeholder="Enter Title">
+        </div>
+        <div class="col-lg-5">
+            <label>Amount</label>
+            <input type="number" name="amount[]" class="form-control edit-amount-input" placeholder="Enter Rupees" min="0" oninput="editCalculateSum()">
+        </div>
+        <div class="col-lg-1 mt-4 d-flex justify-content-end">
+            <span class="edit-remove-field"  style="cursor: pointer; color: red; margin-left: 10px;">
+                <i class="fas fa-minus-circle"></i> <!-- Font Awesome minus icon -->
+            </span>
+        </div>
+    `;
+
+    document.getElementById('edit-dynamic-fields-wrapper').appendChild(newField);
+});
+// Edit page Remove Field
+document.getElementById('edit-dynamic-fields-wrapper').addEventListener('click', function(e) {
+    // Check if the click is on the span or its child (the icon)
+    let removeField = e.target.closest('.edit-remove-field');
+
+    if (removeField) {
+        // Check if the clicked element or its child has the data-id
+        let dataId = removeField.querySelector('i').getAttribute('data-id');
+        
+        // Remove the closest dynamic field container
+        removeField.closest('.dynamic-fields').remove();
+        
+        // Recalculate the total amount
+        editCalculateSum();
+
+        // Send AJAX request to delete the record
+        $.ajax({
+            url: '{{ route("suplyer.delete-exp", ":id") }}'.replace(':id', dataId),
+            type: 'GET', // Using GET instead of DELETE
+            success: function(response) {
+                if (response.success) {
+                    toastr.success(response.message);
+                } else {
+                    toastr.success(response.message);
+                }
+            },
+            error: function(xhr) {
+                alert('An error occurred while deleting the record');
+                console.log(xhr.responseText);
+            }
+        });
+    }
+});
+
+ // Function to calculate the sum of all amount fields
+ function editCalculateSum() {
+        let editTotalAmount = 0;
+      
+        // Loop through all the amount inputs and sum their values
+        $('.edit-amount-input').each(function() {
+         
+            const amount = parseFloat($(this).val());
+            if (!isNaN(amount)) {
+                editTotalAmount += amount;
+            }
+        });
+
+        // Update the total amount in the edit_total_amount field
+        $('#edit_total_amount').val(editTotalAmount.toFixed(2)); // Set total with 2 decimal precision
+    }
 </script>
-
-
 
 
 @endsection
