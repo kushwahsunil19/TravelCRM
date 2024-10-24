@@ -179,7 +179,7 @@ class SupplierController extends Controller
             'city' => 'nullable|string|max:255',
             'state' => 'nullable|string|max:255',
             'country' => 'nullable|string|max:255',
-            'total_amount' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            // 'total_amount' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
         $input = $request->all();
@@ -206,25 +206,27 @@ class SupplierController extends Controller
             $titles = $request->title; // Titles array from form
             $amounts = $request->amount; // Amount array from form
             $ids = $request->exp_id ?? []; // Expense IDs from form, if provided
-            
-            // Loop through the titles and amounts to create or update each expense
-            foreach ($titles as $key => $title) {  
-                // Prepare the matching conditions (for updating)
-                $matchThese = [
-                    'id' => $ids[$key] ?? 0, // Use the expense ID for matching, or 0 if not provided
-                    'suplyer_id' => $Supplier->id,
-                ];
-            
-                // Prepare the data to insert or update
-                $updateData = [
-                    'suplyer_id' => $Supplier->id,
-                    'title' => $title,
-                    'amount' => $amounts[$key] ?? 0,
-                ];
-            
-                // Call updateOrCreate for each expense entry
-                SupplierExpense::updateOrCreate($matchThese, $updateData);
+            if(!empty($titles)){
+                // Loop through the titles and amounts to create or update each expense
+                foreach ($titles as $key => $title) {  
+                    // Prepare the matching conditions (for updating)
+                    $matchThese = [
+                        'id' => $ids[$key] ?? 0, // Use the expense ID for matching, or 0 if not provided
+                        'suplyer_id' => $Supplier->id,
+                    ];
+
+                    // Prepare the data to insert or update
+                    $updateData = [
+                        'suplyer_id' => $Supplier->id,
+                        'title' => $title,
+                        'amount' => $amounts[$key] ?? 0,
+                    ];
+
+                    // Call updateOrCreate for each expense entry
+                    SupplierExpense::updateOrCreate($matchThese, $updateData);
+                }
             }
+          
             
         return response()->json(['status'=>true,'data'=>$Supplier ,'message' => 'Supplier details updated successfully']);
         // return redirect()->route('suppliers.index')->with('success', 'Supplier updated successfully.');

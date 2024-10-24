@@ -991,7 +991,7 @@ $(document).ready(function() {
                 // $('#Supplier_details').modal('hide'); // Close modal
                 $('#Supplier_details_form')[0].reset(); // Reset the form
                 setTimeout(function() {
-                    // window.location.reload(); // Reload the page after the delay
+                     window.location.reload(); // Reload the page after the delay
                 }, 3000); // 5-second delay
 
             },
