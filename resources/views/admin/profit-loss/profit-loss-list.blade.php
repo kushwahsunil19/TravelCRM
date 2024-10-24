@@ -62,8 +62,17 @@
                         <label>Period</label>
                         <ul class="form-group">
                             <li>
-                                <select class="select ">
-                                    <option>This Year</option>
+                                <select class="select" name="year" id="year">
+                                    <option value="">Select Year</option>
+                                    @php
+                                    $currentYear = now()->year; // Get the current year
+                                    $startYear = $currentYear - 1; // Starting from 10 years ago
+                                    $endYear = $currentYear + 10; // Ending 10 years in the future
+                                    @endphp
+
+                                    @for ($year = $startYear; $year <= $endYear; $year++) <option value="{{ $year }}">
+                                        {{ $year }}</option>
+                                        @endfor
                                 </select>
                             </li>
                         </ul>
@@ -73,7 +82,8 @@
                     <div class="input-block mb-3">
                         <label>From</label>
                         <div class="cal-icon cal-icon-info">
-                            <input type="text" class="datetimepicker form-control" placeholder="01 Jan 2023">
+                            <input type="text" id="from_date" name="from_date" class="datetimepicker form-control"
+                                placeholder="DD-MM-YYYY">
                         </div>
                     </div>
                 </div>
@@ -81,7 +91,8 @@
                     <div class="input-block mb-3">
                         <label>To</label>
                         <div class="cal-icon cal-icon-info">
-                            <input type="text" class="datetimepicker form-control" placeholder="31 Mar 2023">
+                            <input type="text" id="to_date" name="to_date" class="datetimepicker form-control"
+                                placeholder="DD-MM-YYYY">
                         </div>
                     </div>
                 </div>
@@ -90,8 +101,11 @@
                         <label>Display Columns by</label>
                         <ul class="form-group">
                             <li>
-                                <select class="select ">
-                                    <option>Month</option>
+                                <select class="select" name="month" id="month">
+                                    <option value="">Select Month</option>
+                                    @foreach(range(1, 12) as $month)
+                                    <option value="{{ $month }}">{{ date('F', mktime(0, 0, 0, $month, 1)) }}</option>
+                                    @endforeach
                                 </select>
                             </li>
                         </ul>
@@ -99,19 +113,43 @@
                 </div>
                 <div class="col-lg-2 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
-                        <label>Accounting Method</label>
+                        <label>Branch</label>
                         <ul class="form-group">
                             <li>
-                                <select class="select ">
-                                    <option>Accrual</option>
+                                <select class="select" name="branch" id="branch">
+                                    <option value="">Select Branch</option>
+                                    @foreach ($branches as $branch)
+                                    <option value="{{ $branch->id }}"
+                                        {{ old('branch_id') == $branch->id ? 'selected' : '' }}>
+                                        {{ $branch->city }}
+                                    </option>
+                                    @endforeach
                                 </select>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-6 col-sm-12">
-                    <a class="btn btn-primary loss" href="#">
-                        Run</a>
+                    <div class="input-block mb-3">
+                        <label>Package</label>
+                        <ul class="form-group">
+                            <li>
+                                <select class="select" name="package" id="package">
+                                    <option value="">Select Package</option>
+                                    @foreach ($packages as $package)
+                                    <option value="{{ $package->id }}"
+                                        {{ old('package_id') == $package->id ? 'selected' : '' }}>
+                                        {{ $package->package_name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <button class="btn btn-primary" id="filter-btn">Filter</button>
+                    <button class="btn btn-danger" id="reset-btn">Reset</button>
                 </div>
             </div>
         </div>
@@ -148,146 +186,9 @@
                 <div class="card-table">
                     <div class="card-body">
                         <div class="table-responsive">
-                            <div class="table-profit-loss">
-                                <table class="table table-center ">
-                                    <thead class="thead-light loss">
-                                        <tr>
-                                        
-											<th>Branch</th>
-											<th>Package</th>
-                                            <th>Month</th>
-                                            <th>Year</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tr>
-                                        <td class="profit space" colspan="5">
-                                            <table class="table table-center profit">
-                                                <thead class="profitloss-heading">
-                                                    <tr>
-                                                        <th class="table-profit-head" colspan="5">Income</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-													@php  $total_invoice_amt = 0; @endphp
-                                                    @forelse ($invoices as $invoice)
-
-                                                    @php
-													$symbol = isset($invoice->currency->symbol) ? $invoice->currency->symbol : '₹';
-                                                    $package_amt = $invoice->package->amount;
-                                                    // GST Tax in percentage
-                                                    $tax = $invoice->vat;
-                                                    // Discount in percentage
-                                                    $discount = $invoice->discount;
-
-                                                    if($invoice->discount_type=='Fixed'){
-                                                    $discount_amt = $discount;
-                                                    }else{
-                                                    $discount_amt = ($package_amt * $discount) / 100;
-                                                    }
-                                                    // Amount after discount
-                                                    $amount_after_discount = $package_amt - $discount_amt;
-                                                    $tax_amt = ($amount_after_discount * $tax) / 100;
-                                                    $total_amt = $amount_after_discount + $tax_amt;
-													$total_invoice_amt += $total_amt;
-                                                    @endphp
-                                                    <tr class="proft-head">
-                                                        <td>{{ isset($invoice->branch->branch_name)?$invoice->branch->branch_name:'' }}</td>
-                                                        <td>{{ isset($invoice->package->package_name)?$invoice->package->package_name:'' }}</td>
-                                                        <td>March</td>
-                                                        <td>2024</td>
-                                                        <td>{{ isset($invoice->currency->symbol) ? $invoice->currency->symbol : '₹' }}{{ $total_amt }}</td>
-                                                    </tr>
-													@empty
-                                    <tr>
-                                        <td colspan="9" class="text-center">No invoices found.</td>
-                                    </tr>
-                                    @endforelse
-                                                </tbody>
-
-                                                <tr class="profitloss-bg">
-                                                    <td>
-                                                        <h6>Total Income</h6>
-                                                    </td>
-                                                    <td>
-                                                        
-                                                    </td>
-                                                    <td>
-                                                      
-                                                    </td>
-                                                    <td>
-                                                      
-                                                    </td>
-                                                    <td>
-                                                        {{$symbol}}{{ $total_amt }}
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="loss-space" colspan="5">
-                                            <table class="table table-center profit">
-                                                <thead class="profitloss-heading">
-                                                    <tr>
-                                                        <th class="table-profit-head" colspan="5">Expenses</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Exchange Gain or Losses</td>
-                                                        <td>$0.00</td>
-                                                        <td>$0.00</td>
-                                                        <td>$0.00</td>
-                                                        <td>$0.00</td>
-                                                    </tr>
-                                                    <tr class="proft-head">
-                                                        <td>Stripe Fees</td>
-                                                        <td>$2,81,687.00</td>
-                                                        <td>$3,73,518.00</td>
-                                                        <td>$2,17,936.00</td>
-                                                        <td>$8,73,141.00</td>
-                                                    </tr>
-                                                </tbody>
-
-                                                <tr class="profitloss-bg">
-                                                    <td>
-                                                        <h6>Total Expense</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6>$2,58,136.00</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6>$1,38,471.00</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6>$2,61,682.00</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6>$6,58,289.00</h6>
-                                                    </td>
-                                                </tr>
-                                                <tr class="profitloss-bg">
-                                                    <td>
-                                                        <h6>Net Income</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6>$2,69,276.00</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6>$2,75,638.00</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6>$2,51,629.00</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6>$7,96,543.00</h6>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </table>
+                            <div id="profit-loss-table">
+                                @include('admin.profit-loss.profit-loss-table-ajx', ['invoices' => $invoices,
+                                'suppliers' => $suppliers])
                             </div>
                         </div>
                     </div>
@@ -807,4 +708,81 @@
     </div>
 </div>
 <!-- /Theme Setting -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    // function formatDate(date) {
+    //     let day = String(date.getDate()).padStart(2, '0'); // Get day and pad with zero
+    //     let month = String(date.getMonth() + 1).padStart(2, '0'); // Get month (0-11) and pad with zero
+    //     let year = date.getFullYear(); // Get full year
+    //     return `${day}-${month}-${year}`; // Return formatted date
+    // }
+
+    // // Get the current date
+    // var currentDate = new Date();
+
+    // // Set the "To" date to the current date (formatted as DD-MM-YYYY)
+    // var toDate = formatDate(currentDate);
+    // $('#to_date').val(toDate);
+
+    // // Set the "From" date to one month before the current date
+    // var fromDate = new Date(currentDate);
+    // fromDate.setMonth(currentDate.getMonth() - 1); // Set to one month earlier
+    // fromDate = formatDate(fromDate); // Format the date
+    // $('#from_date').val(fromDate);
+
+    $('#reset-btn').on('click', function() {
+
+        // Clear all select inputs
+        $('#year').val('');
+        $('#month').val('');
+        $('#branch').val('');
+        $('#package').val('');
+        $('#from_date').val('');
+        $('#to_date').val('');
+        window.location.reload();
+        // Reset date inputs to the current and one month before date
+        // var currentDate = new Date();
+        // var toDate = formatDate(currentDate); // Current date
+        // $('#to_date').val(toDate); // Set To date
+
+        // var fromDate = new Date(currentDate);
+        // fromDate.setMonth(currentDate.getMonth() - 1); // One month ago
+        // $('#from_date').val(formatDate(fromDate)); // Set From date
+    });
+
+    // Function to format date as DD-MM-YYYY
+    // function formatDate(date) {
+    //     let day = String(date.getDate()).padStart(2, '0'); // Get day and pad with zero
+    //     let month = String(date.getMonth() + 1).padStart(2, '0'); // Get month (0-11) and pad with zero
+    //     let year = date.getFullYear(); // Get full year
+    //     return `${day}-${month}-${year}`; // Return formatted date
+    // }
+    $('#filter-btn').click(function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: '{{ route("profit-loss.index") }}', // Adjust the route if necessary
+            method: 'GET',
+            data: {
+                year: $('#year').val(),
+                month: $('#month').val(),
+                branch: $('#branch').val(),
+                package: $('#package').val(),
+                from_date: $('#from_date').val(),
+                to_date: $('#to_date').val(),
+            },
+            success: function(response) {
+                $('#profit-loss-table').html(response
+                    .html); // Replace the table body with the new HTML
+            },
+            error: function(xhr) {
+                console.log(xhr.responseText); // Log any errors
+            }
+        });
+    });
+
+});
+</script>
+
 @endsection

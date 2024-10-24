@@ -92,6 +92,7 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/admin/quotations/download-pdf', [QuotationReportController::class, 'downloadPDF'])->name('quotations.downloadPDF');
     Route::resource('quotation-report', QuotationReportController::class);
     Route::resource('profit-loss', ProfitAndLoss::class);
+    Route::get('/profit-loss/filter', [ProfitAndLoss::class, 'filter'])->name('profit-loss.filter');
 
     // Route::post('quotations/{id}/restore', [QuotationController::class, 'restore'])->name('quotations.restore');
 

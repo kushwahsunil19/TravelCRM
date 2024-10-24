@@ -90,9 +90,12 @@ $url = $_SERVER['REQUEST_URI'];
           $total_cancelled_amt = 0;
           $total_drapt_amt = 0;
           $total_recurring_amt = 0;
+          $symbol =  '₹';
         @endphp  
         @foreach ($invoices as $invoice)
             @php
+            $symbol = isset($invoice->currency->symbol) ?
+            $invoice->currency->symbol : '₹';
             $package_amt = $invoice->package->amount;
             // GST Tax in percentage
             $tax = $invoice->vat;
@@ -112,7 +115,7 @@ $url = $_SERVER['REQUEST_URI'];
         @endforeach
         <!-- Inovices card -->
         <div class="row">
-            <div class="col-xl-2 col-lg-4 col-sm-6 col-12 d-flex">
+            <div class="col-xl-3 col-lg-4 col-sm-6 col-12 d-flex">
                 <div class="card inovices-card w-100">
                     <div class="card-body">
                         <div class="dash-widget-header">
@@ -122,20 +125,20 @@ $url = $_SERVER['REQUEST_URI'];
                             <div class="dash-count">
                                 <div class="dash-title">Total Invoice</div>
                                 <div class="dash-counts">
-                                    <p>${{$total_invoice_amt}}</p>
+                                    <p>{{$symbol}}{{number_format($total_invoice_amt,2)}}</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center">
+                        <!-- <div class="d-flex justify-content-between align-items-center">
                             <p class="inovices-all">No of Invoice <span class="rounded-circle bg-light-gray">02</span>
                             </p>
                             <p class="inovice-trending text-success-light">02 <span class="ms-2"><i
                                         class="fe fe-trending-up"></i></span></p>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
-            <div class="col-xl-2 col-lg-4 col-sm-6 col-12 d-flex">
+            <div class="col-xl-3 col-lg-4 col-sm-6 col-12 d-flex">
                 <div class="card inovices-card w-100">
                     <div class="card-body">
                         <div class="dash-widget-header">
@@ -146,20 +149,20 @@ $url = $_SERVER['REQUEST_URI'];
                             <div class="dash-count">
                                 <div class="dash-title">Outstanding</div>
                                 <div class="dash-counts">
-                                    <p>${{$total_outstanding_amt}}</p>
+                                    <p>{{$symbol}}{{ number_format($total_outstanding_amt, 2) }}</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center">
+                        <!-- <div class="d-flex justify-content-between align-items-center">
                             <p class="inovices-all">No of Invoice <span class="rounded-circle bg-light-gray">03</span>
                             </p>
                             <p class="inovice-trending text-success-light">04 <span class="ms-2"><i
                                         class="fe fe-trending-up"></i></span></p>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
-            <div class="col-xl-2 col-lg-4 col-sm-6 col-12 d-flex">
+            <div class="col-xl-3 col-lg-4 col-sm-6 col-12 d-flex">
                 <div class="card inovices-card w-100">
                     <div class="card-body">
                         <div class="dash-widget-header">
@@ -170,20 +173,20 @@ $url = $_SERVER['REQUEST_URI'];
                             <div class="dash-count">
                                 <div class="dash-title">Total Overdue</div>
                                 <div class="dash-counts">
-                                    <p>${{$total_overdue_amt}}</p>
+                                    <p>{{$symbol}}{{number_format($total_overdue_amt,2)}}</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center">
+                        <!-- <div class="d-flex justify-content-between align-items-center">
                             <p class="inovices-all">No of Invoice <span class="rounded-circle bg-light-gray">01</span>
                             </p>
                             <p class="inovice-trending text-danger-light">03 <span class="ms-2"><i
                                         class="fe fe-trending-down"></i></span></p>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
-            <div class="col-xl-2 col-lg-4 col-sm-6 col-12 d-flex">
+            <div class="col-xl-3 col-lg-4 col-sm-6 col-12 d-flex">
                 <div class="card inovices-card w-100">
                     <div class="card-body">
                         <div class="dash-widget-header">
@@ -195,20 +198,20 @@ $url = $_SERVER['REQUEST_URI'];
                             <div class="dash-count">
                                 <div class="dash-title">Cancelled</div>
                                 <div class="dash-counts">
-                                    <p>${{$total_cancelled_amt}}</p>
+                                    <p>{{$symbol}}{{$total_cancelled_amt}}</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center">
+                        <!-- <div class="d-flex justify-content-between align-items-center">
                             <p class="inovices-all">No of Invoice <span class="rounded-circle bg-light-gray">04</span>
                             </p>
                             <p class="inovice-trending text-danger-light">05 <span class="ms-2"><i
                                         class="fe fe-trending-down"></i></span></p>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
-            <div class="col-xl-2 col-lg-4 col-sm-6 col-12 d-flex">
+            <!-- <div class="col-xl-2 col-lg-4 col-sm-6 col-12 d-flex">
                 <div class="card inovices-card w-100">
                     <div class="card-body">
                         <div class="dash-widget-header">
@@ -218,7 +221,7 @@ $url = $_SERVER['REQUEST_URI'];
                             <div class="dash-count">
                                 <div class="dash-title">Draft</div>
                                 <div class="dash-counts">
-                                    <p>${{$total_drapt_amt}}</p>
+                                    <p>{{$symbol}}{{$total_drapt_amt}}</p>
                                 </div>
                             </div>
                         </div>
@@ -230,8 +233,8 @@ $url = $_SERVER['REQUEST_URI'];
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-xl-2 col-lg-4 col-sm-6 col-12 d-flex">
+            </div> -->
+            <!-- <div class="col-xl-2 col-lg-4 col-sm-6 col-12 d-flex">
                 <div class="card inovices-card w-100">
                     <div class="card-body">
                         <div class="dash-widget-header">
@@ -242,19 +245,19 @@ $url = $_SERVER['REQUEST_URI'];
                             <div class="dash-count">
                                 <div class="dash-title">Recurring</div>
                                 <div class="dash-counts">
-                                    <p>${{ $total_recurring_amt}}</p>
+                                    <p>{{$symbol}}{{ $total_recurring_amt}}</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center">
+                         <div class="d-flex justify-content-between align-items-center">
                             <p class="inovices-all">No of Invoice <span class="rounded-circle bg-light-gray">03</span>
                             </p>
                             <p class="inovice-trending text-success-light">02 <span class="ms-2"><i
                                         class="fe fe-trending-up"></i></span></p>
-                        </div>
+                        </div>>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
         <!-- /Inovices card -->
         <!-- All Invoice -->
@@ -319,6 +322,8 @@ $url = $_SERVER['REQUEST_URI'];
                                     @forelse ($invoices as $invoice)
 
                                     @php
+                                    $symbol = isset($invoice->currency->symbol) ?
+                                    $invoice->currency->symbol : '₹';
                                     $package_amt = $invoice->package->amount;
                                     // GST Tax in percentage
                                     $tax = $invoice->vat;
@@ -359,7 +364,7 @@ $url = $_SERVER['REQUEST_URI'];
                                         <td>{{ $invoice->discount }}{{ ($invoice->discount_type=='Fixed')?'':'%'}}
                                         </td>
                                         <td>{{ $invoice->vat }}%</td>
-                                        <td>{{ $total_amt }}</td>
+                                        <td>{{$symbol}}{{ number_format($total_amt, 2) }}</td>
                                         <td>
 
                                             <div class="dropdown dropdown-action">
