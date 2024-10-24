@@ -29,15 +29,16 @@
                                 <div class="dropdown-menu dropdown-menu-end">
                                     <ul class="d-block">
                                         <li>
-                                            <a class="d-flex align-items-center download-item"
-                                                href="{{route('supplier-report.downloadPDF')}}"><i
-                                                    class="far fa-file-pdf me-2"></i>PDF</a>
+                                        <a class="d-flex align-items-center download-item"
+   href="{{ route('supplier-report.downloadPDF', request()->query()) }}">
+   <i class="far fa-file-pdf me-2"></i>PDF
+</a>
                                         </li>
                                         <li>
-                                            <a class="d-flex align-items-center download-item"
-                                                href="{{ route('supplier-report.downloadCSV') }}" download>
-                                                <i class="far fa-file-text me-2"></i>CSV
-                                            </a>
+                                        <a class="d-flex align-items-center download-item"
+   href="{{ route('supplier-report.downloadCSV', request()->query()) }}">
+   <i class="far fa-file-text me-2"></i>CSV
+</a>
                                         </li>
 
                                     </ul>
@@ -94,7 +95,7 @@
                                         <th>State</th>
                                         <th>Country</th>
                                         <th>Amount</th>
-                                        <th>Actions</th>
+                                        
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -119,73 +120,7 @@
                                         <td>{{ $Supplier->state }}</td>
                                         <td>{{ $Supplier->country }}</td>
                                         <td>{{ $Supplier->amount }}</td>
-                                        <td>
-
-                                            <div class="dropdown dropdown-action">
-                                                <a href="#" class=" btn-action-icon " data-bs-toggle="dropdown"
-                                                    aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <ul>
-                                                        <li>
-                                                            <a class="dropdown-item edit_Supplier"
-                                                                data-id="{{$Supplier->id}}"><i
-                                                                    class="far fa-edit me-2"></i>Edit</a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item" href="javascript:void(0);"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#delete_modal{{$Supplier->id}}"><i
-                                                                    class="far fa-trash-alt me-2"></i>Delete</a>
-                                                        </li>
-                                                        <!-- <li>
-																		<a class="dropdown-item" href="{{ route('suppliers.show', $Supplier->id) }}"><i class="far fa-eye me-2"></i>View</a>
-																	</li> -->
-                                                        <!-- <li>
-																		<a class="dropdown-item" href="active-customers.html"><i class="fa-solid fa-power-off me-2"></i>Activate</a>
-																	</li>
-																	<li>
-																		<a class="dropdown-item" href="deactive-customers.html"><i class="far fa-bell-slash me-2"></i>Deactivate</a>
-																	</li> -->
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            <!-- Delete Items Modal -->
-                                            <div class="modal custom-modal fade" id="delete_modal{{$Supplier->id}}"
-                                                role="dialog">
-                                                <div class="modal-dialog modal-dialog-centered modal-md">
-                                                    <div class="modal-content">
-                                                        <div class="modal-body">
-                                                            <div class="form-header">
-                                                                <h3>Delete Supplier</h3>
-                                                                <p>Are you sure want to delete?</p>
-                                                            </div>
-                                                            <div class="modal-btn delete-action">
-                                                                <div class="row">
-                                                                    <div class="col-6">
-                                                                        <form
-                                                                            action="{{ route('suppliers.destroy', $Supplier->id) }}"
-                                                                            method="POST" style="display:inline;">
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <button type="submit"
-                                                                                data-bs-dismiss="modal"
-                                                                                class="w-100 btn btn-danger paid-continue-btn">Delete</button>
-
-                                                                        </form>
-
-                                                                    </div>
-                                                                    <div class="col-6">
-                                                                        <button type="submit" data-bs-dismiss="modal"
-                                                                            class="w-100 btn btn-primary paid-cancel-btn">Cancel</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- /Delete Items Modal -->
-                                        </td>
+                                        
                                     </tr>
                                     @empty
                                     <tr>
@@ -213,8 +148,8 @@
         </div>
 
         <div class="sidebar-body">
-            <form action="{{ route('supplier.supplier-report') }}" method="GET" autocomplete="off">
-
+            <form id="filterForm" action="{{ route('supplier.supplier-report') }}" method="GET" autocomplete="off">
+                
                 <!-- Name Filter -->
                 <div class="form-group">
                     <label for="name">Name</label>
@@ -236,8 +171,6 @@
                         value="{{ request('mobile') }}">
                 </div>
 
-                <!-- Add other filters as necessary -->
-
                 <!-- Filter Buttons -->
                 <div style="margin-top:12px">
                     <div class="filter-buttons">
@@ -245,18 +178,19 @@
                             class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary">
                             Apply
                         </button>
-                        <button type="button"
-                            class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary"
-                            onclick="resetForm()">
+
+                        <!-- Reset button that clears filters and submits the form -->
+                        <button type="button" class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary"
+                            onclick="resetFilters()">
                             Reset
                         </button>
                     </div>
                 </div>
             </form>
-
         </div>
     </div>
 </div>
+
 <!--/Add Asset -->
 
 
@@ -1039,20 +973,17 @@ $(document).ready(function() {
 });
 </script>
 
+
 <script>
-function resetForm() {
+    function resetFilters() {
+        // Clear the inputs
+        document.querySelector('input[name="name"]').value = '';
+        document.querySelector('input[name="email"]').value = '';
+        document.querySelector('input[name="mobile"]').value = '';
 
-    document.querySelector('input[name="name"]').value = '';
-    document.querySelector('input[name="email"]').value = '';
-    document.querySelector('input[name="mobile"]').value = '';
-    document.querySelector('input[name="city"]').value = '';
-    document.querySelector('input[name="state"]').value = '';
-    document.querySelector('input[name="country"]').value = '';
-
-    // Redirect to the main suppliers page to reset filters
-    window.location.href = {{ route('supplier.supplier-report') }};
-
-}
+        // Submit the form with cleared values
+        document.getElementById('filterForm').submit();
+    }
 </script>
 
 
