@@ -128,13 +128,13 @@ Route::middleware(['auth'])->group(function() {
 
     //staff-wise report
 
-    Route::get('/staff-wise-report', [StaffwiseController::class, 'index'])->name('staff-wise-report.index');
+    Route::get('/staff-report', [StaffwiseController::class, 'index'])->name('staff-wise-report.index');
 
 // Route to download the report as a PDF
-Route::get('/staff-wise-report/download-pdf', [StaffwiseController::class, 'downloadPDF'])->name('staff-wise-report.downloadPDF');
+Route::get('/staff-report/download-pdf', [StaffwiseController::class, 'downloadPDF'])->name('staff-wise-report.downloadPDF');
 
 // Route to download the report as a CSV
-Route::get('/staff-wise-report/download-csv', [StaffwiseController::class, 'downloadCSV'])->name('staff-wise-report.downloadCSV');
+Route::get('/staff-report/download-csv', [StaffwiseController::class, 'downloadCSV'])->name('staff-wise-report.downloadCSV');
 
 // Route for fetching users data via AJAX
 

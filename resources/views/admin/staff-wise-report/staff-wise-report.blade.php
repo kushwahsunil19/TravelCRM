@@ -10,7 +10,7 @@
         <!-- Page Header -->
         <div class="page-header">
             <div class="content-page-header">
-                <h5>Staff-wise Report</h5> <!-- Updated title for clarity -->
+                <h5>Staff Report</h5> <!-- Updated title for clarity -->
                 <div class="list-btn">
                     <ul class="filter-list">
                         <li>
