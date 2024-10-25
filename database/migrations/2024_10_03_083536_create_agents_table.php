@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('partners', function (Blueprint $table) {
+        Schema::create('agents', function (Blueprint $table) {
             $table->id(); // Auto-incrementing ID
             $table->string('name'); // Partner's name
             $table->string('mobile'); // Partner's mobile number
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('partners');
+        Schema::dropIfExists('agents');
     }
 };
