@@ -847,7 +847,7 @@
                                     <!-- <li><a href="low-stock-report.html">Low Stock Report</a></li>
                                         <li><a href="income-report.html">Income Report</a></li>
                                         <li><a href="tax-purchase.html">Tax Report</a></li> -->
-                                    <li><a href="{{route('profit-loss.index')}}">Profit & Loss</a></li>
+                                    <li><a href="{{route('profit-loss.index')}}" class="{{strpos($url,'profit-loss') !== false ? 'active' : '' }}">Profit & Loss</a></li>
                                 </ul>
                             </li>
                             </li>
