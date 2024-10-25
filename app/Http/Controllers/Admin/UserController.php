@@ -26,7 +26,9 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-       
+        $userRole = auth()->user()->roles->first()->name; // Assuming the user has only one role
+        $rolePermissions = getRolePermissions();   
+        if (in_array('list-user', $rolePermissions[$userRole])) { 
         $userId = Auth::id(); // This will return the ID of the authenticated user.
         $roles = Role::where('id', '!=', 1)->get();
         if ($request->ajax()) {   
@@ -109,12 +111,17 @@ class UserController extends Controller
     $actions .= '</ul></div></div>';
 
     return $actions;
+    
 })
 
             ->rawColumns(['first_name', 'role', 'action', 'status']) // Mark 'first_name' as raw HTML
             ->make(true);
         }
         return view('admin.users', compact('roles')); 
+    } else {
+        // Redirect if the user lacks permission
+        return redirect()->route('dashboard')->with('error', 'You do not have permission. Please contact the admin.');
+    }
     }
       
  

@@ -14,10 +14,18 @@ class RolesPermissionController extends Controller
      */
     public function index()
     {
+        $userRole = auth()->user()->roles->first()->name; // Assuming the user has only one role
+        $rolePermissions = getRolePermissions();   
+        if (in_array('list-role', $rolePermissions[$userRole])) { 
         $permissions = Permission::get();   
         // Fetch all branches, including soft-deleted ones if needed
         $roles = Role::where('id', '!=', 1)->get();       
         return view('admin.rolesPermission.roles-permission', compact('roles','permissions'));
+        } else {
+            // Redirect if the user lacks permission
+            return redirect()->route('dashboard')->with('error', 'You do not have permission. Please contact the admin.');
+        } 
+        
     }
         /**
           * Display a listing of the resource.

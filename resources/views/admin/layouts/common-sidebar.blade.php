@@ -711,7 +711,7 @@
                                             class="{{strpos($url,'partners') !== false ? 'active' : '' }}">Partners/Agents</a>
                                     </li>
                                     <li><a href="{{route('currencies.index')}}"
-                                            class="{{strpos($url,'currencies') !== false ? 'active' : '' }}">Currency</a>
+                                            class="{{strpos($url,'currencies') !== false ? 'active' : '' }}">Currencies</a>
                                     </li>
 
                                 </ul>

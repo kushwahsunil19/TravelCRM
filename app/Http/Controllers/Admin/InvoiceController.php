@@ -19,6 +19,9 @@ class InvoiceController extends Controller
 
       public function index(Request $request)
       {
+        $userRole = auth()->user()->roles->first()->name; // Assuming the user has only one role
+        $rolePermissions = getRolePermissions();   
+        if (in_array('list-invoice', $rolePermissions[$userRole])) { 
           // Build the query for fetching invoices with the necessary relationships
           $query = Invoice::with(['branch', 'partner', 'package', 'bank','currency']);
       
@@ -53,6 +56,10 @@ class InvoiceController extends Controller
       
           // Return the view with total invoices and paginated invoices
           return view('admin.invoices.invoices', compact('invoices', 'totalInvoices'));
+        } else {
+            // Redirect if the user lacks permission
+            return redirect()->route('dashboard')->with('error', 'You do not have permission. Please contact the admin.');
+        }
       }
     
      /**

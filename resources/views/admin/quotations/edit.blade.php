@@ -448,6 +448,15 @@ td {
                                                     class="fe fe-download me-2"></i>Estimate</button>
                                         </form>
                                     </li>
+                                    <li>
+                                        <form method="GET"
+                                        action="{{ route('convert-invoice.estimate', $quotation->id) }}">
+                                            <button type="submit" class="dropdown-item"><i
+                                            class="fe fe-file-text me-2"></i>Convert to
+                                            Invoice</button>
+                                        </form>
+                                    </li>
+                                    
 
                                 </ul>
 

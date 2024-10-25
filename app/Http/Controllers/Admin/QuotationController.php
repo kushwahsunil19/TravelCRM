@@ -27,6 +27,9 @@ class QuotationController extends Controller
 
      public function index(Request $request)
      {
+        $userRole = auth()->user()->roles->first()->name; // Assuming the user has only one role
+        $rolePermissions = getRolePermissions();   
+        if (in_array('list-quotation', $rolePermissions[$userRole])) { 
          // Get the total number of quotations
          $totalQuotations = Quotation::count();
      
@@ -62,6 +65,10 @@ class QuotationController extends Controller
      
          // Return the view with total quotations and paginated quotations
          return view('admin.quotations.index', compact('quotations', 'totalQuotations'));
+        } else {
+            // Redirect if the user lacks permission
+            return redirect()->route('dashboard')->with('error', 'You do not have permission. Please contact the admin.');
+        }
      }
      
 
