@@ -4,14 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-// use Illuminate\Database\Eloquent\SoftDeletes; // Import the SoftDeletes trait
 
-class Partner extends Model
+class Agent extends Model
 {
     use HasFactory;
-    protected $table = 'partners';
+    protected $table = 'agents';
 
-    // Fillable attributes for mass assignment
     protected $fillable = [
         'name',
         'mobile',

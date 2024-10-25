@@ -12,37 +12,17 @@
         <!-- Page Header -->
         <div class="page-header">
             <div class="content-page-header">
-                <h5>Partners/Agent</h5>
+                <h5>Agents</h5>
                 <div class="list-btn">
                     <ul class="filter-list">
                      <li>
 										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip"
 											data-bs-placement="bottom" title="Filter"><span class="me-2"><img src="{{url('public/assets/img/icons/filter-icon.svg')}}" alt="filter"></span>Filter </a>
 									</li>
-								   <!-- 	<li>
-										<div class="dropdown dropdown-action" data-bs-toggle="tooltip" data-bs-placement="top" title="Download">
-											<a href="#" class="btn-filters" data-bs-toggle="dropdown" aria-expanded="false"><span><i class="fe fe-download"></i></span></a>
-											<div class="dropdown-menu dropdown-menu-end">
-												<ul class="d-block">
-													<li>
-														<a class="d-flex align-items-center download-item" href="javascript:void(0);" download><i class="far fa-file-pdf me-2"></i>PDF</a>
-													</li>
-													<li>
-														<a class="d-flex align-items-center download-item" href="javascript:void(0);" download><i class="far fa-file-text me-2"></i>CVS</a>
-													</li>
-												</ul>
-											</div>
-										</div>														
-									</li>
-									<li>
-										<a class="btn-filters" href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print"><span><i class="fe fe-printer"></i></span> </a>
-									</li>
-									<li>
-										<a class="btn btn-import" href="javascript:void(0);"><span><i class="fe fe-check-square me-2"></i>Import Customer</span></a>
-									</li> -->
+								  
                         <li>
-                            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#partner_details"><i
-                                    class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add Partner</a>
+                            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agent_details"><i
+                                    class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add Agent</a>
                         </li>
                     </ul>
                 </div>
@@ -56,126 +36,114 @@
         <!-- /Search Filter -->
 
         <div class="row">
-            <div class="col-sm-12">
-                <div class="card-table">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-center table-hover datatable">
-                                <thead>
-                                    <tr>
-                                        <th>S.No</th>
-                                        <th>Name</th>
-                                        <th>Mobile</th>
-                                        <th>City</th>
-                                        <th>State</th>
-                                        <th>Country</th>
+    <div class="col-sm-12">
+        <div class="card-table">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-center table-hover datatable">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Name</th>
+                                <th>Mobile</th>
+                                <th>City</th>
+                                <th>State</th>
+                                <th>Country</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($agents as $agent) <!-- Changed from $partners to $agents -->
+                            <tr>
+                                <td>{{ $loop->iteration }}</td> <!-- Serial number -->
+                                <td>
+                                    <h2 class="table-avatar">
+                                        @php
+                                        $avatar = $agent->image ? url('public/profile/' . $agent->image) :
+                                        url('public/assets/img/profiles/default.png');
+                                        @endphp
+                                        <a href="" class="avatar avatar-md me-2"><img
+                                                class="avatar-img rounded-circle" src="{{$avatar}}"
+                                                alt="User Image"></a>
+                                        <a href="">{{ $agent->name }} <span><span class="__cf_email__"
+                                                    data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $agent->email }}]</span></span></a>
+                                    </h2>
+                                </td>
 
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse ($partners as $partner)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td> <!-- Serial number -->
-                                        <td>
-                                            <h2 class="table-avatar">
-                                                @php
-                                                $avatar = $partner->image ? url('public/profile/' . $partner->image) :
-                                                url('public/assets/img/profiles/default.png');
-                                                @endphp
-                                                <a href="" class="avatar avatar-md me-2"><img
-                                                        class="avatar-img rounded-circle" src="{{$avatar}}"
-                                                        alt="User Image"></a>
-                                                <a href="">{{ $partner->name }} <span><span class="__cf_email__"
-                                                            data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $partner->email }}]</span></span></a>
+                                <td>{{ $agent->mobile }}</td> <!-- Changed from $partner to $agent -->
+                                <td>{{ $agent->city }}</td> <!-- Changed from $partner to $agent -->
+                                <td>{{ $agent->state }}</td> <!-- Changed from $partner to $agent -->
+                                <td>{{ $agent->country }}</td> <!-- Changed from $partner to $agent -->
 
-                                        <td>{{ $partner->mobile }}</td>
-
-                                        <td>{{ $partner->city }}</td>
-                                        <td>{{ $partner->state }}</td>
-                                        <td>{{ $partner->country }}</td>
-
-                                        <td>
-
-                                            <div class="dropdown dropdown-action">
-                                                <a href="#" class=" btn-action-icon " data-bs-toggle="dropdown"
-                                                    aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <ul>
-                                                        <li>
-                                                            <a class="dropdown-item edit_partner"
-                                                                data-id="{{$partner->id}}"><i
-                                                                    class="far fa-edit me-2"></i>Edit</a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item" href="javascript:void(0);"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#delete_modal{{$partner->id}}"><i
-                                                                    class="far fa-trash-alt me-2"></i>Delete</a>
-                                                        </li>
-                                                        <!-- <li>
-																		<a class="dropdown-item" href="{{ route('partners.show', $partner->id) }}"><i class="far fa-eye me-2"></i>View</a>
-																	</li> -->
-                                                        <!-- <li>
-																		<a class="dropdown-item" href="active-customers.html"><i class="fa-solid fa-power-off me-2"></i>Activate</a>
-																	</li>
-																	<li>
-																		<a class="dropdown-item" href="deactive-customers.html"><i class="far fa-bell-slash me-2"></i>Deactivate</a>
-																	</li> -->
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            <!-- Delete Items Modal -->
-                                            <div class="modal custom-modal fade" id="delete_modal{{$partner->id}}"
-                                                role="dialog">
-                                                <div class="modal-dialog modal-dialog-centered modal-md">
-                                                    <div class="modal-content">
-                                                        <div class="modal-body">
-                                                            <div class="form-header">
-                                                                <h3>Delete Partner</h3>
-                                                                <p>Are you sure want to delete?</p>
+                                <td>
+                                    <div class="dropdown dropdown-action">
+                                        <a href="#" class="btn-action-icon" data-bs-toggle="dropdown"
+                                            aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <ul>
+                                                <li>
+                                                    <a class="dropdown-item edit_agent"
+                                                        data-id="{{$agent->id}}"><i
+                                                            class="far fa-edit me-2"></i>Edit</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="javascript:void(0);"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#delete_modal{{$agent->id}}"><i
+                                                            class="far fa-trash-alt me-2"></i>Delete</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <!-- Delete Items Modal -->
+                                    <div class="modal custom-modal fade" id="delete_modal{{$agent->id}}"
+                                        role="dialog">
+                                        <div class="modal-dialog modal-dialog-centered modal-md">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <div class="form-header">
+                                                        <h3>Delete Agent</h3>
+                                                        <p>Are you sure you want to delete?</p>
+                                                    </div>
+                                                    <div class="modal-btn delete-action">
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                <form
+                                                                    action="{{ route('agents.destroy', $agent->id) }}"
+                                                                    method="POST" style="display:inline;">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit"
+                                                                        data-bs-dismiss="modal"
+                                                                        class="w-100 btn btn-danger paid-continue-btn">Delete</button>
+                                                                </form>
                                                             </div>
-                                                            <div class="modal-btn delete-action">
-                                                                <div class="row">
-                                                                    <div class="col-6">
-                                                                        <form
-                                                                            action="{{ route('partners.destroy', $partner->id) }}"
-                                                                            method="POST" style="display:inline;">
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <button type="submit"
-                                                                                data-bs-dismiss="modal"
-                                                                                class="w-100 btn btn-danger paid-continue-btn">Delete</button>
-
-                                                                        </form>
-
-                                                                    </div>
-                                                                    <div class="col-6">
-                                                                        <button type="submit" data-bs-dismiss="modal"
-                                                                            class="w-100 btn btn-primary paid-cancel-btn">Cancel</button>
-                                                                    </div>
-                                                                </div>
+                                                            <div class="col-6">
+                                                                <button type="button" data-bs-dismiss="modal"
+                                                                    class="w-100 btn btn-primary paid-cancel-btn">Cancel</button>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- /Delete Items Modal -->
-                                        </td>
-                                    </tr>
-                                    @empty
-                                    <tr>
-                                        <td colspan="9" class="text-center">No partners found.</td>
-                                    </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
+                                        </div>
+                                    </div>
+                                    <!-- /Delete Items Modal -->
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="7" class="text-center">No agents found.</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
     </div>
 </div>
 <!-- /Page Wrapper -->
@@ -188,7 +156,7 @@
             <a href="#" class="sidebar-closes"><i class="fa-regular fa-circle-xmark"></i></a>
         </div>
         <div class="sidebar-body">
-            <form action="{{ route('partners.index') }}" method="GET" autocomplete="off">
+            <form action="{{ route('agents.index') }}" method="GET" autocomplete="off">
                 <!-- Name Filter -->
                 <div class="form-group">
                     <label for="name">Name</label>
@@ -249,6 +217,7 @@
         </div>
     </div>
 </div>
+
 <!--/Add Asset -->
 
 
@@ -256,17 +225,17 @@
 </div>
 <!-- /Main Wrapper -->
 <!-- Add Partner Details Modal -->
-<div class="modal custom-modal modal-lg fade" id="partner_details" role="dialog">
+<div class="modal custom-modal modal-lg fade" id="agent_details" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
                 <div class="form-header modal-header-title text-start mb-0">
-                    <h4 class="mb-0">Add Partner Details</h4>
+                    <h4 class="mb-0">Add Agent Details</h4>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="partner_details_form" action="{{ route('partners.store') }}" method="POST"
+                <form id="agent_details_form" action="{{ route('agents.store') }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
                     <!-- Include CSRF token for security -->
@@ -316,7 +285,7 @@
                                 <div class="input-block mb-3">
                                     <label>Mobile <span class="text-danger">*</span></label>
                                     <input type="text" id="mobile_code" name="mobile" class="form-control"
-                                        placeholder="Phone Number" name="name">
+                                        placeholder="Phone Number">
                                     @if ($errors->has('mobile'))
                                     <span class="text-danger">{{ $errors->first('mobile') }}</span>
                                     @endif
@@ -333,7 +302,6 @@
                                 </div>
                             </div>
 
-
                             <div class="col-lg-4 col-md-6 col-sm-12">
                                 <div class="input-block">
                                     <label>State</label>
@@ -343,6 +311,7 @@
                                     @endif
                                 </div>
                             </div>
+
                             <div class="col-lg-4 col-md-6 col-sm-12">
                                 <div class="pass-group">
                                     <div class="input-block">
@@ -355,10 +324,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
-
-
                         </div>
                     </div>
 
@@ -371,24 +336,24 @@
         </div>
     </div>
 </div>
+
 <!-- /Add Partner Details Modal -->
 <!-- Edit Partner Details Modal -->
-<div class="modal custom-modal modal-lg fade" id="edit_partner_details" role="dialog">
+<div class="modal custom-modal modal-lg fade" id="edit_agent_details" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
                 <div class="form-header modal-header-title text-start mb-0">
-                    <h4 class="mb-0">Add Partner Details</h4>
+                    <h4 class="mb-0">Edit Agent Details</h4>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-
-                <form id="edit_partner_details_form" method="POST" enctype="multipart/form-data">
+                <form id="edit_agent_details_form" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <!-- Spoofing PUT for update -->
-                    <input type="hidden" name="partner_id" id="partner_id">
+                    <input type="hidden" name="agent_id" id="agent_id">
                     <!-- Include CSRF token for security -->
                     <div class="row">
                         <div class="profile-picture">
@@ -455,7 +420,6 @@
                                 </div>
                             </div>
 
-
                             <div class="col-lg-4 col-md-6 col-sm-12">
                                 <div class="input-block">
                                     <label>State</label>
@@ -478,10 +442,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
-
-
                         </div>
                     </div>
 
@@ -494,6 +454,7 @@
         </div>
     </div>
 </div>
+
 <!-- /Edit Partner Details Modal -->
 <!--Theme Setting -->
 <div class="settings-icon">
@@ -877,7 +838,9 @@ $(document).ready(function() {
         "showMethod": "fadeIn", // Use fadeIn or slideDown
         "hideMethod": "fadeOut" // Use fadeOut or slideUp
     };
-    $('#partner_details_form').on('submit', function(e) {
+
+    // Handle form submission for adding agents
+    $('#agent_details_form').on('submit', function(e) {
         e.preventDefault(); // Prevent the form from submitting normally
 
         var formData = new FormData(this); // Create FormData object from the form
@@ -890,13 +853,10 @@ $(document).ready(function() {
             processData: false, // Important for file upload
             success: function(response) {
                 toastr.success(response.message); // Display success message
-                // Optionally, reset the form or close the modal
-                // $('#partner_details').modal('hide'); // Close modal
-                $('#partner_details_form')[0].reset(); // Reset the form
+                $('#agent_details_form')[0].reset(); // Reset the form
                 setTimeout(function() {
                     window.location.reload(); // Reload the page after the delay
-                }, 3000); // 5-second delay
-
+                }, 3000); // 3-second delay
             },
             error: function(xhr) {
                 if (xhr.responseJSON.errors) {
@@ -904,56 +864,58 @@ $(document).ready(function() {
                         toastr.error(value[0]); // Display each error message
                     });
                 } else {
-                    toastr.error('Error uploading profile.'); // Generic error message
+                    toastr.error('Error uploading agent details.'); // Generic error message
                 }
             }
         });
     });
 
-    $(document).on('click', '.edit_partner', function() {
-        var id = $(this).data('id'); // Get user ID from the button
-        // Make an AJAX request to fetch the user data
+    // Handle click on edit button
+    $(document).on('click', '.edit_agent', function() {
+        var id = $(this).data('id'); // Get agent ID from the button
+
+        // Make an AJAX request to fetch the agent data
         $.ajax({
-            url: '{{ route("partners.edit", ":id") }}'.replace(':id',
-                id), // Replace ':id' with the actual user ID
+            url: '{{ route("agents.edit", ":id") }}'.replace(':id', id), // Replace ':id' with the actual agent ID
             type: 'GET',
             success: function(response) {
                 var data = response.data;
 
                 // Populate the form fields with the fetched data
-                $('#partner_id').val(data.id); // Hidden user ID
+                $('#agent_id').val(data.id); // Hidden agent ID
                 $('#edit_name').val(data.name);
                 $('#edit_email').val(data.email);
                 $('#edit_mobile').val(data.mobile);
                 $('#edit_city').val(data.city);
                 $('#edit_state').val(data.state);
                 $('#edit_country').val(data.country);
+                
                 if (data.image) {
                     // Set the profile image source
-                    $('#blahedit').attr('src', '{{ url("public/profile") }}/' + data
-                        .image);
+                    $('#blahedit').attr('src', '{{ url("public/profile") }}/' + data.image);
                 } else {
                     // Set to default image if no profile exists
-                    $('#blahedit').attr('src',
-                        '{{ url("public/assets/img/profiles/default.png") }}');
+                    $('#blahedit').attr('src', '{{ url("public/assets/img/profiles/default.png") }}');
                 }
+
                 // Open the modal
-                $('#edit_partner_details').modal('show');
+                $('#edit_agent_details').modal('show'); // Change the modal ID
             },
             error: function(xhr) {
-                toastr.error('Error fetching user data.');
+                toastr.error('Error fetching agent data.');
             }
         });
     });
-    // Edit Partner
-    $('#edit_partner_details_form').on('submit', function(e) {
+
+    // Handle form submission for editing agent details
+    $('#edit_agent_details_form').on('submit', function(e) {
         e.preventDefault(); // Prevent the form from submitting normally
 
         var formData = new FormData(this); // FormData for file uploads
-        var id = $('#partner_id').val(); // Get user ID from hidden input
+        var id = $('#agent_id').val(); // Get agent ID from hidden input
 
         $.ajax({
-            url: '{{ route("partners.update", ":id") }}'.replace(':id', id), // Update route
+            url: '{{ route("agents.update", ":id") }}'.replace(':id', id), // Update route
             type: 'POST', // POST method with method override
             data: formData,
             contentType: false,
@@ -963,8 +925,6 @@ $(document).ready(function() {
             },
             success: function(response) {
                 toastr.success(response.message);
-                // Clear the existing table body            
-                // $('#edit_partner_details').modal('hide'); // Close modal after success
                 setTimeout(function() {
                     window.location.reload(); // Reload the page after the delay
                 }, 3000);
@@ -977,43 +937,44 @@ $(document).ready(function() {
                         toastr.error(value[0]);
                     });
                 } else {
-                    toastr.error('Error updating user.');
+                    toastr.error('Error updating agent details.');
                 }
             }
         });
     });
 });
-</script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var filterToggle = document.getElementById('filterToggle'); // Make sure you have this element
-        var filterSidebar = document.querySelector('.toggle-sidebar');
+// Sidebar toggle functionality
+document.addEventListener("DOMContentLoaded", function () {
+    var filterToggle = document.getElementById('filterToggle'); // Ensure this element exists
+    var filterSidebar = document.querySelector('.toggle-sidebar');
 
-        filterToggle.addEventListener('click', function (event) {
-            event.preventDefault();
-            filterSidebar.classList.toggle('active');
-        });
-
-        // Close button functionality
-        var closeSidebar = document.querySelector('.sidebar-closes');
-        closeSidebar.addEventListener('click', function (event) {
-            event.preventDefault();
-            filterSidebar.classList.remove('active');
-        });
+    filterToggle.addEventListener('click', function (event) {
+        event.preventDefault();
+        filterSidebar.classList.toggle('active');
     });
 
-    function resetForm() {
-        // Clear the input values
-        document.getElementById('name').value = '';
-        document.getElementById('email').value = '';
-        document.getElementById('mobile').value = '';
-        document.getElementById('city').value = '';
-        document.getElementById('state').value = '';
-        document.getElementById('country').value = '';
+    // Close button functionality
+    var closeSidebar = document.querySelector('.sidebar-closes');
+    closeSidebar.addEventListener('click', function (event) {
+        event.preventDefault();
+        filterSidebar.classList.remove('active');
+    });
+});
 
-        // Redirect to the main partners page to reset filters
-        window.location.href = '{{ route('partners.index') }}';
-    }
+// Function to reset the form and redirect
+function resetForm() {
+    // Clear the input values
+    document.getElementById('edit_name').value = '';
+    document.getElementById('edit_email').value = '';
+    document.getElementById('edit_mobile').value = '';
+    document.getElementById('edit_city').value = '';
+    document.getElementById('edit_state').value = '';
+    document.getElementById('edit_country').value = '';
+
+    // Redirect to the main agents page to reset filters
+    window.location.href = '{{ route('agents.index') }}';
+}
 </script>
+
 @endsection

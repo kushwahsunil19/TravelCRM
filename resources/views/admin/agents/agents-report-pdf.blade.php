@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Partner Report</title>
+    <title>Agents Report</title>
     <style>
-        /* Add some styles for the PDF */
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
@@ -31,32 +30,30 @@
 </head>
 <body>
 
-<h1>Partner Report</h1>
+<h1>Agents Report</h1>
 
 <table>
     <thead>
         <tr>
             <th>S. No</th>
-            <th>Partner Name</th>
+            <th>Agent Name</th>
             <th>Email</th>
             <th>Mobile</th>
             <th>City</th>
             <th>State</th>
             <th>Country</th>
-          
         </tr>
     </thead>
     <tbody>
-        @foreach ($partners as $partner)
+        @foreach ($agents as $index => $agent)
             <tr>
-                <td class="center">{{ $loop->iteration }}</td>
-                <td>{{ $partner->name }}</td>
-                <td>{{ $partner->email }}</td>
-                <td>{{ $partner->mobile }}</td>
-                <td>{{ $partner->city }}</td>
-                <td>{{ $partner->state }}</td>
-                <td>{{ $partner->country }}</td>
-                
+                <td class="center">{{ $index + 1 }}</td>
+                <td>{{ $agent->name }}</td>
+                <td>{{ $agent->email }}</td>
+                <td>{{ $agent->mobile }}</td>
+                <td>{{ $agent->city }}</td>
+                <td>{{ $agent->state }}</td>
+                <td>{{ $agent->country }}</td>
             </tr>
         @endforeach
     </tbody>

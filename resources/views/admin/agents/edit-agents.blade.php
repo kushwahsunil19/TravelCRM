@@ -14,7 +14,7 @@
 							<!-- Page Header -->
 							<div class="page-header">
 								<div class="content-page-header">
-									<h5>Edit Partner</h5>
+									<h5>Edit Agent</h5>
 								</div>	
 							</div>
 							<!-- /Page Header -->				

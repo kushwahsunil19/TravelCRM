@@ -1,8 +1,7 @@
-<?php
-
+<?php 
 use App\Http\Controllers\admin\ExpensesController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\{AuthController,ForgotPasswordController,ProfileController,UserController,QuotationController,ItineraryController,PartnerController,BranchController,PackageController,CurrencyController,RolesPermissionController,VendorController,InvoiceController,SupplierController,QuotationReportController,SupplierReportController,PartnerReportController,StaffwiseController};
+use App\Http\Controllers\Admin\{AuthController,ForgotPasswordController,ProfileController,UserController,QuotationController,ItineraryController,BranchController,PackageController,CurrencyController,RolesPermissionController,VendorController,InvoiceController,SupplierController,QuotationReportController,SupplierReportController,AgentsController,AgentReportController,StaffwiseController};
 use App\Http\Controllers\Admin\ProfitAndLoss;
 /*
 |--------------------------------------------------------------------------
@@ -56,12 +55,19 @@ Route::middleware(['auth'])->group(function() {
     Route::resource('quotations', QuotationController::class); // Adjust middleware as needed
     Route::get('/quotations-data', [QuotationController::class, 'getdata'])->name('quotations.data');
 
-    Route::resource('partners', PartnerController::class); // Adjust middleware as needed
-    Route::get('/partners-data', [PartnerController::class, 'getdata'])->name('partners.data');
+   
     Route::resource('branches', BranchController::class);
     Route::resource('packages', PackageController::class);
     Route::resource('currencies', CurrencyController::class);
    
+
+    Route::resource('agents', AgentsController::class);
+    Route::get('/agents-data', [AgentsController::class, 'getdata'])->name('agents.data');
+
+     
+Route::get('/agents-report', [AgentReportController::class, 'index'])->name('agents.agents-report');
+Route::get('/agents-report/pdf', [AgentReportController::class, 'downloadPDF'])->name('agents.agents-report.downloadPDF');
+Route::get('/agents-report/csv', [AgentReportController::class, 'downloadCSV'])->name('agents.agents-report.downloadCSV');
 
 
     Route::get('packages/{id}/details', [PackageController::class, 'getPackageDetails'])->name('packages.details');
@@ -105,12 +111,11 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/supplier-report/pdf', [SupplierReportController::class, 'downloadPDF'])->name('supplier-report.downloadPDF');
 
 
-    Route::get('/partners-report', [PartnerReportController::class, 'index'])->name('partners.partners-report');
   // Route to download the partner report as PDF
-  Route::get('/partners-report/pdf', [PartnerReportController::class, 'downloadPDF'])->name('partners.partners-report.downloadPDF');
+ 
     
   // Route to download the partner report as CSV
-  Route::get('/partners-report/csv', [PartnerReportController::class, 'downloadCSV'])->name('partners.partners-report.downloadCSV');
+
 
     Route::get('/expenses',[ExpensesController::class,'index'])->name('expenses.index');
     Route::get('/suplyer/delete-exp/{id}', [SupplierController::class, 'deleteExp'])->name('suplyer.delete-exp');

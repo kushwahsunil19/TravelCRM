@@ -281,7 +281,7 @@
                                     <ul style="display: none;">
                                         <!-- <li><a href="{{route('branches.index')}}">Branches </a></li>
                                         <li><a href="{{route('packages.index')}}">Packeses</a></li>
-                                        <li><a href="{{route('partners.index')}}">Partners</a></li> -->
+                                        <li><a href="{{route('agents.index')}}">Partners</a></li> -->
                                         <li><a href="{{route('quotations.index')}}"
                                                 class="{{strpos($url,'quotations') !== false ? 'active' : '' }}">Quotations</a>
                                         </li>
@@ -707,8 +707,8 @@
                                     <li><a href="{{route('suppliers.index')}}"
                                             class="{{strpos($url,'suppliers') !== false ? 'active' : '' }}">Suppliers</a>
                                     </li>
-                                    <li><a href="{{route('partners.index')}}"
-                                            class="{{strpos($url,'partners') !== false ? 'active' : '' }}">Partners/Agents</a>
+                                    <li><a href="{{route('agents.index')}}"
+                                            class="{{strpos($url,'agents') !== false ? 'active' : '' }}">Agents</a>
                                     </li>
                                     <li><a href="{{route('currencies.index')}}"
                                             class="{{strpos($url,'currencies') !== false ? 'active' : '' }}">Currency</a>
@@ -841,7 +841,7 @@
                                     <li><a href="{{route('quotation-report.index')}}" class="{{strpos($url,'quotation-report') !== false ? 'active' : '' }}">Quotation Report</a></li>
                                     <li><a href="{{route('supplier.supplier-report')}}"  class="{{strpos($url,'supplier-report') !== false ? 'active' : '' }}">Supplier Report</a></li>
                                     <li><a href="{{route('staff-wise-report.index')}}" class="{{strpos($url,'staff-report') !== false ? 'active' : '' }}">Staff Report</a></li>
-                                    <li><a href="{{route('partners.partners-report')}}" class="{{strpos($url,'partners-report') !== false ? 'active' : '' }}">Partner Report</a></li>
+                                    <li><a href="{{route('agents.agents-report')}}"  class="{{strpos($url,'agents-report') !== false ? 'active' : '' }}">Agent Report</a></li>
                                     <li><a href="#">Payment Report</a></li>
                                     <!-- <li><a href="stock-report.html">Stock Report</a></li> -->
                                     <!-- <li><a href="low-stock-report.html">Low Stock Report</a></li>
