@@ -1,5 +1,6 @@
 <?php 
 use App\Http\Controllers\admin\ExpensesController;
+use App\Http\Controllers\admin\HotelReportController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\{AuthController,ForgotPasswordController,ProfileController,UserController,QuotationController,ItineraryController,BranchController,PackageController,CurrencyController,RolesPermissionController,VendorController,InvoiceController,SupplierController,QuotationReportController,SupplierReportController,AgentsController,AgentReportController,StaffwiseController};
 use App\Http\Controllers\Admin\ProfitAndLoss;
@@ -111,11 +112,11 @@ Route::get('/agents-report/csv', [AgentReportController::class, 'downloadCSV'])-
     Route::get('/supplier-report/pdf', [SupplierReportController::class, 'downloadPDF'])->name('supplier-report.downloadPDF');
 
 
-  // Route to download the partner report as PDF
- 
     
   // Route to download the partner report as CSV
-
+  Route::get('/hotel-report/pdf', [HotelReportController::class, 'downloadPDF'])->name('hotel-report.downloadPDF');
+  Route::get('/hotel-report/CSV', [HotelReportController::class, 'downloadCSV'])->name('hotel-report.downloadCSV');
+  Route::get('/hotel-report',[HotelReportController::class,'index'])->name('hotel-report.index');
 
     Route::get('/expenses',[ExpensesController::class,'index'])->name('expenses.index');
     Route::get('/suplyer/delete-exp/{id}', [SupplierController::class, 'deleteExp'])->name('suplyer.delete-exp');
