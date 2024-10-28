@@ -125,7 +125,7 @@ $url = $_SERVER['REQUEST_URI'];
                             <div class="dash-count">
                                 <div class="dash-title">Total Invoice</div>
                                 <div class="dash-counts">
-                                    <p>{{$symbol}}{{number_format($total_invoice_amt,2)}}</p>
+                                    <p>{{number_format($total_invoice_amt,2)}}</p>
                                 </div>
                             </div>
                         </div>
@@ -149,7 +149,7 @@ $url = $_SERVER['REQUEST_URI'];
                             <div class="dash-count">
                                 <div class="dash-title">Outstanding</div>
                                 <div class="dash-counts">
-                                    <p>{{$symbol}}{{ number_format($total_outstanding_amt, 2) }}</p>
+                                    <p>{{ number_format($total_outstanding_amt, 2) }}</p>
                                 </div>
                             </div>
                         </div>
@@ -173,7 +173,7 @@ $url = $_SERVER['REQUEST_URI'];
                             <div class="dash-count">
                                 <div class="dash-title">Total Overdue</div>
                                 <div class="dash-counts">
-                                    <p>{{$symbol}}{{number_format($total_overdue_amt,2)}}</p>
+                                    <p>{{number_format($total_overdue_amt,2)}}</p>
                                 </div>
                             </div>
                         </div>
@@ -198,7 +198,7 @@ $url = $_SERVER['REQUEST_URI'];
                             <div class="dash-count">
                                 <div class="dash-title">Cancelled</div>
                                 <div class="dash-counts">
-                                    <p>{{$symbol}}{{$total_cancelled_amt}}</p>
+                                    <p>{{$total_cancelled_amt}}</p>
                                 </div>
                             </div>
                         </div>

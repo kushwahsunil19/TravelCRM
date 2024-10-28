@@ -239,6 +239,9 @@ h3 {
   h3 {
     font-size: 16px;
   }
+  .mobile-logo {  
+    max-height: 75%;
+}
 }
 
 h4 {
@@ -1324,16 +1327,25 @@ strong {
   .float-start .dropdown-action {
     margin-bottom: 5px;
   }
+  .mobile-logo {  
+    max-height: 95%;
+}
 }
 @media (max-width: 575.98px) {
   .float-start .dropdown-action {
     margin-bottom: 5px;
   }
+  .mobile-logo {  
+    max-height: 90%;
+}
 }
 @media (max-width: 320px) {
   .float-start .dropdown-action {
     margin-bottom: 5px;
   }
+  .mobile-logo {  
+    max-height: 72%;
+}
 }
 
 .apexcharts-legend.apexcharts-align-center.position-right {

@@ -4,20 +4,20 @@
             <div class="header header-one">
                 <a href="{{route('dashboard')}}"
                     class="d-inline-flex d-sm-inline-flex align-items-center d-md-inline-flex d-lg-none align-items-center device-logo">
-                    <img src="{{url('public/assets/img/logo2.png')}}" class="img-fluid logo2" alt="Logo">
+                    <img src="{{url('public/assets/img/logo2.png')}}" class="img-fluid logo2 mobile-logo" alt="Logo">
                 </a>
                 <div class="main-logo d-inline float-start d-lg-flex align-items-center d-none d-sm-none d-md-none">
                     <div class="logo-white">
                         <a href="{{route('dashboard')}}">
-                            <img src="assets/img/logo-full-white.png" class="img-fluid logo-blue" alt="Logo">
+                            <img src="{{url('public/assets/img/logo2.png')}}" class="img-fluid logo-blue" alt="Logo">
                         </a>
                         <a href="{{route('dashboard')}}">
-                            <img src="assets/img/logo-small-white.png" class="img-fluid logo-small" alt="Logo">
+                            <img src="{{url('public/assets/img/logo2.png')}}" class="img-fluid logo-small" alt="Logo">
                         </a>
                     </div>
                     <div class="logo-color">
                         <a href="{{route('dashboard')}}">
-                            <img src="{{url('public/assets/img/logo2.png')}}" class="img-fluid logo-blue" alt="Logo">
+                            <img src="{{url('public/assets/img/logo2.png')}}" class="img-fluid logo-blue mobile-logo" alt="Logo">
                         </a>
                         <a href="{{route('dashboard')}}">
                             <img src="{{url('public/assets/img/logo-small.png')}}" class="img-fluid logo-small"
@@ -841,6 +841,7 @@
                                     <li><a href="{{route('quotation-report.index')}}" class="{{strpos($url,'quotation-report') !== false ? 'active' : '' }}">Quotation Report</a></li>
                                     <li><a href="{{route('supplier.supplier-report')}}"  class="{{strpos($url,'supplier-report') !== false ? 'active' : '' }}">Supplier Report</a></li>
                                     <li><a href="{{route('staff-wise-report.index')}}" class="{{strpos($url,'staff-report') !== false ? 'active' : '' }}">Staff Report</a></li>
+                                    <li><a href="{{route('hotel-report.index')}}" class="{{strpos($url,'hotel-report') !== false ? 'active' : '' }}">Hotel Report</a></li>
                                     <li><a href="{{route('partners.partners-report')}}" class="{{strpos($url,'partners-report') !== false ? 'active' : '' }}">Partner Report</a></li>
                                     <li><a href="#">Payment Report</a></li>
                                     <!-- <li><a href="stock-report.html">Stock Report</a></li> -->

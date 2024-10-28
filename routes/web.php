@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\admin\ExpensesController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\{AuthController,ForgotPasswordController,ProfileController,UserController,QuotationController,ItineraryController,PartnerController,BranchController,PackageController,CurrencyController,RolesPermissionController,VendorController,InvoiceController,SupplierController,QuotationReportController,SupplierReportController,PartnerReportController,StaffwiseController};
+use App\Http\Controllers\Admin\{AuthController,ForgotPasswordController,ProfileController,UserController,QuotationController,ItineraryController,PartnerController,BranchController,PackageController,CurrencyController,RolesPermissionController,VendorController,InvoiceController,SupplierController,QuotationReportController,SupplierReportController,PartnerReportController,StaffwiseController,HotelReportController};
 use App\Http\Controllers\Admin\ProfitAndLoss;
 /*
 |--------------------------------------------------------------------------
@@ -136,7 +136,9 @@ Route::get('/staff-report/download-pdf', [StaffwiseController::class, 'downloadP
 
 // Route to download the report as a CSV
 Route::get('/staff-report/download-csv', [StaffwiseController::class, 'downloadCSV'])->name('staff-wise-report.downloadCSV');
-
+  Route::get('/hotel-report/pdf', [HotelReportController::class, 'downloadPDF'])->name('hotel-report.downloadPDF');
+  Route::get('/hotel-report/CSV', [HotelReportController::class, 'downloadCSV'])->name('hotel-report.downloadCSV');
+  Route::get('/hotel-report',[HotelReportController::class,'index'])->name('hotel-report.index');
 // Route for fetching users data via AJAX
 
 });
