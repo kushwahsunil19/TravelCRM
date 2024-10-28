@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\admin\ExpensesController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\{AuthController,ForgotPasswordController,ProfileController,UserController,QuotationController,ItineraryController,PartnerController,BranchController,PackageController,CurrencyController,RolesPermissionController,VendorController,InvoiceController,SupplierController,QuotationReportController,SupplierReportController,PartnerReportController,StaffwiseController,HotelReportController};
+use App\Http\Controllers\Admin\{AuthController,ForgotPasswordController,ProfileController,UserController,QuotationController,ItineraryController,PartnerController,BranchController,PackageController,CurrencyController,RolesPermissionController,VendorController,InvoiceController,SupplierController,QuotationReportController,SupplierReportController,PartnerReportController,BankController,StaffwiseController,HotelReportController};
 use App\Http\Controllers\Admin\ProfitAndLoss;
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +35,8 @@ Route::controller(AuthController::class)->group(function() {
     Route::get('/login', 'login')->name('login');
     Route::post('/authenticate', 'authenticate')->name('authenticate');
    
-});Route::get('admin/invoices/download-csv', [InvoiceController::class, 'downloadCSV'])->name('invoices.downloadCSV');
+});
+Route::get('admin/invoices/download-csv', [InvoiceController::class, 'downloadCSV'])->name('invoices.downloadCSV');
 
 
 Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
@@ -61,6 +62,7 @@ Route::middleware(['auth'])->group(function() {
     Route::resource('branches', BranchController::class);
     Route::resource('packages', PackageController::class);
     Route::resource('currencies', CurrencyController::class);
+    Route::resource('banks', BankController::class);
    
 
 

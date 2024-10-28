@@ -713,6 +713,9 @@
                                     <li><a href="{{route('currencies.index')}}"
                                             class="{{strpos($url,'currencies') !== false ? 'active' : '' }}">Currencies</a>
                                     </li>
+                                    <li><a href="{{route('banks.index')}}"
+                                            class="{{strpos($url,'banks') !== false ? 'active' : '' }}">Banks</a>
+                                    </li>
 
                                 </ul>
                             </li>
