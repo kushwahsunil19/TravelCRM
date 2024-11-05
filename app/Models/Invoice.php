@@ -22,6 +22,7 @@ class Invoice extends Model
         'partner_id',
         'package_id',
         'currency_id',
+        'currency_rate',
         'bank_id',
         'invoice_no',      
         'vat',       

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Staff-wise Report</title>
+    <title>Users Report</title>
     <style>
         /* Add some styles for the PDF */
         body {
@@ -31,13 +31,13 @@
 </head>
 <body>
 
-<h1>Staff-wise Report</h1>
+<h1>User Report</h1>
 
 <table>
     <thead>
         <tr>
             <th>S. No</th>
-            <th>User Name</th>          
+            <th>User Name</th>           
             <th>Email</th>
             <th>Mobile No</th>
             <th>Role</th>
@@ -49,7 +49,7 @@
         @foreach ($users as $user)
             <tr>
                 <td class="center">{{ $loop->iteration }}</td>
-                <td>{{ $user->first_name  }} {{ $user->last_name }}</td>              
+                <td>{{ $user->first_name  }} {{ $user->last_name }}</td>               
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->mobile }}</td>
                 <td>

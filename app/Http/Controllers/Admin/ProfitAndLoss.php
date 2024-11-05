@@ -15,10 +15,11 @@ class ProfitAndLoss extends Controller
      */
     public function index(Request $request)
     {
-        $suppliers = Supplier::all();
+       
         $packages = Package::all();
         $branches = Branch::all();
-    
+        // Initialize a query builder for Partner
+        $suppliersQuery = Supplier::query();
         $invoicesQuery = Invoice::with(['branch', 'partner', 'package', 'bank', 'currency']);
     
         // Apply filters if present in the request
@@ -30,6 +31,7 @@ class ProfitAndLoss extends Controller
         if ($request->has('month') && $request->month) {
           
             $invoicesQuery->whereMonth('created_at', $request->month);
+            $suppliersQuery->whereMonth('created_at', $request->month);
         }
     
         if ($request->has('branch') && $request->branch) {
@@ -46,10 +48,11 @@ class ProfitAndLoss extends Controller
            $fromDate = Carbon::parse($request->from_date)->startOfDay();
            $toDate = Carbon::parse($request->to_date)->endOfDay();
            $invoicesQuery->whereBetween('created_at', [$fromDate, $toDate]);
+           $suppliersQuery->whereBetween('created_at', [$fromDate, $toDate]);
         }
         $totalInvoice = $invoicesQuery->count();
         $invoices = $invoicesQuery->paginate($totalInvoice);
-     
+        $suppliers = $suppliersQuery->get();
         if ($request->ajax()) {
     //    print_r($invoices);
     //     print_r($request->all());

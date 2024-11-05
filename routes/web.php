@@ -49,7 +49,11 @@ Route::middleware(['auth'])->group(function() {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     // Resource route for users
     Route::resource('users', UserController::class); // Adjust middleware as needed
-    Route::get('/users-data', [UserController::class, 'getUsers'])->name('users.data');
+    // Route to download the report as a PDF
+    Route::get('/users-pdf', [UserController::class, 'downloadPDF'])->name('user-wise-report.downloadPDF');
+
+    // Route to download the report as a CSV
+    Route::get('/users-csv', [UserController::class, 'downloadCSV'])->name('user-wise-report.downloadCSV');
 
     Route::resource('itineraries', ItineraryController::class); // Adjust middleware as needed
     Route::get('/itineraries-data', [ItineraryController::class, 'getdata'])->name('itineraries.data');

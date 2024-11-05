@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Static Estimate</title>
+    <title>Estimate</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
@@ -213,9 +213,9 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Service</th>
-                    <th>Description</th>
-                    <th>Amount ({{$data['currency_code']}})</th>
+                    <th style="text-align:left; border: 1px solid black; ">Service</th>
+                    <th style="text-align:left; border: 1px solid black; ">Description</th>
+                    <th style="text-align:left; border: 1px solid black; ">Amount ({{$data['currency_code']}})</th>
                 </tr>
             </thead>
             <tbody>
@@ -223,9 +223,9 @@
                 @if(!empty($data['items']) && is_array($data['items']))
                 @foreach($data['items'] as $item)
                 <tr>
-                    <td style="text-align:justify;"><b>{{ $item['package_name'] }}</b></td>
-                    <td style="text-align:justify;">{!! $item['description'] !!}</td>
-                    <td style="text-align:justify;">{{$data['curreny_symbol']}}{{ number_format($item['amount'], 2) }}</td>
+                    <td style="text-align:justify; border: 1px solid black;"><b>{{ $item['package_name'] }}</b></td>
+                    <td style="text-align:justify; border: 1px solid black;">{!! $item['description'] !!}</td>
+                    <td style="text-align:justify; border: 1px solid black;">{{$data['curreny_symbol']}}{{ number_format($item['amount'], 2) }}</td>
                 </tr>
                 @endforeach
                 @endif
@@ -233,7 +233,6 @@
         </table>
     </div>
 
-    <hr />
 
     <!-- Total and Notes Section -->
     <div class="total" style="padding: 0px">

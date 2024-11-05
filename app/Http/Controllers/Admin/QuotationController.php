@@ -61,7 +61,7 @@ class QuotationController extends Controller
          $totalQuotations = Quotation::count();
      
          // Paginate the filtered results (you can adjust the number per page as needed)
-         $quotations = $query->paginate(10); // Paginate the filtered results
+         $quotations = $query->paginate( $totalQuotations); // Paginate the filtered results
      
          // Return the view with total quotations and paginated quotations
          return view('admin.quotations.index', compact('quotations', 'totalQuotations'));
@@ -377,6 +377,7 @@ class QuotationController extends Controller
                 'partner_id' => $quotation->partner_id,
                 'package_id' => $quotation->package_id,
                 'currency_id' => $quotation->currency_id,
+                'currency_rate' => $quotation->currency_rate,
                 'bank_id' => $quotation->bank_id,
                 'vat' => $quotation->gst_tax, // Assuming total amount is mapped
                 'discount_type' => $quotation->discount_type,               
@@ -395,6 +396,7 @@ class QuotationController extends Controller
                     'partner_id' => $quotation->partner_id,
                     'package_id' => $quotation->package_id,
                     'currency_id' => $quotation->currency_id,
+                    'currency_rate' => $quotation->currency_rate,
                     'bank_id' => $quotation->bank_id,
                     'vat' => $quotation->gst_tax, // Assuming total amount is mapped
                     'discount_type' =>$quotation->discount_type, // Or any other status you want to set                 

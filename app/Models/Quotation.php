@@ -18,6 +18,7 @@ class Quotation extends Model
         'partner_id',
         'package_id',
         'currency_id',
+        'currency_rate',
         'bank_id',
         'quotation_no',
         'twin_double_sharing_cost',

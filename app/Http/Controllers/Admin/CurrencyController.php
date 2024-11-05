@@ -36,7 +36,7 @@ class CurrencyController extends Controller
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:3',
             'symbol' => 'nullable|string|max:10',
-            'exchange_rate' => 'required|numeric',
+            // 'exchange_rate' => 'required|numeric',
 
         ]);
 
@@ -73,7 +73,7 @@ class CurrencyController extends Controller
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:3',
             'symbol' => 'nullable|string|max:10',
-            'exchange_rate' => 'required|numeric',
+            // 'exchange_rate' => 'required|numeric',
         ]);
 
         // Update the Currency

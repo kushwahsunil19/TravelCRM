@@ -228,6 +228,16 @@ td {
                                                     <input type="hidden" id="currency_symbol" value="₹"> 
                                                 </div>
                                             </div>
+                                            <div class="col-lg-2">
+                                                <div class="input-block mb-2">
+                                                    <label>Currency Rate </label>
+                                                    <input type="number" class="form-control currency_rate" name="currency_rate"
+                                                        placeholder="Enter Rate" min="0" required>
+                                                    @if ($errors->has('currency_rate'))
+                                                    <span class="text-danger">{{ $errors->first('currency_rate') }}</span>
+                                                    @endif
+                                                </div>
+                                            </div>
                                             <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Discount Type</label>
@@ -242,8 +252,8 @@ td {
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3">
-                                                <div class="input-block mb-3">
+                                            <div class="col-lg-2">
+                                                <div class="input-block mb-2">
                                                     <label>Discount </label>
                                                     <input type="number" class="form-control discount" name="discount"
                                                         placeholder="Enter discount" min="0" required>
@@ -252,9 +262,9 @@ td {
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3">
-                                                <div class="input-block mb-3">
-                                                    <div class="input-block mb-3">
+                                            <div class="col-lg-2">
+                                                <div class="input-block mb-2">
+                                                    <div class="input-block mb-2">
                                                         <label>Vat</label>
                                                         <input type="number" class="form-control gst_tax" name="gst_tax"
                                                             placeholder="Enter Vat" min="0" required>

@@ -89,7 +89,7 @@
                                         <th>Name</th>
                                         <th>Code</th>
                                         <th>Symbol</th>
-                                        <th>Exchange Rate</th>
+                                        <!-- <th>Exchange Rate</th> -->
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -101,7 +101,7 @@
 
                                         <td>{{ $currency->code }}</td>
                                         <td>{{ $currency->symbol }}</td>
-                                        <td>{{ $currency->exchange_rate }}</td>
+                                        <!-- <td>{{ $currency->exchange_rate }}</td> -->
 
                                         <td>
 
@@ -344,7 +344,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-lg-12 col-md-12">
+                        <!-- <div class="col-lg-12 col-md-12">
                             <div class="input-block mb-3">
                                 <label>Exchange Rate</label>
                                 <input type="text" class="form-control" name="exchange_rate"  placeholder="Enter Exchange Rate">
@@ -352,7 +352,7 @@
                                 <span class="text-danger">{{ $errors->first('exchange_rate') }}</span>
                                 @endif
                             </div>
-                        </div>
+                        </div> -->
 
 
                     </div>
@@ -413,7 +413,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-lg-12 col-md-12">
+                        <!-- <div class="col-lg-12 col-md-12">
                             <div class="input-block mb-3">
                                 <label>Exchange Rate</label>
                                 <input type="text" class="form-control" name="exchange_rate" id="edit_exchange_rate" placeholder="Enter Exchange Rate">
@@ -421,7 +421,7 @@
                                 <span class="text-danger">{{ $errors->first('exchange_rate') }}</span>
                                 @endif
                             </div>
-                        </div>
+                        </div> -->
 
                     </div>
                     <br>

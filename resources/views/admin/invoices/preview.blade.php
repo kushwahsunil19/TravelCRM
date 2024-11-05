@@ -210,12 +210,12 @@
 
     <!-- Services Table -->
     <div class="content-wrapper" style="padding: 0px">
-        <table class="table">
+        <table class="table" style="border: 1px solid black;" >
             <thead>
                 <tr>
-                    <th>Service</th>
-                    <th>Description</th>
-                    <th>Amount ({{$data['currency_code']}})</th>
+                    <th style="text-align:left; border: 1px solid black; ">Service</th>
+                    <th style="text-align:left; border: 1px solid black; ">Description</th>
+                    <th style="text-align:left; border: 1px solid black; ">Amount ({{$data['currency_code']}})</th>
                 </tr>
             </thead>
             <tbody>
@@ -223,9 +223,9 @@
                 @if(!empty($data['items']) && is_array($data['items']))
                 @foreach($data['items'] as $item)
                 <tr>
-                    <td style="text-align:justify;"><b>{{ $item['package_name'] }}</b></td>
-                    <td style="text-align:justify;">{!! $item['description'] !!}</td>
-                    <td style="text-align:justify;">{{$data['curreny_symbol']}}{{ number_format($item['amount'], 2) }}</td>
+                    <td style="text-align:justify; border: 1px solid black;"><b>{{ $item['package_name'] }}</b></td>
+                    <td style="text-align:justify; border: 1px solid black;">{!! $item['description'] !!}</td>
+                    <td style="text-align:justify; border: 1px solid black;">{{$data['curreny_symbol']}}{{ number_format($item['amount'], 2) }}</td>
                 </tr>
                 @endforeach
                 @endif
@@ -233,7 +233,7 @@
         </table>
     </div>
 
-    <hr />
+
 
     <!-- Total and Notes Section -->
     <div class="total" style="padding: 0px">

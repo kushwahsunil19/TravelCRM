@@ -224,12 +224,12 @@
 
         <!-- Services Table -->
         <div class="content-wrapper" style="padding: 0px">
-            <table class="table">
+            <table class="table" style="border: 1px solid black;">
                 <thead>
                     <tr>
-                        <th style="text-align:left; ">Service</th>
-                        <th style="text-align:left; ">Description</th>
-                        <th style="text-align:left; ">Amount ({{$currency_code}})</th>
+                        <th style="text-align:left; border: 1px solid black; ">Service</th>
+                        <th style="text-align:left; border: 1px solid black; ">Description</th>
+                        <th style="text-align:left; border: 1px solid black; ">Amount ({{$currency_code}})</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -238,9 +238,9 @@
                     @foreach($items as $item)
                     @if(is_array($item))
                     <tr style="text-align:center;">
-                        <td style="text-align:justify;"><b>{{ $item['package_name'] }}</b></td>
-                        <td style="text-align:justify;">{!! $item['description'] !!}</td>
-                        <td style="text-align:justify;">{{$curreny_symbol}}{{ number_format($item['amount'] ?? 0, 2) }}</td>
+                        <td style="text-align:justify; border: 1px solid black;"><b>{{ $item['package_name'] }}</b></td>
+                        <td style="text-align:justify; border: 1px solid black;">{!! $item['description'] !!}</td>
+                        <td style="text-align:justify; border: 1px solid black;">{{$curreny_symbol}}{{ number_format($item['amount'] ?? 0, 2) }}</td>
                     </tr>
                     @endif
                     @endforeach
@@ -253,7 +253,7 @@
             </table>
         </div>
 
-        <hr />
+        
 
         <!-- Total and Notes Section -->
         <!-- <div class="total" style="padding: 0px">

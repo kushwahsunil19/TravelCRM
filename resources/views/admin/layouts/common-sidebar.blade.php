@@ -691,12 +691,12 @@
                               
                             @endphp
                             @role('Administrator')
-                            <li class="menu-title"><span>Manage Master </span></li>
+                            <li class="menu-title"><span>Manage Masters </span></li>
 
                             <li class="submenu">
 
                                 <a href=""><i class="fe fe-file"></i> <span>Manage
-                                        Manage</span><span class="menu-arrow"></span></a>
+                                Masters</span><span class="menu-arrow"></span></a>
                                 <ul style="display: none;">
                                     <li><a href="{{route('branches.index')}}"
                                             class="{{strpos($url,'branches') !== false ? 'active' : '' }}">Branches </a>
