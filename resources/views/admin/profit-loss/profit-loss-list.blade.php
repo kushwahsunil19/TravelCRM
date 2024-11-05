@@ -16,12 +16,12 @@
                 <div class="page-content">
                     <div class="list-btn">
                         <ul class="filter-list">
-                            <!-- <li>
+                                    <!-- <li>
 										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip"
 											data-bs-placement="bottom" title="Filter"><span class="me-2"><img
 													src="{{url('public/assets/img/icons/filter-icon.svg')}}" alt="filter"></span>Filter
 										</a>
-									</li>
+									</li> -->
 									<li>
 										<div class="dropdown dropdown-action" data-bs-toggle="tooltip"
 											data-bs-placement="bottom" title="Download">
@@ -31,19 +31,19 @@
 												<ul class="d-block">
 													<li>
 														<a class="d-flex align-items-center download-item"
-															href="javascript:void(0);" download><i
+															href="javascript:void(0);" id="download-pdf-btn" download><i
 																class="far fa-file-pdf me-2"></i>PDF</a>
 													</li>
 													<li>
 														<a class="d-flex align-items-center download-item"
-															href="javascript:void(0);" download><i
-																class="far fa-file-text me-2"></i>CVS</a>
+															href="javascript:void(0);" id="download-csv-btn" download><i
+																class="far fa-file-text me-2"></i>CSV</a>
 													</li>
 												</ul>
 											</div>
 										</div>
-									</li> -->
-                            <!-- <li>
+									</li>
+                                   <!-- <li>
 										<a class="btn-filters" href="javascript:void(0);" data-bs-toggle="tooltip"
 											data-bs-placement="bottom" title="Print"><span><i
 													class="fe fe-printer"></i></span> </a>
@@ -57,6 +57,7 @@
 
         <div class="profit-menu">
             <div class="row">
+                
                 <div class="col-lg-2 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
                         <label>Period</label>
@@ -780,6 +781,36 @@ $(document).ready(function() {
                 console.log(xhr.responseText); // Log any errors
             }
         });
+    });
+    $('#download-pdf-btn').click(function(e) {
+        e.preventDefault();
+
+        // Build the URL with the necessary parameters
+        var downloadUrl = '{{ route("profit-loss.downloadPDF") }}' + 
+                          '?year=' + $('#year').val() +
+                          '&month=' + $('#month').val() +
+                          '&branch=' + $('#branch').val() +
+                          '&package=' + $('#package').val() +
+                          '&from_date=' + $('#from_date').val() +
+                          '&to_date=' + $('#to_date').val();
+
+        // Redirect to the download URL
+        window.location.href = downloadUrl;
+    });
+    $('#download-csv-btn').click(function(e) {
+        e.preventDefault();
+
+        // Build the URL with the necessary parameters
+        var downloadUrl = '{{ route("profit-loss.downloadCSV") }}' + 
+                          '?year=' + $('#year').val() +
+                          '&month=' + $('#month').val() +
+                          '&branch=' + $('#branch').val() +
+                          '&package=' + $('#package').val() +
+                          '&from_date=' + $('#from_date').val() +
+                          '&to_date=' + $('#to_date').val();
+
+        // Redirect to the download URL
+        window.location.href = downloadUrl;
     });
 
 });

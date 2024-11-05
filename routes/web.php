@@ -100,6 +100,8 @@ Route::middleware(['auth'])->group(function() {
     Route::resource('quotation-report', QuotationReportController::class);
     Route::resource('profit-loss', ProfitAndLoss::class);
     Route::get('/profit-loss/filter', [ProfitAndLoss::class, 'filter'])->name('profit-loss.filter');
+    Route::get('/profit-loss-pdf', [ProfitAndLoss::class, 'downloadPDF'])->name('profit-loss.downloadPDF');
+    Route::get('/profit-loss-csv', [ProfitAndLoss::class, 'downloadCSV'])->name('profit-loss.downloadCSV');
 
     // Route::post('quotations/{id}/restore', [QuotationController::class, 'restore'])->name('quotations.restore');
 

@@ -169,6 +169,7 @@
         <div class="header">
             <nav class="navbar navbar-expand-lg navbar-light">
                 <div class="container-fluid" style="padding: 0px">
+                    <br>
                     <a class="navbar-brand" href="#">
                         <!-- Dynamic Image Placeholder -->
                         <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('assets/img/logo2.png'))) }}"
