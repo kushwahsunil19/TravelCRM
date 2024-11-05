@@ -12,7 +12,7 @@
         <!-- Page Header -->
         <div class="page-header">
             <div class="content-page-header">
-                <h5>Hotel Report</h5>
+                <h5>Expenses Report</h5>
                 <div class="list-btn">
                     <ul class="filter-list">
                         <li>
@@ -155,7 +155,7 @@
 <div class="toggle-sidebar ledge">
     <div class="sidebar-layout-filter">
         <div class="sidebar-header ledge">
-            <h5>Hotel Report</h5>
+            <h5>Expenses Report</h5>
             <a href="#" class="sidebar-closes"><i class="fa-regular fa-circle-xmark"></i></a>
         </div>
 
