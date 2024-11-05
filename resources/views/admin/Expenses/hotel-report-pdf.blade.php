@@ -27,8 +27,8 @@
             text-align: center;
         }
         .expense-list {
-            margin: 0; /* Reset margin */
-            padding-left: 20px; /* Indent for better readability */
+            margin: 0;
+            padding-left: 20px; 
         }
     </style>
 </head>

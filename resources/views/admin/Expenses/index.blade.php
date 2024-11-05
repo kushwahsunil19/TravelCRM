@@ -164,17 +164,17 @@
 
                 <!-- Name Filter -->
                 <div class="form-group">
-                    <label for="name">Supplier Name</label>
+                    <label for="name">Name</label>
                     <input type="text" name="name" id="name" class="form-control" placeholder="Enter supplier name"
                         value="{{ request('name') }}">
                 </div>
 
                 <!-- Title Filter -->
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="title">Title</label>
                     <input type="text" name="title" id="title" class="form-control" placeholder="Enter title"
                         value="{{ request('title') }}">
-                </div>
+                </div> -->
 
                 <!-- Email Filter -->
                 <div class="form-group">
