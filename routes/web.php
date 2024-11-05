@@ -117,12 +117,12 @@ Route::middleware(['auth'])->group(function() {
   // Route to download the partner report as PDF
   Route::get('/partners-report/pdf', [PartnerReportController::class, 'downloadPDF'])->name('partners.partners-report.downloadPDF');
     
-  // Route to download the partner report as CSV
+  // Route to download the partner hot as CSV
   Route::get('/partners-report/csv', [PartnerReportController::class, 'downloadCSV'])->name('partners.partners-report.downloadCSV');
 
     Route::get('/expenses',[ExpensesController::class,'index'])->name('expenses.index');
-    
-    Route::get('/expenses-report',[ExpensesReportController::class,'downloadPDF'])->name('expenses.downloadPDF');
+
+    Route::get('/expenses-report-pdf',[ExpensesReportController::class,'downloadPDF'])->name('expenses.downloadPDF');
     Route::get('/suplyer/delete-exp/{id}', [SupplierController::class, 'deleteExp'])->name('suplyer.delete-exp');
     Route::delete('expenses/{id}', [ExpensesController::class, 'destroy'])->name('expenses.destroy');
     // Route to download the supplier report as a CSV
