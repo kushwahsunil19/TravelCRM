@@ -122,7 +122,7 @@
                                         <th>Quotation No</th>
                                         <th>Branch</th>
                                         <th>Package</th>
-                                        <th>Partner</th>
+                                        <th>agent</th>
                                         <th>Discount Type</th>
                                         <th>Discount</th>
                                         <th>Vat</th>
@@ -137,7 +137,7 @@
                                         <td>{{ ($quotation->branch->city)?$quotation->branch->city:'' }}</td>
                                         <td>{{ isset($quotation->package->package_name)?$quotation->package->package_name:'' }}
                                         </td>
-                                        <td>{{ isset($quotation->partner->name)?$quotation->partner->name:'' }}</td>
+                                        <td>{{ isset($quotation->agent->name)?$quotation->agent->name:'' }}</td>
                                         <td>{{ $quotation->discount_type }}</td>
                                         <td>{{ ($quotation->discount_type=='Fixed') ? $quotation->currency->symbol : '' }}{{ $quotation->discount }}{{ ($quotation->discount_type=='Fixed')?'':'%'}}
                                         </td>
@@ -283,11 +283,11 @@
                            placeholder="Enter package name" value="{{ request('package') }}">
                 </div>
 
-                <!-- Partner Filter -->
+                <!-- agent Filter -->
                 <div class="form-group">
-                    <label for="partner">Partner</label>
-                    <input type="text" name="partner" id="partner" class="form-control"
-                           placeholder="Enter partner name" value="{{ request('partner') }}">
+                    <label for="agent">agent</label>
+                    <input type="text" name="agent" id="agent" class="form-control"
+                           placeholder="Enter agent name" value="{{ request('agent') }}">
                 </div>
 
                 <!-- Discount Type Filter -->
@@ -731,7 +731,7 @@
     document.getElementById('quotation_no').value = '';
     document.getElementById('branch').value = '';
     document.getElementById('package').value = '';
-    document.getElementById('partner').value = '';
+    document.getElementById('agent').value = '';
     document.getElementById('discount_type').value = '';
 
     // Redirect to the main quotations page to reset filters

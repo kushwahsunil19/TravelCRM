@@ -281,7 +281,7 @@
                                     <ul style="display: none;">
                                         <!-- <li><a href="{{route('branches.index')}}">Branches </a></li>
                                         <li><a href="{{route('packages.index')}}">Packeses</a></li>
-                                        <li><a href="{{route('agents.index')}}">Partners</a></li> -->
+                                        <li><a href="{{route('agents.index')}}">agents</a></li> -->
                                         <li><a href="{{route('quotations.index')}}"
                                                 class="{{strpos($url,'quotations') !== false ? 'active' : '' }}">Quotations</a>
                                         </li>

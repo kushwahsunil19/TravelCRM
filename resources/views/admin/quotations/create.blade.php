@@ -116,31 +116,31 @@ td {
 
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="input-block mb-3">
-                                                <label> Partner</label>
+                                                <label> agent</label>
                                                 <ul class="form-group-plus css-equal-heights">
                                                     <li>
-                                                        <select class="select" name="partner_id" id="partner_id"
+                                                        <select class="select" name="agent_id" id="agent_id"
                                                             required>
-                                                            <option value="">Select Partner </option>
-                                                            @foreach ($partners as $partner)
-                                                            <option value="{{ $partner->id }}"
-                                                                {{ old('partner_id') == $partner->id ? 'selected' : '' }}>
-                                                                {{ $partner->name }}
+                                                            <option value="">Select Agent </option>
+                                                            @foreach ($agents as $agent)
+                                                            <option value="{{ $agent->id }}"
+                                                                {{ old('agent_id') == $agent->id ? 'selected' : '' }}>
+                                                                {{ $agent->name }}
                                                             </option>
                                                             @endforeach
                                                         </select>
                                                     </li>
                                                     <li>
                                                         <a class="btn btn-primary form-plus-btn" href="#"
-                                                            data-bs-toggle="modal" data-bs-target="#partner_details"><i
+                                                            data-bs-toggle="modal" data-bs-target="#agent_details"><i
                                                                 class="fas fa-plus-circle"></i></a>
                                                         <!-- <a class="btn btn-primary form-plus-btn"
-                                                            href="{{route('partners.create')}}"><i
+                                                            href="{{route('agents.create')}}"><i
                                                                 class="fas fa-plus-circle"></i></a> -->
                                                     </li>
                                                 </ul>
-                                                @if ($errors->has('partner_id'))
-                                                <span class="text-danger">{{ $errors->first('partner_id') }}</span>
+                                                @if ($errors->has('agent_id'))
+                                                <span class="text-danger">{{ $errors->first('agent_id') }}</span>
                                                 @endif
                                             </div>
                                         </div>
@@ -502,18 +502,18 @@ td {
     </div>
 </div>
 <!-- /Add brach_detail Modal -->
-<!-- Add Partner Details Modal -->
-<div class="modal custom-modal modal-lg fade" id="partner_details" role="dialog">
+<!-- Add agent Details Modal -->
+<div class="modal custom-modal modal-lg fade" id="agent_details" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
                 <div class="form-header modal-header-title text-start mb-0">
-                    <h4 class="mb-0">Add Partner Details</h4>
+                    <h4 class="mb-0">Add agent Details</h4>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="partner_details_form" action="{{ route('partners.store') }}" method="POST"
+                <form id="agent_details_form" action="{{ route('agents.store') }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
                     <!-- Include CSRF token for security -->
@@ -618,7 +618,7 @@ td {
         </div>
     </div>
 </div>
-<!-- /Add Partner Details Modal -->
+<!-- /Add agent Details Modal -->
 
 
 <!-- Add Package Details Modal -->
@@ -1299,7 +1299,7 @@ $(document).ready(function() {
         });
     });
 
-    $('#partner_details_form').on('submit', function(e) {
+    $('#agent_details_form').on('submit', function(e) {
         e.preventDefault(); // Prevent the form from submitting normally
 
         var formData = new FormData(this); // Create FormData object from the form
@@ -1314,23 +1314,23 @@ $(document).ready(function() {
                 toastr.success(response.message); // Display success message
 
                 // Optionally, reset the form or close the modal
-                $('#partner_details').modal('hide'); // Close modal
-                $('#partner_details_form')[0].reset(); // Reset the form
+                $('#agent_details').modal('hide'); // Close modal
+                $('#agent_details_form')[0].reset(); // Reset the form
                 // Populate the select box with the latest bank details
-                var partnerSelect = $('#partner_id');
-                partnerSelect.empty(); // Clear the existing options
-                partnerSelect.append(
-                    '<option value="">Select Partner</option>'); // Add default option
+                var agentSelect = $('#agent_id');
+                agentSelect.empty(); // Clear the existing options
+                agentSelect.append(
+                    '<option value="">Select agent</option>'); // Add default option
 
                 // Loop through the returned bank data and append to select box
-                $.each(response.data, function(index, partner) {
-                    partnerSelect.append('<option value="' + partner.id + '">' +
-                        partner
+                $.each(response.data, function(index, agent) {
+                    agentSelect.append('<option value="' + agent.id + '">' +
+                        agent
                         .name + '</option>');
                 });
 
                 // Refresh the select2 dropdown (if using select2)
-                partnerSelect.trigger('change');
+                agentSelect.trigger('change');
 
 
             },

@@ -53,7 +53,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($agents as $agent) <!-- Changed from $partners to $agents -->
+                            @forelse ($agents as $agent) <!-- Changed from $agents to $agents -->
                             <tr>
                                 <td>{{ $loop->iteration }}</td> <!-- Serial number -->
                                 <td>
@@ -70,10 +70,10 @@
                                     </h2>
                                 </td>
 
-                                <td>{{ $agent->mobile }}</td> <!-- Changed from $partner to $agent -->
-                                <td>{{ $agent->city }}</td> <!-- Changed from $partner to $agent -->
-                                <td>{{ $agent->state }}</td> <!-- Changed from $partner to $agent -->
-                                <td>{{ $agent->country }}</td> <!-- Changed from $partner to $agent -->
+                                <td>{{ $agent->mobile }}</td> <!-- Changed from $agent to $agent -->
+                                <td>{{ $agent->city }}</td> <!-- Changed from $agent to $agent -->
+                                <td>{{ $agent->state }}</td> <!-- Changed from $agent to $agent -->
+                                <td>{{ $agent->country }}</td> <!-- Changed from $agent to $agent -->
 
                                 <td>
                                     <div class="dropdown dropdown-action">
@@ -224,7 +224,7 @@
 
 </div>
 <!-- /Main Wrapper -->
-<!-- Add Partner Details Modal -->
+<!-- Add agent Details Modal -->
 <div class="modal custom-modal modal-lg fade" id="agent_details" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
@@ -337,8 +337,8 @@
     </div>
 </div>
 
-<!-- /Add Partner Details Modal -->
-<!-- Edit Partner Details Modal -->
+<!-- /Add agent Details Modal -->
+<!-- Edit agent Details Modal -->
 <div class="modal custom-modal modal-lg fade" id="edit_agent_details" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
@@ -455,7 +455,7 @@
     </div>
 </div>
 
-<!-- /Edit Partner Details Modal -->
+<!-- /Edit agent Details Modal -->
 <!--Theme Setting -->
 <div class="settings-icon">
     <span data-bs-toggle="offcanvas" data-bs-target="#theme-settings-offcanvas"

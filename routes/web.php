@@ -113,7 +113,7 @@ Route::get('/agents-report/csv', [AgentReportController::class, 'downloadCSV'])-
 
 
     
-  // Route to download the partner report as CSV
+  // Route to download the agent report as CSV
   Route::get('/hotel-report/pdf', [HotelReportController::class, 'downloadPDF'])->name('hotel-report.downloadPDF');
   Route::get('/hotel-report/CSV', [HotelReportController::class, 'downloadCSV'])->name('hotel-report.downloadCSV');
   Route::get('/hotel-report',[HotelReportController::class,'index'])->name('hotel-report.index');

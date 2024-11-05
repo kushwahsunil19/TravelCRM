@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\QuotationReport;
 use PDF;
-use App\Models\{Quotation,Branch,Partner,Package,Bank};
+use App\Models\{Quotation,Branch,Agent,Package,Bank};
 class QuotationReportController extends Controller
 {
     /**
@@ -14,7 +14,7 @@ class QuotationReportController extends Controller
      */
     public function index(Request $request)
 {
-    $query = Quotation::with(['branch', 'partner', 'package', 'bank']);
+    $query = Quotation::with(['branch', 'agent', 'package', 'bank']);
 
     // Apply filters based on user input
     if ($request->filled('quotation_no')) {
@@ -30,9 +30,9 @@ class QuotationReportController extends Controller
             $q->where('package_name', 'like', '%' . $request->package . '%');
         });
     }
-    if ($request->filled('partner')) {
-        $query->whereHas('partner', function ($q) use ($request) {
-            $q->where('name', 'like', '%' . $request->partner . '%');
+    if ($request->filled('agent')) {
+        $query->whereHas('agent', function ($q) use ($request) {
+            $q->where('name', 'like', '%' . $request->agent . '%');
         });
     }
     if ($request->filled('discount_type')) {
@@ -103,7 +103,7 @@ class QuotationReportController extends Controller
         date_default_timezone_set('Asia/Kolkata'); 
         
         // Reuse the filtering logic from index()
-        $query = Quotation::with(['branch', 'partner', 'package', 'bank']);
+        $query = Quotation::with(['branch', 'agent', 'package', 'bank']);
         
         // Apply filters (same as in the index method)
         if ($request->filled('quotation_no')) {
@@ -119,9 +119,9 @@ class QuotationReportController extends Controller
                 $q->where('package_name', 'like', '%' . $request->package . '%');
             });
         }
-        if ($request->filled('partner')) {
-            $query->whereHas('partner', function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->partner . '%');
+        if ($request->filled('agent')) {
+            $query->whereHas('agent', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->agent . '%');
             });
         }
         if ($request->filled('discount_type')) {
@@ -155,7 +155,7 @@ class QuotationReportController extends Controller
         date_default_timezone_set('Asia/Kolkata'); 
     
         // Reuse the filtering logic from index()
-        $query = Quotation::with(['branch', 'partner', 'package', 'bank']);
+        $query = Quotation::with(['branch', 'agent', 'package', 'bank']);
     
         // Apply filters (same as in the index method)
         if ($request->filled('quotation_no')) {
@@ -171,9 +171,9 @@ class QuotationReportController extends Controller
                 $q->where('package_name', 'like', '%' . $request->package . '%');
             });
         }
-        if ($request->filled('partner')) {
-            $query->whereHas('partner', function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->partner . '%');
+        if ($request->filled('agent')) {
+            $query->whereHas('agent', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->agent . '%');
             });
         }
         if ($request->filled('discount_type')) {
@@ -202,7 +202,7 @@ class QuotationReportController extends Controller
             'Quotation No',
             'Branch',
             'Package',
-            'Partner',
+            'agent',
             'Discount Type',
             'Discount',
             'VAT',
@@ -216,7 +216,7 @@ class QuotationReportController extends Controller
                 $quotation->quotation_no,
                 $quotation->branch ? $quotation->branch->city : 'N/A',
                 $quotation->package ? $quotation->package->package_name : 'N/A',
-                $quotation->partner->name . ' (' . $quotation->partner->email . ')',
+                $quotation->agent->name . ' (' . $quotation->agent->email . ')',
                 $quotation->discount_type,
                 $quotation->discount . ($quotation->discount_type == 'Fixed' ? '' : '%'),
                 $quotation->gst_tax . '%',

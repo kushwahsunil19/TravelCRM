@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Invoice,Branch,Partner,Package,Bank,Currency};
+use App\Models\{Invoice,Package,Branch,Agent,Bank,Currency};
 use PDF;
 class InvoiceController extends Controller
 {
@@ -14,13 +14,13 @@ class InvoiceController extends Controller
     // public function index()
     // {
     //   $totalInvoice = Invoice::count();
-    //   $invoices = Invoice::with(['branch', 'partner', 'package','bank'])->paginate( $totalInvoice);
+    //   $invoices = Invoice::with(['branch', 'agent', 'package','bank'])->paginate( $totalInvoice);
     //   return view('admin.invoices.invoices',compact('invoices'));
 
       public function index(Request $request)
       {
           // Build the query for fetching invoices with the necessary relationships
-          $query = Invoice::with(['branch', 'partner', 'package', 'bank','currency']);
+          $query = Invoice::with(['branch', 'agent', 'package', 'bank','currency']);
       
           // Apply filters based on request parameters
           if ($request->filled('invoice_no')) {
@@ -36,9 +36,9 @@ class InvoiceController extends Controller
                   $q->where('package_name', 'like', '%' . $request->package . '%');
               });
           }
-          if ($request->filled('partner')) {
-              $query->whereHas('partner', function ($q) use ($request) {
-                  $q->where('name', 'like', '%' . $request->partner . '%');
+          if ($request->filled('agent')) {
+              $query->whereHas('agent', function ($q) use ($request) {
+                  $q->where('name', 'like', '%' . $request->agent . '%');
               });
           }
           if ($request->filled('discount_type')) {
@@ -61,7 +61,7 @@ class InvoiceController extends Controller
     public function getInvoicesPaid()
     {
       $totalInvoice = Invoice::count();
-      $invoices = Invoice::with(['branch', 'partner', 'package','bank','currency'])->paginate( $totalInvoice);
+      $invoices = Invoice::with(['branch', 'agent', 'package','bank','currency'])->paginate( $totalInvoice);
    
       return view('admin.invoices.invoices-paid',compact('invoices'));
     }
@@ -71,7 +71,7 @@ class InvoiceController extends Controller
     public function getInvoicesOverdue()
     {
       $totalInvoice = Invoice::count();
-      $invoices = Invoice::with(['branch', 'partner', 'package','bank','currency'])->where('status',6)->paginate( $totalInvoice);
+      $invoices = Invoice::with(['branch', 'agent', 'package','bank','currency'])->where('status',6)->paginate( $totalInvoice);
 
       return view('admin.invoices.invoices-overdue',compact('invoices'));
     }
@@ -81,7 +81,7 @@ class InvoiceController extends Controller
     public function getInvoicesCancelled()
     {
       $totalInvoice = Invoice::count();
-      $invoices = Invoice::with(['branch', 'partner', 'package','bank','currency'])->where('status',0)->paginate( $totalInvoice);
+      $invoices = Invoice::with(['branch', 'agent', 'package','bank','currency'])->where('status',0)->paginate( $totalInvoice);
  
       return view('admin.invoices.invoices-cancelled',compact('invoices'));
     }
@@ -92,7 +92,7 @@ class InvoiceController extends Controller
     {
       $totalInvoice = Invoice::count();
       
-      $invoices = Invoice::with(['branch', 'partner', 'package','bank','currency'])->where('status',1)->paginate( $totalInvoice);
+      $invoices = Invoice::with(['branch', 'agent', 'package','bank','currency'])->where('status',1)->paginate( $totalInvoice);
 
       return view('admin.invoices.invoices-recurring',compact('invoices'));
     }
@@ -102,7 +102,7 @@ class InvoiceController extends Controller
     public function getInvoicesUnpaid()
     {
       $totalInvoice = Invoice::count();
-      $invoices = Invoice::with(['branch', 'partner', 'package','bank','currency'])->where('status',4)->paginate( $totalInvoice);
+      $invoices = Invoice::with(['branch', 'agent', 'package','bank','currency'])->where('status',4)->paginate( $totalInvoice);
     
       return view('admin.invoices.invoices-unpaid',compact('invoices'));
     }
@@ -112,7 +112,7 @@ class InvoiceController extends Controller
     public function getInvoicesRefunded()
     {
       $totalInvoice = Invoice::count();
-      $invoices = Invoice::with(['branch', 'partner', 'package','bank','currency'])->where('status',5)->paginate( $totalInvoice);
+      $invoices = Invoice::with(['branch', 'agent', 'package','bank','currency'])->where('status',5)->paginate( $totalInvoice);
   
       return view('admin.invoices.invoices-refunded',compact('invoices'));
     }
@@ -122,7 +122,7 @@ class InvoiceController extends Controller
     public function getInvoicesDraft()
     {
       $totalInvoice = Invoice::count();
-      $invoices = Invoice::with(['branch', 'partner', 'package','bank','currency'])->where('status',3)->paginate( $totalInvoice);
+      $invoices = Invoice::with(['branch', 'agent', 'package','bank','currency'])->where('status',3)->paginate( $totalInvoice);
      
       return view('admin.invoices.invoices-draft',compact('invoices'));
     }
@@ -134,7 +134,7 @@ class InvoiceController extends Controller
     public function create()
     {
           
-        $invoice = Invoice::with(['branch', 'partner', 'package'])
+        $invoice = Invoice::with(['branch', 'agent', 'package'])
                       ->latest('id')  // Sort by the latest ID
                       ->first(); 
          $invoice_no = 100;           
@@ -143,11 +143,11 @@ class InvoiceController extends Controller
         }   
        
         $branches = Branch::all();
-        $partners = Partner::all();
+        $agents = agent::all();
         $packages = Package::all();
         $currencies = Currency::all();
         $bankDetails = Bank::latest()->get();
-        return view('admin.invoices.create', compact('branches', 'partners', 'packages','invoice_no','bankDetails','currencies'));
+        return view('admin.invoices.create', compact('branches', 'agents', 'packages','invoice_no','bankDetails','currencies'));
     }
 
     /**
@@ -158,7 +158,7 @@ class InvoiceController extends Controller
      // print_r($request->all());
         $request->validate([
             'branch_id' => 'required|exists:branches,id',
-            'partner_id' => 'required|exists:partners,id',
+            'agent_id' => 'required|exists:agents,id',
             'package_id' => 'required|exists:packages,id',
             'currency_id' => 'required|exists:currencies,id',
             'bank_id' => 'required',
@@ -191,12 +191,12 @@ class InvoiceController extends Controller
     {
       
         $branches = Branch::all();
-        $partners = Partner::all();
+        $agents = agent::all();
         $packages = Package::all();
         $currencies = Currency::all();
         $bankDetails = Bank::latest()->get();
 
-        return view('admin.invoices.edit', compact('invoice', 'branches', 'partners', 'packages','bankDetails','currencies'));
+        return view('admin.invoices.edit', compact('invoice', 'branches', 'agents', 'packages','bankDetails','currencies'));
     }
 
     /**
@@ -206,7 +206,7 @@ class InvoiceController extends Controller
     {
         $request->validate([
             'branch_id' => 'required|exists:branches,id',
-            'partner_id' => 'required|exists:partners,id',
+            'agent_id' => 'required|exists:agents,id',
             'package_id' => 'required|exists:packages,id',
             'currency_id' => 'required|exists:currencies,id',
             'bank_id' => 'required',
@@ -239,7 +239,7 @@ class InvoiceController extends Controller
         date_default_timezone_set('Asia/Kolkata');
     
         // Build the query for fetching invoices with the necessary relationships
-        $query = Invoice::with(['branch', 'partner', 'package', 'bank']);
+        $query = Invoice::with(['branch', 'agent', 'package', 'bank']);
     
         // Apply filters based on request parameters
         if ($request->filled('invoice_no')) {
@@ -255,9 +255,9 @@ class InvoiceController extends Controller
                 $q->where('package_name', 'like', '%' . $request->package . '%');
             });
         }
-        if ($request->filled('partner')) {
-            $query->whereHas('partner', function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->partner . '%');
+        if ($request->filled('agent')) {
+            $query->whereHas('agent', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->agent . '%');
             });
         }
         if ($request->filled('discount_type')) {
@@ -286,7 +286,7 @@ class InvoiceController extends Controller
     public function generateQuotationPDF($id)
     {
         // Fetch the quotation by ID from the database
-        $invoice = Invoice::with(['branch', 'partner', 'package','bank','currency'])->findOrFail($id);
+        $invoice = Invoice::with(['branch', 'agent', 'package','bank','currency'])->findOrFail($id);
       
         // Get the package amount
         $package_amt = $invoice->package->amount;
@@ -332,12 +332,12 @@ class InvoiceController extends Controller
             'branch_name'=>$invoice->branch->branch_name,
             'invoice_date' => now()->toDateString(),
             'invoice_number' => $invoice->invoice_no,  // Assume there's an invoice number
-            'bill_to' => $invoice->partner->name,  // Assuming you have customer info in your invoice
-            'bill_email' => $invoice->partner->email,  // Assuming you have customer info in your invoice
-            'bill_mobile' => $invoice->partner->mobile,  // Assuming you have customer info in your invoice
-            'bill_city' => $invoice->partner->city,  // Assuming you have customer info in your invoice
-            'bill_state' => $invoice->partner->state,
-            'bill_country' => $invoice->partner->country,
+            'bill_to' => $invoice->agent->name,  // Assuming you have customer info in your invoice
+            'bill_email' => $invoice->agent->email,  // Assuming you have customer info in your invoice
+            'bill_mobile' => $invoice->agent->mobile,  // Assuming you have customer info in your invoice
+            'bill_city' => $invoice->agent->city,  // Assuming you have customer info in your invoice
+            'bill_state' => $invoice->agent->state,
+            'bill_country' => $invoice->agent->country,
             'items' => $items ,  // Assuming a relationship or JSON field for items
             'subtotal' =>  $package_amt ,
             'discount'=> $discount,
@@ -361,7 +361,7 @@ class InvoiceController extends Controller
     public function preview($id)
     {
         // Fetch the quotation by ID from the database
-        $invoice = Invoice::with(['branch', 'partner', 'package','bank','currency'])->findOrFail($id);
+        $invoice = Invoice::with(['branch', 'agent', 'package','bank','currency'])->findOrFail($id);
       
         // Get the package amount
         $package_amt = $invoice->package->amount;
@@ -407,12 +407,12 @@ class InvoiceController extends Controller
             'branch_name'=>$invoice->branch->branch_name,
             'invoice_date' => now()->toDateString(),
             'invoice_number' => $invoice->invoice_no,  // Assume there's an invoice number
-            'bill_to' => $invoice->partner->name,  // Assuming you have customer info in your invoice
-            'bill_email' => $invoice->partner->email,  // Assuming you have customer info in your invoice
-            'bill_mobile' => $invoice->partner->mobile,  // Assuming you have customer info in your invoice
-            'bill_city' => $invoice->partner->city,  // Assuming you have customer info in your invoice
-            'bill_state' => $invoice->partner->state,
-            'bill_country' => $invoice->partner->country,
+            'bill_to' => $invoice->agent->name,  // Assuming you have customer info in your invoice
+            'bill_email' => $invoice->agent->email,  // Assuming you have customer info in your invoice
+            'bill_mobile' => $invoice->agent->mobile,  // Assuming you have customer info in your invoice
+            'bill_city' => $invoice->agent->city,  // Assuming you have customer info in your invoice
+            'bill_state' => $invoice->agent->state,
+            'bill_country' => $invoice->agent->country,
             'items' => $items ,  // Assuming a relationship or JSON field for items
             'subtotal' =>  $package_amt ,
             'discount'=> $discount,

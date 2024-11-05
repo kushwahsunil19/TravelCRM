@@ -40,7 +40,7 @@
             <th>Quotation No</th>
             <th>Branch</th>
             <th>Package</th>
-            <th>Partner</th>
+            <th>agent</th>
             <th>Discount Type</th>
             <th>Discount</th>
             
@@ -54,7 +54,7 @@
                 <td>{{ $quotation->quotation_no }}</td>
                 <td>{{ ($quotation->branch->city) ? $quotation->branch->city : 'N/A' }}</td>
                 <td>{{ isset($quotation->package->package_name) ? $quotation->package->package_name : 'N/A' }}</td>
-                <td>{{ isset($quotation->partner->name) ? $quotation->partner->name : 'N/A' }}</td>
+                <td>{{ isset($quotation->agent->name) ? $quotation->agent->name : 'N/A' }}</td>
                 <td>{{ $quotation->discount_type }}</td>
                 <td>{{ $quotation->discount }}{{ ($quotation->discount_type == 'Fixed') ? '' : '%' }}</td>
                 <td>{{ $quotation->gst_tax }}%</td>

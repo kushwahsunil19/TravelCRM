@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('agents', function (Blueprint $table) {
             $table->id(); // Auto-incrementing ID
-            $table->string('name'); // Partner's name
-            $table->string('mobile'); // Partner's mobile number
-            $table->string('email')->unique(); // Partner's email address
+            $table->string('name'); // agent's name
+            $table->string('mobile'); // agent's mobile number
+            $table->string('email')->unique(); // agent's email address
             $table->string('city')->nullable();  // City
             $table->string('state')->nullable();  // State
             $table->string('country')->nullable();  // Country

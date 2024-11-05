@@ -20,7 +20,7 @@
 							<!-- /Page Header -->				
 							<div class="row">
 								<div class="col-md-12">
-								<form action="{{ route('partners.update', $partner->id) }}" method="POST" enctype="multipart/form-data">
+								<form action="{{ route('agents.update', $agent->id) }}" method="POST" enctype="multipart/form-data">
 									@csrf
 									@method('PUT') <!-- Use PUT method for updating -->
 										<div class="form-group-item">
@@ -28,7 +28,7 @@
 											<div class="profile-picture">
 												<div class="upload-profile">
 													<div class="profile-img">
-														<img id="blah" class="avatar" src="{{ url('public/profile/' . $partner->image) }}" alt="profile-img">
+														<img id="blah" class="avatar" src="{{ url('public/profile/' . $agent->image) }}" alt="profile-img">
 													</div>
 													<div class="add-profile">
 														<h5>Upload a New Photo</h5>
@@ -47,7 +47,7 @@
 												<div class="col-lg-4 col-md-6 col-sm-12">
 													<div class="input-block mb-3">
 														<label>Name <span class="text-danger">*</span></label> 
-														<input type="text" class="form-control" value="{{ old('name', $partner->name) }}" name="name" placeholder="Enter Name">
+														<input type="text" class="form-control" value="{{ old('name', $agent->name) }}" name="name" placeholder="Enter Name">
 														@if ($errors->has('name'))
 														<span class="text-danger">{{ $errors->first('name') }}</span>
 														@endif
@@ -56,7 +56,7 @@
 												<div class="col-lg-4 col-md-6 col-sm-12">
 													<div class="input-block mb-3">
 														<label>Email <span class="text-danger">*</span></label>
-														<input type="email" class="form-control" value="{{ old('email', $partner->email) }}" name="email" placeholder="Enter Email Address">
+														<input type="email" class="form-control" value="{{ old('email', $agent->email) }}" name="email" placeholder="Enter Email Address">
 														@if ($errors->has('email'))
 														<span class="text-danger">{{ $errors->first('email') }}</span>
 														@endif
@@ -65,7 +65,7 @@
 												<div class="col-lg-4 col-md-6 col-sm-12">
 													<div class="input-block mb-3">
 														<label>Mobile <span class="text-danger">*</span></label>
-														<input type="text" id="mobile_code" name="mobile"  value="{{ old('mobile', $partner->mobile) }}" class="form-control" placeholder="Phone Number" name="name">
+														<input type="text" id="mobile_code" name="mobile"  value="{{ old('mobile', $agent->mobile) }}" class="form-control" placeholder="Phone Number" name="name">
 														@if ($errors->has('mobile'))
 														<span class="text-danger">{{ $errors->first('mobile') }}</span>
 														@endif
@@ -86,7 +86,7 @@
 												<div class="col-lg-4 col-md-6 col-sm-12">
 													<div class="input-block mb-3">
 														<label>City</label>
-														<input type="text" class="form-control" value="{{ old('city', $partner->city) }}" name="city" placeholder="Enter City">
+														<input type="text" class="form-control" value="{{ old('city', $agent->city) }}" name="city" placeholder="Enter City">
 														@if ($errors->has('city'))
 														<span class="text-danger">{{ $errors->first('city') }}</span>
 														@endif
@@ -95,7 +95,7 @@
 												<div class="col-lg-4 col-md-6 col-sm-12">
 													<div class="input-block mb-3">
 														<label>State</label>
-														<input type="text" class="form-control" value="{{ old('state', $partner->state) }}" name="state" placeholder="Enter State">
+														<input type="text" class="form-control" value="{{ old('state', $agent->state) }}" name="state" placeholder="Enter State">
 														@if ($errors->has('state'))
 														<span class="text-danger">{{ $errors->first('state') }}</span>
 														@endif
@@ -104,7 +104,7 @@
 												<div class="col-lg-4 col-md-6 col-sm-12">
 													<div class="input-block mb-3">
 														<label>Country</label>
-														<input type="text" class="form-control" value="{{ old('country', $partner->country) }}" name="country"  placeholder="Enter Country">
+														<input type="text" class="form-control" value="{{ old('country', $agent->country) }}" name="country"  placeholder="Enter Country">
 														@if ($errors->has('country'))
 														<span class="text-danger">{{ $errors->first('country') }}</span>
 														@endif
@@ -232,8 +232,8 @@
 											</div>
 										</div>								 -->
 										<div class="add-customer-btns text-end">
-											<a href="{{route('partners.index')}}"  class="btn customer-btn-cancel">Cancel</a>
-											<button type="submit" class="btn customer-btn-save">Create Partner</button>
+											<a href="{{route('agents.index')}}"  class="btn customer-btn-cancel">Cancel</a>
+											<button type="submit" class="btn customer-btn-save">Create agent</button>
 										
 										</div>
 									</form>

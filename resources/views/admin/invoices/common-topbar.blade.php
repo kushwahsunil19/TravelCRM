@@ -344,15 +344,15 @@ $url = $_SERVER['REQUEST_URI'];
                                         <td>
                                             <h2 class="table-avatar">
                                                 @php
-                                                $avatar = $invoice->partner->image ? url('public/profile/' .
-                                                $invoice->partner->image) :
+                                                $avatar = $invoice->agent->image ? url('public/profile/' .
+                                                $invoice->agent->image) :
                                                 url('public/assets/img/profiles/default.png');
                                                 @endphp
                                                 <a href="" class="avatar avatar-md me-2"><img
                                                         class="avatar-img rounded-circle" src="{{$avatar}}"
                                                         alt="User Image"></a>
-                                                <a href="">{{$invoice->partner->name }} <span><span class="__cf_email__"
-                                                            data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $invoice->partner->email }}]</span></span></a>
+                                                <a href="">{{$invoice->agent->name }} <span><span class="__cf_email__"
+                                                            data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $invoice->agent->email }}]</span></span></a>
                                         </td>
 
                                         <td>{{ $invoice->discount_type }}</td>

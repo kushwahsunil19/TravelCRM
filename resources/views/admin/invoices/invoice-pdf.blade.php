@@ -40,7 +40,7 @@
             <th>Invoice No</th>
             <th>Branch</th>
             <th>Package</th>
-            <th>Partner</th>
+            <th>agent</th>
             <th>Discount Type</th>
             <th>Discount</th>
             <th>Vat</th>
@@ -53,7 +53,7 @@
                 <td>{{ $invoice->invoice_no }}</td>
                 <td>{{ ($invoice->branch->city) ? $invoice->branch->city : 'N/A' }}</td>
                 <td>{{ isset($invoice->package->package_name) ? $invoice->package->package_name : 'N/A' }}</td>
-                <td>{{ isset($invoice->partner->name) ? $invoice->partner->name : 'N/A' }}</td>
+                <td>{{ isset($invoice->agent->name) ? $invoice->agent->name : 'N/A' }}</td>
                 <td>{{ $invoice->discount_type }}</td>
                 <td>{{ $invoice->discount }}{{ ($invoice->discount_type == 'Fixed') ? '' : '%' }}</td>
                 <td>{{ $invoice->vat }}%</td>

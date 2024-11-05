@@ -20,7 +20,7 @@
 							<!-- /Page Header -->				
 							<div class="row">
 								<div class="col-md-12">
-								<form action="{{ route('partners.store') }}" method="POST" enctype="multipart/form-data">
+								<form action="{{ route('agents.store') }}" method="POST" enctype="multipart/form-data">
 								@csrf
 										<div class="form-group-item">
 											<h5 class="form-title">Basic Details</h5>
@@ -230,7 +230,7 @@
 											</div>
 										</div>								 -->
 										<div class="add-customer-btns text-end">
-											<a href="{{route('partners.index')}}"  class="btn customer-btn-cancel">Cancel</a>
+											<a href="{{route('agents.index')}}"  class="btn customer-btn-cancel">Cancel</a>
 											<button type="submit" class="btn customer-btn-save">Create Agent</button>
 										
 										</div>

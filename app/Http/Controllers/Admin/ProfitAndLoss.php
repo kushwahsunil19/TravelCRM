@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Invoice,Supplier,Branch,Partner,Package,Bank,Currency};
+use App\Models\{Invoice,Supplier,Branch,agent,Package,Bank,Currency};
 use PDF;
 class ProfitAndLoss extends Controller
 {
@@ -15,7 +15,7 @@ class ProfitAndLoss extends Controller
     {
         $totalInvoice = Invoice::count();
         $suppliers = Supplier::all(); // this is expencess
-        $invoices = Invoice::with(['branch', 'partner', 'package','bank','currency'])->paginate( $totalInvoice);
+        $invoices = Invoice::with(['branch', 'agent', 'package','bank','currency'])->paginate( $totalInvoice);
        return view('admin.profit-loss.profit-loss-list',compact('invoices','suppliers'));
     }
 

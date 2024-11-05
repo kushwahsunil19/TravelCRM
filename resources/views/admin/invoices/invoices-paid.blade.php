@@ -3,13 +3,9 @@
 
 <!-- Main Wrapper -->
 @include('admin.layouts.common-sidebar')
-<!-- /Main Wrapper -->
 
-<!-- Page Wrapper -->
 @include('admin.invoices.common-topbar')
-<!-- /Page Wrapper -->
 
-<!-- Add Asset -->
 <div class="toggle-sidebar">
     <div class="sidebar-layout-filter">
         <div class="sidebar-header">

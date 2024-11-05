@@ -82,11 +82,11 @@
                                     placeholder="Enter package name" value="{{ request('package') }}">
                             </div>
 
-                            <!-- Partner Filter -->
+                            <!-- agent Filter -->
                             <div class="form-group">
-                                <label for="partner">Partner</label>
-                                <input type="text" name="partner" id="partner" class="form-control"
-                                    placeholder="Enter partner name" value="{{ request('partner') }}">
+                                <label for="agent">agent</label>
+                                <input type="text" name="agent" id="agent" class="form-control"
+                                    placeholder="Enter agent name" value="{{ request('agent') }}">
                             </div>
 
                             <!-- Discount Type Filter -->
@@ -137,7 +137,7 @@
                                             <th>Quotation No</th>
                                             <th>Branch</th>
                                             <th>Package</th>
-                                            <th>Partner</th>
+                                            <th>agent</th>
                                             <th>Discount Type</th>
                                             <th>Discount</th>
                                             <th>VAT</th>
@@ -161,15 +161,15 @@
                                             <td>
                                             <h2 class="table-avatar">
                                                 @php
-                                                $avatar = $quotation->partner->image ? url('public/profile/' .
-                                                $quotation->partner->image) :
+                                                $avatar = $quotation->agent->image ? url('public/profile/' .
+                                                $quotation->agent->image) :
                                                 url('public/assets/img/profiles/default.png');
                                                 @endphp
                                                 <a href="" class="avatar avatar-md me-2"><img
                                                         class="avatar-img rounded-circle" src="{{$avatar}}"
                                                         alt="User Image"></a>
-                                                <a href="">{{$quotation->partner->name }} <span><span class="__cf_email__"
-                                                            data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $quotation->partner->email }}]</span></span></a>
+                                                <a href="">{{$quotation->agent->name }} <span><span class="__cf_email__"
+                                                            data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $quotation->agent->email }}]</span></span></a>
                                         </td>
                                            
                                             <td>{{ $quotation->discount_type }}</td>
@@ -230,7 +230,7 @@ function resetForm() {
     document.getElementById('quotation_no').value = '';
     document.getElementById('branch').value = '';
     document.getElementById('package').value = '';
-    document.getElementById('partner').value = '';
+    document.getElementById('agent').value = '';
     document.getElementById('discount_type').value = '';
 
     window.location.reload();

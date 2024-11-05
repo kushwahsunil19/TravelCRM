@@ -106,7 +106,7 @@
                                                     <div class="dropdown-menu dropdown-menu-end">
                                                         <ul>
                                                             <li>
-                                                                <a class="dropdown-item edit_partner" data-id="{{ $agent->id }}">
+                                                                <a class="dropdown-item edit_agent" data-id="{{ $agent->id }}">
                                                                     <i class="far fa-edit me-2"></i>Edit
                                                                 </a>
                                                             </li>
@@ -241,8 +241,8 @@
 
 </div>
 <!-- /Main Wrapper -->
-<!-- Add Partner Details Modal -->
-<div class="modal custom-modal modal-lg fade" id="partner_details" role="dialog">
+<!-- Add agent Details Modal -->
+<div class="modal custom-modal modal-lg fade" id="agent_details" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
@@ -252,7 +252,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="partner_details_form" action="{{ route('agents.store') }}" method="POST" enctype="multipart/form-data">
+                <form id="agent_details_form" action="{{ route('agents.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <!-- Include CSRF token for security -->
                     <div class="row">
@@ -347,8 +347,8 @@
     </div>
 </div>
 
-<!-- /Add Partner Details Modal -->
-<div class="modal custom-modal modal-lg fade" id="edit_partner_details" role="dialog">
+<!-- /Add agent Details Modal -->
+<div class="modal custom-modal modal-lg fade" id="edit_agent_details" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
@@ -358,10 +358,10 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="edit_partner_details_form"  method="POST" enctype="multipart/form-data">
+                <form id="edit_agent_details_form"  method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
-                    <input type="hidden" name="partner_id" id="partner_id">
+                    <input type="hidden" name="agent_id" id="agent_id">
                     <div class="row">
                         <div class="profile-picture">
                             <div class="upload-profile">
@@ -405,7 +405,7 @@
                                     <label>Mobile <span class="text-danger">*</span></label>
            
 
-<div class="modal custom-modal modal-lg fade" id="edit_partner_details" role="dialog">
+<div class="modal custom-modal modal-lg fade" id="edit_agent_details" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
@@ -415,10 +415,10 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="edit_partner_details_form"  method="POST" enctype="multipart/form-data">
+                <form id="edit_agent_details_form"  method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
-                    <input type="hidden" name="partner_id" id="partner_id">
+                    <input type="hidden" name="agent_id" id="agent_id">
                     <div class="row">
                         <div class="profile-picture">
                             <div class="upload-profile">
@@ -510,7 +510,7 @@
         </div>
     </div>
 </div>
-<div class="modal custom-modal modal-lg fade" id="edit_partner_details" role="dialog">
+<div class="modal custom-modal modal-lg fade" id="edit_agent_details" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
@@ -520,10 +520,10 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="edit_partner_details_form"  method="POST" enctype="multipart/form-data">
+                <form id="edit_agent_details_form"  method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
-                    <input type="hidden" name="partner_id" id="partner_id">
+                    <input type="hidden" name="agent_id" id="agent_id">
                     <div class="row">
                         <div class="profile-picture">
                             <div class="upload-profile">
@@ -616,7 +616,7 @@
     </div>
 </div>
 
-<!-- /Edit Partner Details Modal -->
+<!-- /Edit agent Details Modal -->
 <!--Theme Setting -->
 <div class="settings-icon">
     <span data-bs-toggle="offcanvas" data-bs-target="#theme-settings-offcanvas"
@@ -999,8 +999,8 @@ $(document).ready(function() {
         "hideMethod": "fadeOut" // Use fadeOut or slideUp
     };
 
-    // Submit the add partner form
-    $('#partner_details_form').on('submit', function(e) {
+    // Submit the add agent form
+    $('#agent_details_form').on('submit', function(e) {
         e.preventDefault(); // Prevent the form from submitting normally
 
         var formData = new FormData(this); // Create FormData object from the form
@@ -1013,7 +1013,7 @@ $(document).ready(function() {
             processData: false, // Important for file upload
             success: function(response) {
                 toastr.success(response.message); // Display success message
-                $('#partner_details_form')[0].reset(); // Reset the form
+                $('#agent_details_form')[0].reset(); // Reset the form
                 setTimeout(function() {
                     window.location.reload(); // Reload the page after the delay
                 }, 3000); // 3-second delay
@@ -1030,8 +1030,8 @@ $(document).ready(function() {
         });
     });
 
-    // Edit Partner
-    $(document).on('click', '.edit_partner', function() {
+    // Edit agent
+    $(document).on('click', '.edit_agent', function() {
         var id = $(this).data('id'); // Get user ID from the button
         
         // Make an AJAX request to fetch the user data
@@ -1042,7 +1042,7 @@ $(document).ready(function() {
                 var data = response.data;
 
                 // Populate the form fields with the fetched data
-                $('#partner_id').val(data.id); // Hidden user ID
+                $('#agent_id').val(data.id); // Hidden user ID
                 $('#edit_name').val(data.name);
                 $('#edit_email').val(data.email);
                 $('#edit_mobile').val(data.mobile);
@@ -1052,10 +1052,10 @@ $(document).ready(function() {
                 $('#blahedit').attr('src', data.image ? '{{ url("public/profile") }}/' + data.image : '{{ url("public/assets/img/profiles/default.png") }}');
 
                 // Set the form action for updating
-                $('#edit_partner_details_form').attr('action', '{{ route("agents.update", ":id") }}'.replace(':id', data.id));
+                $('#edit_agent_details_form').attr('action', '{{ route("agents.update", ":id") }}'.replace(':id', data.id));
 
                 // Open the modal
-                $('#edit_partner_details').modal('show');
+                $('#edit_agent_details').modal('show');
             },
             error: function(xhr) {
                 toastr.error('Error fetching user data.');
@@ -1063,8 +1063,8 @@ $(document).ready(function() {
         });
     });
 
-    // Submit the edit partner form
-    $('#edit_partner_details_form').on('submit', function(e) {
+    // Submit the edit agent form
+    $('#edit_agent_details_form').on('submit', function(e) {
         e.preventDefault(); // Prevent the form from submitting normally
 
         var formData = new FormData(this); // FormData for file uploads
@@ -1080,7 +1080,7 @@ $(document).ready(function() {
             },
             success: function(response) {
                 toastr.success(response.message);
-                $('#edit_partner_details').modal('hide'); // Close modal after success
+                $('#edit_agent_details').modal('hide'); // Close modal after success
                 setTimeout(function() {
                     window.location.reload(); // Reload the page after the delay
                 }, 3000);
@@ -1132,7 +1132,7 @@ $(document).ready(function() {
         document.getElementById('state').value = '';
         document.getElementById('country').value = '';
 
-        // Redirect to the main partners page to reset filters
+        // Redirect to the main agents page to reset filters
         window.location.href = '{{route('agents.agents-report')}}';
     }
 </script>

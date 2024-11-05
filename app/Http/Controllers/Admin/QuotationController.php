@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Quotation,Invoice,Branch,Partner,Package,Bank,Currency};
+use App\Models\{Quotation,Invoice,Branch,Package,Bank,Currency,Agent};
 use PDF;
 use Spatie\Permission\Models\Role;
 
@@ -31,7 +31,7 @@ class QuotationController extends Controller
          $totalQuotations = Quotation::count();
      
          // Build the query for fetching quotations with the necessary relationships
-         $query = Quotation::with(['branch', 'partner', 'package', 'bank']);
+         $query = Quotation::with(['branch', 'agent', 'package', 'bank']);
      
          // Apply filters based on request parameters
          if ($request->filled('quotation_no')) {
@@ -47,9 +47,9 @@ class QuotationController extends Controller
                  $q->where('package_name', 'like', '%' . $request->package . '%');
              });
          }
-         if ($request->filled('partner')) {
-             $query->whereHas('partner', function ($q) use ($request) {
-                 $q->where('name', 'like', '%' . $request->partner . '%');
+         if ($request->filled('agent')) {
+             $query->whereHas('agent', function ($q) use ($request) {
+                 $q->where('name', 'like', '%' . $request->agent . '%');
              });
          }
          if ($request->filled('discount_type')) {
@@ -71,7 +71,7 @@ class QuotationController extends Controller
      */
     public function create()
     {
-        $quotation = Quotation::with(['branch', 'partner', 'package'])
+        $quotation = Quotation::with(['branch', 'agent', 'package'])
                       ->latest('id')  // Sort by the latest ID
                       ->first(); 
          $quotation_no = 100;           
@@ -80,11 +80,11 @@ class QuotationController extends Controller
         }   
        
         $branches = Branch::all();
-        $partners = Partner::all();
+        $agents = agent::all();
         $packages = Package::all();
         $currencies = Currency::all();
         $bankDetails = Bank::latest()->get();
-        return view('admin.quotations.create', compact('branches', 'partners', 'packages','quotation_no','bankDetails','currencies'));
+        return view('admin.quotations.create', compact('branches', 'agents', 'packages','quotation_no','bankDetails','currencies'));
     }
 
     /**
@@ -94,7 +94,7 @@ class QuotationController extends Controller
     {
         $request->validate([
             'branch_id' => 'required|exists:branches,id',
-            'partner_id' => 'required|exists:partners,id',
+            'agent_id' => 'required|exists:agents,id',
             'package_id' => 'required|exists:packages,id',
             'currency_id' => 'required|exists:currencies,id',
             'bank_id' => 'required|exists:bank_details,id',           
@@ -129,13 +129,13 @@ class QuotationController extends Controller
     {
       
         $branches = Branch::all();
-        $partners = Partner::all();
+        $agents = Agent::all();
         $packages = Package::all();
         $currencies = Currency::all();
 
         $bankDetails = Bank::latest()->get();
 
-        return view('admin.quotations.edit', compact('quotation', 'branches', 'partners', 'packages','bankDetails','currencies'));
+        return view('admin.quotations.edit', compact('quotation', 'branches', 'agents', 'packages','bankDetails','currencies'));
     }
 
     /**
@@ -145,7 +145,7 @@ class QuotationController extends Controller
     {
         $request->validate([
             'branch_id' => 'required|exists:branches,id',
-            'partner_id' => 'required|exists:partners,id',
+            'agent_id' => 'required|exists:agents,id',
             'package_id' => 'required|exists:packages,id',
             'currency_id' => 'required|exists:currencies,id',
             'bank_id' => 'required|exists:bank_details,id',
@@ -179,7 +179,7 @@ class QuotationController extends Controller
     public function generateQuotationPDF($id)
     {
         // Fetch the quotation by ID from the database
-        $quotation = Quotation::with(['branch', 'partner', 'package','bank','currency'])->findOrFail($id);
+        $quotation = Quotation::with(['branch', 'agent', 'package','bank','currency'])->findOrFail($id);
       
         // Get the package amount
         $package_amt = $quotation->package->amount;
@@ -225,12 +225,12 @@ class QuotationController extends Controller
             'branch_name'=>$quotation->branch->branch_name,
             'quotation_date' => now()->toDateString(),
             'quotation_number' => $quotation->quotation_no,  // Assume there's an invoice number
-            'bill_to' => $quotation->partner->name,  // Assuming you have customer info in your quotation
-            'bill_email' => $quotation->partner->email,  // Assuming you have customer info in your quotation
-            'bill_mobile' => $quotation->partner->mobile,  // Assuming you have customer info in your quotation
-            'bill_city' => $quotation->partner->city,  // Assuming you have customer info in your quotation
-            'bill_state' => $quotation->partner->state,
-            'bill_country' => $quotation->partner->country,
+            'bill_to' => $quotation->agent->name,  // Assuming you have customer info in your quotation
+            'bill_email' => $quotation->agent->email,  // Assuming you have customer info in your quotation
+            'bill_mobile' => $quotation->agent->mobile,  // Assuming you have customer info in your quotation
+            'bill_city' => $quotation->agent->city,  // Assuming you have customer info in your quotation
+            'bill_state' => $quotation->agent->state,
+            'bill_country' => $quotation->agent->country,
             'items' => $items ,  // Assuming a relationship or JSON field for items
             'subtotal' =>  $package_amt ,
             'discount'=> $discount,
@@ -254,7 +254,7 @@ class QuotationController extends Controller
     public function preview($id)
     {
         // Fetch the quotation by ID from the database
-        $quotation = Quotation::with(['branch', 'partner', 'package','bank','currency'])->findOrFail($id);
+        $quotation = Quotation::with(['branch', 'agent', 'package','bank','currency'])->findOrFail($id);
       
         // Get the package amount
         $package_amt = $quotation->package->amount;
@@ -300,12 +300,12 @@ class QuotationController extends Controller
             'branch_name'=>$quotation->branch->branch_name,
             'quotation_date' => now()->toDateString(),
             'quotation_number' => $quotation->quotation_no,  // Assume there's an invoice number
-            'bill_to' => $quotation->partner->name,  // Assuming you have customer info in your quotation
-            'bill_email' => $quotation->partner->email,  // Assuming you have customer info in your quotation
-            'bill_mobile' => $quotation->partner->mobile,  // Assuming you have customer info in your quotation
-            'bill_city' => $quotation->partner->city,  // Assuming you have customer info in your quotation
-            'bill_state' => $quotation->partner->state,
-            'bill_country' => $quotation->partner->country,
+            'bill_to' => $quotation->agent->name,  // Assuming you have customer info in your quotation
+            'bill_email' => $quotation->agent->email,  // Assuming you have customer info in your quotation
+            'bill_mobile' => $quotation->agent->mobile,  // Assuming you have customer info in your quotation
+            'bill_city' => $quotation->agent->city,  // Assuming you have customer info in your quotation
+            'bill_state' => $quotation->agent->state,
+            'bill_country' => $quotation->agent->country,
             'items' => $items ,  // Assuming a relationship or JSON field for items
             'subtotal' =>  $package_amt ,
             'discount'=> $discount,
@@ -344,8 +344,8 @@ class QuotationController extends Controller
         }
         public function convertToInvoice($id){
 
-            $quotation = Quotation::with(['branch', 'partner', 'package','bank'])->findOrFail($id);
-            $invoice = Invoice::with(['branch', 'partner', 'package'])
+            $quotation = Quotation::with(['branch', 'agent', 'package','bank'])->findOrFail($id);
+            $invoice = Invoice::with(['branch', 'agent', 'package'])
             ->latest('id')  // Sort by the latest ID
             ->first(); 
             $invoice_no = 100;           
@@ -353,7 +353,7 @@ class QuotationController extends Controller
             $invoice_no =  $invoice->invoice_no +1 ;
             }   
             $existingInvoice = Invoice::where('branch_id', $quotation->branch_id)
-            ->where('partner_id', $quotation->partner_id)
+            ->where('agent_id', $quotation->agent_id)
             ->where('package_id', $quotation->package_id)
             ->where('bank_id', $quotation->bank_id)
             ->where('vat', $quotation->gst_tax)
@@ -367,7 +367,7 @@ class QuotationController extends Controller
             $invoice = Invoice::create([
                 'invoice_no' => $invoice_no,
                 'branch_id' => $quotation->branch_id,
-                'partner_id' => $quotation->partner_id,
+                'agent_id' => $quotation->agent_id,
                 'package_id' => $quotation->package_id,
                 'currency_id' => $quotation->currency_id,
                 'bank_id' => $quotation->bank_id,
@@ -385,7 +385,7 @@ class QuotationController extends Controller
                 [
                   
                     'branch_id' => $quotation->branch_id,
-                    'partner_id' => $quotation->partner_id,
+                    'agent_id' => $quotation->agent_id,
                     'package_id' => $quotation->package_id,
                     'currency_id' => $quotation->currency_id,
                     'bank_id' => $quotation->bank_id,

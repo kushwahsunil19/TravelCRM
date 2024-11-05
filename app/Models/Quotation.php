@@ -15,7 +15,7 @@ class Quotation extends Model
      */
     protected $fillable = [
         'branch_id',
-        'partner_id',
+        'agent_id',
         'package_id',
         'currency_id',
         'bank_id',
@@ -41,11 +41,11 @@ class Quotation extends Model
     }
 
     /**
-     * Get the partner associated with the quotation.
+     * Get the agent associated with the quotation.
      */
-    public function partner()
+    public function agent()
     {
-        return $this->belongsTo(Partner::class);
+        return $this->belongsTo(Agent::class);
     }
 
     /**

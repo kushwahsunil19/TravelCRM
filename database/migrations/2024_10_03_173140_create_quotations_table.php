@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('branch_id'); // Foreign key
             $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade'); // Foreign key constraint
-            $table->unsignedBigInteger('partner_id'); // Foreign key
-            $table->foreign('partner_id')->references('id')->on('partners')->onDelete('cascade');    
+            $table->unsignedBigInteger('agent_id'); // Foreign key
+            $table->foreign('agent_id')->references('id')->on('agents')->onDelete('cascade');    
             $table->unsignedBigInteger('package_id'); // Foreign key
             $table->foreign('package_id')->references('id')->on('packages')->onDelete('cascade');
             $table->integer('bank_id')->nullable();
