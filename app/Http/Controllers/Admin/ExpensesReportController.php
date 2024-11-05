@@ -1,16 +1,18 @@
 <?php
+
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use PDF;
 use App\Models\Supplier;
-
-class HotelReportController extends Controller
+use PDF;
+class ExpensesReportController extends Controller
 {
+   
+   
     public function index(Request $request)
     {
-        
+        // Initialize the query
         $query = Supplier::query();
 
         // Apply filters based on request input
@@ -32,7 +34,7 @@ class HotelReportController extends Controller
         // Get the filtered suppliers with their expenses
         $Suppliers = $query->with('expenses')->get();
 
-        return view('admin.expenses.hotel-report', compact('Suppliers'));
+        return view('admin.expenses.index', compact('Suppliers'));
     }
 
     /**
@@ -70,11 +72,11 @@ class HotelReportController extends Controller
         }
 
         // Generate the PDF
-        $pdf = PDF::loadView('admin.expenses.hotel-report-pdf', compact('suppliers'));
+        $pdf = PDF::loadView('admin.expenses.Expenses-report-pdf', compact('suppliers'));
 
         // Generate the filename with correct format
         $timestamp = date('Y-m-d_H-i-s');
-        $filename = 'hotel_report_' . $timestamp . '.pdf';
+        $filename = 'Expenses_report' . $timestamp . '.pdf';
 
         // Return the PDF with the correct headers
         return $pdf->download($filename);
@@ -124,6 +126,7 @@ class HotelReportController extends Controller
             'S.No',
             'Supplier Name',
             'Expense Title',
+            'date',
             'Amount'
         ]);
 

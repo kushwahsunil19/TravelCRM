@@ -4,12 +4,10 @@
 
 <!-- Main Wrapper -->
 @include('admin.layouts.common-sidebar')
-<!-- /Main Wrapper -->
 
-<!-- Page Wrapper -->
 <div class="page-wrapper">
     <div class="content container-fluid">
-        <!-- Page Header -->
+       
         <div class="page-header">
             <div class="content-page-header">
                 <h5>Hotel Report</h5>

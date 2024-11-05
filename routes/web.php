@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\ExpensesController;
+use App\Http\Controllers\admin\ExpensesReportController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\{AuthController,ForgotPasswordController,ProfileController,UserController,QuotationController,ItineraryController,PartnerController,BranchController,PackageController,CurrencyController,RolesPermissionController,VendorController,InvoiceController,SupplierController,QuotationReportController,SupplierReportController,PartnerReportController,BankController,StaffwiseController,HotelReportController};
 use App\Http\Controllers\Admin\ProfitAndLoss;
@@ -120,6 +121,8 @@ Route::middleware(['auth'])->group(function() {
   Route::get('/partners-report/csv', [PartnerReportController::class, 'downloadCSV'])->name('partners.partners-report.downloadCSV');
 
     Route::get('/expenses',[ExpensesController::class,'index'])->name('expenses.index');
+    
+    Route::get('/expenses-report',[ExpensesReportController::class,'downloadPDF'])->name('expenses.downloadPDF');
     Route::get('/suplyer/delete-exp/{id}', [SupplierController::class, 'deleteExp'])->name('suplyer.delete-exp');
     Route::delete('expenses/{id}', [ExpensesController::class, 'destroy'])->name('expenses.destroy');
     // Route to download the supplier report as a CSV

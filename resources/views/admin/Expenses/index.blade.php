@@ -12,7 +12,7 @@
         <!-- Page Header -->
         <div class="page-header">
             <div class="content-page-header">
-                <h5>Expenses</h5>
+                <h5>Hotel Report</h5>
                 <div class="list-btn">
                     <ul class="filter-list">
                         <li>
@@ -30,12 +30,12 @@
                                     <ul class="d-block">
                                         <li>
                                             <a class="d-flex align-items-center download-item"
-                                                href="{{route('supplier-report.downloadPDF')}}"><i
+                                                href="{{route('expenses.downloadPDF',request()->query())}}"><i
                                                     class="far fa-file-pdf me-2"></i>PDF</a>
                                         </li>
                                         <li>
                                             <a class="d-flex align-items-center download-item"
-                                                href="{{ route('supplier-report.downloadCSV') }}" download>
+                                                href="{{ route('hotel-report.downloadCSV',request()->query()) }}" download>
                                                 <i class="far fa-file-text me-2"></i>CSV
                                             </a>
                                         </li>
@@ -80,126 +80,73 @@
         <!-- /Search Filter -->
 
         <div class="row">
-            <div class="col-sm-12">
-                <div class="card-table">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-center table-hover datatable">
-                                <thead>
-                                    <tr>
-                                        <th>S.No</th>
-                                        <th>Name</th>
-                                        <th>Mobile</th>
-                                        <th>City</th>
-                                        <th>State</th>
-                                        <th>Country</th>
-                                        <th>Amount</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse ($Suppliers as $Supplier)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td> <!-- Serial number -->
-                                        <td>
-                                            <h2 class="table-avatar">
-                                                @php
-                                                $avatar = $Supplier->image ? url('public/profile/' . $Supplier->image) :
-                                                url('public/assets/img/profiles/default.png');
-                                                @endphp
-                                                <a href="" class="avatar avatar-md me-2"><img
-                                                        class="avatar-img rounded-circle" src="{{$avatar}}"
-                                                        alt="User Image"></a>
-                                                <a href="">{{ $Supplier->name }} <span><span class="__cf_email__"
-                                                            data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $Supplier->email }}]</span></span></a>
+    <div class="col-sm-12">
+        <div class="card-table">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-center table-hover datatable">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Name</th>
+                                <th>Expenses</th>
+                                <th>Date</th>
+                                <th>Total Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($Suppliers as $Supplier)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td> <!-- Serial number -->
+                                <td>
+                                    <h2 class="table-avatar">
+                                        @php
+                                        $avatar = $Supplier->image ? url('public/profile/' . $Supplier->image) :
+                                        url('public/assets/img/profiles/default.png');
+                                        @endphp
+                                        <a href="" class="avatar avatar-md me-2"><img
+                                                class="avatar-img rounded-circle" src="{{$avatar}}"
+                                                alt="User Image"></a>
+                                        <a href="">{{ $Supplier->name }} <span><span class="__cf_email__"
+                                                    data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $Supplier->email }}]</span></span></a>
+                                    </h2>
+                                </td>
 
-                                        <td>{{ $Supplier->mobile }}</td>
-
-                                        <td>{{ $Supplier->city }}</td>
-                                        <td>{{ $Supplier->state }}</td>
-                                        <td>{{ $Supplier->country }}</td>
-                                        <td>{{ $Supplier->amount }}</td>
-                                        <td>
-
-                                            <div class="dropdown dropdown-action">
-                                                <a href="#" class=" btn-action-icon " data-bs-toggle="dropdown"
-                                                    aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <ul>
-                                                        <li>
-                                                            <a class="dropdown-item edit_Supplier"
-                                                                data-id="{{$Supplier->id}}"><i
-                                                                    class="far fa-edit me-2"></i>Edit</a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item" href="javascript:void(0);"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#delete_modal{{$Supplier->id}}"><i
-                                                                    class="far fa-trash-alt me-2"></i>Delete</a>
-                                                        </li>
-                                                        <!-- <li>
-																		<a class="dropdown-item" href="{{ route('suppliers.show', $Supplier->id) }}"><i class="far fa-eye me-2"></i>View</a>
-																	</li> -->
-                                                        <!-- <li>
-																		<a class="dropdown-item" href="active-customers.html"><i class="fa-solid fa-power-off me-2"></i>Activate</a>
-																	</li>
-																	<li>
-																		<a class="dropdown-item" href="deactive-customers.html"><i class="far fa-bell-slash me-2"></i>Deactivate</a>
-																	</li> -->
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            <!-- Delete Items Modal -->
-                                            <div class="modal custom-modal fade" id="delete_modal{{$Supplier->id}}"
-                                                role="dialog">
-                                                <div class="modal-dialog modal-dialog-centered modal-md">
-                                                    <div class="modal-content">
-                                                        <div class="modal-body">
-                                                            <div class="form-header">
-                                                                <h3>Delete Supplier</h3>
-                                                                <p>Are you sure want to delete?</p>
-                                                            </div>
-                                                            <div class="modal-btn delete-action">
-                                                                <div class="row">
-                                                                    <div class="col-6">
-                                                                        <form
-                                                                            action="{{ route('suppliers.destroy', $Supplier->id) }}"
-                                                                            method="POST" style="display:inline;">
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <button type="submit"
-                                                                                data-bs-dismiss="modal"
-                                                                                class="w-100 btn btn-danger paid-continue-btn">Delete</button>
-
-                                                                        </form>
-
-                                                                    </div>
-                                                                    <div class="col-6">
-                                                                        <button type="submit" data-bs-dismiss="modal"
-                                                                            class="w-100 btn btn-primary paid-cancel-btn">Cancel</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- /Delete Items Modal -->
-                                        </td>
-                                    </tr>
-                                    @empty
-                                    <tr>
-                                        <td colspan="9" class="text-center">No Suppliers found.</td>
-                                    </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
+                                <td>
+    <ul style="list-style-type: disc; padding-left: 20px;">
+        @php $hasExpenses = false; @endphp <!-- Flag to check if any expenses are non-zero -->
+        @foreach ($Supplier->expenses as $expense)
+            @if($expense->amount > 0) <!-- Skip items with zero amount -->
+                @php $hasExpenses = true; @endphp <!-- Set flag if at least one expense has a non-zero amount -->
+                <li>{{ $expense->title }} = {{ number_format($expense->amount, 2) }}</li>
+            @endif
+        @endforeach
+        @if(!$hasExpenses) <!-- Display message if all expenses are zero -->
+            <li>No items</li>
+        @endif
+    </ul>
+</td>
+<td>
+  {{ $Supplier->created_at}} 
+</td>
+<td>
+    {{ $Supplier->amount > 0 ? number_format($Supplier->amount, 2) : 'No items' }}
+</td>
+                               
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="4" class="text-center">No Suppliers found.</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
     </div>
 </div>
 <!-- /Page Wrapper -->
@@ -208,35 +155,33 @@
 <div class="toggle-sidebar ledge">
     <div class="sidebar-layout-filter">
         <div class="sidebar-header ledge">
-            <h5>Suppliers</h5>
+            <h5>Hotel Report</h5>
             <a href="#" class="sidebar-closes"><i class="fa-regular fa-circle-xmark"></i></a>
         </div>
 
         <div class="sidebar-body">
-            <form action="{{ route('supplier.supplier-report') }}" method="GET" autocomplete="off">
+            <form action="{{ route('hotel-report.index') }}" method="GET" autocomplete="off">
 
                 <!-- Name Filter -->
                 <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" name="name" id="name" class="form-control" placeholder="Enter name"
+                    <label for="name">Supplier Name</label>
+                    <input type="text" name="name" id="name" class="form-control" placeholder="Enter supplier name"
                         value="{{ request('name') }}">
+                </div>
+
+                <!-- Title Filter -->
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" name="title" id="title" class="form-control" placeholder="Enter title"
+                        value="{{ request('title') }}">
                 </div>
 
                 <!-- Email Filter -->
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="text" name="email" id="email" class="form-control" placeholder="Enter email"
+                    <input type="text" name="email" id="email" class="form-control" placeholder="Enter Email"
                         value="{{ request('email') }}">
                 </div>
-
-                <!-- Phone Filter -->
-                <div class="form-group">
-                    <label for="mobile">Phone</label>
-                    <input type="text" name="mobile" id="mobile" class="form-control" placeholder="Enter phone number"
-                        value="{{ request('mobile') }}">
-                </div>
-
-                <!-- Add other filters as necessary -->
 
                 <!-- Filter Buttons -->
                 <div style="margin-top:12px">
@@ -253,10 +198,11 @@
                     </div>
                 </div>
             </form>
-
         </div>
     </div>
 </div>
+
+
 <!--/Add Asset -->
 
 
@@ -929,6 +875,8 @@ $(document).ready(function() {
         "showMethod": "fadeIn", // Use fadeIn or slideDown
         "hideMethod": "fadeOut" // Use fadeOut or slideUp
     };
+
+    // Form Submission for Adding Supplier
     $('#Supplier_details_form').on('submit', function(e) {
         e.preventDefault(); // Prevent the form from submitting normally
 
@@ -942,13 +890,10 @@ $(document).ready(function() {
             processData: false, // Important for file upload
             success: function(response) {
                 toastr.success(response.message); // Display success message
-                // Optionally, reset the form or close the modal
-                // $('#Supplier_details').modal('hide'); // Close modal
                 $('#Supplier_details_form')[0].reset(); // Reset the form
                 setTimeout(function() {
                     window.location.reload(); // Reload the page after the delay
-                }, 3000); // 5-second delay
-
+                }, 3000); // 3-second delay
             },
             error: function(xhr) {
                 if (xhr.responseJSON.errors) {
@@ -956,102 +901,87 @@ $(document).ready(function() {
                         toastr.error(value[0]); // Display each error message
                     });
                 } else {
-                    toastr.error('Error uploading profile.'); // Generic error message
+                    toastr.error('Error uploading supplier details.'); // Generic error message
                 }
             }
         });
     });
 
+    // Fetch and Populate Supplier Data for Editing
     $(document).on('click', '.edit_Supplier', function() {
-        var id = $(this).data('id'); // Get user ID from the button
-        // Make an AJAX request to fetch the user data
+        var id = $(this).data('id'); // Get supplier ID from the button
+
         $.ajax({
-            url: '{{ route("suppliers.edit", ":id") }}'.replace(':id',
-                id), // Replace ':id' with the actual user ID
+            url: '{{ route("suppliers.edit", ":id") }}'.replace(':id', id), // Fetch supplier data
             type: 'GET',
             success: function(response) {
                 var data = response.data;
 
                 // Populate the form fields with the fetched data
-                $('#Supplier_id').val(data.id); // Hidden user ID
+                $('#Supplier_id').val(data.id); // Hidden supplier ID
                 $('#edit_name').val(data.name);
                 $('#edit_email').val(data.email);
                 $('#edit_mobile').val(data.mobile);
-                $('#edit_city').val(data.city);
-                $('#edit_state').val(data.state);
-                $('#edit_country').val(data.country);
                 $('#edit_amount').val(data.amount);
-                $('#edit_description').val(data.description);
-                if (data.image) {
-                    // Set the profile image source
-                    $('#blahedit').attr('src', '{{ url("public/profile") }}/' + data
-                        .image);
-                } else {
-                    // Set to default image if no profile exists
-                    $('#blahedit').attr('src',
-                        '{{ url("public/assets/img/profiles/default.png") }}');
-                }
-                // Open the modal
+                $('#edit_title').val(data.title); // Ensure you have a title field
+
+                // Set the profile image source
+                var avatarSrc = data.image ? '{{ url("public/profile") }}/' + data.image : '{{ url("public/assets/img/profiles/default.png") }}';
+                $('#blahedit').attr('src', avatarSrc);
+
+                // Open the modal for editing supplier details
                 $('#edit_Supplier_details').modal('show');
             },
             error: function(xhr) {
-                toastr.error('Error fetching user data.');
+                toastr.error('Error fetching supplier data.');
             }
         });
     });
+
     // Edit Supplier
     $('#edit_Supplier_details_form').on('submit', function(e) {
         e.preventDefault(); // Prevent the form from submitting normally
 
         var formData = new FormData(this); // FormData for file uploads
-        var id = $('#Supplier_id').val(); // Get user ID from hidden input
+        var id = $('#Supplier_id').val(); // Get supplier ID from hidden input
 
         $.ajax({
             url: '{{ route("suppliers.update", ":id") }}'.replace(':id', id), // Update route
-            type: 'POST', // POST method with method override
+            type: 'POST',
             data: formData,
             contentType: false,
             processData: false,
             headers: {
-                'X-HTTP-Method-Override': 'PUT' // Spoofing PUT
+                'X-HTTP-Method-Override': 'PUT' // Spoofing PUT for update
             },
             success: function(response) {
                 toastr.success(response.message);
-                // Clear the existing table body            
-                // $('#edit_Supplier_details').modal('hide'); // Close modal after success
                 setTimeout(function() {
                     window.location.reload(); // Reload the page after the delay
                 }, 3000);
             },
             error: function(xhr) {
-                // Display error messages from the server if any
                 let errors = xhr.responseJSON.errors;
                 if (errors) {
                     $.each(errors, function(key, value) {
-                        toastr.error(value[0]);
+                        toastr.error(value[0]); // Display each error message
                     });
                 } else {
-                    toastr.error('Error updating user.');
+                    toastr.error('Error updating supplier.');
                 }
             }
         });
     });
 });
-</script>
 
-<script>
+// Function to reset the filters
 function resetForm() {
-
     document.querySelector('input[name="name"]').value = '';
     document.querySelector('input[name="email"]').value = '';
     document.querySelector('input[name="mobile"]').value = '';
-    document.querySelector('input[name="city"]').value = '';
-    document.querySelector('input[name="state"]').value = '';
-    document.querySelector('input[name="country"]').value = '';
 
     // Redirect to the main suppliers page to reset filters
-    window.location.href = {{ route('supplier.supplier-report') }};
-
+    window.location.href = '{{ route('hotel-report.index') }}';
 }
 </script>
 

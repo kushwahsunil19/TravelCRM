@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hotel Report</title>
+    <title>Expenses Report</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -34,7 +34,7 @@
 </head>
 <body>
 
-<h1>Hotel Report</h1>
+<h1>Expenses Report</h1>
 
 <table>
     <thead>
@@ -67,7 +67,7 @@
                         </ul>
                     @endif
                 </td>
-               
+                <td>{{$supplier->created_at}}</td>
                 <td>
                     @if($supplier->expenses->isNotEmpty() && $totalAmount > 0)
                         {{ number_format($totalAmount, 2) }} <!-- Show total only if greater than 0 -->

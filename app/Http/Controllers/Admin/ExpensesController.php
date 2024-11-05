@@ -41,7 +41,7 @@ class ExpensesController extends Controller
         // Get the filtered suppliers
         $Suppliers = $query->get();
 
-        return view('admin.Expenses.index', compact('Suppliers'));
+        return view('admin.expenses.index', compact('Suppliers'));
     }
     /**
      * Download PDF report.
@@ -83,6 +83,7 @@ class ExpensesController extends Controller
         return $pdf->download($filename);
     }
     
+    
 
     /**
      * Download CSV report.
@@ -114,6 +115,7 @@ class ExpensesController extends Controller
             'Mobile',
             'City', 
             'State',
+            'date',
             'Country',
             'Amount'
           
