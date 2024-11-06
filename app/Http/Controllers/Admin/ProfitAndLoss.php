@@ -23,35 +23,43 @@ class ProfitAndLoss extends Controller
         $invoicesQuery = Invoice::with(['branch', 'partner', 'package', 'bank', 'currency']);
     
         // Apply filters if present in the request
+        $currency_id  = 0;
+        if ($request->has('branch') && $request->branch) {            
+            $invoicesQuery->where('branch_id', $request->branch);
+          
+        }
+
         if ($request->has('year') && $request->year) {
           //  echo "turfdse";
             $invoicesQuery->whereYear('created_at', $request->year);
+            $suppliersQuery->whereYear('created_at', $request->year);
         }
     
-        if ($request->has('month') && $request->month) {
-          
+        if ($request->has('month') && $request->month) {          
             $invoicesQuery->whereMonth('created_at', $request->month);
             $suppliersQuery->whereMonth('created_at', $request->month);
         }
     
-        if ($request->has('branch') && $request->branch) {
-            
-            $invoicesQuery->where('branch_id', $request->branch);
-        }
-    
-        if ($request->has('package') && $request->package) {
-       
+        if ($request->has('package') && $request->package) {       
             $invoicesQuery->where('package_id', $request->package);
         }
-        if ($request->has('from_date') && $request->from_date && $request->has('to_date') && $request->to_date) {
-          
+
+        if ($request->has('from_date') && $request->from_date && $request->has('to_date') && $request->to_date) {          
            $fromDate = Carbon::parse($request->from_date)->startOfDay();
            $toDate = Carbon::parse($request->to_date)->endOfDay();
            $invoicesQuery->whereBetween('created_at', [$fromDate, $toDate]);
            $suppliersQuery->whereBetween('created_at', [$fromDate, $toDate]);
         }
-        $totalInvoice = $invoicesQuery->count();
-        $invoices = $invoicesQuery->paginate($totalInvoice);
+        
+        $invoices = $invoicesQuery->get();        
+      
+        if (isset($invoices[0])) {
+           $currency_id = $invoices[0]->currency_id;
+           $suppliersQuery->where('currency_id', $currency_id);
+        } else {
+            $currency_id = 0;
+            $suppliersQuery->where('currency_id', $currency_id);
+        }
         $suppliers = $suppliersQuery->get();
         if ($request->ajax()) {
     //    print_r($invoices);
@@ -91,6 +99,7 @@ class ProfitAndLoss extends Controller
         // Apply filters if present in the request
         if ($request->has('year') && $request->year) {
             $invoicesQuery->whereYear('created_at', $request->year);
+            $suppliersQuery->whereYear('created_at', $request->year);
         }
     
         if ($request->has('month') && $request->month) {
@@ -188,13 +197,14 @@ class ProfitAndLoss extends Controller
         // Prepare the callback for CSV generation
         $callback = function() use ($invoices, $suppliers, $totalInvoiceAmt, $totalExpenseAmt, $netIncome) {
             $file = fopen('php://output', 'w');
-    
+            fwrite($file, "\xEF\xBB\xBF");
             // Write the headers
             fputcsv($file, ['Branch', 'Package', 'Partner', 'Month', 'Year', 'Amount',]);
     
             // Write the invoices data
             foreach ($invoices as $invoice) {
                 $package_amt = $invoice->package->amount ?? 0;
+                $symbol = $invoices->first()->currency->symbol ?? '';
                 $tax = $invoice->vat ?? 0;
                 $discount = $invoice->discount ?? 0;
                 $discount_amt = ($invoice->discount_type == 'Fixed') ? $discount : ($package_amt * $discount) / 100;
@@ -209,7 +219,7 @@ class ProfitAndLoss extends Controller
                     $invoice->partner->name ?? '',
                     $month, // get month 
                     $year, // get year 
-                    number_format($total_amt, 2),
+                    $symbol . ' ' . number_format($total_amt, 2),
                  
                    
                 ]);
@@ -232,9 +242,9 @@ class ProfitAndLoss extends Controller
             // Add Total Income, Total Expense, and Net Income to the CSV
             fputcsv($file, []);
          
-            fputcsv($file, ['Total Income', '', '','', '', number_format($totalInvoiceAmt, 2)]);
-            fputcsv($file, ['Total Expense', '','', '', '', number_format($totalExpenseAmt, 2)]);
-            fputcsv($file, ['Net Income', '','', '', '', number_format($netIncome, 2)]);
+            fputcsv($file, ['Total Income', '', '','', '', $symbol . ' ' . number_format($totalInvoiceAmt, 2)]);
+            fputcsv($file, ['Total Expense', '','', '', '', $symbol . ' ' . number_format($totalExpenseAmt, 2)]);
+            fputcsv($file, ['Net Income', '','', '', '',$symbol . ' ' .  number_format($netIncome, 2)]);
     
             fclose($file);
         };

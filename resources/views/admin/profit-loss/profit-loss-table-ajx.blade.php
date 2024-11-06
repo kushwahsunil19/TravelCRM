@@ -29,7 +29,7 @@
                         <td>{{ $invoice->package->package_name ?? '' }}</td>
                         <td>{{ \Carbon\Carbon::parse($invoice->created_at)->format('F') }}</td>
                         <td>{{ \Carbon\Carbon::parse($invoice->created_at)->format('Y') }}</td>
-                        <td>{{ number_format($total_amt, 2) }}</td>
+                        <td>{{ $symbol}}{{ number_format($total_amt, 2) }}</td>
                     </tr>
                 @empty
                     <tr>
@@ -44,7 +44,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td>{{ number_format($total_invoice_amt, 2) }}</td>
+                <td>{{ $symbol}}{{ number_format($total_invoice_amt, 2) }}</td>
             </tr>
 
             <!-- Display the expenses -->
@@ -53,7 +53,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td>{{ number_format($suppliers->sum('amount'), 2) }}</td>
+                <td>{{ $symbol}}{{ number_format($suppliers->sum('amount'), 2) }}</td>
             </tr>
 
             <!-- Display net income -->
@@ -66,7 +66,7 @@
                     @php
                         $netIncome = $total_invoice_amt - $suppliers->sum('amount');
                     @endphp
-                    {{ number_format($netIncome, 2) }}
+                    {{ $symbol}} {{ number_format($netIncome, 2) }}
                 </td>
             </tr>
         </table>

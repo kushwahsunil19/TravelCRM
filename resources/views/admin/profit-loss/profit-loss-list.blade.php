@@ -57,7 +57,41 @@
 
         <div class="profit-menu">
             <div class="row">
-                
+            <div class="col-lg-2 col-md-6 col-sm-12">
+                    <div class="input-block mb-3">
+                        <label>Branch</label>
+                        <ul class="form-group">
+                            <li>
+                                <select class="select" name="branch" id="branch">                                   
+                                    @foreach ($branches as $branch)
+                                    <option value="{{ $branch->id }}"
+                                        {{ old('branch_id') == $branch->id ? 'selected' : '' }}>
+                                        {{ $branch->city }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 col-sm-12">
+                    <div class="input-block mb-3">
+                        <label>Package</label>
+                        <ul class="form-group">
+                            <li>
+                                <select class="select" name="package" id="package">
+                                    <option value="">Select Package</option>
+                                    @foreach ($packages as $package)
+                                    <option value="{{ $package->id }}"
+                                        {{ old('package_id') == $package->id ? 'selected' : '' }}>
+                                        {{ $package->package_name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
                 <div class="col-lg-2 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
                         <label>Period</label>
@@ -112,42 +146,8 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-6 col-sm-12">
-                    <div class="input-block mb-3">
-                        <label>Branch</label>
-                        <ul class="form-group">
-                            <li>
-                                <select class="select" name="branch" id="branch">
-                                    <option value="">Select Branch</option>
-                                    @foreach ($branches as $branch)
-                                    <option value="{{ $branch->id }}"
-                                        {{ old('branch_id') == $branch->id ? 'selected' : '' }}>
-                                        {{ $branch->city }}
-                                    </option>
-                                    @endforeach
-                                </select>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-6 col-sm-12">
-                    <div class="input-block mb-3">
-                        <label>Package</label>
-                        <ul class="form-group">
-                            <li>
-                                <select class="select" name="package" id="package">
-                                    <option value="">Select Package</option>
-                                    @foreach ($packages as $package)
-                                    <option value="{{ $package->id }}"
-                                        {{ old('package_id') == $package->id ? 'selected' : '' }}>
-                                        {{ $package->package_name }}
-                                    </option>
-                                    @endforeach
-                                </select>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+             
+              
                 <div class="col-lg-4 col-md-6 col-sm-12">
                     <button class="btn btn-primary" id="filter-btn">Filter</button>
                     <button class="btn btn-danger" id="reset-btn">Reset</button>
@@ -712,6 +712,13 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 $(document).ready(function() {
+    
+    setTimeout(function() {
+        // Trigger the click event using .click()
+        $('#filter-btn').click();
+    }, 100);
+
+
     // function formatDate(date) {
     //     let day = String(date.getDate()).padStart(2, '0'); // Get day and pad with zero
     //     let month = String(date.getMonth() + 1).padStart(2, '0'); // Get month (0-11) and pad with zero

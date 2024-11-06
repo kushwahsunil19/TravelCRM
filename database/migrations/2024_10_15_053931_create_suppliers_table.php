@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('currency_id'); // Foreign key
+            $table->foreign('currency_id')->references('id')->on('currencies')->onDelete('cascade'); // Foreign key constraint
+            $table->decimal('currency_rate', 15, 2)->nullable();
             $table->string('name');
             $table->string('email')->nullable();
             $table->string('mobile')->nullable();

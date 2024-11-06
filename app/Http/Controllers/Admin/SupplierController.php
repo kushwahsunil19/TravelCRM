@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SupplierExpense;
 use Illuminate\Http\Request;
-use App\Models\Supplier;
+use App\Models\{Supplier,Currency};
 
 
 class SupplierController extends Controller
 {
     public function index(Request $request) // Add Request parameter
     {
+        $currencies = Currency::all();
+
         // Initialize query
         $query = Supplier::query();
 
@@ -41,9 +43,9 @@ class SupplierController extends Controller
         }
 
         // Get the filtered suppliers
-        $Suppliers = $query->with('expenses')->get();
+        $Suppliers = $query->with('expenses','currency')->get();
 
-        return view('admin.suppliers.index', compact('Suppliers'));
+        return view('admin.suppliers.index', compact('Suppliers','currencies'));
     }
 
     public function create()

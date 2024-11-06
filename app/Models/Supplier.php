@@ -23,6 +23,8 @@ class Supplier extends Model
      * @var array
      */
     protected $fillable = [
+        'currency_id',
+        'currency_rate',
         'name',
         'email',
         'mobile',
@@ -41,7 +43,12 @@ class Supplier extends Model
      * Get the expenses for the supplier.
      */
     public function expenses()
-{
-    return $this->hasMany(SupplierExpense::class, 'suplyer_id');
-}
+    {
+        return $this->hasMany(SupplierExpense::class, 'suplyer_id');
+    }
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class , 'currency_id', 'id');    
+
+    }
 }

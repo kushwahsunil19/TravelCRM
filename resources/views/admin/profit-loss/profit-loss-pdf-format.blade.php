@@ -222,7 +222,7 @@
                         <td style="text-align:justify; border: 1px solid black;">
                             {{ \Carbon\Carbon::parse($invoice->created_at)->format('Y') }}</td>
                         <td style="text-align:justify; border: 1px solid black;">
-                            {{ number_format($total_amt, 2) }}</td>
+                        {{$symbol}}{{ number_format($total_amt, 2) }}</td>
                     </tr>
                     @empty
                     <tr>
@@ -239,12 +239,12 @@
 
 
         <div class="total" style="padding: 0px">
-            <p><strong>Total Income :</strong>  {{ number_format($total_invoice_amt, 2) }} </p>
-            <p><strong>Total Expense : </strong>{{ number_format($suppliers->sum('amount'), 2) }} </p>
+            <p><strong>Total Income :</strong>  {{$symbol}}{{ number_format($total_invoice_amt, 2) }} </p>
+            <p><strong>Total Expense : </strong>{{$symbol}}{{ number_format($suppliers->sum('amount'), 2) }} </p>
             <p><strong>Net Income : </strong> @php
                 $netIncome = $total_invoice_amt - $suppliers->sum('amount');
                 @endphp
-                {{ number_format($netIncome, 2) }}</p>
+                {{$symbol}}{{ number_format($netIncome, 2) }}</p>
 
         </div>
 

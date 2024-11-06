@@ -12,6 +12,7 @@
     align-items: center;
     justify-content: center;
 }
+
 .edit-remove-field {
     display: flex;
     align-items: center;
@@ -130,7 +131,7 @@
                                         <td>{{ $Supplier->city }}</td>
                                         <td>{{ $Supplier->state }}</td>
                                         <td>{{ $Supplier->country }}</td>
-                                        <td>{{ $Supplier->amount }}</td>
+                                        <td>{{ $Supplier->currency->symbol}} {{ $Supplier->amount }}</td>
                                         <td>
 
                                             <div class="dropdown dropdown-action">
@@ -372,22 +373,52 @@
                                 @endif
                             </div>
                         </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="input-block mb-6">
+                                <label>Currency</label>
+                                <select class="select" name="currency_id" id="currency_id" required>
+                                    <option value="">Select Currency </option>
+                                    @foreach ($currencies as $currency)
+                                    <option value="{{ $currency->id }}" data-symbol="{{$currency->symbol}}"
+                                        {{ old('currency_id') == $currency->id ? 'selected' : '' }}>
+                                        {{ $currency->code }}
+                                    </option>
+                                    @endforeach
+                                </select>
+
+                                @if ($errors->has('currency_id'))
+                                <span class="text-danger">{{ $errors->first('currency_id') }}</span>
+                                @endif
+                                <input type="hidden" id="currency_symbol" value="₹">
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="input-block">
+                                <label>Currency Rate</label>
+                                <input type="text" class="form-control" name="currency_rate" placeholder="Enter Rate">
+                                @if ($errors->has('currency_rate'))
+                                <span class="text-danger">{{ $errors->first('currency_rate') }}</span>
+                                @endif
+                            </div>
+                        </div>
 
                         <!-- Dynamic Title and Rupees Fields -->
 
 
                         <div class="col-lg-12">
                             <div id="dynamic-fields-wrapper">
+                                <br>
                                 <div class="row mb-3 dynamic-fields">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-6 input-block">
+
                                         <label>Title</label>
                                         <input type="text" name="title[]" class="form-control"
                                             placeholder="Enter Title">
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-6 input-block">
                                         <label>Amount</label>
                                         <input type="number" name="amount[]" class="form-control amount-input"
-                                            placeholder="Enter Rupees" min="0" oninput="calculateSum()">
+                                            placeholder="Enter Amount" min="0" oninput="calculateSum()">
                                     </div>
 
                                 </div>
@@ -538,7 +569,35 @@
                                 </div>
 
                             </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="input-block mb-6">
+                                    <label>Currency</label>
+                                    <select class="select" name="currency_id" id="edit_currency_id" required>
+                                        <option value="">Select Currency </option>
+                                        @foreach ($currencies as $currency)
+                                        <option value="{{ $currency->id }}" data-symbol="{{$currency->symbol}}"
+                                            {{ old('currency_id') == $currency->id ? 'selected' : '' }}>
+                                            {{ $currency->code }}
+                                        </option>
+                                        @endforeach
+                                    </select>
 
+                                    @if ($errors->has('currency_id'))
+                                    <span class="text-danger">{{ $errors->first('currency_id') }}</span>
+                                    @endif
+                                    <input type="hidden" id="currency_symbol" value="₹">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="input-block">
+                                    <label>Currency Rate</label>
+                                    <input type="text" class="form-control" name="currency_rate" id="edit_currency_rate"
+                                        placeholder="Enter Rate">
+                                    @if ($errors->has('currency_rate'))
+                                    <span class="text-danger">{{ $errors->first('currency_rate') }}</span>
+                                    @endif
+                                </div>
+                            </div>
                             <div class="col-lg-12">
                                 <div id="edit-dynamic-fields-wrapper">
                                     <div class="row mb-3 dynamic-fields">
@@ -552,8 +611,8 @@
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="input-block mb-3">
                                     <label>Total Amount</label>
-                                    <input type="number" id="edit_total_amount" name="total_amount"
-                                        class="form-control" placeholder="Total Amount" readonly>
+                                    <input type="number" id="edit_total_amount" name="total_amount" class="form-control"
+                                        placeholder="Total Amount" readonly>
                                     @if ($errors->has('amount'))
                                     <span class="text-danger">{{ $errors->first('amount') }}</span>
                                     @endif
@@ -991,7 +1050,7 @@ $(document).ready(function() {
                 // $('#Supplier_details').modal('hide'); // Close modal
                 $('#Supplier_details_form')[0].reset(); // Reset the form
                 setTimeout(function() {
-                     window.location.reload(); // Reload the page after the delay
+                    window.location.reload(); // Reload the page after the delay
                 }, 3000); // 5-second delay
 
             },
@@ -1012,7 +1071,7 @@ $(document).ready(function() {
         // Make an AJAX request to fetch the supplier data
         $.ajax({
             url: '{{ route("suppliers.edit", ":id") }}'.replace(':id',
-            id), // Replace ':id' with the actual supplier ID
+                id), // Replace ':id' with the actual supplier ID
             type: 'GET',
             success: function(response) {
                 var data = response.data;
@@ -1027,6 +1086,9 @@ $(document).ready(function() {
                 $('#edit_country').val(data.country);
                 $('#edit_amount').val(data.amount);
                 $('#edit_description').val(data.description);
+                $('#edit_currency_rate').val(data.currency_rate);
+                $('#edit_currency_id').val(data.currency_id).trigger('change');
+
 
                 // Handle supplier image
                 if (data.image) {
@@ -1044,15 +1106,16 @@ $(document).ready(function() {
                     let editTotalAmount = 0;
                     data.expenses.forEach(function(expense) {
                         editTotalAmount += parseFloat(expense.amount);
-                        addDynamicField(expense.title, expense.amount,expense.id); // Add each expense to the dynamic fields
+                        addDynamicField(expense.title, expense.amount, expense
+                            .id); // Add each expense to the dynamic fields
 
                     });
-                    $('#edit_total_amount').val(editTotalAmount.toFixed(2)); 
+                    $('#edit_total_amount').val(editTotalAmount.toFixed(2));
                 } else {
                     // If no expenses, add an empty field
                     addDynamicField();
                 }
-               // Display total with 2 decimal precision
+                // Display total with 2 decimal precision
 
                 // Open the modal
                 $('#edit_Supplier_details').modal('show');
@@ -1064,18 +1127,18 @@ $(document).ready(function() {
     });
 
     // Function to Edit add dynamic expense fields
- 
+
     function addDynamicField(title = '', amount = '', id = '') {
-    
+
         const newField = `
 
         <div class="row mb-3 dynamic-fields">
-            <div class="col-lg-6">
+            <div class="col-lg-6 input-block">
                 <label>Title</label>
                   <input type="hidden" name="exp_id[]" class="form-control" value="${id}">
                 <input type="text" name="title[]" class="form-control" value="${title}" placeholder="Enter Title">
             </div>
-            <div class="col-lg-5">
+            <div class="col-lg-5 input-block">
                 <label>Amount</label>
                 <input type="number" name="amount[]" class="form-control edit-amount-input" value="${amount}" placeholder="Enter Amount" min="0" oninput="editCalculateSum()">
             </div>
@@ -1086,13 +1149,13 @@ $(document).ready(function() {
                 </span>
             </div>
         </div>`;
-       
+
         $('#edit-dynamic-fields-wrapper').append(newField);
-        
+
     }
-    
-   
-   
+
+
+
     $('#edit_Supplier_details_form').on('submit', function(e) {
         e.preventDefault(); // Prevent the form from submitting normally
 
@@ -1152,7 +1215,7 @@ function resetForm() {
     document.querySelector('input[name="country"]').value = '';
 
     // Redirect to the main suppliers page to reset filters
-    window.location.href = '{{ route('suppliers.index') }}';
+    window.location.reload();
 }
 </script>
 
@@ -1204,13 +1267,13 @@ document.getElementById('edit-add-more-fields').addEventListener('click', functi
     newField.className = 'row mb-3 dynamic-fields'; // Same class for styling
 
     newField.innerHTML = `
-        <div class="col-lg-6">
+        <div class="col-lg-6 input-block">
             <label>Title</label>
             <input type="text" name="title[]" class="form-control" placeholder="Enter Title">
         </div>
-        <div class="col-lg-5">
+        <div class="col-lg-5 input-block">
             <label>Amount</label>
-            <input type="number" name="amount[]" class="form-control edit-amount-input" placeholder="Enter Rupees" min="0" oninput="editCalculateSum()">
+            <input type="number" name="amount[]" class="form-control edit-amount-input" placeholder="Enter Amount" min="0" oninput="editCalculateSum()">
         </div>
         <div class="col-lg-1 mt-4 d-flex justify-content-end">
             <span class="edit-remove-field"  style="cursor: pointer; color: red; margin-left: 10px;">
@@ -1229,10 +1292,10 @@ document.getElementById('edit-dynamic-fields-wrapper').addEventListener('click',
     if (removeField) {
         // Check if the clicked element or its child has the data-id
         let dataId = removeField.querySelector('i').getAttribute('data-id');
-        
+
         // Remove the closest dynamic field container
         removeField.closest('.dynamic-fields').remove();
-        
+
         // Recalculate the total amount
         editCalculateSum();
 
@@ -1255,22 +1318,22 @@ document.getElementById('edit-dynamic-fields-wrapper').addEventListener('click',
     }
 });
 
- // Function to calculate the sum of all amount fields
- function editCalculateSum() {
-        let editTotalAmount = 0;
-      
-        // Loop through all the amount inputs and sum their values
-        $('.edit-amount-input').each(function() {
-         
-            const amount = parseFloat($(this).val());
-            if (!isNaN(amount)) {
-                editTotalAmount += amount;
-            }
-        });
+// Function to calculate the sum of all amount fields
+function editCalculateSum() {
+    let editTotalAmount = 0;
 
-        // Update the total amount in the edit_total_amount field
-        $('#edit_total_amount').val(editTotalAmount.toFixed(2)); // Set total with 2 decimal precision
-    }
+    // Loop through all the amount inputs and sum their values
+    $('.edit-amount-input').each(function() {
+
+        const amount = parseFloat($(this).val());
+        if (!isNaN(amount)) {
+            editTotalAmount += amount;
+        }
+    });
+
+    // Update the total amount in the edit_total_amount field
+    $('#edit_total_amount').val(editTotalAmount.toFixed(2)); // Set total with 2 decimal precision
+}
 </script>
 
 
