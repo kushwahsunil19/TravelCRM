@@ -1,186 +1,218 @@
 <?php
-
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Supplier;
 use PDF;
+
 class ExpensesReportController extends Controller
 {
-   
-   
+    /**
+     * Display the filtered suppliers.
+     */
+  
     public function index(Request $request)
     {
-        // Initialize the query
         $query = Supplier::query();
-
+    
         // Apply filters based on request input
         if ($request->filled('name')) {
             $query->where('name', 'like', '%' . $request->name . '%');
         }
-
-        if ($request->filled('title')) {
-            $query->whereHas('expenses', function($query) use ($request) {
-                $query->where('title', 'like', '%' . $request->title . '%');
-            });
-        }
-
-        // New email filter
         if ($request->filled('email')) {
             $query->where('email', 'like', '%' . $request->email . '%');
         }
-
-        // Get the filtered suppliers with their expenses
-        $Suppliers = $query->with('expenses')->get();
-
-        return view('admin.expenses.index', compact('Suppliers'));
+        if ($request->filled('mobile')) {
+            $query->where('mobile', 'like', '%' . $request->mobile . '%');
+        }
+        if ($request->filled('city')) {
+            $query->where('city', 'like', '%' . $request->city . '%');
+        }
+        if ($request->filled('state')) {
+            $query->where('state', 'like', '%' . $request->state . '%');
+        }
+        if ($request->filled('country')) {
+            $query->where('country', 'like', '%' . $request->country . '%');
+        }
+        if ($request->filled('expenses')) {
+            $query->whereHas('expenses', function ($query) use ($request) {
+                $query->where('title', 'like', '%' . $request->expenses . '%');
+            });
+        }
+    
+        $suppliers = $query->with(['expenses'])->get();
+    
+        // Filter expenses for total calculation
+        foreach ($suppliers as $supplier) {
+            $filteredExpenses = $supplier->expenses->filter(function ($expense) use ($request) {
+                return !$request->filled('expenses') || stristr(strtolower($expense->title), strtolower($request->expenses));
+            });
+    
+            $supplier->filtered_expenses = $filteredExpenses;
+            $supplier->total_amount = $filteredExpenses->sum('amount');
+        }
+    
+        return view('admin.expenses.index', compact('suppliers'));
     }
+    
 
     /**
      * Download PDF report.
      */
-    public function downloadPDF(Request $request)
-    {
-        date_default_timezone_set('Asia/Kolkata');
+   /**
+ * Download PDF report.
+ */
+public function downloadPDF(Request $request)
+{
+    date_default_timezone_set(timezoneId: 'Asia/Kolkata');
+    
+    // Filtering logic for suppliers
+    $query = Supplier::query();
 
-        // Initialize the query
-        $query = Supplier::query();
-
-        // Apply filters based on request input
-        if ($request->filled('name')) {
-            $query->where('name', 'like', '%' . $request->name . '%');
-        }
-
-        if ($request->filled('title')) {
-            $query->whereHas('expenses', function($query) use ($request) {
-                $query->where('title', 'like', '%' . $request->title . '%');
-            });
-        }
-
-        // New email filter
-        if ($request->filled('email')) {
-            $query->where('email', 'like', '%' . $request->email . '%');
-        }
-
-        // Get the filtered data
-        $suppliers = $query->with('expenses')->get();
-
-        // Check if suppliers exist before generating the PDF
-        if ($suppliers->isEmpty()) {
-            return redirect()->back()->with('error', 'No suppliers found for the selected filters.');
-        }
-
-        // Generate the PDF
-        $pdf = PDF::loadView('admin.expenses.Expenses-report-pdf', compact('suppliers'));
-
-        // Generate the filename with correct format
-        $timestamp = date('Y-m-d_H-i-s');
-        $filename = 'Expenses_report' . $timestamp . '.pdf';
-
-        // Return the PDF with the correct headers
-        return $pdf->download($filename);
+    // Apply filters for the PDF download
+    if ($request->filled('supplier_name')) {
+        $query->where('name', 'like', '%' . $request->supplier_name . '%');
     }
 
+    if ($request->filled('mobile')) {
+        $query->where('mobile', 'like', '%' . $request->mobile . '%');
+    }
+
+    if ($request->filled('expenses')) {
+        $query->whereHas('expenses', function ($query) use ($request) {
+            $query->where('title', 'like', '%' . $request->expenses . '%');
+        });
+    }
+
+    // Get the filtered suppliers
+    $suppliers = $query->with(['expenses'])->get();
+
+    // Apply the expense filter and calculate the filtered total amount for each supplier
+    foreach ($suppliers as $supplier) {
+        $filteredExpenses = $supplier->expenses->filter(function ($expense) use ($request) {
+            return !$request->filled('expenses') || stristr(strtolower($expense->title), strtolower($request->expenses));
+        });
+
+        $supplier->filtered_expenses = $filteredExpenses;
+        $supplier->total_amount = $filteredExpenses->sum('amount');
+    }
+
+    // Check if suppliers exist before generating the PDF
+    if ($suppliers->isEmpty()) {
+        return redirect()->back()->with('error', 'No suppliers found for the selected filters.');
+    }
+
+    // Generate the PDF with filtered data
+    $pdf = PDF::loadView('admin.expenses.expenses-report-pdf', compact('suppliers'));
+
+    // Generate the filename with the correct format
+    $timestamp = date('Y-m-d_H-i-s');
+    $filename = 'expenses_report_' . $timestamp . '.pdf';
+
+    // Return the PDF with the correct headers
+    return $pdf->download($filename);
+}
+
+    
+    
+    
+
+    /**
+     * Download CSV report.
+     */
     public function downloadCSV(Request $request)
     {
         date_default_timezone_set('Asia/Kolkata');
-
-        // Initialize the query
+    
+        // Filtering logic for suppliers
         $query = Supplier::query();
-
-        // Apply filters based on request input
-        if ($request->filled('name')) {
-            $query->where('name', 'like', '%' . $request->name . '%');
+    
+        // Apply filters for the CSV export
+        if ($request->filled('supplier_name')) {
+            $query->where('name', 'like', '%' . $request->supplier_name . '%');
         }
-
-        if ($request->filled('title')) {
-            $query->whereHas('expenses', function($query) use ($request) {
-                $query->where('title', 'like', '%' . $request->title . '%');
+    
+        if ($request->filled('mobile')) {
+            $query->where('mobile', 'like', '%' . $request->mobile . '%');
+        }
+    
+        if ($request->filled('expenses')) {
+            $query->whereHas('expenses', function ($query) use ($request) {
+                $query->where('title', 'like', '%' . $request->expenses . '%');
             });
         }
-
-        // New email filter
-        if ($request->filled('email')) {
-            $query->where('email', 'like', '%' . $request->email . '%');
-        }
-
-        // Get the filtered data with expenses
-        $suppliers = $query->with('expenses')->get();
-
-        // Check if suppliers exist before generating the CSV
+    
+        // Get the filtered suppliers with expenses
+        $suppliers = $query->with(['expenses'])->get();
+    
+        // Check if suppliers exist after filtering
         if ($suppliers->isEmpty()) {
+            // If no data found, redirect with an error message
             return redirect()->back()->with('error', 'No suppliers found for the selected filters.');
         }
-
+    
         // Create a CSV handle
         $handle = fopen('php://output', 'w');
-
-        // Set headers for CSV download
+    
         $timestamp = date('Y-m-d_H-i-s');
         header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="hotel_report_' . $timestamp . '.csv"');
-
+        header('Content-Disposition: attachment; filename="supplier_report_' . $timestamp . '.csv"');
+    
         // Add CSV headers
         fputcsv($handle, [
             'S.No',
             'Supplier Name',
-            'Expense Title',
-            'date',
-            'Amount'
+            'Email',
+            'Mobile',
+            'City',
+            'State',
+            'Country',
+            'Expenses',
+            'Total Amount'
         ]);
-
+    
         $serialNumber = 1;
-
+    
         // Add the filtered data rows
         foreach ($suppliers as $supplier) {
-            $supplierTotal = 0; // Initialize total for each supplier
-
-            // Check if the supplier has expenses
-            if ($supplier->expenses->isEmpty()) {
-                fputcsv($handle, [
-                    $serialNumber++,
-                    $supplier->name,
-                    'No expenses',
-                    '0.00'
-                ]);
-                continue;
+            // Gather the expenses for each supplier
+            $expensesList = [];
+            $totalAmount = 0;
+    
+            // Filter expenses by title if 'expenses' filter is provided
+            foreach ($supplier->expenses as $expense) {
+                if ($request->filled('expenses')) {
+                    if (stristr(strtolower($expense->title), strtolower($request->expenses))) {
+                        $expensesList[] = $expense->title . ' = ' . number_format($expense->amount, 2);
+                        $totalAmount += $expense->amount;
+                    }
+                } else {
+                    // Include all expenses if no specific filter is provided
+                    if ($expense->amount > 0) {
+                        $expensesList[] = $expense->title . ' = ' . number_format($expense->amount, 2);
+                        $totalAmount += $expense->amount;
+                    }
+                }
             }
-
-            // Display supplier name
+    
+            // Write the supplier's data into the CSV file
             fputcsv($handle, [
                 $serialNumber++,
                 $supplier->name,
-                '', // Blank for expense title initially
-                ''  // Blank for amount initially
+                $supplier->email,
+                $supplier->mobile,
+                $supplier->city,
+                $supplier->state,
+                $supplier->country,
+                implode(', ', $expensesList) ?: 'No items',
+                $totalAmount > 0 ? number_format($totalAmount, 2) : 'No items'
             ]);
-
-            // Add the expenses for the supplier
-            foreach ($supplier->expenses as $expense) {
-                if ($expense->amount > 0) {
-                    $expenseAmount = number_format($expense->amount, 2); // Format amount
-                    fputcsv($handle, [
-                        '',
-                        '',
-                        $expense->title . ' = ' . $expenseAmount,
-                        $expenseAmount
-                    ]);
-                    $supplierTotal += $expense->amount; // Track total amount for the supplier
-                }
-            }
-
-            // Show the total for the supplier
-            if ($supplierTotal > 0) {
-                fputcsv($handle, [
-                    '',
-                    '',
-                    'Total = ' . number_format($supplierTotal, 2),
-                    number_format($supplierTotal, 2)
-                ]);
-            }
         }
-
+    
         fclose($handle);
         exit;
     }
+    
+
 }

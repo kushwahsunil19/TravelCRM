@@ -35,7 +35,7 @@
                                         </li>
                                         <li>
                                             <a class="d-flex align-items-center download-item"
-                                                href="{{ route('hotel-report.downloadCSV',request()->query()) }}" download>
+                                                href="{{ route('expenses.downloadCSV',request()->query()) }}" >
                                                 <i class="far fa-file-text me-2"></i>CSV
                                             </a>
                                         </li>
@@ -95,48 +95,43 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($Suppliers as $Supplier)
+                            @forelse ($suppliers as $supplier)
                             <tr>
-                                <td>{{ $loop->iteration }}</td> <!-- Serial number -->
+                                <td>{{ $loop->iteration }}</td>
                                 <td>
                                     <h2 class="table-avatar">
                                         @php
-                                        $avatar = $Supplier->image ? url('public/profile/' . $Supplier->image) :
+                                        $avatar = $supplier->image ? url('public/profile/' . $supplier->image) :
                                         url('public/assets/img/profiles/default.png');
                                         @endphp
                                         <a href="" class="avatar avatar-md me-2"><img
                                                 class="avatar-img rounded-circle" src="{{$avatar}}"
                                                 alt="User Image"></a>
-                                        <a href="">{{ $Supplier->name }} <span><span class="__cf_email__"
-                                                    data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $Supplier->email }}]</span></span></a>
+                                        <a href="">{{ $supplier->name }} <span><span class="__cf_email__"
+                                                    data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $supplier->email }}]</span></span></a>
                                     </h2>
                                 </td>
-
                                 <td>
-    <ul style="list-style-type: disc; padding-left: 20px;">
-        @php $hasExpenses = false; @endphp <!-- Flag to check if any expenses are non-zero -->
-        @foreach ($Supplier->expenses as $expense)
-            @if($expense->amount > 0) <!-- Skip items with zero amount -->
-                @php $hasExpenses = true; @endphp <!-- Set flag if at least one expense has a non-zero amount -->
-                <li>{{ $expense->title }} = {{ number_format($expense->amount, 2) }}</li>
-            @endif
-        @endforeach
-        @if(!$hasExpenses) <!-- Display message if all expenses are zero -->
-            <li>No items</li>
-        @endif
-    </ul>
-</td>
-<td>
-  {{ $Supplier->created_at}} 
-</td>
-<td>
-    {{ $Supplier->amount > 0 ? number_format($Supplier->amount, 2) : 'No items' }}
-</td>
-                               
+                                    <ul style="list-style-type: disc; padding-left: 20px;">
+                                        @php $hasExpenses = false; @endphp
+                                        @foreach ($supplier->filtered_expenses as $expense)
+                                            <li>{{ $expense->title }} = {{ number_format($expense->amount, 2) }}</li>
+                                        @endforeach
+                                        @if(!$supplier->filtered_expenses->count())
+                                            <li>No items</li>
+                                        @endif
+                                    </ul>
+                                </td>
+                                <td>
+                                    {{ $supplier->created_at }}
+                                </td>
+                                <td>
+                                    {{ $supplier->total_amount > 0 ? number_format($supplier->total_amount, 2) : 'No items' }}
+                                </td>
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="4" class="text-center">No Suppliers found.</td>
+                                <td colspan="5" class="text-center">No Suppliers found.</td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -147,11 +142,12 @@
     </div>
 </div>
 
+
+
+
     </div>
 </div>
-<!-- /Page Wrapper -->
 
-<!-- Add Asset -->
 <div class="toggle-sidebar ledge">
     <div class="sidebar-layout-filter">
         <div class="sidebar-header ledge">
@@ -160,56 +156,52 @@
         </div>
 
         <div class="sidebar-body">
-            <form action="{{ route('hotel-report.index') }}" method="GET" autocomplete="off">
-
+            <form action="{{ route('expenses.index') }}" method="GET" autocomplete="off">
                 <!-- Name Filter -->
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" name="name" id="name" class="form-control" placeholder="Enter supplier name"
-                        value="{{ request('name') }}">
+                    <input type="text" name="name" id="name" class="form-control" placeholder="Enter name"
+                           value="{{ request('name') }}">
                 </div>
 
-                <!-- Title Filter -->
-                <!-- <div class="form-group">
-                    <label for="title">Title</label>
-                    <input type="text" name="title" id="title" class="form-control" placeholder="Enter title"
-                        value="{{ request('title') }}">
-                </div> -->
+                <!-- Expenses Filter -->
+                <div class="form-group">
+                    <label for="expenses">Expenses</label>
+                    <input type="text" name="expenses" id="expenses" class="form-control" placeholder="Enter expense title (e.g., hotel, bus)"
+                           value="{{ request('expenses') }}">
+                </div>
 
                 <!-- Email Filter -->
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="text" name="email" id="email" class="form-control" placeholder="Enter Email"
-                        value="{{ request('email') }}">
+                           value="{{ request('email') }}">
                 </div>
 
                 <!-- Filter Buttons -->
                 <div style="margin-top:12px">
-                    <div class="filter-buttons">
-                        <button type="submit"
-                            class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary">
-                            Apply
-                        </button>
-                        <button type="button"
-                            class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary"
-                            onclick="resetForm()">
-                            Reset
-                        </button>
-                    </div>
+                    <button type="submit" class="btn btn-primary">Apply</button>
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
+<script>
+    function resetForm() {
+        document.getElementById("name").value = '';
+        document.getElementById("expenses").value = '';
+        document.getElementById("email").value = '';
+    }
+</script>
 
-<!--/Add Asset -->
 
 
 
 </div>
-<!-- /Main Wrapper -->
-<!-- Add Supplier Details Modal -->
+
+
 <div class="modal custom-modal modal-lg fade" id="Supplier_details" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
@@ -981,7 +973,7 @@ function resetForm() {
     document.querySelector('input[name="mobile"]').value = '';
 
     // Redirect to the main suppliers page to reset filters
-    window.location.href = '{{ route('hotel-report.index') }}';
+    window.location.href = '{{ route('expenses.index') }}';
 }
 </script>
 

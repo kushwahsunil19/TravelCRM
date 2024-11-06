@@ -67,7 +67,7 @@
                         </ul>
                     @endif
                 </td>
-               
+               <td>{{$supplier->created_at}}</td>
                 <td>
                     @if($supplier->expenses->isNotEmpty() && $totalAmount > 0)
                         {{ number_format($totalAmount, 2) }} <!-- Show total only if greater than 0 -->
