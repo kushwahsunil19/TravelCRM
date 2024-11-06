@@ -138,7 +138,7 @@ $url = $_SERVER['REQUEST_URI'];
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-sm-6 col-12 d-flex">
+            <!-- <div class="col-xl-3 col-lg-4 col-sm-6 col-12 d-flex">
                 <div class="card inovices-card w-100">
                     <div class="card-body">
                         <div class="dash-widget-header">
@@ -153,12 +153,12 @@ $url = $_SERVER['REQUEST_URI'];
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="d-flex justify-content-between align-items-center">
+                         <div class="d-flex justify-content-between align-items-center">
                             <p class="inovices-all">No of Invoice <span class="rounded-circle bg-light-gray">03</span>
                             </p>
                             <p class="inovice-trending text-success-light">04 <span class="ms-2"><i
                                         class="fe fe-trending-up"></i></span></p>
-                        </div> -->
+                        </div> 
                     </div>
                 </div>
             </div>
@@ -177,15 +177,15 @@ $url = $_SERVER['REQUEST_URI'];
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="d-flex justify-content-between align-items-center">
+                         <div class="d-flex justify-content-between align-items-center">
                             <p class="inovices-all">No of Invoice <span class="rounded-circle bg-light-gray">01</span>
                             </p>
                             <p class="inovice-trending text-danger-light">03 <span class="ms-2"><i
                                         class="fe fe-trending-down"></i></span></p>
-                        </div> -->
+                        </div> 
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="col-xl-3 col-lg-4 col-sm-6 col-12 d-flex">
                 <div class="card inovices-card w-100">
                     <div class="card-body">
