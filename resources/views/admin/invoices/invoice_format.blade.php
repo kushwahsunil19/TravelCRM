@@ -232,7 +232,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Dynamic Items -->
+                   
                     @if(!empty($items) && is_array($items))
                     @foreach($items as $item)
                     @if(is_array($item))

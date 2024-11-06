@@ -10,18 +10,8 @@ class Supplier extends Model
 {
     use HasFactory;
 
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
     protected $table = 'suppliers';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'currency_id',
         'currency_rate',
@@ -32,16 +22,13 @@ class Supplier extends Model
         'city',
         'state',
         'country',
-        'postal_code',  
+        'postal_code',
         'amount',
         'description',
-        'status',     
+        'status',
         'image',
     ];
 
-    /**
-     * Get the expenses for the supplier.
-     */
     public function expenses()
     {
         return $this->hasMany(SupplierExpense::class, 'suplyer_id');

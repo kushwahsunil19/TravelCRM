@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hotel Report</title>
+    <title>Expenses Report</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -28,13 +28,13 @@
         }
         .expense-list {
             margin: 0;
-            padding-left: 20px; 
+            padding-left: 20px;
         }
     </style>
 </head>
 <body>
 
-<h1>Hotel Report</h1>
+<h1>Expenses Report</h1>
 
 <table>
     <thead>
@@ -51,14 +51,18 @@
         @foreach ($suppliers as $supplier)
             <tr>
                 <td class="center">{{ $serialNumber++ }}</td>
-                <td>{{ $supplier->name }}</td>
                 <td>
-                    @if($supplier->expenses->isEmpty())
+                    <!-- Display supplier name with email -->
+                    {{ $supplier->name }}<br>
+                    <small>[{{ $supplier->email }}]</small>
+                </td>
+                <td>
+                    @if($supplier->filtered_expenses->isEmpty())
                         No expenses
                     @else
                         <ul class="expense-list">
                             @php $totalAmount = 0; @endphp
-                            @foreach ($supplier->expenses as $expense)
+                            @foreach ($supplier->filtered_expenses as $expense) <!-- Using filtered_expenses here -->
                                 @if ($expense->amount > 0) <!-- Only show expenses with non-zero amounts -->
                                     <li>{{ $expense->title }} = {{ number_format($expense->amount, 2) }}</li>
                                 @endif
@@ -67,9 +71,9 @@
                         </ul>
                     @endif
                 </td>
-               <td>{{$supplier->created_at}}</td>
+                <td>{{ $supplier->created_at }}</td>
                 <td>
-                    @if($supplier->expenses->isNotEmpty() && $totalAmount > 0)
+                    @if($totalAmount > 0)
                         {{ number_format($totalAmount, 2) }} <!-- Show total only if greater than 0 -->
                     @else
                         0.00

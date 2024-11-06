@@ -4,12 +4,10 @@
 
 <!-- Main Wrapper -->
 @include('admin.layouts.common-sidebar')
-<!-- /Main Wrapper -->
 
-<!-- Page Wrapper -->
 <div class="page-wrapper">
     <div class="content container-fluid">
-        <!-- Page Header -->
+       
         <div class="page-header">
             <div class="content-page-header">
                 <h5>Hotel Report</h5>
@@ -35,7 +33,7 @@
                                         </li>
                                         <li>
                                             <a class="d-flex align-items-center download-item"
-                                                href="{{ route('hotel-report.downloadCSV',request()->query()) }}" download>
+                                                href="{{ route('hotel-report.downloadCSV',request()->query()) }}">
                                                 <i class="far fa-file-text me-2"></i>CSV
                                             </a>
                                         </li>
@@ -78,7 +76,6 @@
             </div>
         </div>
         <!-- /Search Filter -->
-
         <div class="row">
     <div class="col-sm-12">
         <div class="card-table">
@@ -89,7 +86,7 @@
                             <tr>
                                 <th>S.No</th>
                                 <th>Name</th>
-                                <th>Expenses</th>
+                                <th>Hotel Expenses</th>
                                 <th>Total Amount</th>
                             </tr>
                         </thead>
@@ -111,24 +108,23 @@
                                     </h2>
                                 </td>
                                 <td>
-    <ul style="list-style-type: disc; padding-left: 20px;">
-        @php $hasExpenses = false; @endphp <!-- Flag to check if any expenses are non-zero -->
-        @foreach ($Supplier->expenses as $expense)
-            @if($expense->amount > 0) <!-- Skip items with zero amount -->
-                @php $hasExpenses = true; @endphp <!-- Set flag if at least one expense has a non-zero amount -->
-                <li>{{ $expense->title }} = {{ number_format($expense->amount, 2) }}</li>
-            @endif
-        @endforeach
-        @if(!$hasExpenses) <!-- Display message if all expenses are zero -->
-            <li>No items</li>
-        @endif
-    </ul>
-</td>
+                                    <ul style="list-style-type: disc; padding-left: 20px;">
+                                        @php $hasHotelExpenses = false; @endphp <!-- Flag to check if any hotel expenses are non-zero -->
+                                        @foreach ($Supplier->expenses as $expense)
+                                            @if(strpos(strtolower($expense->title), 'hotel') !== false && $expense->amount > 0) <!-- Check if expense is hotel-related and has a non-zero amount -->
+                                                @php $hasHotelExpenses = true; @endphp <!-- Set flag if hotel expense found -->
+                                                <li>{{ $expense->title }} = {{ number_format($expense->amount, 2) }}</li>
+                                            @endif
+                                        @endforeach
+                                        @if(!$hasHotelExpenses) <!-- Display message if no hotel expenses -->
+                                            <li>No hotel expenses</li>
+                                        @endif
+                                    </ul>
+                                </td>
 
-<td>
-    {{ $Supplier->amount > 0 ? number_format($Supplier->amount, 2) : 'No items' }}
-</td>
-                               
+                                <td>
+                                    {{ $Supplier->totalHotelAmount > 0 ? number_format($Supplier->totalHotelAmount, 2) : 'No items' }}
+                                </td>
                             </tr>
                             @empty
                             <tr>
@@ -142,6 +138,7 @@
         </div>
     </div>
 </div>
+
 
     </div>
 </div>
@@ -166,11 +163,7 @@
                 </div>
 
                 <!-- Title Filter -->
-                <div class="form-group">
-                    <label for="title">Title</label>
-                    <input type="text" name="title" id="title" class="form-control" placeholder="Enter title"
-                        value="{{ request('title') }}">
-                </div>
+               
 
                 <!-- Email Filter -->
                 <div class="form-group">
