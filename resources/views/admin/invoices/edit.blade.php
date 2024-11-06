@@ -233,7 +233,7 @@ td {
                                         <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Currency</label>
-                                                    <select class="select" name="currency_id" id="currency_id" required>
+                                                    <select class="select" name="currency_id" id="currency_id" required disabled>
                                                         <option value="">Select Currency </option>
                                                         @foreach ($currencies as $currency)
                                                         <option value="{{ $currency->id }}"
@@ -1758,12 +1758,16 @@ $(document).ready(function() {
         var selectedBranch = $.trim($('#branch_id option:selected').text()).toLowerCase();
         $('.iban_no').hide();
         if (selectedBranch === 'dubai') {
+            var currencySelect = $('#currency_id'); // Currency select element
+            currencySelect.val('4').trigger('change');
             $('.iban_no').show();
             // Change label text to SWIFT Code
             $('label[for="ifsc_code"]').text('SWIFT Code');
             // Change placeholder to Enter SWIFT Code
             $('#ifsc_code').attr('placeholder', 'Enter SWIFT Code');
         } else {
+            var currencySelect = $('#currency_id'); // Currency select element
+            currencySelect.val('1').trigger('change');
             $('.iban_no').hide();
             // Revert back to IFSC Code for other branches
             $('label[for="ifsc_code"]').text('IFSC Code');
