@@ -18,7 +18,7 @@ class SuperAdminSeeder extends Seeder
             'last_name' => 'Ji',
             'email' => 'admin@cltt.co.in',
             'password' => Hash::make('admin@123'),
-            'mobile' => '123456790',
+            'mobile' => '1234567900',
             'status'=>1
            
         ]);
@@ -28,9 +28,9 @@ class SuperAdminSeeder extends Seeder
         $sales = User::create([
              'first_name' => 'Syed Ahsan ',
             'last_name' => 'Kamal',
-            'email' => 'Syed@gmail.com',
+            'email' => 'syed@gmail.com',
             'password' => Hash::make('syed@123'),
-            'mobile' => '123456790',
+            'mobile' => '1234567909',
             'status'=>1
         ]);
         $sales->assignRole('Sales');
@@ -41,7 +41,7 @@ class SuperAdminSeeder extends Seeder
            'last_name' => 'Kamal',
            'email' => 'javed@gmail.com',
            'password' => Hash::make('javed@123'),
-           'mobile' => '123456790',
+           'mobile' => '1234567906',
            'status'=>1
        ]);
          $perations->assignRole('Operations');

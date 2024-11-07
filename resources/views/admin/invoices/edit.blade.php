@@ -233,7 +233,7 @@ td {
                                         <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Currency</label>
-                                                    <select class="select" name="currency_id" id="currency_id" required disabled>
+                                                    <select class="select" name="currency_id" id="currency_id" required >
                                                         <option value="">Select Currency </option>
                                                         @foreach ($currencies as $currency)
                                                         <option value="{{ $currency->id }}"
