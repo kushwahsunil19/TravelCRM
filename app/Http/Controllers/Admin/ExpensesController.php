@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -8,7 +8,9 @@ use App\Models\Supplier;
 use PDF;
 class ExpensesController extends Controller
 {
-   
+      /**
+     * Display a listing of the resource.
+     */
     public function index(Request $request)
     {
         $query = Supplier::query();
@@ -211,8 +213,6 @@ public function downloadPDF(Request $request)
 
     fclose($handle);
     exit;
-}
+    }
 
-
-    
 }

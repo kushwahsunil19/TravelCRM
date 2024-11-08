@@ -12,7 +12,7 @@
         <!-- Page Header -->
         <div class="page-header">
             <div class="content-page-header">
-                <h5>Expenses Report</h5>
+                <h5>Expenses </h5>
                 <div class="list-btn">
                     <ul class="filter-list">
                         <li>

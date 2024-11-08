@@ -16,9 +16,9 @@ return new class extends Migration
             $table->string('name'); // Partner's name
             $table->string('mobile'); // Partner's mobile number
             $table->string('email')->unique(); // Partner's email address
-            $table->string('city')->nullable();  // City
-            $table->string('state')->nullable();  // State
-            $table->string('country')->nullable();  // Country
+            $table->integer('city_id')->nullable();  // City
+            $table->integer('state_id')->nullable();  // State
+            $table->integer('country_id')->nullable();  // Country
             $table->string('image')->nullable();  // Country
             $table->timestamps(); // Created at and updated at timestamps
             $table->softDeletes(); // Soft delete timestamp

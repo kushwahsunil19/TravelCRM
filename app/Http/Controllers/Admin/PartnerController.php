@@ -5,43 +5,66 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use App\Models\{Partner};
+use App\Models\{Partner,Country,State,City};
 use Yajra\DataTables\Facades\DataTables;
 class PartnerController extends Controller
 {
     public function index(Request $request)
-    {
-        // Initialize a query builder for Partner
-        $query = Partner::query();
-    
-        // Apply filters based on request parameters
-        if ($request->filled('name')) {
-            $query->where('name', 'like', '%' . $request->name . '%');
-        }
-        if ($request->filled('email')) {
-            $query->where('email', 'like', '%' . $request->email . '%');
-        }
-        if ($request->filled('mobile')) {
-            $query->where('mobile', 'like', '%' . $request->mobile . '%');
-        }
-        if ($request->filled('city')) {
-            $query->where('city', 'like', '%' . $request->city . '%');
-        }
-        if ($request->filled('state')) {
-            $query->where('state', 'like', '%' . $request->state . '%');
-        }
-        if ($request->filled('country')) {
-            $query->where('country', 'like', '%' . $request->country . '%');
-        }
-    
-        // Retrieve the filtered partners
-        $partners = $query->get();
-    
-        // Return the view with filtered partners
-        return view('admin.partners.partners', compact('partners'));
+{
+    $countries = Country::all();
+    $states = State::all();
+    $cities = City::all();
+
+    // Initialize a query builder for Partner with relationships
+    $query = Partner::with(['city', 'state', 'country']);
+
+    // Apply filters based on request parameters
+    if ($request->filled('name')) {
+        $query->where('name', 'like', '%' . $request->name . '%');
     }
+    if ($request->filled('email')) {
+        $query->where('email', 'like', '%' . $request->email . '%');
+    }
+    if ($request->filled('mobile')) {
+        $query->where('mobile', 'like', '%' . $request->mobile . '%');
+    }
+    if ($request->filled('city')) {
+        $query->whereHas('city', function ($q) use ($request) {
+            $q->where('name', 'like', '%' . $request->city . '%');
+        });
+    }
+    if ($request->filled('state')) {
+        $query->whereHas('state', function ($q) use ($request) {
+            $q->where('name', 'like', '%' . $request->state . '%');
+        });
+    }
+    if ($request->filled('country')) {
+        $query->whereHas('country', function ($q) use ($request) {
+            $q->where('name', 'like', '%' . $request->country . '%');
+        });
+    }
+
+    // Retrieve the filtered partners
+    $partners = $query->get();
+//     echo "<pre>";
+// print_r( $partners); die();
+    // Return the view with filtered partners
+    return view('admin.partners.partners', compact('partners', 'countries','states','cities'));
+}
+
     
     
+    public function getStates($countryId)
+    {
+        $states = State::where('country_id', $countryId)->get();  // Fetch states for the given country
+        return response()->json($states);
+    }
+
+    public function getCities($stateId)
+    {
+        $cities = City::where('state_id', $stateId)->get();  // Fetch cities for the given state
+        return response()->json($cities);
+    }
 
     public function create()
     {
@@ -84,6 +107,7 @@ class PartnerController extends Controller
 
     public function edit(Partner $partner)
     {
+        
         return response()->json(['status'=>true,'data'=>$partner ,'message' => 'Partner details successfully']);
 
         // return view('admin.partners.edit-partner', compact('partner'));
@@ -91,6 +115,7 @@ class PartnerController extends Controller
 
     public function update(Request $request, Partner $partner)
     {
+     
         $request->validate([
             'name' => 'required|string|max:255',
             'mobile' => 'required|numeric|digits_between:10,15|regex:/^(?:\+?\d{1,3})?\d{10,15}$/',

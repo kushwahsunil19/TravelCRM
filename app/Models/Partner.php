@@ -16,8 +16,26 @@ class Partner extends Model
         'name',
         'mobile',
         'email',
-        'city',
-        'state',
-        'country',
+        'city_id',
+        'state_id',
+        'country_id',
     ];
+
+    public function state()
+    {
+        return $this->belongsTo(State::class , 'state_id', 'id');       
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class , 'country_id', 'id');    
+    }
+
+    // Relationship with City
+    public function city()
+    {
+        return $this->belongsTo(City::class , 'city_id', 'id');  
+    }
+
+
 }

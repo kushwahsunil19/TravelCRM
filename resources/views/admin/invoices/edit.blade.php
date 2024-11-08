@@ -255,7 +255,7 @@ td {
                                                 <div class="input-block mb-2">
                                                     <label>Currency Rate </label>
                                                     <input type="number" class="form-control currency_rate" name="currency_rate"
-                                                        placeholder="Enter Rate" min="0" value="{{ old('currency_rate', $invoice->currency_rate) }}">
+                                                        placeholder="Enter Rate"  min="0" step="any" value="{{ old('currency_rate', $invoice->currency_rate) }}">
                                                     @if ($errors->has('currency_rate'))
                                                     <span class="text-danger">{{ $errors->first('currency_rate') }}</span>
                                                     @endif
@@ -264,8 +264,7 @@ td {
                                             <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Discount Type</label>
-                                                    <select class="select" name="discount_type" id="discount_type"
-                                                        required>
+                                                    <select class="select" name="discount_type" id="discount_type">
                                                         <option value="">Select Discount Type </option>
                                                         <option value="Percentage"
                                                             {{ (old('discount_type', $invoice->discount_type) == 'Percentage') ? 'selected' : '' }}>
@@ -284,7 +283,7 @@ td {
                                                     <label>Discount </label>
                                                     <input type="number" class="form-control discount" name="discount"
                                                         placeholder="Enter discount"
-                                                        value="{{ old('discount', $invoice->discount) }}" min="0">
+                                                        value="{{ old('discount', $invoice->discount) }}"  min="0" step="any">
                                                     @if ($errors->has('discount'))
                                                     <span class="text-danger">{{ $errors->first('discount') }}</span>
                                                     @endif
@@ -296,7 +295,7 @@ td {
                                                         <label>Vat</label>
                                                         <input type="number" class="form-control vat" name="vat"
                                                             placeholder="Enter Vat"
-                                                            value="{{ old('vat', $invoice->vat) }}" min="0">
+                                                            value="{{ old('vat', $invoice->vat) }}"  min="0" step="any">
                                                         <!-- <select class="select" name="vat" id="vat">
                                                             <option value="21">IVA - (21%)</option>
                                                             <option value="15">IRPF - (-15%)</option>
@@ -1754,10 +1753,14 @@ $(document).ready(function() {
         // Optional: You can remove this alert in the final version
      
     }
+    $('#currency_id').next('.select2-container').css('pointer-events', 'none');
+
     $('#branch_id').change(function() {
         var selectedBranch = $.trim($('#branch_id option:selected').text()).toLowerCase();
         $('.iban_no').hide();
         if (selectedBranch === 'dubai') {
+            $('#currency_id').next('.select2-container').css('pointer-events', 'none');
+
             var currencySelect = $('#currency_id'); // Currency select element
             currencySelect.val('4').trigger('change');
             $('.iban_no').show();
@@ -1766,6 +1769,7 @@ $(document).ready(function() {
             // Change placeholder to Enter SWIFT Code
             $('#ifsc_code').attr('placeholder', 'Enter SWIFT Code');
         } else {
+
             var currencySelect = $('#currency_id'); // Currency select element
             currencySelect.val('1').trigger('change');
             $('.iban_no').hide();

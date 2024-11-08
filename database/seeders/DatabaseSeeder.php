@@ -23,6 +23,10 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             SuperAdminSeeder::class,
             CurrencySeeder::class,
+            CountriesTableSeeder::class,
+            StatesTableSeeder::class,
+            CitySeeder::class,
+
         ]);
     }
 }

@@ -128,9 +128,9 @@
 
                                         <td>{{ $Supplier->mobile }}</td>
 
-                                        <td>{{ $Supplier->city }}</td>
-                                        <td>{{ $Supplier->state }}</td>
-                                        <td>{{ $Supplier->country }}</td>
+                                        <td>{{ $Supplier->city->name ?? 'N/A' }}</td>
+                                        <td>{{ $Supplier->state->name ?? 'N/A'}}</td>
+                                        <td>{{ $Supplier->country->name ?? 'N/A' }}</td>
                                         <td>{{ $Supplier->currency->symbol}} {{ $Supplier->amount }}</td>
                                         <td>
 
@@ -343,33 +343,44 @@
                                 @endif
                             </div>
                         </div>
-
+                        <!-- Country Dropdown -->
                         <div class="col-lg-4 col-md-6 col-sm-12">
                             <div class="input-block mb-3">
-                                <label>City</label>
-                                <input type="text" class="form-control" name="city" placeholder="Enter City">
-                                @if ($errors->has('city'))
-                                <span class="text-danger">{{ $errors->first('city') }}</span>
+                                <label>Country <span class="text-danger">*</span></label>
+                                <select id="country_id" class="form-control" name="country_id">
+                                    <option value="">Select Country</option>
+                                    @foreach($countries as $country)
+                                    <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('country'))
+                                <span class="text-danger">{{ $errors->first('country') }}</span>
                                 @endif
                             </div>
                         </div>
 
+                        <!-- State Dropdown -->
                         <div class="col-lg-4 col-md-6 col-sm-12">
-                            <div class="input-block">
-                                <label>State</label>
-                                <input type="text" class="form-control" name="state" placeholder="Enter State">
+                            <div class="input-block mb-3">
+                                <label>State <span class="text-danger">*</span></label>
+                                <select id="state_id" class="form-control" name="state_id">
+                                    <option value="">Select State</option>
+                                </select>
                                 @if ($errors->has('state'))
                                 <span class="text-danger">{{ $errors->first('state') }}</span>
                                 @endif
                             </div>
                         </div>
 
+                        <!-- City Dropdown -->
                         <div class="col-lg-4 col-md-6 col-sm-12">
-                            <div class="input-block">
-                                <label>Country</label>
-                                <input type="text" class="form-control" name="country" placeholder="Enter Country">
-                                @if ($errors->has('country'))
-                                <span class="text-danger">{{ $errors->first('country') }}</span>
+                            <div class="input-block mb-3">
+                                <label>City <span class="text-danger">*</span></label>
+                                <select id="city_id" class="form-control" name="city_id">
+                                    <option value="">Select City</option>
+                                </select>
+                                @if ($errors->has('city'))
+                                <span class="text-danger">{{ $errors->first('city') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -395,7 +406,7 @@
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="input-block">
                                 <label>Currency Rate</label>
-                                <input type="text" class="form-control" name="currency_rate" placeholder="Enter Rate">
+                                <input type="mumber" class="form-control" name="currency_rate" placeholder="Enter Rate"  min="0" step="any">
                                 @if ($errors->has('currency_rate'))
                                 <span class="text-danger">{{ $errors->first('currency_rate') }}</span>
                                 @endif
@@ -535,40 +546,53 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-4 col-md-6 col-sm-12">
-                                <div class="input-block mb-3">
-                                    <label>City</label>
-                                    <input type="text" class="form-control" name="city" id="edit_city"
-                                        placeholder="Enter City">
-                                    @if ($errors->has('city'))
-                                    <span class="text-danger">{{ $errors->first('city') }}</span>
-                                    @endif
-                                </div>
-                            </div>
-
-
-                            <div class="col-lg-4 col-md-6 col-sm-12">
-                                <div class="input-block">
-                                    <label>State</label>
-                                    <input type="text" class="form-control" name="state" id="edit_state"
-                                        placeholder="Enter State">
-                                    @if ($errors->has('state'))
-                                    <span class="text-danger">{{ $errors->first('state') }}</span>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-12">
-
-                                <div class="input-block">
-                                    <label>Country</label>
-                                    <input type="text" class="form-control" name="country" id="edit_country"
-                                        placeholder="Enter Country">
-                                    @if ($errors->has('country'))
+                              <!-- Country Dropdown -->
+                              <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                            <div class="input-block">
+                                <label for="edit_country">Country <span class="text-danger">*</span></label>
+                                <select id="edit_country" class="form-control" name="country_id">
+                                    <option value="">Select Country</option>
+                                    @foreach($countries as $country)
+                                        <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('country'))
                                     <span class="text-danger">{{ $errors->first('country') }}</span>
-                                    @endif
-                                </div>
-
+                                @endif
                             </div>
+                        </div>
+
+                        <!-- State Dropdown -->
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                            <div class="input-block">
+                                <label for="edit_state">State <span class="text-danger">*</span></label>
+                                <select id="edit_state" class="form-control" name="state_id">
+                                    <option value="">Select State</option>
+                                    @foreach($states as $state)
+                                        <option value="{{ $state->id }}">{{ $state->name }}</option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('state'))
+                                    <span class="text-danger">{{ $errors->first('state') }}</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- City Dropdown -->
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                            <div class="input-block">
+                                <label for="edit_city">City <span class="text-danger">*</span></label>
+                                <select id="edit_city" class="form-control" name="city_id">
+                                    <option value="">Select City</option>
+                                    @foreach($cities as $city)
+                                        <option value="{{ $city->id }}">{{ $city->name }}</option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('city'))
+                                    <span class="text-danger">{{ $errors->first('city') }}</span>
+                                @endif
+                            </div>
+                        </div>
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="input-block mb-6">
                                     <label>Currency</label>
@@ -591,8 +615,8 @@
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="input-block">
                                     <label>Currency Rate</label>
-                                    <input type="text" class="form-control" name="currency_rate" id="edit_currency_rate"
-                                        placeholder="Enter Rate">
+                                    <input type="number" class="form-control" name="currency_rate" id="edit_currency_rate"
+                                        placeholder="Enter Rate" min="0" step="any">
                                     @if ($errors->has('currency_rate'))
                                     <span class="text-danger">{{ $errors->first('currency_rate') }}</span>
                                     @endif
@@ -1081,9 +1105,9 @@ $(document).ready(function() {
                 $('#edit_name').val(data.name);
                 $('#edit_email').val(data.email);
                 $('#edit_mobile').val(data.mobile);
-                $('#edit_city').val(data.city);
-                $('#edit_state').val(data.state);
-                $('#edit_country').val(data.country);
+                $('#edit_city').val(data.city_id);
+                $('#edit_state').val(data.state_id);
+                $('#edit_country').val(data.country_id);
                 $('#edit_amount').val(data.amount);
                 $('#edit_description').val(data.description);
                 $('#edit_currency_rate').val(data.currency_rate);
@@ -1334,6 +1358,120 @@ function editCalculateSum() {
     // Update the total amount in the edit_total_amount field
     $('#edit_total_amount').val(editTotalAmount.toFixed(2)); // Set total with 2 decimal precision
 }
+        // Load states when a country is selected (for both add and edit forms)
+        $(document).ready(function () {
+    
+    $('#edit_state').prop('disabled', true);
+    $('#edit_city').prop('disabled', true);
+   
+    $(document).on('change', '#edit_country', function () {
+        var countryId = $(this).val();
+        
+       
+        $('#edit_state').prop('disabled', true).empty().append('<option value="">Select State</option>');
+        $('#edit_city').prop('disabled', true).empty().append('<option value="">Select City</option>');
+
+        if (countryId) {
+            let fullUrl = '{{ url("/states") }}/' + countryId;
+            $.ajax({
+                url: fullUrl,
+                type: 'GET',
+                success: function (states) {
+                    if (Array.isArray(states)) {
+                        states.forEach(function (state) {
+                            $('#edit_state').append('<option value="' + state.id + '">' + state.name + '</option>');
+                        });
+                        $('#edit_state').prop('disabled', false); // Enable state dropdown if states are available
+                    } else {
+                        console.error("Invalid response format for states");
+                    }
+                },
+                error: function () {
+                    console.error("Error fetching states");
+                }
+            });
+        }
+    });
+
+    // Load cities when a state is selected
+    $(document).on('change', '#edit_state', function () {
+        var stateId = $(this).val();
+    
+        if (stateId) {
+            let fullUrl = '{{ url("/cities") }}/' + stateId;
+            $.ajax({                
+                url: fullUrl,
+                type: 'GET',
+                success: function (cities) {
+                    if (Array.isArray(cities)) {
+                        cities.forEach(function (city) {
+                            $('#edit_city').append('<option value="' + city.id + '">' + city.name + '</option>');
+                        });
+                        $('#edit_city').prop('disabled', false); 
+                    } else {
+                        console.error("Invalid response format for cities");
+                    }
+                },
+                error: function () {
+                    console.error("Error fetching cities");
+                }
+            });
+        }
+    });
+});
+
+$(document).ready(function () {
+        // When a country is selected, load the respective states
+        $(document).on('change', '#country_id', function () {
+            var countryId = $(this).val();
+            $('#state_id').prop('disabled', false).empty().append('<option value="">Select State</option>');
+            $('#city').prop('disabled', true).empty().append('<option value="">Select City</option>');
+
+            if (countryId) {
+                let fullUrl = '{{ url("/states") }}/' + countryId;
+                $.ajax({
+                    
+                    url: fullUrl, // Adjust URL as per your route
+                    method: 'GET',
+                    success: function (states) {
+                        // Ensure that the response is parsed as an array
+                        if (Array.isArray(states)) {
+                            states.forEach(function (state) {
+                                //  alert(state.id );
+                                $('#state_id').append('<option value="' + state.id + '">' + state.name + '</option>');
+                            });
+                        } else {
+                            console.error("Invalid response format");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching states: ", error);
+                    }
+                });
+            }
+        });
+
+
+
+        // When a state is selected, load the respective cities
+        $(document).on('change', '#state_id', function () {
+            var stateId = $(this).val();
+            $('#city_id').prop('disabled', false).empty().append('<option value="">Select City</option>');
+
+            if (stateId) {
+                let fullUrl = '{{ url("/cities") }}/' + stateId;
+                $.ajax({
+                    url: fullUrl,// Get cities for the selected state
+                    method: 'GET', 
+                    success: function (cities) {
+                        cities.forEach(function (city) {
+                            $('#city_id').append('<option value="' + city.id + '">' + city.name + '</option>');
+                        });
+                    }
+                });
+            }
+        });
+    });
 </script>
 
 

@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\admin\ExpensesController;
-use App\Http\Controllers\admin\ExpensesReportController;
+
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\{AuthController,ForgotPasswordController,ProfileController,UserController,QuotationController,ItineraryController,PartnerController,BranchController,PackageController,CurrencyController,RolesPermissionController,VendorController,InvoiceController,SupplierController,QuotationReportController,SupplierReportController,PartnerReportController,BankController,StaffwiseController,HotelReportController};
+use App\Http\Controllers\Admin\{AuthController,ForgotPasswordController,ProfileController,UserController,QuotationController,ExpensesController,PartnerController,BranchController,PackageController,CurrencyController,RolesPermissionController,VendorController,InvoiceController,SupplierController,QuotationReportController,SupplierReportController,PartnerReportController,BankController,StaffwiseController,HotelReportController};
 use App\Http\Controllers\Admin\ProfitAndLoss;
+
+use App\Http\Controllers\admin\TestController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -45,7 +46,8 @@ Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPa
 Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
 Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
 Route::middleware(['auth'])->group(function() {
-    Route::resource('profile', ProfileController::class);
+      Route::resource('profile', ProfileController::class);
+  
     Route::get('/dashboard',[AuthController::class, 'dashboard'] )->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     // Resource route for users
@@ -55,9 +57,6 @@ Route::middleware(['auth'])->group(function() {
 
     // Route to download the report as a CSV
     Route::get('/users-csv', [UserController::class, 'downloadCSV'])->name('user-wise-report.downloadCSV');
-
-    Route::resource('itineraries', ItineraryController::class); // Adjust middleware as needed
-    Route::get('/itineraries-data', [ItineraryController::class, 'getdata'])->name('itineraries.data');
 
     Route::resource('quotations', QuotationController::class); // Adjust middleware as needed
     Route::get('/quotations-data', [QuotationController::class, 'getdata'])->name('quotations.data');
@@ -121,7 +120,7 @@ Route::middleware(['auth'])->group(function() {
     
   // Route to download the partner hot as CSV
   Route::get('/partners-report/csv', [PartnerReportController::class, 'downloadCSV'])->name('partners.partners-report.downloadCSV');
-
+  
     Route::get('/expenses',[ExpensesController::class,'index'])->name('expenses.index');
     Route::get('/expenses-report-pdf',[ExpensesController::class,'downloadPDF'])->name('expenses.downloadPDF');
     Route::get('/expenses-report-csv',[ExpensesController::class,'downloadCSV'])->name('expenses.downloadCSV');
@@ -151,5 +150,6 @@ Route::get('/staff-report/download-csv', [StaffwiseController::class, 'downloadC
   Route::get('/hotel-report/CSV', [HotelReportController::class, 'downloadCSV'])->name('hotel-report.downloadCSV');
   Route::get('/hotel-report',[HotelReportController::class,'index'])->name('hotel-report.index');
 // Route for fetching users data via AJAX
-
+  Route::get('/states/{countryId}', [PartnerController::class, 'getStates'])->name('states.getByCountry');
+  Route::get('/cities/{stateId}', [PartnerController::class, 'getCities'])->name('cities.getByState');
 });

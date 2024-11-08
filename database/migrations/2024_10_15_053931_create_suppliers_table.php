@@ -20,9 +20,9 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('mobile')->nullable();
             $table->string('address')->nullable();
-            $table->string('city')->nullable();
-            $table->string('state')->nullable();
-            $table->string('country')->nullable();
+            $table->integer('city_id')->nullable();  // City
+            $table->integer('state_id')->nullable();  // State
+            $table->integer('country_id')->nullable();  // Country
             $table->string('postal_code')->nullable();          
             $table->string('image')->nullable(); // In case you have a supplier logo or image
             $table->timestamps();

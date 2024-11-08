@@ -19,9 +19,9 @@ class Supplier extends Model
         'email',
         'mobile',
         'address',
-        'city',
-        'state',
-        'country',
+        'city_id',
+        'state_id',
+        'country_id',
         'postal_code',
         'amount',
         'description',
@@ -35,7 +35,21 @@ class Supplier extends Model
     }
     public function currency()
     {
-        return $this->belongsTo(Currency::class , 'currency_id', 'id');    
-
+        return $this->belongsTo(Currency::class , 'currency_id', 'id');
     }
+   
+    public function country()
+    {
+        return $this->belongsTo(Country::class , 'country_id', 'id');    
+    }
+    public function state()
+    {
+        return $this->belongsTo(State::class , 'state_id', 'id');       
+    }
+    // Relationship with City
+    public function city()
+    {
+        return $this->belongsTo(City::class , 'city_id', 'id');  
+    }
+
 }

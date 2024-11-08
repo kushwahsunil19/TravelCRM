@@ -255,7 +255,7 @@ td {
                                                 <div class="input-block mb-2">
                                                     <label>Currency Rate </label>
                                                     <input type="number" class="form-control currency_rate" name="currency_rate"
-                                                        placeholder="Enter Rate" min="0" value="{{ old('currency_rate', $quotation->currency_rate) }}">
+                                                        placeholder="Enter Rate" min="0"  step="any" value="{{ old('currency_rate', $quotation->currency_rate) }}">
                                                     @if ($errors->has('currency_rate'))
                                                     <span class="text-danger">{{ $errors->first('currency_rate') }}</span>
                                                     @endif
@@ -285,7 +285,7 @@ td {
                                                     <label>Discount </label>
                                                     <input type="number" class="form-control discount" name="discount"
                                                         placeholder="Enter discount"
-                                                        value="{{ old('discount', $quotation->discount) }}" min="0">
+                                                        value="{{ old('discount', $quotation->discount) }}" min="0"  step="any">
                                                     @if ($errors->has('discount'))
                                                     <span class="text-danger">{{ $errors->first('discount') }}</span>
                                                     @endif
@@ -297,7 +297,7 @@ td {
                                                         <label>Vat</label>
                                                         <input type="number" class="form-control gst_tax" name="gst_tax"
                                                             placeholder="Enter Vat"
-                                                            value="{{ old('gst_tax', $quotation->gst_tax) }}" min="0">
+                                                            value="{{ old('gst_tax', $quotation->gst_tax) }}" min="0"  step="any">
                                                         <!-- <select class="select" name="gst_tax" id="gst_tax">
                                                             <option value="21">IVA - (21%)</option>
                                                             <option value="15">IRPF - (-15%)</option>
@@ -1770,10 +1770,13 @@ $(document).ready(function() {
         console.log('GST Amount: ', gstAmount);
         console.log('Total Amount: ', total_amt);
     }
+    $('#currency_id').next('.select2-container').css('pointer-events', 'none');
     $('#branch_id').change(function() {
         var selectedBranch = $.trim($('#branch_id option:selected').text()).toLowerCase();
         $('.iban_no').hide();
         if (selectedBranch === 'dubai') {
+            $('#currency_id').next('.select2-container').css('pointer-events', 'none');
+
             var currencySelect = $('#currency_id'); // Currency select element
             currencySelect.val('4').trigger('change');
             $('.iban_no').show();
@@ -1781,7 +1784,8 @@ $(document).ready(function() {
             $('label[for="ifsc_code"]').text('SWIFT Code');
             // Change placeholder to Enter SWIFT Code
             $('#ifsc_code').attr('placeholder', 'Enter SWIFT Code');
-        } else {
+        } else {        
+
             var currencySelect = $('#currency_id'); // Currency select element
             currencySelect.val('1').trigger('change');
             $('.iban_no').hide();

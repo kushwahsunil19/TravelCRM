@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SupplierExpense;
 use Illuminate\Http\Request;
-use App\Models\{Supplier,Currency};
+use App\Models\{Supplier,Currency,Country,State,City};
 
 
 class SupplierController extends Controller
@@ -13,7 +13,9 @@ class SupplierController extends Controller
     public function index(Request $request) // Add Request parameter
     {
         $currencies = Currency::all();
-
+        $countries = Country::all();
+        $states = State::all();
+        $cities = City::all();
         // Initialize query
         $query = Supplier::query();
 
@@ -43,9 +45,9 @@ class SupplierController extends Controller
         }
 
         // Get the filtered suppliers
-        $Suppliers = $query->with('expenses','currency')->get();
+        $Suppliers = $query->with('expenses','currency','country','state','city')->get();
 
-        return view('admin.suppliers.index', compact('Suppliers','currencies'));
+        return view('admin.suppliers.index', compact('Suppliers','currencies','countries','states','cities'));
     }
 
     public function create()
@@ -108,9 +110,9 @@ class SupplierController extends Controller
         'name' => 'required|string|max:255',
         'mobile' => 'required|numeric|digits_between:10,15|regex:/^(?:\+?\d{1,3})?\d{10,15}$/',
         'email' => 'required|email|unique:suppliers',
-        'city' => 'nullable|string|max:255',
-        'state' => 'nullable|string|max:255',
-        'country' => 'nullable|string|max:255',
+        'city_id' => 'nullable|string|max:255',
+        'state_id' => 'nullable|string|max:255',
+        'country_id' => 'nullable|string|max:255',
         'total_amount' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);
@@ -178,9 +180,9 @@ class SupplierController extends Controller
             'name' => 'required|string|max:255',
             'mobile' => 'required|numeric|digits_between:10,15|regex:/^(?:\+?\d{1,3})?\d{10,15}$/',
             'email' => 'required|email|unique:suppliers,email,' . $Supplier->id,
-            'city' => 'nullable|string|max:255',
-            'state' => 'nullable|string|max:255',
-            'country' => 'nullable|string|max:255',
+            'city_id' => 'nullable|integer',
+            'state_id' => 'nullable|integer',
+            'country_id' => 'nullable|integer',
             // 'total_amount' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
