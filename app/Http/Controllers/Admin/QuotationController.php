@@ -244,9 +244,9 @@ class QuotationController extends Controller
             'bill_to' => $quotation->partner->name,  // Assuming you have customer info in your quotation
             'bill_email' => $quotation->partner->email,  // Assuming you have customer info in your quotation
             'bill_mobile' => $quotation->partner->mobile,  // Assuming you have customer info in your quotation
-            'bill_city' => $quotation->partner->city,  // Assuming you have customer info in your quotation
-            'bill_state' => $quotation->partner->state,
-            'bill_country' => $quotation->partner->country,
+            'bill_city' => $quotation->partner->city->name,  // Assuming you have customer info in your quotation
+            'bill_state' => $quotation->partner->state->name,
+            'bill_country' => $quotation->partner->country->name,
             'items' => $items ,  // Assuming a relationship or JSON field for items
             'subtotal' =>  $package_amt ,
             'discount'=> $discount,
@@ -319,9 +319,9 @@ class QuotationController extends Controller
             'bill_to' => $quotation->partner->name,  // Assuming you have customer info in your quotation
             'bill_email' => $quotation->partner->email,  // Assuming you have customer info in your quotation
             'bill_mobile' => $quotation->partner->mobile,  // Assuming you have customer info in your quotation
-            'bill_city' => $quotation->partner->city,  // Assuming you have customer info in your quotation
-            'bill_state' => $quotation->partner->state,
-            'bill_country' => $quotation->partner->country,
+            'bill_city' => $quotation->partner->city->name,  // Assuming you have customer info in your quotation
+            'bill_state' => $quotation->partner->state->name,
+            'bill_country' => $quotation->partner->country->name,
             'items' => $items ,  // Assuming a relationship or JSON field for items
             'subtotal' =>  $package_amt ,
             'discount'=> $discount,

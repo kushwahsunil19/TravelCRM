@@ -297,7 +297,7 @@
         </div>
 
         <div class="footer">
-            <p> Invoice #{{ $invoice_number }}</p>
+            <p style="margin-top:-17px;"> Invoice #{{ $invoice_number }}</p>
         </div>
     </div>
 </body>

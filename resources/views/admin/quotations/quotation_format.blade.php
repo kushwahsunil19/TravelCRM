@@ -297,8 +297,8 @@
             </div>
         </div>
 
-        <div class="footer">
-            <p> Estimate #{{ $quotation_number }}</p>
+        <div class="footer">            
+            <p style="margin-top:-17px;"> Estimate #{{ $quotation_number }}</p>
         </div>
     </div>
 </body>
