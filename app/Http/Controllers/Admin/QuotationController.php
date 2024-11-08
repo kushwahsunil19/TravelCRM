@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Quotation,Invoice,Branch,Partner,Package,Bank,Currency};
+use App\Models\{Quotation,Invoice,Branch,Partner,Package,Bank,Currency,City,Country,State};
 use PDF;
 use Spatie\Permission\Models\Role;
 
@@ -27,6 +27,10 @@ class QuotationController extends Controller
 
      public function index(Request $request)
      {
+
+        $countries = Country::all();
+        $states = State::all();
+        $cities = City::all();
         $userRole = auth()->user()->roles->first()->name; // Assuming the user has only one role
         $rolePermissions = getRolePermissions();   
         if (in_array('list-quotation', $rolePermissions[$userRole])) { 
@@ -64,7 +68,7 @@ class QuotationController extends Controller
          $quotations = $query->paginate( $totalQuotations); // Paginate the filtered results
      
          // Return the view with total quotations and paginated quotations
-         return view('admin.quotations.index', compact('quotations', 'totalQuotations'));
+         return view('admin.quotations.index', compact('quotations', 'totalQuotations','cities','states','countries'));
         } else {
             // Redirect if the user lacks permission
             return redirect()->route('dashboard')->with('error', 'You do not have permission. Please contact the admin.');
@@ -78,6 +82,9 @@ class QuotationController extends Controller
      */
     public function create()
     {
+        $countries = Country::all();
+        $states = State::all();
+        $cities = City::all();
         $quotation = Quotation::with(['branch', 'partner', 'package'])
                       ->latest('id')  // Sort by the latest ID
                       ->first(); 
@@ -91,7 +98,7 @@ class QuotationController extends Controller
         $packages = Package::all();
         $currencies = Currency::all();
         $bankDetails = Bank::latest()->get();
-        return view('admin.quotations.create', compact('branches', 'partners', 'packages','quotation_no','bankDetails','currencies'));
+        return view('admin.quotations.create', compact('branches', 'partners', 'packages','quotation_no','bankDetails','currencies','countries','states','cities'));
     }
 
     /**
@@ -134,7 +141,9 @@ class QuotationController extends Controller
      */
     public function edit(Quotation $quotation)
     {
-      
+        $countries = Country::all();
+        $states = State::all();
+        $cities = City::all();
         $branches = Branch::all();
         $partners = Partner::all();
         $packages = Package::all();
@@ -142,7 +151,7 @@ class QuotationController extends Controller
 
         $bankDetails = Bank::latest()->get();
 
-        return view('admin.quotations.edit', compact('quotation', 'branches', 'partners', 'packages','bankDetails','currencies'));
+        return view('admin.quotations.edit', compact('quotation', 'branches', 'partners', 'packages','bankDetails','currencies','countries','states','cities'));
     }
 
     /**

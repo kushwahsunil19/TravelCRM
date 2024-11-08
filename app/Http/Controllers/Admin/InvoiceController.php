@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Invoice,Branch,Partner,Package,Bank,Currency};
+use App\Models\{Invoice,Branch,Partner,Package,Bank,Currency,Country,State,City};
 use PDF;
 class InvoiceController extends Controller
 {
@@ -19,6 +19,10 @@ class InvoiceController extends Controller
 
       public function index(Request $request)
       {
+
+        $countries = Country::all();
+        $states = State::all();
+        $cities = City::all();
         $userRole = auth()->user()->roles->first()->name; // Assuming the user has only one role
         $rolePermissions = getRolePermissions();   
         if (in_array('list-invoice', $rolePermissions[$userRole])) { 
@@ -55,7 +59,7 @@ class InvoiceController extends Controller
           $invoices = $query->paginate(10); // Paginate the filtered results
       
           // Return the view with total invoices and paginated invoices
-          return view('admin.invoices.invoices', compact('invoices', 'totalInvoices'));
+          return view('admin.invoices.invoices', compact('invoices', 'totalInvoices','states','countries','cities'));
         } else {
             // Redirect if the user lacks permission
             return redirect()->route('dashboard')->with('error', 'You do not have permission. Please contact the admin.');
@@ -140,6 +144,10 @@ class InvoiceController extends Controller
      */
     public function create()
     {
+        $countries = Country::all();
+        $states = State::all();
+        $cities = City::all();
+        
           
         $invoice = Invoice::with(['branch', 'partner', 'package'])
                       ->latest('id')  // Sort by the latest ID
@@ -154,7 +162,7 @@ class InvoiceController extends Controller
         $packages = Package::all();
         $currencies = Currency::all();
         $bankDetails = Bank::latest()->get();
-        return view('admin.invoices.create', compact('branches', 'partners', 'packages','invoice_no','bankDetails','currencies'));
+        return view('admin.invoices.create', compact('branches', 'partners', 'packages','invoice_no','bankDetails','currencies','countries','states','cities'));
     }
 
     /**
@@ -196,6 +204,10 @@ class InvoiceController extends Controller
      */
     public function edit(Invoice $invoice)
     {
+        $countries = Country::all();
+        $states = State::all();
+        $cities = City::all();
+    
       
         $branches = Branch::all();
         $partners = Partner::all();
@@ -203,7 +215,7 @@ class InvoiceController extends Controller
         $currencies = Currency::all();
         $bankDetails = Bank::latest()->get();
 
-        return view('admin.invoices.edit', compact('invoice', 'branches', 'partners', 'packages','bankDetails','currencies'));
+        return view('admin.invoices.edit', compact('invoice', 'branches', 'partners', 'packages','bankDetails','currencies','countries','states','cities'));
     }
 
     /**
@@ -342,9 +354,9 @@ class InvoiceController extends Controller
             'bill_to' => $invoice->partner->name,  // Assuming you have customer info in your invoice
             'bill_email' => $invoice->partner->email,  // Assuming you have customer info in your invoice
             'bill_mobile' => $invoice->partner->mobile,  // Assuming you have customer info in your invoice
-            'bill_city' => $invoice->partner->city,  // Assuming you have customer info in your invoice
-            'bill_state' => $invoice->partner->state,
-            'bill_country' => $invoice->partner->country,
+            'bill_city' => $invoice->partner->city->name,  // Assuming you have customer info in your invoice
+            'bill_state' => $invoice->partner->state->name,
+            'bill_country' => $invoice->partner->country->name,
             'items' => $items ,  // Assuming a relationship or JSON field for items
             'subtotal' =>  $package_amt ,
             'discount'=> $discount,
@@ -417,9 +429,9 @@ class InvoiceController extends Controller
             'bill_to' => $invoice->partner->name,  // Assuming you have customer info in your invoice
             'bill_email' => $invoice->partner->email,  // Assuming you have customer info in your invoice
             'bill_mobile' => $invoice->partner->mobile,  // Assuming you have customer info in your invoice
-            'bill_city' => $invoice->partner->city,  // Assuming you have customer info in your invoice
-            'bill_state' => $invoice->partner->state,
-            'bill_country' => $invoice->partner->country,
+            'bill_city' => $invoice->partner->city->name,  // Assuming you have customer info in your invoice
+            'bill_state' => $invoice->partner->state->name,
+            'bill_country' => $invoice->partner->country->name,
             'items' => $items ,  // Assuming a relationship or JSON field for items
             'subtotal' =>  $package_amt ,
             'discount'=> $discount,

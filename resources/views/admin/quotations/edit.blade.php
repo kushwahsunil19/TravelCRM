@@ -681,38 +681,52 @@ td {
                                 </div>
                             </div>
 
-                            <div class="col-lg-4 col-md-6 col-sm-12">
-                                <div class="input-block mb-3">
-                                    <label>City</label>
-                                    <input type="text" class="form-control" name="city" placeholder="Enter City">
-                                    @if ($errors->has('city'))
-                                    <span class="text-danger">{{ $errors->first('city') }}</span>
-                                    @endif
-                                </div>
+                            <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                            <div class="input-block">
+                                <label for="edit_country">Country <span class="text-danger">*</span></label>
+                                <select id="edit_country" class="form-control" name="country_id">
+                                    <option value="">Select Country</option>
+                                    @foreach($countries as $country)
+                                        <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('country'))
+                                    <span class="text-danger">{{ $errors->first('country') }}</span>
+                                @endif
                             </div>
+                        </div>
 
-
-                            <div class="col-lg-4 col-md-6 col-sm-12">
-                                <div class="input-block">
-                                    <label>State</label>
-                                    <input type="text" class="form-control" name="state" placeholder="Enter State">
-                                    @if ($errors->has('state'))
+                        <!-- State Dropdown -->
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                            <div class="input-block">
+                                <label for="edit_state">State <span class="text-danger">*</span></label>
+                                <select id="edit_state" class="form-control" name="state_id">
+                                    <option value="">Select State</option>
+                                    @foreach($states as $state)
+                                        <option value="{{ $state->id }}">{{ $state->name }}</option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('state'))
                                     <span class="text-danger">{{ $errors->first('state') }}</span>
-                                    @endif
-                                </div>
+                                @endif
                             </div>
-                            <div class="col-lg-4 col-md-6 col-sm-12">
-                                <div class="pass-group">
-                                    <div class="input-block">
-                                        <label>Country</label>
-                                        <input type="text" class="form-control" name="country"
-                                            placeholder="Enter Country">
-                                        @if ($errors->has('country'))
-                                        <span class="text-danger">{{ $errors->first('country') }}</span>
-                                        @endif
-                                    </div>
-                                </div>
+                        </div>
+
+                        <!-- City Dropdown -->
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                            <div class="input-block">
+                                <label for="edit_city">City <span class="text-danger">*</span></label>
+                                <select id="edit_city" class="form-control" name="city_id">
+                                    <option value="">Select City</option>
+                                    @foreach($cities as $city)
+                                        <option value="{{ $city->id }}">{{ $city->name }}</option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('city'))
+                                    <span class="text-danger">{{ $errors->first('city') }}</span>
+                                @endif
                             </div>
+                        </div>
 
 
 
@@ -1823,4 +1837,74 @@ $(document).ready(function() {
     });
 }); //end redy function
 </script>
+
+<script>
+
+$(document).ready(function () {
+    
+    $('#edit_state').prop('disabled', true);
+    $('#edit_city').prop('disabled', true);
+   
+    $(document).on('change', '#edit_country', function () {
+        var countryId = $(this).val();
+        
+       
+        $('#edit_state').prop('disabled', true).empty().append('<option value="">Select State</option>');
+        $('#edit_city').prop('disabled', true).empty().append('<option value="">Select City</option>');
+
+        if (countryId) {
+            let fullUrl = '{{ url("/states") }}/' + countryId;
+            $.ajax({
+                url: fullUrl,
+                type: 'GET',
+                success: function (states) {
+                    if (Array.isArray(states)) {
+                        states.forEach(function (state) {
+                            $('#edit_state').append('<option value="' + state.id + '">' + state.name + '</option>');
+                        });
+                        $('#edit_state').prop('disabled', false); // Enable state dropdown if states are available
+                    } else {
+                        console.error("Invalid response format for states");
+                    }
+                },
+                error: function () {
+                    console.error("Error fetching states");
+                }
+            });
+        }
+    });
+
+    // Load cities when a state is selected
+    $(document).on('change', '#edit_state', function () {
+        var stateId = $(this).val();
+    
+        if (stateId) {
+            let fullUrl = '{{ url("/cities") }}/' + stateId;
+            $.ajax({
+                url: fullUrl,
+                type: 'GET',
+                success: function (cities) {
+                    if (Array.isArray(cities)) {
+                        cities.forEach(function (city) {
+                            $('#edit_city').append('<option value="' + city.id + '">' + city.name + '</option>');
+                        });
+                        $('#edit_city').prop('disabled', false); 
+                    } else {
+                        console.error("Invalid response format for cities");
+                    }
+                },
+                error: function () {
+                    console.error("Error fetching cities");
+                }
+            });
+        }
+    });
+});
+
+            
+    
+
+ 
+</script>
+
 @endsection

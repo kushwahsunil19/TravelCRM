@@ -406,7 +406,7 @@
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="input-block">
                                 <label>Currency Rate</label>
-                                <input type="mumber" class="form-control" name="currency_rate" placeholder="Enter Rate"  min="0" step="any">
+                                <input type="number" class="form-control" name="currency_rate" placeholder="Enter Rate"  min="0" step="any">
                                 @if ($errors->has('currency_rate'))
                                 <span class="text-danger">{{ $errors->first('currency_rate') }}</span>
                                 @endif
@@ -429,7 +429,7 @@
                                     <div class="col-lg-6 input-block">
                                         <label>Amount</label>
                                         <input type="number" name="amount[]" class="form-control amount-input"
-                                            placeholder="Enter Amount" min="0" oninput="calculateSum()">
+                                            placeholder="Enter Amount" min="0" step="any" oninput="calculateSum()">
                                     </div>
 
                                 </div>
@@ -1164,7 +1164,7 @@ $(document).ready(function() {
             </div>
             <div class="col-lg-5 input-block">
                 <label>Amount</label>
-                <input type="number" name="amount[]" class="form-control edit-amount-input" value="${amount}" placeholder="Enter Amount" min="0" oninput="editCalculateSum()">
+                <input type="number" name="amount[]" class="form-control edit-amount-input" value="${amount}" placeholder="Enter Amount"  min="0" step="any" oninput="editCalculateSum()">
             </div>
         
             <div class="col-lg-1 mt-4 d-flex justify-content-end">
@@ -1266,7 +1266,7 @@ document.getElementById('add-more-fields').addEventListener('click', function() 
         </div>
         <div class="col-lg-5">
             <label>Amount</label>
-            <input type="number" name="amount[]" class="form-control amount-input" placeholder="Enter Rupees" min="0" oninput="calculateSum()">
+            <input type="number" name="amount[]" class="form-control amount-input" placeholder="Enter Rupees" min="0" step="any" oninput="calculateSum()">
         </div>
         <div class="col-lg-1 mt-4 d-flex justify-content-end">
             <span class="remove-field" style="cursor: pointer; color: red; margin-left: 10px;">
@@ -1297,7 +1297,7 @@ document.getElementById('edit-add-more-fields').addEventListener('click', functi
         </div>
         <div class="col-lg-5 input-block">
             <label>Amount</label>
-            <input type="number" name="amount[]" class="form-control edit-amount-input" placeholder="Enter Amount" min="0" oninput="editCalculateSum()">
+            <input type="number" name="amount[]" class="form-control edit-amount-input" placeholder="Enter Amount" min="0" step="any" oninput="editCalculateSum()">
         </div>
         <div class="col-lg-1 mt-4 d-flex justify-content-end">
             <span class="edit-remove-field"  style="cursor: pointer; color: red; margin-left: 10px;">
