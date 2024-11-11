@@ -117,8 +117,8 @@ class QuotationController extends Controller
             'child_extra_bed_cost' => 'nullable|numeric',
             // 'child_no_extra_bed_cost' => 'nullable|numeric',
             'gst_tax' => 'nullable|numeric',
-            'discount_type' => 'required',            
-            'discount' => 'nullable|numeric',
+            // 'discount_type' => 'required',            
+            'discount' => 'numeric',
         ]);
        
         $quotation = Quotation::create($request->all());
@@ -170,8 +170,8 @@ class QuotationController extends Controller
             'triple_sharing_cost' => 'nullable|numeric',
             'child_extra_bed_cost' => 'nullable|numeric',
             'child_no_extra_bed_cost' => 'nullable|numeric',
-            'gst_tax' => 'nullable|numeric',
-            'discount' => 'nullable|numeric',
+            'gst_tax' => 'numeric',
+            'discount' => 'numeric',
         ]);
 
         $quotation->update($request->all());

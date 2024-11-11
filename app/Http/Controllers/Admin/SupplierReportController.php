@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Supplier;
+use App\Models\{Supplier,Country,State,City};
 
 use PDF;
 
@@ -15,6 +15,7 @@ class SupplierReportController extends Controller
      */
     public function index(Request $request) // Add Request parameter
     {
+      
         // Initialize query
         $query = Supplier::query();
 
@@ -44,7 +45,7 @@ class SupplierReportController extends Controller
         }
 
         // Get the filtered suppliers
-        $Suppliers = $query->get();
+        $Suppliers = $query->with('expenses','currency','country','state','city')->get();
 
         return view('admin.suppliers.supplier-report', compact('Suppliers'));
     }
@@ -84,7 +85,7 @@ class SupplierReportController extends Controller
     }
 
     // Get the filtered data
-    $suppliers = $query->get();
+    $suppliers = $query->with('expenses','currency','country','state','city')->get();
 
     // Check if suppliers exist before generating the PDF
     if ($suppliers->isEmpty()) {
@@ -134,7 +135,7 @@ public function downloadCSV(Request $request)
     }
 
     // Get the filtered data
-    $suppliers = $query->get();
+    $suppliers = $query->with('expenses','currency','country','state','city')->get();
 
     if ($suppliers->isEmpty()) {
         return redirect()->back()->with('error', 'No suppliers found for the selected filters.');
@@ -168,9 +169,9 @@ public function downloadCSV(Request $request)
             $supplier->name,
             $supplier->email,
             $supplier->mobile,
-            $supplier->city,
-            $supplier->state,
-            $supplier->country,
+            $supplier->city->name,
+            $supplier->state->name,
+            $supplier->country->name,
             $supplier->amount,
         ]);
     }

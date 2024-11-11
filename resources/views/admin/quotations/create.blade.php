@@ -232,7 +232,7 @@ td {
                                                 <div class="input-block mb-2">
                                                     <label>Currency Rate </label>
                                                     <input type="number" class="form-control currency_rate" name="currency_rate"
-                                                        placeholder="Enter Rate"  min="0" step="any" >
+                                                        placeholder="Enter Rate"  min="0" step="any" value="0.00">
                                                     @if ($errors->has('currency_rate'))
                                                     <span class="text-danger">{{ $errors->first('currency_rate') }}</span>
                                                     @endif
@@ -246,8 +246,8 @@ td {
                                                         <option value="Percentage">Percentage(%)</option>
                                                         <option value="Fixed">Fixed</option>
                                                     </select>
-                                                    @if ($errors->has('gst_tax'))
-                                                    <span class="text-danger">{{ $errors->first('gst_tax') }}</span>
+                                                    @if ($errors->has('discount_type'))
+                                                    <span class="text-danger">{{ $errors->first('discount_type') }}</span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -255,7 +255,7 @@ td {
                                                 <div class="input-block mb-2">
                                                     <label>Discount </label>
                                                     <input type="number" class="form-control discount" name="discount"
-                                                        placeholder="Enter discount" min="0"  step="any">
+                                                        placeholder="Enter discount" min="0"  step="any" value="0.00">
                                                     @if ($errors->has('discount'))
                                                     <span class="text-danger">{{ $errors->first('discount') }}</span>
                                                     @endif
@@ -266,7 +266,7 @@ td {
                                                     <div class="input-block mb-2">
                                                         <label>Vat</label>
                                                         <input type="number" class="form-control gst_tax" name="gst_tax"
-                                                            placeholder="Enter Vat" min="0"  step="any">
+                                                            placeholder="Enter Vat" min="0"  step="any" value="0.00">
                                                         <!-- <select class="select" name="gst_tax" id="gst_tax">
                                                             <option value="21">IVA - (21%)</option>
                                                             <option value="15">IRPF - (-15%)</option>

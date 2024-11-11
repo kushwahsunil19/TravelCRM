@@ -9,7 +9,7 @@ class AddCurrencyRateToQuotationsTable extends Migration
     public function up()
     {
         Schema::table('quotations', function (Blueprint $table) {
-            $table->decimal('currency_rate', 15, 2)->nullable()->after('currency_id'); // Add currency_rate after currency_id
+            $table->decimal('currency_rate', 15, 2)->default(0.00)->after('currency_id'); // Add currency_rate after currency_id
         });
     }
 

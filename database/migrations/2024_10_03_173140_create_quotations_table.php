@@ -25,9 +25,9 @@ return new class extends Migration
             $table->decimal('triple_sharing_cost', 10, 2)->nullable();
             $table->decimal('child_extra_bed_cost', 10, 2)->nullable();
             $table->decimal('child_no_extra_bed_cost', 10, 2)->nullable();
-            $table->decimal('gst_tax', 10, 2)->nullable();
+            $table->decimal('gst_tax', 10, 2)->default(0.00);
             $table->string('discount_type')->nullable();// Package Name
-            $table->decimal('discount', 10, 2)->nullable();
+            $table->decimal('discount', 10, 2)->default(0.00);
             $table->text('note')->nullable();
             $table->text('term_condition')->nullable();
             $table->tinyInteger('status')->default(2)->comment('0 for Declined, 1 for Accepted, 2 for Sent, 3 for Expired');

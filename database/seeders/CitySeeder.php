@@ -146,32 +146,36 @@ class CitySeeder extends Seeder
     // West Bengal
     ['name' => 'Kolkata', 'state_id' => 28, 'zipcode' => '700001', 'created_at' => now(), 'updated_at' => now()],
     ['name' => 'Siliguri', 'state_id' => 28, 'zipcode' => '734001', 'created_at' => now(), 'updated_at' => now()],
-    
-        // Abu Dhabi (state_id: 29)
-        ['name' => 'Al Ain', 'state_id' => 29, 'zipcode' => '00001', 'created_at' => now(), 'updated_at' => now()],
-        ['name' => 'Mussafah', 'state_id' => 29, 'zipcode' => '00002', 'created_at' => now(), 'updated_at' => now()],
-        ['name' => 'Bani Yas', 'state_id' => 29, 'zipcode' => '00003', 'created_at' => now(), 'updated_at' => now()],
-        ['name' => 'Al Shamkha', 'state_id' => 29, 'zipcode' => '00004', 'created_at' => now(), 'updated_at' => now()],
-        ['name' => 'Al Wathba', 'state_id' => 29, 'zipcode' => '00005', 'created_at' => now(), 'updated_at' => now()],
+   
+       // New Delhi   
+        ['name' => 'New Delhi', 'state_id' => 29, 'zipcode' => '110001', 'created_at' => now(), 'updated_at' => now()],
 
-        // Dubai (state_id: 30)
-        ['name' => 'Jebel Ali', 'state_id' => 30, 'zipcode' => '00006', 'created_at' => now(), 'updated_at' => now()],
-        ['name' => 'Al Barsha', 'state_id' => 30, 'zipcode' => '00007', 'created_at' => now(), 'updated_at' => now()],
-        ['name' => 'Al Karama', 'state_id' => 30, 'zipcode' => '00008', 'created_at' => now(), 'updated_at' => now()],
-        ['name' => 'Bur Dubai', 'state_id' => 30, 'zipcode' => '00009', 'created_at' => now(), 'updated_at' => now()],
-        ['name' => 'Deira', 'state_id' => 30, 'zipcode' => '00010', 'created_at' => now(), 'updated_at' => now()],
-        ['name' => 'Dubai Marina', 'state_id' => 30, 'zipcode' => '00011', 'created_at' => now(), 'updated_at' => now()],
-        ['name' => 'Downtown Dubai', 'state_id' => 30, 'zipcode' => '00012', 'created_at' => now(), 'updated_at' => now()],
-        ['name' => 'Palm Jumeirah', 'state_id' => 30, 'zipcode' => '00013', 'created_at' => now(), 'updated_at' => now()],
+ 
+        // Abu Dhabi (state_id: 30)
+        ['name' => 'Al Ain', 'state_id' => 30, 'zipcode' => '00001', 'created_at' => now(), 'updated_at' => now()],
+        ['name' => 'Mussafah', 'state_id' => 30, 'zipcode' => '00002', 'created_at' => now(), 'updated_at' => now()],
+        ['name' => 'Bani Yas', 'state_id' => 30, 'zipcode' => '00003', 'created_at' => now(), 'updated_at' => now()],
+        ['name' => 'Al Shamkha', 'state_id' => 30, 'zipcode' => '00004', 'created_at' => now(), 'updated_at' => now()],
+        ['name' => 'Al Wathba', 'state_id' => 30, 'zipcode' => '00005', 'created_at' => now(), 'updated_at' => now()],
 
-        // Sharjah (state_id: 31)
-        ['name' => 'Khor Fakkan', 'state_id' => 31, 'zipcode' => '00014', 'created_at' => now(), 'updated_at' => now()],
-        ['name' => 'Dibba Al-Hisn', 'state_id' => 31, 'zipcode' => '00015', 'created_at' => now(), 'updated_at' => now()],
-        ['name' => 'Al Dhaid', 'state_id' => 31, 'zipcode' => '00016', 'created_at' => now(), 'updated_at' => now()],
-        ['name' => 'Kalba', 'state_id' => 31, 'zipcode' => '00017', 'created_at' => now(), 'updated_at' => now()],
-        ['name' => 'Al Nahda', 'state_id' => 31, 'zipcode' => '00018', 'created_at' => now(), 'updated_at' => now()],
-        ['name' => 'Muwailih', 'state_id' => 31, 'zipcode' => '00019', 'created_at' => now(), 'updated_at' => now()],
-        ['name' => 'Al Qasimia', 'state_id' => 31, 'zipcode' => '00020', 'created_at' => now(), 'updated_at' => now()],
+        // Dubai (state_id: 31)
+        ['name' => 'Jebel Ali', 'state_id' => 31, 'zipcode' => '00006', 'created_at' => now(), 'updated_at' => now()],
+        ['name' => 'Al Barsha', 'state_id' => 31, 'zipcode' => '00007', 'created_at' => now(), 'updated_at' => now()],
+        ['name' => 'Al Karama', 'state_id' => 31, 'zipcode' => '00008', 'created_at' => now(), 'updated_at' => now()],
+        ['name' => 'Bur Dubai', 'state_id' => 31, 'zipcode' => '00009', 'created_at' => now(), 'updated_at' => now()],
+        ['name' => 'Deira', 'state_id' => 31, 'zipcode' => '00010', 'created_at' => now(), 'updated_at' => now()],
+        ['name' => 'Dubai Marina', 'state_id' => 31, 'zipcode' => '00011', 'created_at' => now(), 'updated_at' => now()],
+        ['name' => 'Downtown Dubai', 'state_id' => 31, 'zipcode' => '00012', 'created_at' => now(), 'updated_at' => now()],
+        ['name' => 'Palm Jumeirah', 'state_id' => 31, 'zipcode' => '00013', 'created_at' => now(), 'updated_at' => now()],
+
+        // Sharjah (state_id: 32)
+        ['name' => 'Khor Fakkan', 'state_id' => 32, 'zipcode' => '00014', 'created_at' => now(), 'updated_at' => now()],
+        ['name' => 'Dibba Al-Hisn', 'state_id' => 32, 'zipcode' => '00015', 'created_at' => now(), 'updated_at' => now()],
+        ['name' => 'Al Dhaid', 'state_id' => 32, 'zipcode' => '00016', 'created_at' => now(), 'updated_at' => now()],
+        ['name' => 'Kalba', 'state_id' => 32, 'zipcode' => '00017', 'created_at' => now(), 'updated_at' => now()],
+        ['name' => 'Al Nahda', 'state_id' => 32, 'zipcode' => '00018', 'created_at' => now(), 'updated_at' => now()],
+        ['name' => 'Muwailih', 'state_id' => 32, 'zipcode' => '00019', 'created_at' => now(), 'updated_at' => now()],
+        ['name' => 'Al Qasimia', 'state_id' => 32, 'zipcode' => '00020', 'created_at' => now(), 'updated_at' => now()],
     ]);
     }
 }

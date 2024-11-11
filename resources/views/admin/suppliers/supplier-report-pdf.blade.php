@@ -53,10 +53,10 @@
                 <td>{{ $supplier->name }}</td>
                 <td>{{ $supplier->email }}</td>
                 <td>{{ $supplier->mobile }}</td>
-                <td>{{ $supplier->city }}</td>
-                <td>{{ $supplier->state }}</td>
-                <td>{{ $supplier->country }}</td>
-                <td>{{ $supplier->amount }}</td>
+                <td>{{ $supplier->city->name }}</td>
+                <td>{{ $supplier->state->name }}</td>
+                <td>{{ $supplier->country->name }}</td>
+                <td>{{ $Supplier->currency->symbol}}  {{ $supplier->amount }}</td>
             </tr>
         @endforeach
     </tbody>

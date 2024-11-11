@@ -41,6 +41,7 @@ class StatesTableSeeder extends Seeder
             ['name' => 'Uttar Pradesh', 'code' => 'UP', 'country_id' => 1],
             ['name' => 'Uttarakhand', 'code' => 'UT', 'country_id' => 1],
             ['name' => 'West Bengal', 'code' => 'WB', 'country_id' => 1],
+            ['name' => 'New Delhi', 'code' => 'DL', 'country_id' => 1],
             // UAE
             ['name' => 'Abu Dhabi', 'code' => 'AD', 'country_id' => 2],
             ['name' => 'Dubai', 'code' => 'DU', 'country_id' => 2],

@@ -110,9 +110,9 @@ class SupplierController extends Controller
         'name' => 'required|string|max:255',
         'mobile' => 'required|numeric|digits_between:10,15|regex:/^(?:\+?\d{1,3})?\d{10,15}$/',
         'email' => 'required|email|unique:suppliers',
-        'city_id' => 'nullable|string|max:255',
-        'state_id' => 'nullable|string|max:255',
-        'country_id' => 'nullable|string|max:255',
+        'city_id' => 'required|string|max:255',
+        'state_id' => 'required|string|max:255',
+        'country_id' => 'required|string|max:255',
         'total_amount' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);

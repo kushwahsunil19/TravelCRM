@@ -22,9 +22,9 @@ return new class extends Migration
                 $table->foreign('package_id')->references('id')->on('packages')->onDelete('cascade');
                 $table->integer('bank_id')->nullable();
                 $table->string('invoice_no')->unique(); // Unique quotation number              
-                $table->decimal('vat', 10, 2)->nullable();
+                $table->decimal('vat', 10, 2)->default(0.00);
                 $table->string('discount_type')->nullable();// Package Name
-                $table->decimal('discount', 10, 2)->nullable();
+                $table->decimal('discount', 10, 2)->default(0.00);
                 $table->text('note')->nullable();
                 $table->text('term_condition')->nullable();
                 $table->tinyInteger('status')->default(2)->comment('0 for Declined, 1 for Accepted, 2 for Sent, 3 for Expired');

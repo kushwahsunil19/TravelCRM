@@ -233,7 +233,7 @@ td {
                                                 <div class="input-block mb-2">
                                                     <label>Currency Rate </label>
                                                     <input type="number" class="form-control currency_rate" name="currency_rate"
-                                                        placeholder="Enter Rate"  min="0" step="any">
+                                                        placeholder="Enter Rate"  min="0" step="any" value="0.00">
                                                     @if ($errors->has('currency_rate'))
                                                     <span class="text-danger">{{ $errors->first('currency_rate') }}</span>
                                                     @endif
@@ -256,7 +256,7 @@ td {
                                                 <div class="input-block mb-2">
                                                     <label>Discount </label>
                                                     <input type="number" class="form-control discount" name="discount"
-                                                        placeholder="Enter Discount" min="0" step="any">
+                                                        placeholder="Enter Discount" min="0" step="any" value="0.00">
                                                     @if ($errors->has('discount'))
                                                     <span class="text-danger">{{ $errors->first('discount') }}</span>
                                                     @endif
@@ -267,7 +267,7 @@ td {
                                                     <div class="input-block mb-2">
                                                         <label>Vat</label>
                                                         <input type="number" class="form-control vat" name="vat"
-                                                            placeholder="Enter Vat" min="0" step="any">
+                                                            placeholder="Enter Vat" min="0" step="any" value="0.00">
                                                         <!-- <select class="select" name="vat" id="vat">
                                                             <option value="21">IVA - (21%)</option>
                                                             <option value="15">IRPF - (-15%)</option>

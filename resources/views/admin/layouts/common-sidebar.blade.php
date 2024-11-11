@@ -688,7 +688,13 @@
                                 $listUser = in_array('list-user', $rolePermissions[$userRole]);
                                 $listInovice = in_array('list-invoice', $rolePermissions[$userRole]);
                                 $listQuotation = in_array('list-quotation', $rolePermissions[$userRole]);
-                              
+                                $listExpenses = in_array('list-expenses', $rolePermissions[$userRole]);
+                                $listStaffReport = in_array('list-staff-report', $rolePermissions[$userRole]);
+                                $listHotelReport = in_array('list-hotel-report', $rolePermissions[$userRole]);
+                                $listSupplierReport = in_array('list-supplier-report', $rolePermissions[$userRole]);
+                                $listQuotationReport  = in_array('list-quotation-report', $rolePermissions[$userRole]);
+                                $listPartnersReport  = in_array('list-partners-report', $rolePermissions[$userRole]);
+                                $listProfitLoss = in_array('list-profit-loss', $rolePermissions[$userRole]);
                             @endphp
                             @role('Administrator')
                             <li class="menu-title"><span>Manage Masters </span></li>
@@ -723,7 +729,7 @@
 
                             <!-- Quotations -->
                              @if($listQuotation)
-                            <li class="menu-title"><span>Manage Quotations  </span></li>
+                            <li class="menu-title"><span>Manage Quotations   </span></li>
 
                             <li class="submenu">
 
@@ -738,7 +744,13 @@
                                 </ul>
                             </li>
                             @endif
-                      
+                        <!-- Finance & Accounts -->
+                        @if($listExpenses)
+                        <li class="menu-title"><span>Finance & Accounts  </span></li>
+                        <li>
+                            <a href="{{route('expenses.index')}}"><i class="fe fe-file-plus"></i> <span>Expenses</span></a>
+                        </li>
+                        @endif
 
                          
 
@@ -776,11 +788,10 @@
                             <li class="submenu">
 
                                 <a href="{{route('invoices.index')}}"><i class="fe fe-file"></i>
-                                    <span>Invoices</span><span class="menu-arrow"></span></a>
+                                    <span>Manage Invoices</span><span class="menu-arrow"></span></a>
                                 <ul style="display: none;">
                                     <li><a href="{{route('invoices.index')}}"
-                                            class="{{strpos($url,'invoices') !== false ? 'active' : '' }}">Invoices
-                                            List</a></li>
+                                            class="{{strpos($url,'invoices') !== false ? 'active' : '' }}">Invoices</a></li>
                                     <!-- <li><a href="#">Invoice Details (Admin)</a></li>
                                     <li><a href="#">Invoice Details (Customer)</a></li>
                                     <li><a href="#">Invoice Templates</a></li> -->
@@ -807,15 +818,14 @@
                                     <a href="debit-notes.html"><i class="fe fe-file-text"></i> <span>Debit Notes</span></a>
                                 </li> -->
                             <!-- /Purchases -->
-                            @role('Administrator')
-                            <!-- Finance & Accounts -->
-                            <li class="menu-title"><span>Finance & Accounts</span></li>
-                            <li>
-                                <a href="{{route('expenses.index')}}"><i class="fe fe-file-plus"></i> <span>Expenses</span></a>
-                            </li>
-                            <li>
+                           
+                         
+                            
+                            <!-- <li>
+
                                 <a href="#"><i class="fe fe-credit-card"></i> <span>Payments</span></a>
-                            </li>
+                            </li> -->
+
                             <!-- /Finance & Accounts -->
 
 
@@ -829,34 +839,34 @@
                             <!-- /Quotations -->
 
                             <!-- Reports -->
-                            <li class="menu-title"><span>Reports</span></li>
+                            <li class="menu-title"><span>Reports </span></li>
                             <li>
                                 <a href="#"><i class="fe fe-credit-card"></i> <span>Payment Summary</span></a>
                             <li class="submenu">
                                 <a href="#"><i class="fe fe-box"></i><span>Reports</span> <span
                                         class="menu-arrow"></span></a>
                                 <ul>
-                                    <li><a href="#">Expense Report</a></li>
+                                    <!-- <li><a href="#">Expense Report</a></li> -->
                                     <!-- <li><a href="purchase-report.html">Purchase Report</a></li>
                                         <li><a href="purchase-return.html">Purchase Return Report</a></li> -->
                                     <li><a href="#">Sales Report</a></li>
                                     <!-- <li><a href="#">Sales Return Report</a></li> -->
-                                    <li><a href="{{route('quotation-report.index')}}" class="{{strpos($url,'quotation-report') !== false ? 'active' : '' }}">Quotation Report</a></li>
-                                    <li><a href="{{route('supplier.supplier-report')}}"  class="{{strpos($url,'supplier-report') !== false ? 'active' : '' }}">Supplier Report</a></li>
-                                    <li><a href="{{route('staff-wise-report.index')}}" class="{{strpos($url,'staff-report') !== false ? 'active' : '' }}">Staff Report</a></li>
-                                    <li><a href="{{route('hotel-report.index')}}" class="{{strpos($url,'hotel-report') !== false ? 'active' : '' }}">Hotel Report</a></li>
-                                    <li><a href="{{route('partners.partners-report')}}" class="{{strpos($url,'partners-report') !== false ? 'active' : '' }}">Partner Report</a></li>
-                                    <li><a href="#">Payment Report</a></li>
+                                    @if($listQuotationReport) <li><a href="{{route('quotation-report.index')}}" class="{{strpos($url,'quotation-report') !== false ? 'active' : '' }}">Quotation Report</a></li>@endif
+                                    @if($listSupplierReport) <li><a href="{{route('supplier.supplier-report')}}"  class="{{strpos($url,'supplier-report') !== false ? 'active' : '' }}">Supplier Report</a></li>@endif
+                                    @if($listStaffReport) <li><a href="{{route('staff-wise-report.index')}}" class="{{strpos($url,'staff-report') !== false ? 'active' : '' }}">Staff Report</a></li> @endif
+                                    @if($listHotelReport) <li><a href="{{route('hotel-report.index')}}" class="{{strpos($url,'hotel-report') !== false ? 'active' : '' }}">Hotel Report</a></li>@endif
+                                    @if($listPartnersReport) <li><a href="{{route('partners.partners-report')}}" class="{{strpos($url,'partners-report') !== false ? 'active' : '' }}">Partner Report</a></li>@endif
+                                    <li><a href="#">Payment Report </a></li>
                                     <!-- <li><a href="stock-report.html">Stock Report</a></li> -->
                                     <!-- <li><a href="low-stock-report.html">Low Stock Report</a></li>
                                         <li><a href="income-report.html">Income Report</a></li>
                                         <li><a href="tax-purchase.html">Tax Report</a></li> -->
-                                    <li><a href="{{route('profit-loss.index')}}" class="{{strpos($url,'profit-loss') !== false ? 'active' : '' }}">Profit & Loss</a></li>
+                                  @if($listProfitLoss) <li><a href="{{route('profit-loss.index')}}" class="{{strpos($url,'profit-loss') !== false ? 'active' : '' }}">Profit & Loss</a></li>@endif
                                 </ul>
                             </li>
                             </li>
                             <!-- /Reports -->
-                            @endrole
+                          <!-- @role('Administrator') -->   <!-- @endrole -->
                             @if($listUser)
                             <!-- User Management -->
                             <li class="menu-title"><span>User Management</span></li>

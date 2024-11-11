@@ -11,7 +11,7 @@
                 </tr>
             </thead>
             <tbody>
-                @php $total_invoice_amt = 0; @endphp
+                @php $total_invoice_amt = 0;  $symbol = '₹'; @endphp
                 @forelse ($invoices as $invoice)
                     @php
                         $symbol = $invoice->currency->symbol ?? '₹';

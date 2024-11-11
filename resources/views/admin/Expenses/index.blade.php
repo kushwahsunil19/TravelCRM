@@ -115,7 +115,7 @@
                                     <ul style="list-style-type: disc; padding-left: 20px;">
                                         @php $hasExpenses = false; @endphp
                                         @foreach ($supplier->filtered_expenses as $expense)
-                                            <li>{{ $expense->title }} = {{ number_format($expense->amount, 2) }}</li>
+                                            <li>{{ $expense->title }} = {{ $supplier->currency->symbol}}  {{ number_format($expense->amount, 2) }}</li>
                                         @endforeach
                                         @if(!$supplier->filtered_expenses->count())
                                             <li>No items</li>
@@ -126,7 +126,7 @@
                                     {{ $supplier->created_at }}
                                 </td>
                                 <td>
-                                    {{ $supplier->total_amount > 0 ? number_format($supplier->total_amount, 2) : 'No items' }}
+                                {{ $supplier->currency->symbol}}   {{ $supplier->total_amount > 0 ? number_format($supplier->total_amount, 2) : 'No items' }}
                                 </td>
                             </tr>
                             @empty

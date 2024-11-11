@@ -116,10 +116,10 @@
 
                                         <td>{{ $Supplier->mobile }}</td>
 
-                                        <td>{{ $Supplier->city }}</td>
-                                        <td>{{ $Supplier->state }}</td>
-                                        <td>{{ $Supplier->country }}</td>
-                                        <td>{{ $Supplier->amount }}</td>
+                                        <td>{{ $Supplier->city->name }}</td>
+                                        <td>{{ $Supplier->state->name }}</td>
+                                        <td>{{ $Supplier->country->name }}</td>
+                                        <td>{{ $Supplier->currency->symbol}} {{ $Supplier->amount }}</td>
                                         
                                     </tr>
                                     @empty

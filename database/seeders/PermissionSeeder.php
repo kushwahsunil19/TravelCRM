@@ -33,7 +33,49 @@ class PermissionSeeder extends Seeder
             'create-invoice',
             'edit-invoice',
             'view-invoice',
-            'delete-invoice'
+            'delete-invoice',
+                        
+            'list-expenses',  
+            'create-expenses',
+            'edit-expenses',         
+            'view-expenses',
+            'delete-expenses',
+            
+            'list-staff-report', 
+            'create-staff-report',
+            'edit-staff-report',             
+            'view-staff-report',
+            'delete-staff-report',
+
+            'list-hotel-report', 
+            'create-hotel-report',
+            'edit-hotel-report',    
+            'view-hotel-report',
+            'delete-hotel-report',
+
+            'list-supplier-report',
+            'create-supplier-report',
+            'edit-supplier-report',    
+            'view-supplier-report',
+            'delete-supplier-report',
+
+            'list-quotation-report', 
+            'create-quotation-report',
+            'edit-quotation-report',    
+            'view-quotation-report',
+            'delete-quotation-report',
+
+            'list-partners-report', 
+            'create-partners-report',
+            'edit-partners-report',    
+            'view-partners-report',
+            'delete-partners-report',
+
+            'list-profit-loss',
+            'create-profit-loss',
+            'edit-profit-loss',               
+            'view-profit-loss',
+            'delete-profit-loss',
 
         ];
         

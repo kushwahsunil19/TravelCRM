@@ -179,9 +179,8 @@ class InvoiceController extends Controller
             'bank_id' => 'required',
             'invoice_no' => 'required|unique:invoices,invoice_no',        
             // 'child_no_extra_bed_cost' => 'nullable|numeric',
-            'vat' => 'nullable|numeric',
-            'discount_type' => 'required',            
-            'discount' => 'nullable|numeric',
+            'vat' => 'numeric',           
+            'discount' => 'numeric',
         ]);
       
         $invoice = Invoice::create($request->all());

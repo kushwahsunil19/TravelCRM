@@ -91,47 +91,66 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($Suppliers as $Supplier)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td> <!-- Serial number -->
-                                <td>
-                                    <h2 class="table-avatar">
-                                        @php
-                                        $avatar = $Supplier->image ? url('public/profile/' . $Supplier->image) :
-                                        url('public/assets/img/profiles/default.png');
-                                        @endphp
-                                        <a href="" class="avatar avatar-md me-2"><img
-                                                class="avatar-img rounded-circle" src="{{$avatar}}"
-                                                alt="User Image"></a>
-                                        <a href="">{{ $Supplier->name }} <span><span class="__cf_email__"
-                                                    data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $Supplier->email }}]</span></span></a>
-                                    </h2>
-                                </td>
-                                <td>
-                                    <ul style="list-style-type: disc; padding-left: 20px;">
-                                        @php $hasHotelExpenses = false; @endphp <!-- Flag to check if any hotel expenses are non-zero -->
-                                        @foreach ($Supplier->expenses as $expense)
-                                            @if(strpos(strtolower($expense->title), 'hotel') !== false && $expense->amount > 0) <!-- Check if expense is hotel-related and has a non-zero amount -->
-                                                @php $hasHotelExpenses = true; @endphp <!-- Set flag if hotel expense found -->
-                                                <li>{{ $expense->title }} = {{ number_format($expense->amount, 2) }}</li>
-                                            @endif
-                                        @endforeach
-                                        @if(!$hasHotelExpenses) <!-- Display message if no hotel expenses -->
-                                            <li>No hotel expenses</li>
-                                        @endif
-                                    </ul>
-                                </td>
+        @php $counter = 1; @endphp
 
-                                <td>
-                                    {{ $Supplier->totalHotelAmount > 0 ? number_format($Supplier->totalHotelAmount, 2) : 'No items' }}
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="4" class="text-center">No Suppliers found.</td>
-                            </tr>
-                            @endforelse
-                        </tbody>
+        @forelse ($Suppliers as $Supplier)
+        @php $hasHotelExpenses = false; @endphp 
+
+        @foreach ($Supplier->expenses as $expense)
+            @if(strpos(strtolower($expense->title), 'hotel') !== false && $expense->amount > 0) <!-- Check if expense is hotel-related and has a non-zero amount -->
+                @php $hasHotelExpenses = true; @endphp <!-- Set flag if hotel expense found -->
+            @endif
+        @endforeach
+        
+        @if($hasHotelExpenses) 
+            <tr>
+                <td>{{ $counter }} </td>
+                
+                <td>
+                    <h2 class="table-avatar">
+                        @php
+                            $avatar = $Supplier->image ? url('public/profile/' . $Supplier->image) :
+                            url('public/assets/img/profiles/default.png');
+                        @endphp
+                        <a href="" class="avatar avatar-md me-2"><img
+                                class="avatar-img rounded-circle" src="{{$avatar}}"
+                                alt="User Image"></a>
+                        <a href="">{{ $Supplier->name }} <span><span class="__cf_email__"
+                                    data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $Supplier->email }}]</span></span></a>
+                    </h2>
+                </td>
+                
+                <td>
+                    <ul style="list-style-type: disc; padding-left: 20px;">
+                        @php $hasHotelExpenses = false; @endphp <!-- Reset flag for each expense list -->
+                        
+                        @foreach ($Supplier->expenses as $expense)
+                            @if(strpos(strtolower($expense->title), 'hotel') !== false && $expense->amount > 0) <!-- Check if expense is hotel-related and has a non-zero amount -->
+                                @php $hasHotelExpenses = true; @endphp <!-- Set flag if hotel expense found -->
+                                <li>{{ $expense->title }} = {{ number_format($expense->amount, 2) }}</li>
+                            @endif
+                        @endforeach
+                        
+                        @if(!$hasHotelExpenses) 
+                            <li>No hotel expenses</li>
+                        @endif
+                    </ul>
+                </td>
+
+                <td>
+                    {{ $Supplier->totalHotelAmount > 0 ? number_format($Supplier->totalHotelAmount, 2) : 'No items' }}
+                </td>
+            </tr>
+            
+            @php $counter++; @endphp <!-- Increment the counter only when a row is displayed -->
+        @endif
+    @empty
+        <tr>
+            <td colspan="4" class="text-center">No Suppliers found.</td>
+        </tr>
+    @endforelse
+</tbody>
+
                     </table>
                 </div>
             </div>
