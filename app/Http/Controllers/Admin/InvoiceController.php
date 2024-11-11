@@ -300,7 +300,83 @@ class InvoiceController extends Controller
         // Return the PDF download
         return $pdf->download($filename);
     }
+    public function downloadCSV(Request $request)
+    {
+        // Set the timezone to Indian Standard Time (IST)
+        date_default_timezone_set('Asia/Kolkata'); 
+    
+        // Reuse the filtering logic from index()
+        $query = Invoice::with(['branch', 'partner', 'package', 'bank']);
+    
+        // Apply filters (same as in the index method)
+        if ($request->filled('quotation_no')) {
+            $query->where('quotation_no', 'like', '%' . $request->quotation_no . '%');
+        }
+        if ($request->filled('branch')) {
+            $query->whereHas('branch', function ($q) use ($request) {
+                $q->where('city', 'like', '%' . $request->branch . '%');
+            });
+        }
+        if ($request->filled('package')) {
+            $query->whereHas('package', function ($q) use ($request) {
+                $q->where('package_name', 'like', '%' . $request->package . '%');
+            });
+        }
+        if ($request->filled('partner')) {
+            $query->whereHas('partner', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->partner . '%');
+            });
+        }
+        if ($request->filled('discount_type')) {
+            $query->where('discount_type', $request->discount_type);
+        }
+    
+        // Get the filtered data
+        $quotations = $query->get();
+    
+        // Check if quotations exist before generating the CSV
+        if ($quotations->isEmpty()) {
+            return redirect()->back()->with('error', 'No invoices found for the selected filters.');
+        }
+    
+        // Create a CSV handle
+        $handle = fopen('php://output', 'w');
+    
+        // Format the date for the filename
+        $timestamp = date('Y-m-d_H-i-s');
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="Invoice_report_' . $timestamp . '.csv"');
+    
+        // Add CSV headers
+        fputcsv($handle, [
+            'S.No',
+            'Quotation No',
+            'Branch',
+            'Package',
+            'Partner',
+            'Discount Type',
+            'Discount',
+            'VAT',
+        ]);
+        $serialNumber = 1;
 
+        // Add the filtered data rows
+        foreach ($quotations as $quotation) {
+            fputcsv($handle, [
+                $serialNumber++,
+                $quotation->quotation_no,
+                $quotation->branch ? $quotation->branch->city : 'N/A',
+                $quotation->package ? $quotation->package->package_name : 'N/A',
+                $quotation->partner->name . ' (' . $quotation->partner->email . ')',
+                $quotation->discount_type,
+                $quotation->discount . ($quotation->discount_type == 'Fixed' ? '' : '%'),
+                $quotation->gst_tax . '%',
+            ]);
+        }
+    
+        fclose($handle);
+        exit;
+    }
     public function generateQuotationPDF($id)
     {
         // Fetch the quotation by ID from the database

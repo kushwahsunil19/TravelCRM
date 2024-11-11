@@ -43,7 +43,7 @@ class PartnerReportController extends Controller
         }
 
         // Get the filtered partners
-        $partners = $query->get();
+        $partners = $query->with(['city', 'state', 'country'])->get();
 
         return view('admin.partners.partners-report', compact('partners'));
     }
@@ -68,7 +68,7 @@ class PartnerReportController extends Controller
         }
 
         // Get the filtered data
-        $partners = $query->get();
+        $partners = $query->with(['city', 'state', 'country'])->get();
 
         // Check if partners exist before generating the PDF
         if ($partners->isEmpty()) {
@@ -94,7 +94,7 @@ class PartnerReportController extends Controller
         date_default_timezone_set('Asia/Kolkata'); 
 
         $query = Partner::query();
-        $partners = $query->get();
+        $partners = $query->with(['city', 'state', 'country'])->get();
 
         if ($partners->isEmpty()) {
             return redirect()->back()->with('error', 'No partners found for the selected filters.');
@@ -128,9 +128,9 @@ class PartnerReportController extends Controller
                 $partner->name,
                 $partner->email,
                 $partner->mobile,
-                $partner->city,
-                $partner->state,
-                $partner->country,
+                $partner->city->name,
+                $partner->state->name,
+                $partner->country->name,
                
             ]);
         }

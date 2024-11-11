@@ -38,7 +38,7 @@ Route::controller(AuthController::class)->group(function() {
     Route::post('/authenticate', 'authenticate')->name('authenticate');
    
 });
-Route::get('admin/invoices/download-csv', [InvoiceController::class, 'downloadCSV'])->name('invoices.downloadCSV');
+
 
 
 Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
@@ -93,7 +93,8 @@ Route::middleware(['auth'])->group(function() {
     Route::get('invoices/preview/{id}', [InvoiceController::class, 'preview'])->name('invoice.preview');
     Route::get('/invoices/pdf/{id}', [InvoiceController::class, 'generateQuotationPDF'])->name('invoice.estimate');
     Route::get('/convert-invoice/{id}', [QuotationController::class, 'convertToInvoice'])->name('convert-invoice.estimate');
-
+    Route::get('/download-invoice-csv', [InvoiceController::class, 'downloadCSV'])->name('invoices.downloadCSV');
+    
     Route::resource('suppliers', SupplierController::class);
     Route::get('/admin/quotations/download-csv', [QuotationReportController::class, 'downloadCSV'])->name('quotations.downloadCSV');
     Route::get('/admin/quotations/download-pdf', [QuotationReportController::class, 'downloadPDF'])->name('quotations.downloadPDF');

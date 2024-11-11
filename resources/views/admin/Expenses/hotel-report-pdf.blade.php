@@ -49,6 +49,15 @@
     <tbody>
         @php $serialNumber = 1; @endphp
         @foreach ($suppliers as $supplier)
+        @php $hasHotelExpenses = false; @endphp 
+
+        @foreach ($suppliers->expenses as $expense)
+            @if(strpos(strtolower($expense->title), 'hotel') !== false && $expense->amount > 0) <!-- Check if expense is hotel-related and has a non-zero amount -->
+                @php $hasHotelExpenses = true; @endphp <!-- Set flag if hotel expense found -->
+            @endif
+        @endforeach
+
+        @if($hasHotelExpenses) 
             <tr>
                 <td class="center">{{ $serialNumber++ }}</td>
                 <td>{{ $supplier->name }}</td>
@@ -76,6 +85,7 @@
                     @endif
                 </td>
             </tr>
+            @endif
         @endforeach
     </tbody>
 </table>

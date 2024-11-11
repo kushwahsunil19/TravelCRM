@@ -53,9 +53,9 @@
                 <td>{{ $partner->name }}</td>
                 <td>{{ $partner->email }}</td>
                 <td>{{ $partner->mobile }}</td>
-                <td>{{ $partner->city }}</td>
-                <td>{{ $partner->state }}</td>
-                <td>{{ $partner->country }}</td>
+                <td>{{ $partner->city->name ?? 'N/A' }}</td>
+                <td>{{ $partner->state->name ?? 'N/A' }}</td>
+                <td>{{ $partner->country->name ?? 'N/A' }}</td>
                 
             </tr>
         @endforeach
