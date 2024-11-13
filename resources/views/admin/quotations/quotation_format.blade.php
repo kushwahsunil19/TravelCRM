@@ -212,6 +212,8 @@
                             <p>
                                 <b>Estimate Number:</b> {{ $quotation_number }}<br />
                                 <b>Estimate Date:</b> {{ $quotation_date }}<br />
+                                <b>No. of Night:</b> {{ $no_of_night }}<br />
+                                <b>No. of Passenger:</b> {{ $no_of_passenger }}<br />
                                 <b>Valid Until:</b> {{ now()->addDays(30)->toDateString() }}<br />
                                 <b>Estimate Total:</b> {{$curreny_symbol}}{{ number_format($total, 2) }}
                             </p>

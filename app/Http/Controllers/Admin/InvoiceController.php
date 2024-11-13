@@ -23,6 +23,7 @@ class InvoiceController extends Controller
         $countries = Country::all();
         $states = State::all();
         $cities = City::all();
+        $suppliers = Supplier::all();
         $userRole = auth()->user()->roles->first()->name; // Assuming the user has only one role
         $rolePermissions = getRolePermissions();   
         if (in_array('list-invoice', $rolePermissions[$userRole])) { 
@@ -59,7 +60,7 @@ class InvoiceController extends Controller
           $invoices = $query->paginate(10); // Paginate the filtered results
       
           // Return the view with total invoices and paginated invoices
-          return view('admin.invoices.invoices', compact('invoices', 'totalInvoices','states','countries','cities'));
+          return view('admin.invoices.invoices', compact('invoices', 'totalInvoices','states','countries','cities','suppliers'));
         } else {
             // Redirect if the user lacks permission
             return redirect()->route('dashboard')->with('error', 'You do not have permission. Please contact the admin.');
@@ -178,7 +179,8 @@ class InvoiceController extends Controller
             'currency_id' => 'required|exists:currencies,id',
             'bank_id' => 'required',
             'invoice_no' => 'required|unique:invoices,invoice_no',        
-            // 'child_no_extra_bed_cost' => 'nullable|numeric',
+            'no_of_night' => 'nullable|numeric',
+            'no_of_passenger' => 'nullable|numeric',          
             'vat' => 'numeric',           
             'discount' => 'numeric',
         ]);
@@ -229,7 +231,8 @@ class InvoiceController extends Controller
             'currency_id' => 'required|exists:currencies,id',
             'bank_id' => 'required',
             'invoice_no' => 'required|unique:invoices,invoice_no,' . $invoice->id,
-          
+            'no_of_night' => 'nullable|numeric',
+            'no_of_passenger' => 'nullable|numeric',          
             'vat' => 'nullable|numeric',
             'discount' => 'nullable|numeric',
         ]);
@@ -426,6 +429,8 @@ class InvoiceController extends Controller
             'branch_name'=>$invoice->branch->branch_name,
             'invoice_date' => now()->toDateString(),
             'invoice_number' => $invoice->invoice_no,  // Assume there's an invoice number
+            'no_of_night' => $invoice->no_of_night,
+            'no_of_passenger' => $invoice->no_of_passenger, 
             'bill_to' => $invoice->partner->name,  // Assuming you have customer info in your invoice
             'bill_email' => $invoice->partner->email,  // Assuming you have customer info in your invoice
             'bill_mobile' => $invoice->partner->mobile,  // Assuming you have customer info in your invoice
@@ -501,6 +506,8 @@ class InvoiceController extends Controller
             'branch_name'=>$invoice->branch->branch_name,
             'invoice_date' => now()->toDateString(),
             'invoice_number' => $invoice->invoice_no,  // Assume there's an invoice number
+            'no_of_night' => $invoice->no_of_night,
+            'no_of_passenger' => $invoice->no_of_passenger, 
             'bill_to' => $invoice->partner->name,  // Assuming you have customer info in your invoice
             'bill_email' => $invoice->partner->email,  // Assuming you have customer info in your invoice
             'bill_mobile' => $invoice->partner->mobile,  // Assuming you have customer info in your invoice

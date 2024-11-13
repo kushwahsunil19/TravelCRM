@@ -201,6 +201,8 @@
                     <!-- Dynamic Estimate Info -->
                     <b>Invoice Number:</b> {{ $data['invoice_number'] }}<br />
                     <b>Invoice Date:</b> {{ $data['invoice_date'] }}<br />
+                    <b>No. of Night:</b> {{ $data['no_of_night'] }}<br />
+                    <b>No. of Passenger:</b> {{ $data['no_of_passenger'] }}<br />
                     <b>Valid Until:</b> {{ now()->addDays(30)->toDateString() }}<br />
                     <b>Invoice Total:</b> {{$data['curreny_symbol']}}{{ number_format($data['total'], 2) }}
                 </p>

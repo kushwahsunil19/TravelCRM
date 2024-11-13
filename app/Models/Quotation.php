@@ -21,6 +21,8 @@ class Quotation extends Model
         'currency_rate',
         'bank_id',
         'quotation_no',
+        'no_of_night',
+        'no_of_passenger', 
         'twin_double_sharing_cost',
         'triple_sharing_cost',
         'child_extra_bed_cost',

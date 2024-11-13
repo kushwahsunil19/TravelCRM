@@ -211,6 +211,8 @@
                             <p>
                                 <b>Invoice Number:</b> {{ $invoice_number }}<br />
                                 <b>Invoice Date:</b> {{ $invoice_date }}<br />
+                                <b>No. of Night:</b> {{ $no_of_night }}<br />
+                                <b>No. of Passenger:</b> {{ $no_of_passenger }}<br />
                                 <b>Valid Until:</b> {{ now()->addDays(30)->toDateString() }}<br />
                                 <b>Invoice Total:</b> {{$curreny_symbol}}{{ number_format($total, 2) }}
                             </p>

@@ -201,6 +201,8 @@
                     <!-- Dynamic Estimate Info -->
                     <b>Estimate Number:</b> {{ $data['quotation_number'] }}<br />
                     <b>Estimate Date:</b> {{ $data['quotation_date'] }}<br />
+                    <b>No. of Night:</b> {{ $data['no_of_night'] }}<br />
+                    <b>No. of Passenger:</b> {{ $data['no_of_passenger'] }}<br />
                     <b>Valid Until:</b> {{ now()->addDays(30)->toDateString() }}<br />
                     <b>Estimate Total:</b> {{$data['curreny_symbol']}}{{ number_format($data['total'], 2) }}
                 </p>

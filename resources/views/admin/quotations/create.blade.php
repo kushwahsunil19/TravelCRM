@@ -175,8 +175,54 @@ td {
                                                 @endif
                                             </div>
                                         </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="input-block mb-3">
+                                                <label>No. of Night</label>
+                                                <input type="number" class="form-control" name="no_of_night"
+                                                    placeholder="Enter No. of Night" value="{{ old('no_of_night')}}"
+                                                    min="0">
+                                                @if ($errors->has('no_of_night'))
+                                                <span class="text-danger">{{ $errors->first('no_of_night') }}</span>
+                                                @endif
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="input-block mb-3">
+                                                <label>No. of Passenger</label>
+                                                <input type="number" class="form-control" name="no_of_passenger"
+                                                    placeholder="Enter No. of Passenger"
+                                                    value="{{ old('no_of_passenger')}}" min="0">
+                                                @if ($errors->has('no_of_passenger'))
+                                                <span class="text-danger">{{ $errors->first('no_of_passenger') }}</span>
+                                                @endif
+
+                                            </div>
+                                        </div>
 
 
+                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                            <div class="input-block mb-3">
+                                                <label>Supplier</label>
+                                                
+                                                <select class="form-select @error('supplier') is-invalid @enderror"
+                                                    multiple aria-label="supplier" id="suppliers"
+                                                    name="supplier[]" style="height: 210px;">
+
+                                                    @forelse ($suppliers as $supplier)
+                                                    <option value="{{ $supplier->id }}"
+                                                        {{ in_array($supplier->id, old('supplier') ?? []) ? 'selected' : '' }}>
+                                                        {{ $supplier->name }}
+                                                    </option>
+                                                    @empty
+
+                                                    @endforelse
+                                                </select>
+                                                @if ($errors->has('supplier'))
+                                                <span class="text-danger">{{ $errors->first('supplier') }}</span>
+                                                @endif
+                                            </div>
+                                        </div>
 
                                     </div>
 
@@ -195,7 +241,8 @@ td {
                                                         </tr>
                                                     </thead>
                                                     <tbody id="packageBody">
-                                                    <tr class="odd"> <td valign="top" colspan="4" class="dataTables_empty"
+                                                        <tr class="odd">
+                                                            <td valign="top" colspan="4" class="dataTables_empty"
                                                                 style="text-align:center;">No data available in table
                                                             </td>
                                                         </tr>
@@ -211,30 +258,32 @@ td {
                                             <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Currency</label>
-                                                    <select class="select" name="currency_id" id="currency_id" 
-                                                        required>
-                                                        <option value="">Select Currency </option>  
+                                                    <select class="select" name="currency_id" id="currency_id" required>
+                                                        <option value="">Select Currency </option>
                                                         @foreach ($currencies as $currency)
-                                                            <option value="{{ $currency->id }}" data-symbol="{{$currency->symbol}}"
-                                                                {{ old('currency_id') == $currency->id ? 'selected' : '' }}>
-                                                                {{ $currency->code }}
-                                                            </option>
-                                                            @endforeach                                                     
+                                                        <option value="{{ $currency->id }}"
+                                                            data-symbol="{{$currency->symbol}}"
+                                                            {{ old('currency_id') == $currency->id ? 'selected' : '' }}>
+                                                            {{ $currency->code }}
+                                                        </option>
+                                                        @endforeach
                                                     </select>
 
                                                     @if ($errors->has('currency_id'))
                                                     <span class="text-danger">{{ $errors->first('currency_id') }}</span>
                                                     @endif
-                                                    <input type="hidden" id="currency_symbol" value="₹"> 
+                                                    <input type="hidden" id="currency_symbol" value="₹">
                                                 </div>
                                             </div>
                                             <div class="col-lg-2">
                                                 <div class="input-block mb-2">
                                                     <label>Currency Rate </label>
-                                                    <input type="number" class="form-control currency_rate" name="currency_rate"
-                                                        placeholder="Enter Rate"  min="0" step="any" value="0.00">
+                                                    <input type="number" class="form-control currency_rate"
+                                                        name="currency_rate" placeholder="Enter Rate" min="0" step="any"
+                                                        value="0.00">
                                                     @if ($errors->has('currency_rate'))
-                                                    <span class="text-danger">{{ $errors->first('currency_rate') }}</span>
+                                                    <span
+                                                        class="text-danger">{{ $errors->first('currency_rate') }}</span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -247,7 +296,8 @@ td {
                                                         <option value="Fixed">Fixed</option>
                                                     </select>
                                                     @if ($errors->has('discount_type'))
-                                                    <span class="text-danger">{{ $errors->first('discount_type') }}</span>
+                                                    <span
+                                                        class="text-danger">{{ $errors->first('discount_type') }}</span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -255,7 +305,7 @@ td {
                                                 <div class="input-block mb-2">
                                                     <label>Discount </label>
                                                     <input type="number" class="form-control discount" name="discount"
-                                                        placeholder="Enter discount" min="0"  step="any" value="0.00">
+                                                        placeholder="Enter discount" min="0" step="any" value="0.00">
                                                     @if ($errors->has('discount'))
                                                     <span class="text-danger">{{ $errors->first('discount') }}</span>
                                                     @endif
@@ -266,7 +316,7 @@ td {
                                                     <div class="input-block mb-2">
                                                         <label>Vat</label>
                                                         <input type="number" class="form-control gst_tax" name="gst_tax"
-                                                            placeholder="Enter Vat" min="0"  step="any" value="0.00">
+                                                            placeholder="Enter Vat" min="0" step="any" value="0.00">
                                                         <!-- <select class="select" name="gst_tax" id="gst_tax">
                                                             <option value="21">IVA - (21%)</option>
                                                             <option value="15">IRPF - (-15%)</option>
@@ -585,11 +635,11 @@ td {
                                     <select id="country" class="form-control" name="country_id">
                                         <option value="">Select Country</option>
                                         @foreach($countries as $country)
-                                            <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                        <option value="{{ $country->id }}">{{ $country->name }}</option>
                                         @endforeach
                                     </select>
                                     @if ($errors->has('country'))
-                                        <span class="text-danger">{{ $errors->first('country') }}</span>
+                                    <span class="text-danger">{{ $errors->first('country') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -602,7 +652,7 @@ td {
                                         <option value="">Select State</option>
                                     </select>
                                     @if ($errors->has('state'))
-                                        <span class="text-danger">{{ $errors->first('state') }}</span>
+                                    <span class="text-danger">{{ $errors->first('state') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -615,7 +665,7 @@ td {
                                         <option value="">Select City</option>
                                     </select>
                                     @if ($errors->has('city'))
-                                        <span class="text-danger">{{ $errors->first('city') }}</span>
+                                    <span class="text-danger">{{ $errors->first('city') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -1194,12 +1244,20 @@ td {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
 <script src="https://cdn.ckeditor.com/4.20.1/standard/ckeditor.js"></script>
 
 <script>
 $(document).ready(function() {
     CKEDITOR.replace('description');
     CKEDITOR.replace('description_edit');
+    $('#suppliers').select2({
+        placeholder: "Select Supliers",
+        allowClear: true
+    });
+   
 });
 </script>
 <script type="text/javascript">
@@ -1501,31 +1559,31 @@ $(document).ready(function() {
 
     // onchange Symbol
     function updateSymbol() {
-            var selectedOption = $('#currency_id option:selected'); // Get selected option
-            var symbol = selectedOption.data('symbol'); // Get symbol from the data attribute
-         
-            if (!symbol) {
-                symbol = '₹'; // Default to ₹ symbol if none selected
-            }
-            // Update all relevant fields with the new symbol
-          
-            var discount_type = $('#discount_type').val();
-            var package_amt = $('#package_amt').val(); // Default to 0 if not a number
-            var discount = $('.discount').val();         
-            var gst_tax = $('.gst_tax').val();
-        
-            $('#currency_symbol').val(symbol);          
-            calculation(package_amt, gst_tax, discount, discount_type,symbol);
-            
+        var selectedOption = $('#currency_id option:selected'); // Get selected option
+        var symbol = selectedOption.data('symbol'); // Get symbol from the data attribute
+
+        if (!symbol) {
+            symbol = '₹'; // Default to ₹ symbol if none selected
         }
-        // Call the function on page load in case a currency is already selected
-        updateSymbol();        
-        // Update symbol when the selection changes
-        $('#currency_id').on('change', updateSymbol);
-        // Symbol end 
+        // Update all relevant fields with the new symbol
+
+        var discount_type = $('#discount_type').val();
+        var package_amt = $('#package_amt').val(); // Default to 0 if not a number
+        var discount = $('.discount').val();
+        var gst_tax = $('.gst_tax').val();
+
+        $('#currency_symbol').val(symbol);
+        calculation(package_amt, gst_tax, discount, discount_type, symbol);
+
+    }
+    // Call the function on page load in case a currency is already selected
+    updateSymbol();
+    // Update symbol when the selection changes
+    $('#currency_id').on('change', updateSymbol);
+    // Symbol end 
     $(document).on('change', '#package_id', function() {
         var packageId = $(this).val();
-      
+
         if (packageId) {
             $.ajax({
                 url: '{{ route("packages.details", ":id") }}'.replace(':id', packageId),
@@ -1538,7 +1596,7 @@ $(document).ready(function() {
                         // Update package amounts
                         // $('.amount').text(symbol + response.data.amount);
                         $('#package_amt').val(response.data.amount);
-                       // $('.total_amt').text(symbol + response.data.amount);
+                        // $('.total_amt').text(symbol + response.data.amount);
 
                         // Clear the existing table body
                         const tableBody = $('#packageBody');
@@ -1567,8 +1625,9 @@ $(document).ready(function() {
                         var discount = $('.discount').val();
                         var gst_tax = $('.gst_tax').val();
                         var discount_type = $('#discount_type').val();
-                        var symbol = $('#currency_symbol').val(); 
-                        calculation(response.data.amount, gst_tax, discount, discount_type,symbol);
+                        var symbol = $('#currency_symbol').val();
+                        calculation(response.data.amount, gst_tax, discount, discount_type,
+                            symbol);
 
                     } else {
                         alert('Package not found');
@@ -1609,7 +1668,7 @@ $(document).ready(function() {
             var package_amt = $('#package_amt').val();
             var symbol = $('#currency_symbol').val();
         }
-        calculation(package_amt, gst_tax, discount, discount_type,symbol);
+        calculation(package_amt, gst_tax, discount, discount_type, symbol);
     });
 
     $(document).on('input', '.discount', function() {
@@ -1622,7 +1681,7 @@ $(document).ready(function() {
         var package_amt = $('#package_amt').val(); // Default to 0 if not a number
         var gst_tax = $('.gst_tax').val();
         var symbol = $('#currency_symbol').val();
-        calculation(package_amt, gst_tax, discount, discount_type,symbol);
+        calculation(package_amt, gst_tax, discount, discount_type, symbol);
     });
 
     $(document).on('input', '.gst_tax', function() {
@@ -1631,10 +1690,10 @@ $(document).ready(function() {
         var package_amt = $('#package_amt').val(); // Default to 0 if not a number
         var discount = $('.discount').val();
         var symbol = $('#currency_symbol').val();
-        calculation(package_amt, gst_tax, discount, discount_type,symbol);
+        calculation(package_amt, gst_tax, discount, discount_type, symbol);
     });
 
-    function calculation(amount, tax, discount, discount_type,symbol) {
+    function calculation(amount, tax, discount, discount_type, symbol) {
 
 
         $('#discount').val(discount);
@@ -1648,17 +1707,17 @@ $(document).ready(function() {
         // Update the displayed discount value
         $('.amount').text(symbol + package_amt.toFixed(2));
         //$('.discount').text(symbol + discount.toFixed(2));
-        $('.gst_tax').text( gst_tax.toFixed(2) + '%');
+        $('.gst_tax').text(gst_tax.toFixed(2) + '%');
         // Calculate the discount amount
         var discountAmount = 0;
         if (discount_type === 'Fixed') {
             discountAmount = discount; // For fixed discount, use the discount value directly
             $('.discount').text(symbol + discount.toFixed(2));
-        } else if(discount_type === 'Percentage'){
-        
+        } else if (discount_type === 'Percentage') {
+
             discountAmount = (package_amt * discount) / 100; // For percentage discount
-            $('.discount').text( discount.toFixed(2) +'%');
-        }else{
+            $('.discount').text(discount.toFixed(2) + '%');
+        } else {
             $('.discount').text(symbol + discount.toFixed(2));
         }
 
@@ -1674,13 +1733,14 @@ $(document).ready(function() {
         // Display the calculated total amount
         $('.total_amt').text(symbol + total_amt.toFixed(2)); // Format to 2 decimal places
     }
+
     function toggleIBANField() {
         var selectedBranch = $.trim($('#branch_id option:selected').text()).toLowerCase();
         if (selectedBranch === 'dubai') {
             $('#currency_id').next('.select2-container').css('pointer-events', 'none');
             var currencySelect = $('#currency_id'); // Currency select element
             currencySelect.val('4').trigger('change');
-            
+
             $('.iban_no').show();
             // Change label text to SWIFT Code
             $('label[for="ifsc_code"]').text('SWIFT Code');
@@ -1713,57 +1773,62 @@ $(document).ready(function() {
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function () {
-        // When a country is selected, load the respective states
-        $(document).on('change', '#country', function () {
-            var countryId = $(this).val();
-            $('#state_id').prop('disabled', false).empty().append('<option value="">Select State</option>');
-            $('#city').prop('disabled', true).empty().append('<option value="">Select City</option>');
+$(document).ready(function() {
+    // When a country is selected, load the respective states
+    $(document).on('change', '#country', function() {
+        var countryId = $(this).val();
+        $('#state_id').prop('disabled', false).empty().append('<option value="">Select State</option>');
+        $('#city').prop('disabled', true).empty().append('<option value="">Select City</option>');
 
-            if (countryId) {
-                let fullUrl = '{{ url("/states") }}/' + countryId;
-                $.ajax({
-                    url: fullUrl, // Adjust URL as per your route
-                    method: 'GET',
-                    success: function (states) {
-                        // Ensure that the response is parsed as an array
-                        if (Array.isArray(states)) {
-                            states.forEach(function (state) {
-                                //  alert(state.id );
-                                $('#state_id').append('<option value="' + state.id + '">' + state.name + '</option>');
-                            });
-                        } else {
-                            console.error("Invalid response format");
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error fetching states: ", error);
-                    }
-                });
-            }
-        });
-
-
-
-        // When a state is selected, load the respective cities
-        $(document).on('change', '#state_id', function () {
-            var stateId = $(this).val();
-            $('#city_id').prop('disabled', false).empty().append('<option value="">Select City</option>');
-
-            if (stateId) {
-                let fullUrl = '{{ url("/cities") }}/' + stateId;
-                $.ajax({
-                    url: fullUrl, // Get cities for the selected state
-                    method: 'GET',
-                    success: function (cities) {
-                        cities.forEach(function (city) {
-                            $('#city_id').append('<option value="' + city.id + '">' + city.name + '</option>');
+        if (countryId) {
+            let fullUrl = '{{ url("/states") }}/' + countryId;
+            $.ajax({
+                url: fullUrl, // Adjust URL as per your route
+                method: 'GET',
+                success: function(states) {
+                    // Ensure that the response is parsed as an array
+                    if (Array.isArray(states)) {
+                        states.forEach(function(state) {
+                            //  alert(state.id );
+                            $('#state_id').append('<option value="' + state.id +
+                                '">' + state.name + '</option>');
                         });
+                    } else {
+                        console.error("Invalid response format");
                     }
-                });
-            }
-        });
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching states: ", error);
+                }
+            });
+        }
     });
+
+
+
+    // When a state is selected, load the respective cities
+    $(document).on('change', '#state_id', function() {
+        var stateId = $(this).val();
+        $('#city_id').prop('disabled', false).empty().append('<option value="">Select City</option>');
+
+        if (stateId) {
+            let fullUrl = '{{ url("/cities") }}/' + stateId;
+            $.ajax({
+                url: fullUrl, // Get cities for the selected state
+                method: 'GET',
+                success: function(cities) {
+                    cities.forEach(function(city) {
+                        $('#city_id').append('<option value="' + city.id + '">' +
+                            city.name + '</option>');
+                    });
+                }
+            });
+        }
+    });
+});
 </script>
 <!-- /Theme Setting -->
 @endsection
+
+
+

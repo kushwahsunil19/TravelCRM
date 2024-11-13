@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Quotation,Invoice,Branch,Partner,Package,Bank,Currency,City,Country,State};
+use App\Models\{Quotation,Invoice,Branch,Partner,Package,Bank,Currency,City,Country,State,Supplier,Service,TmpService};
 use PDF;
 use Spatie\Permission\Models\Role;
 
@@ -31,6 +31,7 @@ class QuotationController extends Controller
         $countries = Country::all();
         $states = State::all();
         $cities = City::all();
+        $suppliers = Supplier::all();
         $userRole = auth()->user()->roles->first()->name; // Assuming the user has only one role
         $rolePermissions = getRolePermissions();   
         if (in_array('list-quotation', $rolePermissions[$userRole])) { 
@@ -68,7 +69,7 @@ class QuotationController extends Controller
          $quotations = $query->paginate( $totalQuotations); // Paginate the filtered results
      
          // Return the view with total quotations and paginated quotations
-         return view('admin.quotations.index', compact('quotations', 'totalQuotations','cities','states','countries'));
+         return view('admin.quotations.index', compact('quotations', 'totalQuotations','cities','states','countries','suppliers'));
         } else {
             // Redirect if the user lacks permission
             return redirect()->route('dashboard')->with('error', 'You do not have permission. Please contact the admin.');
@@ -85,6 +86,7 @@ class QuotationController extends Controller
         $countries = Country::all();
         $states = State::all();
         $cities = City::all();
+        $suppliers = Supplier::all();
         $quotation = Quotation::with(['branch', 'partner', 'package'])
                       ->latest('id')  // Sort by the latest ID
                       ->first(); 
@@ -98,7 +100,7 @@ class QuotationController extends Controller
         $packages = Package::all();
         $currencies = Currency::all();
         $bankDetails = Bank::latest()->get();
-        return view('admin.quotations.create', compact('branches', 'partners', 'packages','quotation_no','bankDetails','currencies','countries','states','cities'));
+        return view('admin.quotations.create', compact('branches', 'partners', 'packages','quotation_no','bankDetails','currencies','countries','states','cities','suppliers'));
     }
 
     /**
@@ -112,17 +114,25 @@ class QuotationController extends Controller
             'package_id' => 'required|exists:packages,id',
             'currency_id' => 'required|exists:currencies,id',
             'bank_id' => 'required|exists:bank_details,id',           
-            'twin_double_sharing_cost' => 'nullable|numeric',
-            'triple_sharing_cost' => 'nullable|numeric',
-            'child_extra_bed_cost' => 'nullable|numeric',
-            // 'child_no_extra_bed_cost' => 'nullable|numeric',
+            'no_of_night' => 'nullable|numeric',
+            'no_of_passenger' => 'nullable|numeric',            
             'gst_tax' => 'nullable|numeric',
             // 'discount_type' => 'required',            
             'discount' => 'numeric',
         ]);
        
         $quotation = Quotation::create($request->all());
-
+        $data =[]; 
+        foreach($request->supplier as $val){
+            $data[] = [
+                'suplyer_id' => $val,
+                'quotation_id' => $quotation->id,
+            ];
+        }
+        // echo "<pre>";
+        // print_r($request->all());
+        // print_r( $data);die;
+       TmpService::insert($data);
         return redirect()->route('quotations.edit', $quotation->id)
                          ->with('success', 'Quotation created successfully and you are now editing it.');
     
@@ -166,10 +176,8 @@ class QuotationController extends Controller
             'currency_id' => 'required|exists:currencies,id',
             'bank_id' => 'required|exists:bank_details,id',
             'quotation_no' => 'required|unique:quotations,quotation_no,' . $quotation->id,
-            'twin_double_sharing_cost' => 'nullable|numeric',
-            'triple_sharing_cost' => 'nullable|numeric',
-            'child_extra_bed_cost' => 'nullable|numeric',
-            'child_no_extra_bed_cost' => 'nullable|numeric',
+            'no_of_night' => 'nullable|numeric',
+            'no_of_passenger' => 'nullable|numeric',          
             'gst_tax' => 'numeric',
             'discount' => 'numeric',
         ]);
@@ -241,6 +249,8 @@ class QuotationController extends Controller
             'branch_name'=>$quotation->branch->branch_name,
             'quotation_date' => now()->toDateString(),
             'quotation_number' => $quotation->quotation_no,  // Assume there's an invoice number
+            'no_of_night' => $quotation->no_of_night,
+            'no_of_passenger' => $quotation->no_of_passenger,          
             'bill_to' => $quotation->partner->name,  // Assuming you have customer info in your quotation
             'bill_email' => $quotation->partner->email,  // Assuming you have customer info in your quotation
             'bill_mobile' => $quotation->partner->mobile,  // Assuming you have customer info in your quotation
@@ -316,6 +326,8 @@ class QuotationController extends Controller
             'branch_name'=>$quotation->branch->branch_name,
             'quotation_date' => now()->toDateString(),
             'quotation_number' => $quotation->quotation_no,  // Assume there's an invoice number
+            'no_of_night' => $quotation->no_of_night,
+            'no_of_passenger' => $quotation->no_of_passenger,  
             'bill_to' => $quotation->partner->name,  // Assuming you have customer info in your quotation
             'bill_email' => $quotation->partner->email,  // Assuming you have customer info in your quotation
             'bill_mobile' => $quotation->partner->mobile,  // Assuming you have customer info in your quotation
@@ -361,6 +373,7 @@ class QuotationController extends Controller
         public function convertToInvoice($id){
 
             $quotation = Quotation::with(['branch', 'partner', 'package','bank'])->findOrFail($id);
+            $tmpServices = TmpService::where('quotation_id',$id)->get();          
             $invoice = Invoice::with(['branch', 'partner', 'package'])
             ->latest('id')  // Sort by the latest ID
             ->first(); 
@@ -382,6 +395,8 @@ class QuotationController extends Controller
         if (!$existingInvoice) {
             $invoice = Invoice::create([
                 'invoice_no' => $invoice_no,
+                'no_of_night' => $quotation->no_of_night,
+                'no_of_passenger' => $quotation->no_of_passenger,    
                 'branch_id' => $quotation->branch_id,
                 'partner_id' => $quotation->partner_id,
                 'package_id' => $quotation->package_id,
@@ -402,6 +417,8 @@ class QuotationController extends Controller
                 [
                   
                     'branch_id' => $quotation->branch_id,
+                    'no_of_night' => $quotation->no_of_night,
+                    'no_of_passenger' => $quotation->no_of_passenger,    
                     'partner_id' => $quotation->partner_id,
                     'package_id' => $quotation->package_id,
                     'currency_id' => $quotation->currency_id,
