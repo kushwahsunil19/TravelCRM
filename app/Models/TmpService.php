@@ -9,6 +9,7 @@ class TmpService extends Model
 {
     use HasFactory;
     protected $table = 'tmp_services';
+    public $timestamps = false; // Disable timestamps
 
     // Fillable attributes for mass assignment
     protected $fillable = [

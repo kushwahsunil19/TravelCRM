@@ -20,7 +20,7 @@ class ProfitAndLoss extends Controller
         $branches = Branch::all();
         // Initialize a query builder for Partner
         $suppliersQuery = Supplier::query();
-        $invoicesQuery = Invoice::with(['branch', 'partner', 'package', 'bank', 'currency']);
+        $invoicesQuery = Invoice::with(['branch', 'partner', 'package', 'bank', 'currency','services']);
     
         // Apply filters if present in the request
         $currency_id  = 0;
@@ -51,7 +51,7 @@ class ProfitAndLoss extends Controller
            $suppliersQuery->whereBetween('created_at', [$fromDate, $toDate]);
         }
         
-        $invoices = $invoicesQuery->get();        
+        $invoices = $invoicesQuery->get(); 
       
         if (isset($invoices[0])) {
            $currency_id = $invoices[0]->currency_id;
@@ -62,9 +62,7 @@ class ProfitAndLoss extends Controller
         }
         $suppliers = $suppliersQuery->get();
         if ($request->ajax()) {
-    //    print_r($invoices);
-    //     print_r($request->all());
-    //   die;
+    
             // Return only the HTML content for the table if it's an AJAX request
             return response()->json([
                 'html' => view('admin.profit-loss.profit-loss-table-ajx', compact('invoices', 'suppliers'))->render()

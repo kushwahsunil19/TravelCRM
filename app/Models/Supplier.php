@@ -51,5 +51,10 @@ class Supplier extends Model
     {
         return $this->belongsTo(City::class , 'city_id', 'id');  
     }
+      // New relationship to get all invoices for this supplier
+      public function invoices()
+      {
+          return $this->hasManyThrough(Invoice::class, Service::class, 'suplyer_id', 'id', 'id', 'invoice_id');
+      }
 
 }

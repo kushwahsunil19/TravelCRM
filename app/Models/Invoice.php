@@ -66,4 +66,15 @@ class Invoice extends Model
     {
         return $this->belongsTo(Currency::class , 'currency_id', 'id');    
     }
+
+    public function services()
+    {
+        return $this->hasMany(Service::class, 'invoice_id', 'id');
+    }
+
+    // Alternative method to retrieve supplier IDs directly (optional)
+    public function supplierIds()
+    {
+        return $this->services()->pluck('suplyer_id')->toArray();
+    }
 }

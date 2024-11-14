@@ -205,7 +205,28 @@ td {
 
                                             </div>
                                         </div>
+                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                            <div class="input-block mb-3">
+                                                <label>Supplier</label>
 
+                                                <select class="form-select @error('supplier') is-invalid @enderror"
+                                                    multiple aria-label="supplier" id="suppliers" name="supplier[]"
+                                                    style="height: 210px;">
+
+                                                    @forelse ($suppliers as $supplier)
+                                                    <option value="{{ $supplier->id }}"
+                                                        {{ in_array($supplier->id, old('supplier', $selectedSuppliers ?? [])) ? 'selected' : '' }}>
+                                                        {{ $supplier->name }}
+                                                    </option>
+                                                    @empty
+                                                    <option value="">No suppliers available</option>
+                                                    @endforelse
+                                                </select>
+                                                @if ($errors->has('supplier'))
+                                                <span class="text-danger">{{ $errors->first('supplier') }}</span>
+                                                @endif
+                                            </div>
+                                        </div>
 
                                     </div>
 
@@ -1313,7 +1334,15 @@ td {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <script src="https://cdn.ckeditor.com/4.20.1/standard/ckeditor.js"></script>
+<script>
+$(document).ready(function() {
+    $('#suppliers').select2({
+        placeholder: "Select Supliers",
+        allowClear: true
+    });
 
+});
+</script>
 <script>
 $(document).ready(function() {
     CKEDITOR.replace('description');

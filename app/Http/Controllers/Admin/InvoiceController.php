@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Invoice,Branch,Partner,Package,Bank,Currency,Country,State,City};
+use App\Models\{Invoice,Branch,Partner,Package,Bank,Currency,Country,State,City,Supplier,Service};
 use PDF;
 class InvoiceController extends Controller
 {
@@ -148,7 +148,7 @@ class InvoiceController extends Controller
         $countries = Country::all();
         $states = State::all();
         $cities = City::all();
-        
+        $suppliers = Supplier::all();
           
         $invoice = Invoice::with(['branch', 'partner', 'package'])
                       ->latest('id')  // Sort by the latest ID
@@ -163,7 +163,7 @@ class InvoiceController extends Controller
         $packages = Package::all();
         $currencies = Currency::all();
         $bankDetails = Bank::latest()->get();
-        return view('admin.invoices.create', compact('branches', 'partners', 'packages','invoice_no','bankDetails','currencies','countries','states','cities'));
+        return view('admin.invoices.create', compact('branches', 'partners', 'packages','invoice_no','bankDetails','currencies','countries','states','cities','suppliers'));
     }
 
     /**
@@ -186,7 +186,15 @@ class InvoiceController extends Controller
         ]);
       
         $invoice = Invoice::create($request->all());
-
+        $data =[]; 
+        foreach($request->supplier as $val){
+            $data[] = [
+                'suplyer_id' => $val,
+                'invoice_id' => $invoice->id,
+            ];
+        }
+   
+       Service::insert($data);
         return redirect()->route('invoices.edit', $invoice->id)
                          ->with('success', 'Invioce created successfully and you are now editing it.');
     
@@ -215,8 +223,10 @@ class InvoiceController extends Controller
         $packages = Package::all();
         $currencies = Currency::all();
         $bankDetails = Bank::latest()->get();
+        $suppliers = Supplier::all();
+        $selectedSuppliers = $invoice->services->pluck('suplyer_id')->toArray();
 
-        return view('admin.invoices.edit', compact('invoice', 'branches', 'partners', 'packages','bankDetails','currencies','countries','states','cities'));
+        return view('admin.invoices.edit', compact('invoice', 'branches', 'partners', 'packages','bankDetails','currencies','countries','states','cities','suppliers','selectedSuppliers'));
     }
 
     /**
@@ -236,7 +246,16 @@ class InvoiceController extends Controller
             'vat' => 'nullable|numeric',
             'discount' => 'nullable|numeric',
         ]);
-
+       // Clear existing tmp_services records for this quotation
+       Service::where('invoice_id', $invoice->id)->delete();
+       // Insert new suppliers
+       $suppliers = $request->input('supplier');
+       foreach ($suppliers as $supplier_id) {
+           Service::create([
+               'suplyer_id' => $supplier_id,
+               'invoice_id' => $invoice->id,
+           ]);
+       }
         $invoice->update($request->all());
 
         return redirect()->route('invoices.edit', $invoice->id)

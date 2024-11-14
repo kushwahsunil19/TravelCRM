@@ -129,9 +129,7 @@ class QuotationController extends Controller
                 'quotation_id' => $quotation->id,
             ];
         }
-        // echo "<pre>";
-        // print_r($request->all());
-        // print_r( $data);die;
+   
        TmpService::insert($data);
         return redirect()->route('quotations.edit', $quotation->id)
                          ->with('success', 'Quotation created successfully and you are now editing it.');
@@ -158,10 +156,10 @@ class QuotationController extends Controller
         $partners = Partner::all();
         $packages = Package::all();
         $currencies = Currency::all();
-
+        $suppliers = Supplier::all();
         $bankDetails = Bank::latest()->get();
-
-        return view('admin.quotations.edit', compact('quotation', 'branches', 'partners', 'packages','bankDetails','currencies','countries','states','cities'));
+        $selectedSuppliers = $quotation->tmpServices->pluck('suplyer_id')->toArray();
+        return view('admin.quotations.edit', compact('quotation', 'branches', 'partners', 'packages','bankDetails','currencies','countries','states','cities','suppliers','selectedSuppliers'));
     }
 
     /**
@@ -181,7 +179,17 @@ class QuotationController extends Controller
             'gst_tax' => 'numeric',
             'discount' => 'numeric',
         ]);
+                // Clear existing tmp_services records for this quotation
+        TmpService::where('quotation_id', $quotation->id)->delete();
 
+        // Insert new suppliers
+        $suppliers = $request->input('supplier');
+        foreach ($suppliers as $supplier_id) {
+            TmpService::create([
+                'suplyer_id' => $supplier_id,
+                'quotation_id' => $quotation->id,
+            ]);
+        }
         $quotation->update($request->all());
 
         return redirect()->route('quotations.edit', $quotation->id)
@@ -373,7 +381,8 @@ class QuotationController extends Controller
         public function convertToInvoice($id){
 
             $quotation = Quotation::with(['branch', 'partner', 'package','bank'])->findOrFail($id);
-            $tmpServices = TmpService::where('quotation_id',$id)->get();          
+            $tmpServices = TmpService::where('quotation_id',$id)->get(); 
+               
             $invoice = Invoice::with(['branch', 'partner', 'package'])
             ->latest('id')  // Sort by the latest ID
             ->first(); 
@@ -409,6 +418,7 @@ class QuotationController extends Controller
                 'note' => $quotation->note,
                 'term_condition' => $quotation->term_condition,
             ]);
+          
         }else{
             $invoice = Invoice::updateOrCreate(
                 [  
@@ -433,6 +443,15 @@ class QuotationController extends Controller
                 ]
             );
         }
+        $invicedata =[]; 
+        foreach($tmpServices as $val){
+            $invicedata[] = [
+                'suplyer_id' => $val->suplyer_id,
+                'invoice_id' => $invoice->id,
+            ];
+        }       
+       // echo "<pre>"; print_r($invicedata);die;
+        Service::insert($invicedata);
             return redirect()->route('invoices.edit', $invoice->id);
           
         }

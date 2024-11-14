@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Supplier;
+use App\Models\{Supplier,Invoice};
 use PDF;
 class ExpensesController extends Controller
 {
@@ -26,6 +26,68 @@ class ExpensesController extends Controller
         }
 
         return view('admin.expenses.index', compact('suppliers'));
+    }
+
+      /**
+     * Display the suppliers with filtering options.
+     */
+    public function profitAndLossExpenses(Request $request)
+    {
+         $packages = [];  // Package::all();
+         $branches = []; //Branch::all();
+        // Initialize a query builder for Partner
+        $suppliersQuery = Supplier::query();
+        $invoicesQuery = Invoice::with(['branch', 'partner', 'package', 'bank', 'currency','services']);
+    
+        // Apply filters if present in the request
+        $currency_id  = 0;
+        if ($request->has('branch') && $request->branch) {            
+            $invoicesQuery->where('branch_id', $request->branch);
+          
+        }
+
+        if ($request->has('year') && $request->year) {
+          //  echo "turfdse";
+            $invoicesQuery->whereYear('created_at', $request->year);
+            $suppliersQuery->whereYear('created_at', $request->year);
+        }
+    
+        if ($request->has('month') && $request->month) {          
+            $invoicesQuery->whereMonth('created_at', $request->month);
+            $suppliersQuery->whereMonth('created_at', $request->month);
+        }
+    
+        if ($request->has('package') && $request->package) {       
+            $invoicesQuery->where('package_id', $request->package);
+        }
+
+        if ($request->has('from_date') && $request->from_date && $request->has('to_date') && $request->to_date) {          
+           $fromDate = Carbon::parse($request->from_date)->startOfDay();
+           $toDate = Carbon::parse($request->to_date)->endOfDay();
+           $invoicesQuery->whereBetween('created_at', [$fromDate, $toDate]);
+           $suppliersQuery->whereBetween('created_at', [$fromDate, $toDate]);
+        }
+        
+        $invoices = $invoicesQuery->get(); 
+      
+        if (isset($invoices[0])) {
+           $currency_id = $invoices[0]->currency_id;
+           $suppliersQuery->where('currency_id', $currency_id);
+        } else {
+            $currency_id = 0;
+            $suppliersQuery->where('currency_id', $currency_id);
+        }
+        $suppliers = $suppliersQuery->with(['invoices','expenses'])->get();
+      
+        // if ($request->ajax()) {
+    
+        //     // Return only the HTML content for the table if it's an AJAX request
+        //     return response()->json([
+        //         'html' => view('admin.profit-loss.profit-loss-table-ajx', compact('invoices', 'suppliers'))->render()
+        //     ]);
+        // }
+    
+        return view('admin.expenses.profilt-and-loss-expenses', compact('invoices', 'suppliers', 'packages', 'branches'));
     }
 
     /**

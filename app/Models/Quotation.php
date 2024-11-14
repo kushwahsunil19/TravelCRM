@@ -69,6 +69,15 @@ class Quotation extends Model
         return $this->belongsTo(Currency::class , 'currency_id', 'id');    
 
     }
+    public function tmpServices()
+    {
+        return $this->hasMany(TmpService::class, 'quotation_id', 'id');
+    }
 
+    // Alternative method to retrieve supplier IDs directly (optional)
+    public function supplierIds()
+    {
+        return $this->tmpServices()->pluck('suplyer_id')->toArray();
+    }
 
 }

@@ -187,7 +187,8 @@ td {
                                             <div class="input-block mb-3">
                                                 <label>No. of Night</label>
                                                 <input type="number" class="form-control" name="no_of_night"
-                                                    placeholder="Enter No. of Night" value="{{ old('no_of_night', $quotation->no_of_night) }}"  min="0">
+                                                    placeholder="Enter No. of Night"
+                                                    value="{{ old('no_of_night', $quotation->no_of_night) }}" min="0">
                                                 @if ($errors->has('no_of_night'))
                                                 <span class="text-danger">{{ $errors->first('no_of_night') }}</span>
                                                 @endif
@@ -198,11 +199,35 @@ td {
                                             <div class="input-block mb-3">
                                                 <label>No. of Passenger</label>
                                                 <input type="number" class="form-control" name="no_of_passenger"
-                                                    placeholder="Enter No. of Passenger" value="{{ old('no_of_passenger', $quotation->no_of_passenger) }}"  min="0">
+                                                    placeholder="Enter No. of Passenger"
+                                                    value="{{ old('no_of_passenger', $quotation->no_of_passenger) }}"
+                                                    min="0">
                                                 @if ($errors->has('no_of_passenger'))
                                                 <span class="text-danger">{{ $errors->first('no_of_passenger') }}</span>
                                                 @endif
 
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                            <div class="input-block mb-3">
+                                                <label>Supplier</label>
+
+                                                <select class="form-select @error('supplier') is-invalid @enderror"
+                                                    multiple aria-label="supplier" id="suppliers" name="supplier[]"
+                                                    style="height: 210px;">
+
+                                                    @forelse ($suppliers as $supplier)
+                                                    <option value="{{ $supplier->id }}"
+                                                        {{ in_array($supplier->id, old('supplier', $selectedSuppliers ?? [])) ? 'selected' : '' }}>
+                                                        {{ $supplier->name }}
+                                                    </option>
+                                                    @empty
+                                                    <option value="">No suppliers available</option>
+                                                    @endforelse
+                                                </select>
+                                                @if ($errors->has('supplier'))
+                                                <span class="text-danger">{{ $errors->first('supplier') }}</span>
+                                                @endif
                                             </div>
                                         </div>
 
@@ -254,7 +279,7 @@ td {
                                             <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Currency</label>
-                                                    <select class="select" name="currency_id" id="currency_id" required >
+                                                    <select class="select" name="currency_id" id="currency_id" required>
                                                         <option value="">Select Currency </option>
                                                         @foreach ($currencies as $currency)
                                                         <option value="{{ $currency->id }}"
@@ -275,14 +300,16 @@ td {
                                             <div class="col-lg-2">
                                                 <div class="input-block mb-2">
                                                     <label>Currency Rate </label>
-                                                    <input type="number" class="form-control currency_rate" name="currency_rate"
-                                                        placeholder="Enter Rate" min="0"  step="any" value="{{ old('currency_rate', $quotation->currency_rate) }}">
+                                                    <input type="number" class="form-control currency_rate"
+                                                        name="currency_rate" placeholder="Enter Rate" min="0" step="any"
+                                                        value="{{ old('currency_rate', $quotation->currency_rate) }}">
                                                     @if ($errors->has('currency_rate'))
-                                                    <span class="text-danger">{{ $errors->first('currency_rate') }}</span>
+                                                    <span
+                                                        class="text-danger">{{ $errors->first('currency_rate') }}</span>
                                                     @endif
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Discount Type</label>
@@ -306,7 +333,8 @@ td {
                                                     <label>Discount </label>
                                                     <input type="number" class="form-control discount" name="discount"
                                                         placeholder="Enter discount"
-                                                        value="{{ old('discount', $quotation->discount) }}" min="0"  step="any">
+                                                        value="{{ old('discount', $quotation->discount) }}" min="0"
+                                                        step="any">
                                                     @if ($errors->has('discount'))
                                                     <span class="text-danger">{{ $errors->first('discount') }}</span>
                                                     @endif
@@ -318,7 +346,8 @@ td {
                                                         <label>Vat</label>
                                                         <input type="number" class="form-control gst_tax" name="gst_tax"
                                                             placeholder="Enter Vat"
-                                                            value="{{ old('gst_tax', $quotation->gst_tax) }}" min="0"  step="any">
+                                                            value="{{ old('gst_tax', $quotation->gst_tax) }}" min="0"
+                                                            step="any">
                                                         <!-- <select class="select" name="gst_tax" id="gst_tax">
                                                             <option value="21">IVA - (21%)</option>
                                                             <option value="15">IRPF - (-15%)</option>
@@ -482,13 +511,13 @@ td {
                                     </li>
                                     <li>
                                         <form method="GET"
-                                        action="{{ route('convert-invoice.estimate', $quotation->id) }}">
+                                            action="{{ route('convert-invoice.estimate', $quotation->id) }}">
                                             <button type="submit" class="dropdown-item"><i
-                                            class="fe fe-file-text me-2"></i>Convert to
-                                            Invoice</button>
+                                                    class="fe fe-file-text me-2"></i>Convert to
+                                                Invoice</button>
                                         </form>
                                     </li>
-                                    
+
 
                                 </ul>
 
@@ -703,51 +732,51 @@ td {
                             </div>
 
                             <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
-                            <div class="input-block">
-                                <label for="edit_country">Country <span class="text-danger">*</span></label>
-                                <select id="edit_country" class="form-control" name="country_id">
-                                    <option value="">Select Country</option>
-                                    @foreach($countries as $country)
+                                <div class="input-block">
+                                    <label for="edit_country">Country <span class="text-danger">*</span></label>
+                                    <select id="edit_country" class="form-control" name="country_id">
+                                        <option value="">Select Country</option>
+                                        @foreach($countries as $country)
                                         <option value="{{ $country->id }}">{{ $country->name }}</option>
-                                    @endforeach
-                                </select>
-                                @if ($errors->has('country'))
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('country'))
                                     <span class="text-danger">{{ $errors->first('country') }}</span>
-                                @endif
+                                    @endif
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- State Dropdown -->
-                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
-                            <div class="input-block">
-                                <label for="edit_state">State <span class="text-danger">*</span></label>
-                                <select id="edit_state" class="form-control" name="state_id">
-                                    <option value="">Select State</option>
-                                    @foreach($states as $state)
+                            <!-- State Dropdown -->
+                            <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <div class="input-block">
+                                    <label for="edit_state">State <span class="text-danger">*</span></label>
+                                    <select id="edit_state" class="form-control" name="state_id">
+                                        <option value="">Select State</option>
+                                        @foreach($states as $state)
                                         <option value="{{ $state->id }}">{{ $state->name }}</option>
-                                    @endforeach
-                                </select>
-                                @if ($errors->has('state'))
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('state'))
                                     <span class="text-danger">{{ $errors->first('state') }}</span>
-                                @endif
+                                    @endif
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- City Dropdown -->
-                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
-                            <div class="input-block">
-                                <label for="edit_city">City <span class="text-danger">*</span></label>
-                                <select id="edit_city" class="form-control" name="city_id">
-                                    <option value="">Select City</option>
-                                    @foreach($cities as $city)
+                            <!-- City Dropdown -->
+                            <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <div class="input-block">
+                                    <label for="edit_city">City <span class="text-danger">*</span></label>
+                                    <select id="edit_city" class="form-control" name="city_id">
+                                        <option value="">Select City</option>
+                                        @foreach($cities as $city)
                                         <option value="{{ $city->id }}">{{ $city->name }}</option>
-                                    @endforeach
-                                </select>
-                                @if ($errors->has('city'))
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('city'))
                                     <span class="text-danger">{{ $errors->first('city') }}</span>
-                                @endif
+                                    @endif
+                                </div>
                             </div>
-                        </div>
 
 
 
@@ -1324,7 +1353,15 @@ td {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <script src="https://cdn.ckeditor.com/4.20.1/standard/ckeditor.js"></script>
+<script>
+$(document).ready(function() {
+    $('#suppliers').select2({
+        placeholder: "Select Supliers",
+        allowClear: true
+    });
 
+});
+</script>
 <script>
 $(document).ready(function() {
     CKEDITOR.replace('description');
@@ -1774,18 +1811,18 @@ $(document).ready(function() {
         $('#discount').val(discount);
         $('#gst_tax').val(gst_tax);
         // $('.discount').text(symbol + discount.toFixed(2));
-        $('.gst_tax').text( gst_tax.toFixed(2) + '%');
+        $('.gst_tax').text(gst_tax.toFixed(2) + '%');
         $('.amount').text(symbol + package_amt.toFixed(2));
         // Calculate the discount amount based on discount type
         var discountAmount = 0;
         if (discount_type === 'Fixed') {
             discountAmount = discount; // For fixed discount, use the discount value directly
             $('.discount').text(symbol + discount.toFixed(2));
-        } else if(discount_type === 'Percentage'){
-        
+        } else if (discount_type === 'Percentage') {
+
             discountAmount = (package_amt * discount) / 100; // For percentage discount
-            $('.discount').text( discount.toFixed(2) +'%');
-        }else{
+            $('.discount').text(discount.toFixed(2) + '%');
+        } else {
             $('.discount').text(symbol + discount.toFixed(2));
         }
 
@@ -1819,7 +1856,7 @@ $(document).ready(function() {
             $('label[for="ifsc_code"]').text('SWIFT Code');
             // Change placeholder to Enter SWIFT Code
             $('#ifsc_code').attr('placeholder', 'Enter SWIFT Code');
-        } else {        
+        } else {
 
             var currencySelect = $('#currency_id'); // Currency select element
             currencySelect.val('1').trigger('change');
@@ -1860,17 +1897,17 @@ $(document).ready(function() {
 </script>
 
 <script>
+$(document).ready(function() {
 
-$(document).ready(function () {
-    
     $('#edit_state').prop('disabled', true);
     $('#edit_city').prop('disabled', true);
-   
-    $(document).on('change', '#edit_country', function () {
+
+    $(document).on('change', '#edit_country', function() {
         var countryId = $(this).val();
-        
-       
-        $('#edit_state').prop('disabled', true).empty().append('<option value="">Select State</option>');
+
+
+        $('#edit_state').prop('disabled', true).empty().append(
+        '<option value="">Select State</option>');
         $('#edit_city').prop('disabled', true).empty().append('<option value="">Select City</option>');
 
         if (countryId) {
@@ -1878,17 +1915,19 @@ $(document).ready(function () {
             $.ajax({
                 url: fullUrl,
                 type: 'GET',
-                success: function (states) {
+                success: function(states) {
                     if (Array.isArray(states)) {
-                        states.forEach(function (state) {
-                            $('#edit_state').append('<option value="' + state.id + '">' + state.name + '</option>');
+                        states.forEach(function(state) {
+                            $('#edit_state').append('<option value="' + state.id +
+                                '">' + state.name + '</option>');
                         });
-                        $('#edit_state').prop('disabled', false); // Enable state dropdown if states are available
+                        $('#edit_state').prop('disabled',
+                        false); // Enable state dropdown if states are available
                     } else {
                         console.error("Invalid response format for states");
                     }
                 },
-                error: function () {
+                error: function() {
                     console.error("Error fetching states");
                 }
             });
@@ -1896,36 +1935,32 @@ $(document).ready(function () {
     });
 
     // Load cities when a state is selected
-    $(document).on('change', '#edit_state', function () {
+    $(document).on('change', '#edit_state', function() {
         var stateId = $(this).val();
-    
+
         if (stateId) {
             let fullUrl = '{{ url("/cities") }}/' + stateId;
             $.ajax({
                 url: fullUrl,
                 type: 'GET',
-                success: function (cities) {
+                success: function(cities) {
                     if (Array.isArray(cities)) {
-                        cities.forEach(function (city) {
-                            $('#edit_city').append('<option value="' + city.id + '">' + city.name + '</option>');
+                        cities.forEach(function(city) {
+                            $('#edit_city').append('<option value="' + city.id +
+                                '">' + city.name + '</option>');
                         });
-                        $('#edit_city').prop('disabled', false); 
+                        $('#edit_city').prop('disabled', false);
                     } else {
                         console.error("Invalid response format for cities");
                     }
                 },
-                error: function () {
+                error: function() {
                     console.error("Error fetching cities");
                 }
             });
         }
     });
 });
-
-            
-    
-
- 
 </script>
 
 @endsection

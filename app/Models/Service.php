@@ -9,6 +9,7 @@ class Service extends Model
 {
     use HasFactory;
     protected $table = 'services';
+    public $timestamps = false; // Disable timestamps
 
     // Fillable attributes for mass assignment
     protected $fillable = [

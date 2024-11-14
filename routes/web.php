@@ -123,6 +123,7 @@ Route::middleware(['auth'])->group(function() {
   Route::get('/partners-report/csv', [PartnerReportController::class, 'downloadCSV'])->name('partners.partners-report.downloadCSV');
   
     Route::get('/expenses',[ExpensesController::class,'index'])->name('expenses.index');
+    Route::get('/profit-loss-expenses',[ExpensesController::class,'profitAndLossExpenses'])->name('expenses.profit-loss-expenses');
     Route::get('/expenses-report-pdf',[ExpensesController::class,'downloadPDF'])->name('expenses.downloadPDF');
     Route::get('/expenses-report-csv',[ExpensesController::class,'downloadCSV'])->name('expenses.downloadCSV');
     Route::get('/suplyer/delete-exp/{id}', [SupplierController::class, 'deleteExp'])->name('suplyer.delete-exp');
