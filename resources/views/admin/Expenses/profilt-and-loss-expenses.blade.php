@@ -12,7 +12,7 @@
         <!-- Page Header -->
         <div class="page-header">
             <div class="content-page-header">
-                <h5>Profit & Loss</h5>
+                <h5>Profit & Loss Expences</h5>
                 <div class="page-content">
                     <div class="list-btn">
                         <ul class="filter-list">
@@ -56,7 +56,7 @@
         <!-- /Page Header -->
 
         <div class="profit-menu">
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-lg-2 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
                         <label>Branch</label>
@@ -142,7 +142,7 @@
                     <button class="btn btn-primary" id="filter-btn">Filter</button>
                     <button class="btn btn-danger" id="reset-btn">Reset</button>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <!-- Search Filter -->
@@ -192,7 +192,16 @@
         </tr>
     </thead>
     <tbody>
+        @php 
+           $gross  = 0;
+           $net_cost  = 0;
+           $net_profit  = 0;
+        @endphp
         @foreach($suppliers as $supplier)
+        @php 
+        $gross += $supplier->invoices->first()?->package->amount ?? 0;
+        $net_cost += $supplier->expenses->first()?->amount  ?? o;
+        @endphp
             <tr>
                 <td> {{ $supplier->invoices->first()?->partner->name ?? 'N/A' }}</td>
                 <td>{{ $supplier->name }}</td>
@@ -204,19 +213,19 @@
                         <div> {{ $expense->title }}</div>
                     @endforeach
                 </td>
-                <td>{{ $supplier->invoices->sum('gross') }}</td>
-                <td>{{ $supplier->expenses->sum('net_cost') }}</td>
-                <td>{{ $supplier->invoices->sum('gross') - $supplier->expenses->sum('net_cost') }}</td>
+                <td>{{ $supplier->invoices->first()?->package->amount ?? 'N/A' }}</td>
+                <td>{{ $supplier->expenses->first()?->amount ?? 'N/A'  }}</td>
+                <td> </td>
             </tr>
         @endforeach
     </tbody>
 
     <!-- Display the total income -->
     <tr class="profitloss-bg">
-        <td colspan="4" class="text-right"><strong>Total:</strong></td>
-        <td>{{ $suppliers->sum(fn($supplier) => $supplier->invoices->sum('gross')) }}</td>
-        <td>{{ $suppliers->sum(fn($supplier) => $supplier->expenses->sum('net_cost')) }}</td>
-        <td>{{ $suppliers->sum(fn($supplier) => $supplier->invoices->sum('gross') - $supplier->expenses->sum('net_cost')) }}</td>
+        <td colspan="4" class="text-right" ><strong>Total:</strong></td>
+        <td>{{ number_format($gross, 2) }}</td>
+        <td>{{  number_format($net_cost, 2) }}</td>
+        <td>{{ $net_profit}}</td>
     </tr>
 </table>
 
