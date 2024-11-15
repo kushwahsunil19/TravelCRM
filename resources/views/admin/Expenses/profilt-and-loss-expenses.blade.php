@@ -16,13 +16,13 @@
                 <div class="page-content">
                     <div class="list-btn">
                         <ul class="filter-list">
-                            <!-- <li>
+                            <li>
 										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip"
 											data-bs-placement="bottom" title="Filter"><span class="me-2"><img
 													src="{{url('public/assets/img/icons/filter-icon.svg')}}" alt="filter"></span>Filter
 										</a>
-									</li> -->
-                            <li>
+									</li>
+                            <!-- <li>
                                 <div class="dropdown dropdown-action" data-bs-toggle="tooltip"
                                     data-bs-placement="bottom" title="Download">
                                     <a href="#" class="btn-filters" data-bs-toggle="dropdown"
@@ -42,7 +42,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                            </li>
+                            </li> -->
                             <!-- <li>
 										<a class="btn-filters" href="javascript:void(0);" data-bs-toggle="tooltip"
 											data-bs-placement="bottom" title="Print"><span><i
@@ -185,7 +185,7 @@
             <th>Agent Name</th>
             <th>Supplier Name</th>
             <th>Description</th>
-            <th>Hotel</th>
+            <th>Expence</th>
             <th>Gross</th>
             <th>Net Cost</th>
             <th>Net Profit</th>
@@ -201,6 +201,14 @@
         @php 
         $gross += $supplier->invoices->first()?->package->amount ?? 0;
         $net_cost += $supplier->expenses->first()?->amount  ?? o;
+       
+        $gross_row  = 0;
+        $net_cost_row  = 0;
+        $gross_row += $supplier->invoices->first()?->package->amount ?? 0;
+        $net_cost_row += $supplier->expenses->first()?->amount  ?? o;
+        $net_profit_row = $gross_row -  $net_cost_row;
+        $net_profit += $net_profit_row ;
+        
         @endphp
             <tr>
                 <td> {{ $supplier->invoices->first()?->partner->name ?? 'N/A' }}</td>
@@ -213,9 +221,9 @@
                         <div> {{ $expense->title }}</div>
                     @endforeach
                 </td>
-                <td>{{ $supplier->invoices->first()?->package->amount ?? 'N/A' }}</td>
-                <td>{{ $supplier->expenses->first()?->amount ?? 'N/A'  }}</td>
-                <td> </td>
+                <td> {{  number_format($gross_row, 2) }}</td>
+                <td>{{  number_format($net_cost_row, 2) }}</td>
+                <td> {{  number_format($net_profit_row, 2) }}</td>
             </tr>
         @endforeach
     </tbody>
@@ -225,7 +233,7 @@
         <td colspan="4" class="text-right" ><strong>Total:</strong></td>
         <td>{{ number_format($gross, 2) }}</td>
         <td>{{  number_format($net_cost, 2) }}</td>
-        <td>{{ $net_profit}}</td>
+        <td>{{  number_format($net_profit, 2) }}</td>
     </tr>
 </table>
 
@@ -241,122 +249,48 @@
 <!-- /Page Wrapper -->
 
 <!-- Add Asset -->
-<div class="toggle-sidebar">
+<div class="toggle-sidebar ledge">
     <div class="sidebar-layout-filter">
-        <div class="sidebar-header">
-            <h5>Filter</h5>
+        <div class="sidebar-header ledge">
+            <h5>Expenses Report</h5>
             <a href="#" class="sidebar-closes"><i class="fa-regular fa-circle-xmark"></i></a>
         </div>
+
         <div class="sidebar-body">
-            <form action="#" autocomplete="off">
-                <!-- Customer -->
-                <div class="accordion" id="accordionMain1">
-                    <div class="card-header-new" id="headingOne">
-                        <h6 class="filter-title">
-                            <a href="javascript:void(0);" class="w-100" data-bs-toggle="collapse"
-                                data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Customer
-                                <span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
-                            </a>
-                        </h6>
-                    </div>
-
-                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
-                        data-bs-parent="#accordionExample1">
-                        <div class="card-body-chat">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div id="checkBoxes1">
-                                        <div class="form-custom">
-                                            <input type="text" class="form-control" id="member_search1"
-                                                placeholder="Search here">
-                                            <span><img src="assets/img/icons/search.svg" alt="img"></span>
-                                        </div>
-                                        <div class="selectBox-cont">
-                                            <label class="custom_check w-100">
-                                                <input type="checkbox" name="username">
-                                                <span class="checkmark"></span> Michael
-                                            </label>
-                                            <label class="custom_check w-100">
-                                                <input type="checkbox" name="username">
-                                                <span class="checkmark"></span> Richard
-                                            </label>
-                                            <label class="custom_check w-100">
-                                                <input type="checkbox" name="username">
-                                                <span class="checkmark"></span> Joseph
-                                            </label>
-                                            <label class="custom_check w-100">
-                                                <input type="checkbox" name="username">
-                                                <span class="checkmark"></span> David
-                                            </label>
-                                            <!-- View All -->
-                                            <div class="view-content">
-                                                <div class="viewall-One">
-                                                    <label class="custom_check w-100">
-                                                        <input type="checkbox" name="username">
-                                                        <span class="checkmark"></span> Benjamin
-                                                    </label>
-                                                    <label class="custom_check w-100">
-                                                        <input type="checkbox" name="username">
-                                                        <span class="checkmark"></span> Steven
-                                                    </label>
-                                                </div>
-                                                <div class="view-all">
-                                                    <a href="javascript:void(0);" class="viewall-button-One"><span
-                                                            class="me-2">View
-                                                            All</span><span><i
-                                                                class="fa fa-circle-chevron-down"></i></span></a>
-                                                </div>
-                                            </div>
-                                            <!-- /View All -->
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <form action="{{ route('expenses.profit-loss-expenses') }}" method="GET" autocomplete="off">
+                <!-- Name Filter -->
+                <div class="form-group">
+                    <label for="name">Agent Name</label>
+                    <input type="text" name="agent_name" id="name" class="form-control" placeholder="Enter name"
+                           value="{{ request('agent_name') }}">
                 </div>
-                <!-- /Customer -->
-
-                <!-- Select Date -->
-                <div class="accordion" id="accordionMain2">
-                    <div class="card-header-new" id="headingTwo">
-                        <h6 class="filter-title">
-                            <a href="javascript:void(0);" class="w-100 collapsed" data-bs-toggle="collapse"
-                                data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                                Select Date
-                                <span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
-                            </a>
-                        </h6>
-                    </div>
-
-                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
-                        data-bs-parent="#accordionExample2">
-                        <div class="card-body-chat">
-                            <div class="input-block mb-3">
-                                <label class="form-control-label">From</label>
-                                <div class="cal-icon">
-                                    <input type="email" class="form-control datetimepicker" placeholder="DD-MM-YYYY">
-                                </div>
-                            </div>
-                            <div class="input-block mb-3">
-                                <label class="form-control-label">To</label>
-                                <div class="cal-icon">
-                                    <input type="email" class="form-control datetimepicker" placeholder="DD-MM-YYYY">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label for="name">Supplyer Name</label>
+                    <input type="text" name="supplyer_name" id="name" class="form-control" placeholder="Enter name"
+                           value="{{ request('supplyer_name') }}">
                 </div>
-                <!-- /Select Date -->
 
-                <button type="submit"
-                    class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary">
-                    <span><img src="assets/img/icons/chart.svg" class="me-2" alt="Generate report"></span>Generate
-                    report
-                </button>
+
+                <!-- Expenses Filter -->
+                <div class="form-group">
+                    <label for="expenses">Expenses</label>
+                    <input type="text" name="expenses" id="expenses" class="form-control" placeholder="Enter expense title (e.g., hotel, bus)"
+                           value="{{ request('expenses') }}">
+                </div>
+
+                <!-- Email Filter -->
+                <!-- <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="text" name="email" id="email" class="form-control" placeholder="Enter Email"
+                           value="{{ request('email') }}">
+                </div> -->
+
+                <!-- Filter Buttons -->
+                <div style="margin-top:12px">
+                    <button type="submit" class="btn btn-primary">Apply</button>
+                    <button type="button" class="btn btn-secondary reset" >Reset</button>
+                </div>
             </form>
-
         </div>
     </div>
 </div>
@@ -750,9 +684,12 @@
 </div>
 <!-- /Theme Setting -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 <script>
 $(document).ready(function() {
-
+  $(document).on('click','.reset',function(){   
+       window.location.href = "{{ route('expenses.profit-loss-expenses') }}";
+  });
     setTimeout(function() {
         // Trigger the click event using .click()
         $('#filter-btn').click();

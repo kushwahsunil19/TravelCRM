@@ -184,8 +184,10 @@ class InvoiceController extends Controller
             'vat' => 'numeric',           
             'discount' => 'numeric',
         ]);
-      
-        $invoice = Invoice::create($request->all());
+        $input = $request->all();
+        $input['user_id'] = auth()->id();
+        $invoice = Invoice::create($input);
+        
         $data =[]; 
         foreach($request->supplier as $val){
             $data[] = [
@@ -256,7 +258,9 @@ class InvoiceController extends Controller
                'invoice_id' => $invoice->id,
            ]);
        }
-        $invoice->update($request->all());
+        $input = $request->all();
+        $input['user_id'] = auth()->id();
+        $invoice->update($input);
 
         return redirect()->route('invoices.edit', $invoice->id)
                          ->with('success', 'Invoice updated successfully.');

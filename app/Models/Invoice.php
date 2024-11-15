@@ -18,6 +18,7 @@ class Invoice extends Model
      * The attributes that are mass assignable.
      */
     protected $fillable = [
+        'user_id',
         'branch_id',
         'partner_id',
         'package_id',

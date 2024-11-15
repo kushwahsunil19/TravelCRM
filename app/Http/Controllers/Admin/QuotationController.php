@@ -382,7 +382,7 @@ class QuotationController extends Controller
 
             $quotation = Quotation::with(['branch', 'partner', 'package','bank'])->findOrFail($id);
             $tmpServices = TmpService::where('quotation_id',$id)->get(); 
-               
+            $user_id = auth()->id();
             $invoice = Invoice::with(['branch', 'partner', 'package'])
             ->latest('id')  // Sort by the latest ID
             ->first(); 
@@ -403,6 +403,7 @@ class QuotationController extends Controller
         // If an invoice with the same invoice_no and attributes exists, avoid updating it
         if (!$existingInvoice) {
             $invoice = Invoice::create([
+                'user_id' => $user_id,
                 'invoice_no' => $invoice_no,
                 'no_of_night' => $quotation->no_of_night,
                 'no_of_passenger' => $quotation->no_of_passenger,    
@@ -425,7 +426,7 @@ class QuotationController extends Controller
                     'id' => $existingInvoice->id,                     
                 ], // The unique key for the invoice (could be quotation_id)
                 [
-                  
+                    'user_id' => $user_id,
                     'branch_id' => $quotation->branch_id,
                     'no_of_night' => $quotation->no_of_night,
                     'no_of_passenger' => $quotation->no_of_passenger,    
