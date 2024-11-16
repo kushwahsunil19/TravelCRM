@@ -24,51 +24,66 @@ class UserController extends Controller
     }
     public function index(Request $request)
     {
+        // Get the current logged-in user
+        $user = auth()->user();
+        
+        // Check if the logged-in user has the 'Admin' role
+        $isAdmin = $user->hasRole('Administrator');
+        
+        // Initialize query to fetch users
       
         $query = User::with('roles')->whereDoesntHave('roles', function ($query) {
             $query->where('id', 1); // Exclude users with admin role
         });
-
+        // If the logged-in user is not an Admin, filter users by their role
+        if (!$isAdmin) {
+            $query->whereHas('roles', function ($subQuery) use ($user) {
+                $subQuery->where('name', $user->roles->first()->name); // Filter by the logged-in user's role
+            });
+        }
+    
         // Apply filters based on user input
         if ($request->filled('user_name')) {
-                $userName = trim($request->user_name); // Trim the input     
-                $names = explode(' ', $userName);  // Split the input by space
-                if (count($names)=== 2 || count($names) ===3) {
-                    // If there are two parts, assume first and last name
-                        $firstName = $names[0]; 
-                        $lastName =(!empty($names[2]))? $names[2]: $names[1];         
-                    $query->where('first_name', 'LIKE', '%' . $firstName . '%')
-                          ->where('last_name', 'LIKE', '%' . $lastName . '%');
-                } else {
-                    // If there's only one part, search in both first_name and last_name
-                    $query->where(function ($subQuery) use ($userName) {
-                        $subQuery->where('first_name', 'LIKE', '%' . $userName . '%')
-                                 ->orWhere('last_name', 'LIKE', '%' . $userName . '%');
-                    });
-                }
-            
-        }        
-
+            $userName = trim($request->user_name); // Trim the input     
+            $names = explode(' ', $userName);  // Split the input by space
+            if (count($names) === 2 || count($names) === 3) {
+                $firstName = $names[0]; 
+                $lastName = (!empty($names[2])) ? $names[2] : $names[1];         
+                $query->where('first_name', 'LIKE', '%' . $firstName . '%')
+                      ->where('last_name', 'LIKE', '%' . $lastName . '%');
+            } else {
+                $query->where(function ($subQuery) use ($userName) {
+                    $subQuery->where('first_name', 'LIKE', '%' . $userName . '%')
+                             ->orWhere('last_name', 'LIKE', '%' . $userName . '%');
+                });
+            }
+        }
+    
         if ($request->filled('email')) {
             $query->where('email', 'LIKE', '%' . $request->email . '%');
         }
-
+    
         if ($request->filled('role')) {
             $query->whereHas('roles', function ($subQuery) use ($request) {
-                $subQuery->where('id', $request->role);
+                $subQuery->where('id', $request->role); // Filter by selected role
             });
         }
+    
         if ($request->filled('mobile')) {
             $query->where('mobile', 'LIKE', '%' . $request->mobile . '%');
         }
-
-      
+    
+        // Get users with applied filters
         $total = User::count();
         $users = $query->latest()->paginate($total); // Adjust pagination as needed
-        $roles = Role::where('id', '!=', 1)->get(); // Fetch roles for filters
-
+    
+        // Fetch roles for the filter dropdown (excluding Admin)
+        $roles = Role::where('id', '!=', 1)->get();
+    
+        // Return the view with users grouped by roles
         return view('admin.user.users', compact('users', 'roles'));
     }
+    
     public function downloadPDF(Request $request)
     {
        

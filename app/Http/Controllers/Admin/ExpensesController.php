@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Supplier,Invoice};
+use App\Models\{Supplier,Invoice,User};
 use PDF;
 class ExpensesController extends Controller
 {
@@ -33,8 +33,10 @@ class ExpensesController extends Controller
      */
     public function profitAndLossExpenses(Request $request)
     {
-        $userId = auth()->id(); 
-
+       
+        $user = auth()->user(); // Get the logged-in user
+        $roleName = auth()->user()->getRoleNames()->first(); // Returns the first role name
+        $userIds = User::role( $roleName)->pluck('id');
          $packages = [];  // Package::all();
          $branches = []; //Branch::all();
         // Initialize a query builder for Partner
@@ -47,6 +49,7 @@ class ExpensesController extends Controller
             $invoicesQuery->where('branch_id', $request->branch);                    
         }
         // role base 
+        $userId = auth()->id(); 
         if($userId !=1){
         $invoicesQuery->where('user_id',  $userId); 
        }
@@ -78,15 +81,26 @@ class ExpensesController extends Controller
         //    $suppliersQuery->whereBetween('created_at', [$fromDate, $toDate]);
         // }
         
-        $invoices = $invoicesQuery->get(); 
-      
-        if (isset($invoices[0])) {
-           $currency_id = $invoices[0]->currency_id;
-           $suppliersQuery->where('currency_id', $currency_id);
-        } else {
-            $currency_id = 0;
-            $suppliersQuery->where('currency_id', $currency_id);
+         // role base 
+         $userId = auth()->id(); 
+         if($userId !=1){
+         $invoicesQuery->where('user_id',  $userId); 
         }
+        if ($user->hasRole($roleName) === 'Administrator') {
+          // Admin sees all data, no filters applied
+        } elseif ($user->hasRole($roleName)) {            
+            $invoicesQuery->whereIn('user_id', $userIds);
+        }
+        $invoices = $invoicesQuery->get(); 
+        // echo "<pre>"; print_r($invoices->toArray());die;
+        // if (isset($invoices[0])) {
+        //    $currency_id = $invoices[0]->currency_id;
+        //    $suppliersQuery->where('currency_id', $currency_id);
+        // } else {
+        //     $currency_id = 0;
+        //     $suppliersQuery->where('currency_id', $currency_id);
+        // }
+
         $suppliers = $suppliersQuery->with(['invoices','expenses'])->get();
         // echo "<pre>";
         // print_r($suppliers->toArray());die;

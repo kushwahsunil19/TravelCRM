@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Invoice,Supplier,Branch,Partner,Package,Bank,Currency};
+use App\Models\{Invoice,Supplier,Branch,Partner,Package,Bank,Currency,User};
 use PDF;
 use Carbon\Carbon;
 
@@ -15,7 +15,96 @@ class ProfitAndLoss extends Controller
      */
     public function index(Request $request)
     {
-       
+        $user = auth()->user(); // Get the logged-in user
+        $roleName = auth()->user()->getRoleNames()->first(); // Returns the first role name
+        $userIds = User::role( $roleName)->pluck('id');
+      
+        $packages = Package::all();
+        $branches = Branch::all();
+        // Initialize a query builder for Partner
+        $suppliersQuery = Supplier::query();
+        $invoicesQuery = Invoice::with(['branch', 'partner', 'package', 'bank', 'currency','services.suplyer.expenses']);
+    
+        // Apply filters if present in the request
+        $currency_id  = 0;
+        if ($request->has('branch') && $request->branch) {            
+            $invoicesQuery->where('branch_id', $request->branch);
+          
+        }
+
+        if ($request->has('year') && $request->year) {
+          //  echo "turfdse";
+            $invoicesQuery->whereYear('created_at', $request->year);
+            $suppliersQuery->whereYear('created_at', $request->year);
+        }
+    
+        if ($request->has('month') && $request->month) {          
+            $invoicesQuery->whereMonth('created_at', $request->month);
+            $suppliersQuery->whereMonth('created_at', $request->month);
+        }
+    
+        if ($request->has('package') && $request->package) {       
+            $invoicesQuery->where('package_id', $request->package);
+        }
+
+        if ($request->has('from_date') && $request->from_date && $request->has('to_date') && $request->to_date) {          
+           $fromDate = Carbon::parse($request->from_date)->startOfDay();
+           $toDate = Carbon::parse($request->to_date)->endOfDay();
+           $invoicesQuery->whereBetween('created_at', [$fromDate, $toDate]);
+           $suppliersQuery->whereBetween('created_at', [$fromDate, $toDate]);
+        }
+        
+         // role base 
+         $userId = auth()->id(); 
+         if($userId !=1){
+         $invoicesQuery->where('user_id',  $userId); 
+        }
+        if ($user->hasRole($roleName) === 'Administrator') {
+          // Admin sees all data, no filters applied
+        } elseif ($user->hasRole($roleName)) {            
+            $invoicesQuery->whereIn('user_id', $userIds);
+        }
+        $invoices = $invoicesQuery->get(); 
+      //    echo "<pre>"; print_r( $invoices->toArray());die;
+        if (isset($invoices[0])) {
+           $currency_id = $invoices[0]->currency_id;
+           $suppliersQuery->where('currency_id', $currency_id);
+        } else {
+            $currency_id = 0;
+            $suppliersQuery->where('currency_id', $currency_id);
+        }
+        $suppliers = $suppliersQuery->get();
+        
+        if ($request->ajax()) {
+    
+            // Return only the HTML content for the table if it's an AJAX request
+            return response()->json([
+                'html' => view('admin.profit-loss.profit-loss-table-ajx', compact('invoices', 'suppliers'))->render()
+            ]);
+        }
+    
+        return view('admin.profit-loss.profit-loss-list', compact('invoices', 'suppliers', 'packages', 'branches'));
+    }
+
+    
+    
+    public function filter(Request $request)
+    {
+        $invoices = Invoice::with(['branch', 'package', 'currency'])
+            ->when($request->year, fn($query, $year) => $query->whereYear('created_at', $year))
+            ->when($request->month, fn($query, $month) => $query->whereMonth('created_at', $month))
+            ->when($request->branch, fn($query, $branch) => $query->where('branch_id', $branch))
+            ->when($request->package, fn($query, $package) => $query->where('package_id', $package))
+            ->get();
+
+        return view('invoices.partials.table', compact('invoices'))->render();
+    }
+    public function downloadPDF(Request $request)
+    {
+        $user = auth()->user(); // Get the logged-in user
+        $roleName = auth()->user()->getRoleNames()->first(); // Returns the first role name
+        $userIds = User::role( $roleName)->pluck('id');
+      
         $packages = Package::all();
         $branches = Branch::all();
         // Initialize a query builder for Partner
@@ -51,8 +140,20 @@ class ProfitAndLoss extends Controller
            $suppliersQuery->whereBetween('created_at', [$fromDate, $toDate]);
         }
         
+         // role base 
+         $userId = auth()->id(); 
+         if($userId !=1){
+         $invoicesQuery->where('user_id',  $userId); 
+        }
+        if ($user->hasRole($roleName) === 'Administrator') {
+          // Admin sees all data, no filters applied
+        } elseif ($user->hasRole($roleName)) {            
+            $invoicesQuery->whereIn('user_id', $userIds);
+        }
         $invoices = $invoicesQuery->get(); 
-      
+        if ($invoices->isEmpty()) {
+            return redirect()->back()->with('error', 'No Data found for the selected filters.');
+        }
         if (isset($invoices[0])) {
            $currency_id = $invoices[0]->currency_id;
            $suppliersQuery->where('currency_id', $currency_id);
@@ -60,68 +161,6 @@ class ProfitAndLoss extends Controller
             $currency_id = 0;
             $suppliersQuery->where('currency_id', $currency_id);
         }
-        $suppliers = $suppliersQuery->get();
-        if ($request->ajax()) {
-    
-            // Return only the HTML content for the table if it's an AJAX request
-            return response()->json([
-                'html' => view('admin.profit-loss.profit-loss-table-ajx', compact('invoices', 'suppliers'))->render()
-            ]);
-        }
-    
-        return view('admin.profit-loss.profit-loss-list', compact('invoices', 'suppliers', 'packages', 'branches'));
-    }
-
-    
-    
-    public function filter(Request $request)
-    {
-        $invoices = Invoice::with(['branch', 'package', 'currency'])
-            ->when($request->year, fn($query, $year) => $query->whereYear('created_at', $year))
-            ->when($request->month, fn($query, $month) => $query->whereMonth('created_at', $month))
-            ->when($request->branch, fn($query, $branch) => $query->where('branch_id', $branch))
-            ->when($request->package, fn($query, $package) => $query->where('package_id', $package))
-            ->get();
-
-        return view('invoices.partials.table', compact('invoices'))->render();
-    }
-    public function downloadPDF(Request $request)
-    {
-        $packages = Package::all();
-        $branches = Branch::all();
-    
-        // Initialize the query builders
-        $suppliersQuery = Supplier::query();
-        $invoicesQuery = Invoice::with(['branch', 'partner', 'package', 'bank', 'currency']);
-    
-        // Apply filters if present in the request
-        if ($request->has('year') && $request->year) {
-            $invoicesQuery->whereYear('created_at', $request->year);
-            $suppliersQuery->whereYear('created_at', $request->year);
-        }
-    
-        if ($request->has('month') && $request->month) {
-            $invoicesQuery->whereMonth('created_at', $request->month);
-            $suppliersQuery->whereMonth('created_at', $request->month);
-        }
-    
-        if ($request->has('branch') && $request->branch) {
-            $invoicesQuery->where('branch_id', $request->branch);
-        }
-    
-        if ($request->has('package') && $request->package) {
-            $invoicesQuery->where('package_id', $request->package);
-        }
-    
-        if ($request->has('from_date') && $request->from_date && $request->has('to_date') && $request->to_date) {
-            $fromDate = Carbon::parse($request->from_date)->startOfDay();
-            $toDate = Carbon::parse($request->to_date)->endOfDay();
-            $invoicesQuery->whereBetween('created_at', [$fromDate, $toDate]);
-            $suppliersQuery->whereBetween('created_at', [$fromDate, $toDate]);
-        }
-    
-        // Fetch results
-        $invoices = $invoicesQuery->get();
         $suppliers = $suppliersQuery->get();
     
         // Load the view and pass data to it
@@ -135,40 +174,67 @@ class ProfitAndLoss extends Controller
     }
     public function downloadCSV(Request $request)
     {
-        // Apply the same filters for invoices and suppliers
-        $invoicesQuery = Invoice::with(['branch', 'partner', 'package', 'bank', 'currency']);
+        $user = auth()->user(); // Get the logged-in user
+        $roleName = auth()->user()->getRoleNames()->first(); // Returns the first role name
+        $userIds = User::role( $roleName)->pluck('id');
+      
+        $packages = Package::all();
+        $branches = Branch::all();
+        // Initialize a query builder for Partner
         $suppliersQuery = Supplier::query();
+        $invoicesQuery = Invoice::with(['branch', 'partner', 'package', 'bank', 'currency','services']);
     
         // Apply filters if present in the request
+        $currency_id  = 0;
+        if ($request->has('branch') && $request->branch) {            
+            $invoicesQuery->where('branch_id', $request->branch);
+          
+        }
+
         if ($request->has('year') && $request->year) {
+          //  echo "turfdse";
             $invoicesQuery->whereYear('created_at', $request->year);
             $suppliersQuery->whereYear('created_at', $request->year);
         }
     
-        if ($request->has('month') && $request->month) {
+        if ($request->has('month') && $request->month) {          
             $invoicesQuery->whereMonth('created_at', $request->month);
             $suppliersQuery->whereMonth('created_at', $request->month);
         }
     
-        if ($request->has('branch') && $request->branch) {
-            $invoicesQuery->where('branch_id', $request->branch);
-        }
-    
-        if ($request->has('package') && $request->package) {
+        if ($request->has('package') && $request->package) {       
             $invoicesQuery->where('package_id', $request->package);
         }
-    
-        if ($request->has('from_date') && $request->from_date && $request->has('to_date') && $request->to_date) {
-            $fromDate = Carbon::parse($request->from_date)->startOfDay();
-            $toDate = Carbon::parse($request->to_date)->endOfDay();
-            $invoicesQuery->whereBetween('created_at', [$fromDate, $toDate]);
-            $suppliersQuery->whereBetween('created_at', [$fromDate, $toDate]);
+
+        if ($request->has('from_date') && $request->from_date && $request->has('to_date') && $request->to_date) {          
+           $fromDate = Carbon::parse($request->from_date)->startOfDay();
+           $toDate = Carbon::parse($request->to_date)->endOfDay();
+           $invoicesQuery->whereBetween('created_at', [$fromDate, $toDate]);
+           $suppliersQuery->whereBetween('created_at', [$fromDate, $toDate]);
         }
-    
-        // Fetch results
-        $invoices = $invoicesQuery->get();
+        
+         // role base 
+         $userId = auth()->id(); 
+         if($userId !=1){
+         $invoicesQuery->where('user_id',  $userId); 
+        }
+        if ($user->hasRole($roleName) === 'Administrator') {
+          // Admin sees all data, no filters applied
+        } elseif ($user->hasRole($roleName)) {            
+            $invoicesQuery->whereIn('user_id', $userIds);
+        }
+        $invoices = $invoicesQuery->get(); 
+        if ($invoices->isEmpty()) {
+            return redirect()->back()->with('error', 'No Data found for the selected filters.');
+        }
+        if (isset($invoices[0])) {
+           $currency_id = $invoices[0]->currency_id;
+           $suppliersQuery->where('currency_id', $currency_id);
+        } else {
+            $currency_id = 0;
+            $suppliersQuery->where('currency_id', $currency_id);
+        }
         $suppliers = $suppliersQuery->get();
-    
         // Calculate Total Income and Net Income
         $totalInvoiceAmt = 0;
         foreach ($invoices as $invoice) {

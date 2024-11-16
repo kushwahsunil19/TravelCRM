@@ -746,10 +746,27 @@
                             @endif
                         <!-- Finance & Accounts -->
                         @if($listExpenses)
-                        <li class="menu-title"><span>Finance & Accounts  </span></li>
+                        <!-- <li class="menu-title"><span>Finance & Accounts  </span></li>
                         <li>
                             <a href="{{route('expenses.index')}}"><i class="fe fe-file-plus"></i> <span>Expenses</span></a>
-                        </li>
+                        </li> -->
+
+                        <li class="menu-title"><span>Finance & Accounts   </span></li>
+
+                            <li class="submenu">
+
+                                <a href="{{route('expenses.index')}}"><i class="fe fe-file"></i> <span>Finance & Accounts</span><span class="menu-arrow"></span></a>
+                                <ul style="display: none;">
+
+                                    <li><a href="{{route('expenses.index')}}"
+                                            class="{{strpos($url,'expenses') !== false ? 'active' : '' }}"><i class="fe fe-file-plus"></i> <span>Expenses</span></a>
+                                    </li>
+                                    <li><a href="{{route('expenses.profit-loss-expenses')}}"
+                                            class="{{strpos($url,'profit-loss-expenses') !== false ? 'active' : '' }}"><i class="fe fe-file-plus"></i> <span>Profit & Loss Expenses</span></a>
+                                    </li>
+
+                                </ul>
+                            </li>
                         @endif
 
                          

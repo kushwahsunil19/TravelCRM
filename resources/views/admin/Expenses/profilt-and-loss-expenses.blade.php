@@ -12,7 +12,7 @@
         <!-- Page Header -->
         <div class="page-header">
             <div class="content-page-header">
-                <h5>Profit & Loss Expences</h5>
+                <h5>Profit & Loss Expenses</h5>
                 <div class="page-content">
                     <div class="list-btn">
                         <ul class="filter-list">
@@ -185,7 +185,7 @@
             <th>Agent Name</th>
             <th>Supplier Name</th>
             <th>Description</th>
-            <th>Expence</th>
+            <th>Expense</th>
             <th>Gross</th>
             <th>Net Cost</th>
             <th>Net Profit</th>
