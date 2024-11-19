@@ -23,12 +23,17 @@ class ProfitAndLoss extends Controller
         $branches = Branch::all();
         // Initialize a query builder for Partner
         $suppliersQuery = Supplier::query();
-        $invoicesQuery = Invoice::with(['branch', 'partner', 'package', 'bank', 'currency','services.suplyer.expenses']);
+        $invoicesQuery = Invoice::with(['user','branch', 'partner', 'package', 'bank', 'currency','services.suplyer.expenses']);
     
         // Apply filters if present in the request
         $currency_id  = 0;
         if ($request->has('branch') && $request->branch) {            
             $invoicesQuery->where('branch_id', $request->branch);
+          
+        }
+
+        if ($request->has('user_id') && $request->user_id) {            
+            $invoicesQuery->where('user_id', $request->user_id);
           
         }
 
@@ -59,13 +64,13 @@ class ProfitAndLoss extends Controller
          if($userId !=1){
          $invoicesQuery->where('user_id',  $userId); 
         }
-        if ($user->hasRole($roleName) === 'Administrator') {
+        if ($user->hasRole($roleName) == 'Administrator') {
           // Admin sees all data, no filters applied
         } elseif ($user->hasRole($roleName)) {            
             $invoicesQuery->whereIn('user_id', $userIds);
         }
         $invoices = $invoicesQuery->get(); 
-      //    echo "<pre>"; print_r( $invoices->toArray());die;
+        // echo "<pre>"; print_r( $invoices->toArray());die;
         if (isset($invoices[0])) {
            $currency_id = $invoices[0]->currency_id;
            $suppliersQuery->where('currency_id', $currency_id);
@@ -74,7 +79,7 @@ class ProfitAndLoss extends Controller
             $suppliersQuery->where('currency_id', $currency_id);
         }
         $suppliers = $suppliersQuery->get();
-        
+        $users = User::where('id', '!=', 1)->get();
         if ($request->ajax()) {
     
             // Return only the HTML content for the table if it's an AJAX request
@@ -83,7 +88,7 @@ class ProfitAndLoss extends Controller
             ]);
         }
     
-        return view('admin.profit-loss.profit-loss-list', compact('invoices', 'suppliers', 'packages', 'branches'));
+        return view('admin.profit-loss.profit-loss-list', compact('invoices', 'suppliers', 'packages', 'branches','users'));
     }
 
     

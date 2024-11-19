@@ -7,6 +7,8 @@
                     <th>Package</th>
                     <th>Month</th>
                     <th>Year</th>
+                    <th>User</th>
+                    <th>Created Date</th>
                     <th>Total</th>
                 </tr>
             </thead>
@@ -28,13 +30,19 @@
                         $total_amt = $amount_after_discount + $tax_amt;
                         $total_invoice_amt += $total_amt;
                     @endphp
+
+                    <!-- Invoice Details -->
                     <tr>
                         <td>{{ $invoice->branch->branch_name ?? '' }}</td>
                         <td>{{ $invoice->package->package_name ?? '' }}</td>
                         <td>{{ \Carbon\Carbon::parse($invoice->created_at)->format('F') }}</td>
                         <td>{{ \Carbon\Carbon::parse($invoice->created_at)->format('Y') }}</td>
+                        <td>{{ $invoice->user->first_name ?? '' }} {{ $invoice->user->last_name ?? '' }}</td>
+                        <td>{{ \Carbon\Carbon::parse($invoice->created_at)->format('d-M-Y h:i A') }}</td>
                         <td>{{ $symbol }}{{ number_format($total_amt, 2) }}</td>
                     </tr>
+
+                
 
                     @php
                         $invoice_total_expense = 0; // Initialize total expense for this invoice
@@ -51,36 +59,45 @@
                         @endphp
 
                         <!-- Display Supplier Name with Expense Description in the same row -->
-                        @foreach ($supplier_expenses as $expense)
+                    
                             <tr>
                                 <!-- Display Supplier Name -->
                                 <td colspan="2">
-                                    <strong>Supplier: {{ $supplier->name }} - {{ $expense->title }}</strong>
+                                <strong>Supplier: {{$service->suplyer->name}}</strong>
+                                <br><strong>Expense:- </strong>
+                                <br>
+                                  @foreach ($supplier_expenses as $expense)
+                                      {{ $expense->title }} - {{ $symbol }}{{ number_format($expense->amount, 2) }}
+                                      <br>
+                                    @endforeach
+                                    <br>
+                                    <strong>Total Expense:</strong>
+                                    <strong>{{ $symbol }}{{ number_format($supplier_expense_total, 2) }}</strong>
                                 </td>
                                 <!-- Display Expense Amount -->
-                                <td>{{ $symbol }}{{ number_format($expense->amount, 2) }}</td>
+                                <td></td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                             </tr>
-                        @endforeach
+                            
+                       
 
                         <!-- Display total expense for the supplier -->
-                        <tr class="total-expense">
-                            <td colspan="2"><strong>Total Expense for {{ $supplier->name }}</strong></td>
-                            <td><strong>{{ $symbol }}{{ number_format($supplier_expense_total, 2) }}</strong></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
+                 
+                            <!-- Add HR tag -->
+                    
                     @endforeach
+                    
 
                     <!-- Display total expense for this invoice -->
                     <tr class="total-expense">
-                        <td colspan="4"><strong>Total Expense for this Invoice</strong></td>
+                        <td colspan="6"><strong>Total Expense for this Invoice</strong></td>
                         <td><strong>{{ $symbol }}{{ number_format($invoice_total_expense, 2) }}</strong></td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="text-center">No invoices found.</td>
+                        <td colspan="7" class="text-center">No invoices found.</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -88,6 +105,8 @@
             <!-- Display the total income -->
             <tr class="profitloss-bg">
                 <td><strong>Total Income</strong></td>
+                <td></td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -100,12 +119,16 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+                <td></td>
                 <td><strong>{{ $symbol }}{{ number_format($total_supplier_expenses, 2) }}</strong></td>
             </tr>
 
             <!-- Display net income -->
             <tr class="profitloss-bg">
                 <td><strong>Net Income</strong></td>
+                <td></td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>

@@ -118,10 +118,11 @@ class QuotationController extends Controller
             'no_of_passenger' => 'nullable|numeric',            
             'gst_tax' => 'nullable|numeric',
             // 'discount_type' => 'required',            
-            'discount' => 'numeric',
+            // 'discount' => 'numeric',
         ]);
-       
-        $quotation = Quotation::create($request->all());
+        $input = $request->all();
+        $input['discount'] = ($request->discount !='')?$request->discount:0.00;
+        $quotation = Quotation::create($input);
         $data =[]; 
         foreach($request->supplier as $val){
             $data[] = [
@@ -177,8 +178,10 @@ class QuotationController extends Controller
             'no_of_night' => 'nullable|numeric',
             'no_of_passenger' => 'nullable|numeric',          
             'gst_tax' => 'numeric',
-            'discount' => 'numeric',
+            // 'discount' => 'nullable|numeric',
         ]);
+        $input = $request->all();
+        $input['discount'] = ($request->discount !='')?$request->discount:0.00;
                 // Clear existing tmp_services records for this quotation
         TmpService::where('quotation_id', $quotation->id)->delete();
 
@@ -190,7 +193,7 @@ class QuotationController extends Controller
                 'quotation_id' => $quotation->id,
             ]);
         }
-        $quotation->update($request->all());
+        $quotation->update($input);
 
         return redirect()->route('quotations.edit', $quotation->id)
                          ->with('success', 'Quotation updated successfully.');

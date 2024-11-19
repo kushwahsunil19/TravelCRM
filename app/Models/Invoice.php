@@ -35,6 +35,14 @@ class Invoice extends Model
         'note',
         'term_condition'
     ];
+
+      /**
+     * Get the User associated with the quotation.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class,'user_id', 'id');
+    }
      /**
      * Get the branch associated with the quotation.
      */

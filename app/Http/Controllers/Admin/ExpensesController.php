@@ -41,7 +41,7 @@ class ExpensesController extends Controller
          $branches = []; //Branch::all();
         // Initialize a query builder for Partner
         $suppliersQuery = Supplier::query();
-        $invoicesQuery = Invoice::with(['branch', 'partner', 'package', 'bank', 'currency','services']);
+        $invoicesQuery = Invoice::with(['branch', 'partner', 'package', 'bank', 'currency','services.suplyer.expenses']);
     
         // Apply filters if present in the request
         $currency_id  = 0;
@@ -102,8 +102,8 @@ class ExpensesController extends Controller
         // }
 
         $suppliers = $suppliersQuery->with(['invoices','expenses'])->get();
-        // echo "<pre>";
-        // print_r($suppliers->toArray());die;
+        //  echo "<pre>";
+        //  print_r($suppliers->toArray());die;
         // if ($request->ajax()) {
     
         //     // Return only the HTML content for the table if it's an AJAX request

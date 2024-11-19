@@ -57,7 +57,8 @@
 
         <div class="profit-menu">
             <div class="row">
-            <div class="col-lg-2 col-md-6 col-sm-12">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                
                     <div class="input-block mb-3">
                         <label>Branch</label>
                         <ul class="form-group">
@@ -74,7 +75,25 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-6 col-sm-12">
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="input-block mb-3">
+                        <label>User Name</label>
+                        <ul class="form-group">
+                            <li>
+                                <select class="select" name="user_id" id="user_id">
+                                    <option value="">Select User</option>
+                                    @foreach ($users as $user)
+                                    <option value="{{ $user->id }}"
+                                        {{ old('user_id') == $user->id ? 'selected' : '' }}>
+                                        {{ $user->first_name }} {{ $user->last_name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
                         <label>Package</label>
                         <ul class="form-group">
@@ -92,9 +111,9 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-6 col-sm-12">
+                <div class="col-lg-3 col-md-2 col-sm-12">
                     <div class="input-block mb-3">
-                        <label>Period</label>
+                        <label>Year</label>
                         <ul class="form-group">
                             <li>
                                 <select class="select" name="year" id="year">
@@ -113,27 +132,9 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-6 col-sm-12">
+                <div class="col-lg-3 col-md-2 col-sm-12 ">
                     <div class="input-block mb-3">
-                        <label>From</label>
-                        <div class="cal-icon cal-icon-info">
-                            <input type="text" id="from_date" name="from_date" class="datetimepicker form-control"
-                                placeholder="DD-MM-YYYY">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-6 col-sm-12">
-                    <div class="input-block mb-3">
-                        <label>To</label>
-                        <div class="cal-icon cal-icon-info">
-                            <input type="text" id="to_date" name="to_date" class="datetimepicker form-control"
-                                placeholder="DD-MM-YYYY">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-6 col-sm-12 ">
-                    <div class="input-block mb-3">
-                        <label>Display Columns by</label>
+                        <label>Month</label>
                         <ul class="form-group">
                             <li>
                                 <select class="select" name="month" id="month">
@@ -146,9 +147,28 @@
                         </ul>
                     </div>
                 </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="input-block mb-3">
+                        <label>From</label>
+                        <div class="cal-icon cal-icon-info">
+                            <input type="text" id="from_date" name="from_date" class="datetimepicker form-control"
+                                placeholder="DD-MM-YYYY">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="input-block mb-3">
+                        <label>To</label>
+                        <div class="cal-icon cal-icon-info">
+                            <input type="text" id="to_date" name="to_date" class="datetimepicker form-control"
+                                placeholder="DD-MM-YYYY">
+                        </div>
+                    </div>
+                </div>
+               
              
               
-                <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="col-lg-12 col-md-12 col-sm-12">
                     <button class="btn btn-primary" id="filter-btn">Filter</button>
                     <button class="btn btn-danger" id="reset-btn">Reset</button>
                 </div>
@@ -748,6 +768,7 @@ $(document).ready(function() {
         $('#package').val('');
         $('#from_date').val('');
         $('#to_date').val('');
+        $('#user_id').val('');
         window.location.reload();
         // Reset date inputs to the current and one month before date
         // var currentDate = new Date();
@@ -779,6 +800,7 @@ $(document).ready(function() {
                 package: $('#package').val(),
                 from_date: $('#from_date').val(),
                 to_date: $('#to_date').val(),
+                user_id: $('#user_id').val(),
             },
             success: function(response) {
                 $('#profit-loss-table').html(response

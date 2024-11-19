@@ -181,10 +181,12 @@ class InvoiceController extends Controller
             'invoice_no' => 'required|unique:invoices,invoice_no',        
             'no_of_night' => 'nullable|numeric',
             'no_of_passenger' => 'nullable|numeric',          
-            'vat' => 'numeric',           
-            'discount' => 'numeric',
-        ]);
+            // 'vat' => 'numeric',           
+            // 'discount' => 'numeric',
+        ]);     
+      
         $input = $request->all();
+        $input['discount'] = ($request->discount !='')?$request->discount:0.00;
         $input['user_id'] = auth()->id();
         $invoice = Invoice::create($input);
         

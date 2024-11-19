@@ -17,11 +17,12 @@
                     <div class="list-btn">
                         <ul class="filter-list">
                             <li>
-										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip"
-											data-bs-placement="bottom" title="Filter"><span class="me-2"><img
-													src="{{url('public/assets/img/icons/filter-icon.svg')}}" alt="filter"></span>Filter
-										</a>
-									</li>
+                                <a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip"
+                                    data-bs-placement="bottom" title="Filter"><span class="me-2"><img
+                                            src="{{url('public/assets/img/icons/filter-icon.svg')}}"
+                                            alt="filter"></span>Filter
+                                </a>
+                            </li>
                             <!-- <li>
                                 <div class="dropdown dropdown-action" data-bs-toggle="tooltip"
                                     data-bs-placement="bottom" title="Download">
@@ -176,70 +177,91 @@
             <div class="col-sm-12">
                 <div class="card-table">
                     <div class="card-body">
-                       
-                                <div class="table-responsive">
-                                    <div class="table-profit-loss">
-                                    <table class="table table-center">
-    <thead class="thead-light loss">
-        <tr>
-            <th>Agent Name</th>
-            <th>Supplier Name</th>
-            <th>Description</th>
-            <th>Expense</th>
-            <th>Gross</th>
-            <th>Net Cost</th>
-            <th>Net Profit</th>
-        </tr>
-    </thead>
-    <tbody>
-        @php 
-           $gross  = 0;
-           $net_cost  = 0;
-           $net_profit  = 0;
-        @endphp
-        @foreach($suppliers as $supplier)
-        @php 
-        $gross += $supplier->invoices->first()?->package->amount ?? 0;
-        $net_cost += $supplier->expenses->first()?->amount  ?? o;
-       
-        $gross_row  = 0;
-        $net_cost_row  = 0;
-        $gross_row += $supplier->invoices->first()?->package->amount ?? 0;
-        $net_cost_row += $supplier->expenses->first()?->amount  ?? o;
-        $net_profit_row = $gross_row -  $net_cost_row;
-        $net_profit += $net_profit_row ;
-        
-        @endphp
-            <tr>
-                <td> {{ $supplier->invoices->first()?->partner->name ?? 'N/A' }}</td>
-                <td>{{ $supplier->name }}</td>
-                <td>
-                {{ $supplier->description }}
-                </td>
-                <td>
-                    @foreach($supplier->expenses as $expense)
-                        <div> {{ $expense->title }}</div>
-                    @endforeach
-                </td>
-                <td> {{  number_format($gross_row, 2) }}</td>
-                <td>{{  number_format($net_cost_row, 2) }}</td>
-                <td> {{  number_format($net_profit_row, 2) }}</td>
-            </tr>
-        @endforeach
-    </tbody>
 
-    <!-- Display the total income -->
-    <tr class="profitloss-bg">
-        <td colspan="4" class="text-right" ><strong>Total:</strong></td>
-        <td>{{ number_format($gross, 2) }}</td>
-        <td>{{  number_format($net_cost, 2) }}</td>
-        <td>{{  number_format($net_profit, 2) }}</td>
-    </tr>
-</table>
+                        <div class="table-responsive">
+                            <div class="table-profit-loss">
+                                <table class="table table-center">
+                                    <thead class="thead-light loss">
+                                        <tr>
+                                            <th>Supplier Name</th>
+                                            <th>Agent Name</th>
+                                            <th>Description</th>
+                                            <th>Expenses</th>
+                                            <th>Gross</th>
+                                            <th>Net Cost</th>
+                                            <th>Net Profit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                        $gross = 0;
+                                        $net_cost = 0;
+                                        $net_profit = 0;
+                                        @endphp
 
-                                    </div>
-                                </div>
-                          
+                                        @foreach ($suppliers as $supplier)
+                                        @php
+                                        $gross_row = 0;
+                                        $net_cost_row = 0;
+
+                                        // Calculate gross from invoices
+                                        foreach ($supplier->invoices as $invoice) {
+                                        $package_amount = $invoice->package?->amount ?? 0;
+                                        $gross_row += $package_amount;
+                                        }
+
+                                        // Calculate net cost from expenses
+                                        foreach ($supplier->expenses as $expense) {
+                                        $net_cost_row += $expense->amount;
+                                        }
+
+                                        // Calculate net profit
+                                        $net_profit_row = $gross_row - $net_cost_row;
+
+                                        // Add to totals
+                                        $gross += $gross_row;
+                                        $net_cost += $net_cost_row;
+                                        $net_profit += $net_profit_row;
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $supplier->name }}</td>
+                                            <td>
+                                                @if ($supplier->invoices->isNotEmpty())
+                                                {{ $supplier->invoices->first()->partner?->name ?? 'N/A' }}
+                                                @else
+                                                N/A
+                                                @endif
+                                            </td>
+                                            <td>{{ $supplier->description ?? 'N/A' }}</td>
+                                            <td>
+                                                @foreach ($supplier->expenses as $expense)
+                                                <div>{{ $expense->title }} - {{ number_format($expense->amount, 2) }}
+                                                </div>
+                                                @endforeach
+                                            </td>
+                                            <td>{{ number_format($gross_row, 2) }}</td>
+                                            <td>{{ number_format($net_cost_row, 2) }}</td>
+                                            <td>{{ number_format($net_profit_row, 2) }}</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+
+                                    <!-- Display the total values -->
+                                    <tfoot>
+                                        <tr class="profitloss-bg">
+                                            <td colspan="4" class="text-right"><strong>Total:</strong></td>
+                                            <td>{{ number_format($gross, 2) }}</td>
+                                            <td>{{ number_format($net_cost, 2) }}</td>
+                                            <td>{{ number_format($net_profit, 2) }}</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+
+
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -262,20 +284,20 @@
                 <div class="form-group">
                     <label for="name">Agent Name</label>
                     <input type="text" name="agent_name" id="name" class="form-control" placeholder="Enter name"
-                           value="{{ request('agent_name') }}">
+                        value="{{ request('agent_name') }}">
                 </div>
                 <div class="form-group">
                     <label for="name">Supplyer Name</label>
                     <input type="text" name="supplyer_name" id="name" class="form-control" placeholder="Enter name"
-                           value="{{ request('supplyer_name') }}">
+                        value="{{ request('supplyer_name') }}">
                 </div>
 
 
                 <!-- Expenses Filter -->
                 <div class="form-group">
                     <label for="expenses">Expenses</label>
-                    <input type="text" name="expenses" id="expenses" class="form-control" placeholder="Enter expense title (e.g., hotel, bus)"
-                           value="{{ request('expenses') }}">
+                    <input type="text" name="expenses" id="expenses" class="form-control"
+                        placeholder="Enter expense title (e.g., hotel, bus)" value="{{ request('expenses') }}">
                 </div>
 
                 <!-- Email Filter -->
@@ -288,7 +310,7 @@
                 <!-- Filter Buttons -->
                 <div style="margin-top:12px">
                     <button type="submit" class="btn btn-primary">Apply</button>
-                    <button type="button" class="btn btn-secondary reset" >Reset</button>
+                    <button type="button" class="btn btn-secondary reset">Reset</button>
                 </div>
             </form>
         </div>
@@ -687,9 +709,9 @@
 
 <script>
 $(document).ready(function() {
-  $(document).on('click','.reset',function(){   
-       window.location.href = "{{ route('expenses.profit-loss-expenses') }}";
-  });
+    $(document).on('click', '.reset', function() {
+        window.location.href = "{{ route('expenses.profit-loss-expenses') }}";
+    });
     setTimeout(function() {
         // Trigger the click event using .click()
         $('#filter-btn').click();
