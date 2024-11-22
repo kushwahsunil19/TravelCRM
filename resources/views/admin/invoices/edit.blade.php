@@ -317,7 +317,7 @@ td {
                                                             Fixed</option>
                                                     </select>
                                                     @if ($errors->has('vat'))
-                                                    <span class="text-danger">{{ $errors->first('vat') }}</span>
+                                                    <span class="text-danger">{{ $errors->first('discount_type') }}</span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -481,7 +481,7 @@ td {
                                     </div>
                                 </div>
                                 <div class="text-end">
-                                    <a href="{{route('quotations.index')}}" class="btn customer-btn-cancel">Cancel</a>
+                                    <a href="{{route('invoices.index')}}" class="btn customer-btn-cancel">Cancel</a>
                                     <button type="submit" class="btn btn-primary  customer-btn-save">save</button>
 
 
@@ -1631,7 +1631,12 @@ $(document).ready(function() {
                 // Clear the existing table body
                 const tableBody = $('#packageBody');
                 tableBody.empty(); // Clear existing rows
-
+                var discount = $('.discount').val();
+                var vat = $('.vat').val();
+                var discount_type = $('#discount_type').val();
+                var symbol = $('#currency_symbol').val();
+                calculation(response.data.amount, vat, discount, discount_type,
+                    symbol);
                 // Ensure that the response contains the expected fields
                 const packageData = response.data;
 

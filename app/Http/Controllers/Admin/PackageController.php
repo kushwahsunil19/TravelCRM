@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Package;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Redirect;
 
 class PackageController extends Controller
@@ -15,7 +16,7 @@ class PackageController extends Controller
     public function index()
     {
         // Fetch all packages, including soft-deleted ones if needed
-        $packages = Package::latest()->get();
+        $packages = Package::with('user')->where('user_id', auth()->id())->latest()->get();
 
         return view('admin.packages.index', compact('packages'));
     }
@@ -51,13 +52,15 @@ class PackageController extends Controller
       
         // Validate the incoming data
         $request->validate([
-            'package_name' => 'required|string|max:255',
+            'package_name' => 'required|string|max:255|unique:packages,package_name',
             'description' => 'required|string',
             'amount' => 'required|numeric|min:0',
         ]);
         // Create a new package
-        Package::create($request->all());
-        $packageDetails = Package::latest()->get();
+        $input = $request->all();
+        $input['user_id'] = auth()->id();
+        Package::create($input);
+        $packageDetails = Package::with('user')->latest()->get();
         return response()->json(['status'=>true,'data'=>$packageDetails ,'message' => 'Package details added successfully']);
    
     }

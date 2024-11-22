@@ -181,12 +181,14 @@ class InvoiceController extends Controller
             'invoice_no' => 'required|unique:invoices,invoice_no',        
             'no_of_night' => 'nullable|numeric',
             'no_of_passenger' => 'nullable|numeric',          
-            // 'vat' => 'numeric',           
-            // 'discount' => 'numeric',
+             'vat' => 'nullable|numeric',           
+            'discount' => 'nullable|numeric',
         ]);     
       
         $input = $request->all();
+        $input['vat'] = ($request->vat !='')?$request->vat:0.00;
         $input['discount'] = ($request->discount !='')?$request->discount:0.00;
+        $input['currency_rate'] = ($request->currency_rate !='')?$request->currency_rate:0.00;
         $input['user_id'] = auth()->id();
         $invoice = Invoice::create($input);
         
@@ -250,6 +252,7 @@ class InvoiceController extends Controller
             'vat' => 'nullable|numeric',
             'discount' => 'nullable|numeric',
         ]);
+        
        // Clear existing tmp_services records for this quotation
        Service::where('invoice_id', $invoice->id)->delete();
        // Insert new suppliers
@@ -262,6 +265,9 @@ class InvoiceController extends Controller
        }
         $input = $request->all();
         $input['user_id'] = auth()->id();
+        $input['vat'] = ($request->vat !='')?$request->vat:0.00;
+        $input['discount'] = ($request->discount !='')?$request->discount:0.00;
+        $input['currency_rate'] = ($request->currency_rate !='')?$request->currency_rate:0.00;
         $invoice->update($input);
 
         return redirect()->route('invoices.edit', $invoice->id)
@@ -445,7 +451,26 @@ class InvoiceController extends Controller
                 'amount' => $invoice->package->amount,
             ];
         }
-
+         // Get the branch ID from the quotation
+         $branchId = $invoice->branch_id;
+        
+         // Fetch the branch and related bank details
+         $branchDetails = Branch::with('companyBankDetail')->findOrFail($branchId);
+         
+         $companyBankDetails = [];
+         
+         if ($branchDetails->companyBankDetail->isNotEmpty()) {
+             foreach ($branchDetails->companyBankDetail as $bankDetail) {
+                 $companyBankDetails[] = [
+                     'bank_name' => $bankDetail->bank_name,
+                     'account_holder_name' => $bankDetail->account_holder_name,
+                     'account_no' => $bankDetail->account_no,
+                     'branch_name' => $bankDetail->branch_name,
+                     'ifsc_code' => $bankDetail->ifsc_code,
+                     'iban_no' => $bankDetail->iban_no,
+                 ];
+             }
+         }
         // Example: Adjust these fields based on your quotations table structure
         $data = [
             'currency_code'=>$invoice->currency->code,
@@ -473,6 +498,7 @@ class InvoiceController extends Controller
             'bank_branch'=> isset($invoice->bank->branch_name)?$invoice->bank->branch_name:'',
             'ifsc_code'=> isset($invoice->bank->ifsc_code)?$invoice->bank->ifsc_code:'',
             'iban_no'=> isset($invoice->bank->iban_no)?$invoice->bank->iban_no:'',
+            'companyBankDetails' => $companyBankDetails,
         ];
         
         // Load the view and pass data to it
@@ -522,6 +548,26 @@ class InvoiceController extends Controller
                 'amount' => $invoice->package->amount,
             ];
         }
+        // Get the branch ID from the quotation
+        $branchId = $invoice->branch_id;
+        
+        // Fetch the branch and related bank details
+        $branchDetails = Branch::with('companyBankDetail')->findOrFail($branchId);
+        
+        $companyBankDetails = [];
+        
+        if ($branchDetails->companyBankDetail->isNotEmpty()) {
+            foreach ($branchDetails->companyBankDetail as $bankDetail) {
+                $companyBankDetails[] = [
+                    'bank_name' => $bankDetail->bank_name,
+                    'account_holder_name' => $bankDetail->account_holder_name,
+                    'account_no' => $bankDetail->account_no,
+                    'branch_name' => $bankDetail->branch_name,
+                    'ifsc_code' => $bankDetail->ifsc_code,
+                    'iban_no' => $bankDetail->iban_no,
+                ];
+            }
+        }
 
         // Example: Adjust these fields based on your invoices table structure
         $data = [
@@ -550,6 +596,7 @@ class InvoiceController extends Controller
             'bank_branch'=> isset($invoice->bank->branch_name)?$invoice->bank->branch_name:'',
             'ifsc_code'=> isset($invoice->bank->ifsc_code)?$invoice->bank->ifsc_code:'',
             'iban_no'=> isset($invoice->bank->iban_no)?$invoice->bank->iban_no:'',
+            'companyBankDetails' => $companyBankDetails,  
         ];
         
         // Load the view and pass data to it

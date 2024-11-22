@@ -22,7 +22,7 @@
 													src="{{url('public/assets/img/icons/filter-icon.svg')}}" alt="filter"></span>Filter
 										</a>
 									</li> -->
-									<!-- <li>
+									 <li>
 										<div class="dropdown dropdown-action" data-bs-toggle="tooltip"
 											data-bs-placement="bottom" title="Download">
 											<a href="#" class="btn-filters" data-bs-toggle="dropdown"
@@ -42,7 +42,7 @@
 												</ul>
 											</div>
 										</div>
-									</li> -->
+									</li> 
                                    <!-- <li>
 										<a class="btn-filters" href="javascript:void(0);" data-bs-toggle="tooltip"
 											data-bs-placement="bottom" title="Print"><span><i

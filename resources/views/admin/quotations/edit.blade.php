@@ -324,7 +324,7 @@ td {
                                                             Fixed</option>
                                                     </select>
                                                     @if ($errors->has('gst_tax'))
-                                                    <span class="text-danger">{{ $errors->first('gst_tax') }}</span>
+                                                    <span class="text-danger">{{ $errors->first('discount_type') }}</span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -1628,7 +1628,12 @@ $(document).ready(function() {
                 // Clear the existing table body
                 const tableBody = $('#packageBody');
                 tableBody.empty(); // Clear existing rows
-
+                var discount = $('.discount').val();
+                        var gst_tax = $('.gst_tax').val();
+                        var discount_type = $('#discount_type').val();
+                        var symbol = $('#currency_symbol').val();
+                        calculation(response.data.amount, gst_tax, discount, discount_type,
+                            symbol);
                 // Ensure that the response contains the expected fields
                 const packageData = response.data;
 

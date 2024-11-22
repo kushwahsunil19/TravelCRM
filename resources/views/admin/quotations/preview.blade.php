@@ -227,7 +227,8 @@
                 <tr>
                     <td style="text-align:justify; border: 1px solid black;"><b>{{ $item['package_name'] }}</b></td>
                     <td style="text-align:justify; border: 1px solid black;">{!! $item['description'] !!}</td>
-                    <td style="text-align:justify; border: 1px solid black;">{{$data['curreny_symbol']}}{{ number_format($item['amount'], 2) }}</td>
+                    <td style="text-align:justify; border: 1px solid black;">
+                        {{$data['curreny_symbol']}}{{ number_format($item['amount'], 2) }}</td>
                 </tr>
                 @endforeach
                 @endif
@@ -240,10 +241,12 @@
     <div class="total" style="padding: 0px">
         <p>
             <strong>Sub Total :</strong> {{$data['curreny_symbol']}}{{ number_format($data['subtotal'], 2) }}<br />
-        <p><strong>Discount @if($data['discount_type'] == 'Percentage') (%) @endif: </strong>@if($data['discount_type'] == 'Fixed') {{$data['curreny_symbol'] }} @endif{{ number_format($data['discount'], 2) }} </p>
+        <p><strong>Discount @if($data['discount_type'] == 'Percentage') (%) @endif: </strong>@if($data['discount_type']
+            == 'Fixed') {{$data['curreny_symbol'] }} @endif{{ number_format($data['discount'], 2) }} </p>
         <p><strong>Vat % : </strong>{{ number_format($data['tax'], 2) }} </p>
         <strong>Estimate Total :</strong> {{$data['curreny_symbol']}}{{ number_format($data['total'], 2) }}
         </p>
+      
     </div>
 
 
@@ -252,24 +255,33 @@
         <div class="content-wrapper total-section">
             <div class="notes">
                 <h6>Notes / Terms</h6>
-                <p>
-                    <!-- Dynamic Notes -->
-                    Timeline: <br />
-                    Advance: <br />
-                    Payments should be made in favor of “{{ $data['bill_to'] }}”<br /><br />
-                    <strong>ACCOUNT DETAIL</strong><br />
-                    Account Name: {{ $data['bill_to'] }}<br />
-                    Bank: {{ $data['bank_name'] }}<br />
-                    Branch: {{ $data['bank_branch'] }}<br />
-                    Account Number: {{ $data['account_no'] }}<br />
-                    @if (isset($data['branch_name']) && strpos(strtolower(trim($data['branch_name'])), 'dubai') !==
-                    false)
-                    IBAN No: {{ $data['iban_no'] }}<br />
-                    SWIFT Code: {{ $data['ifsc_code'] }}
-                    @else
-                    IFSC Code: {{ $data['ifsc_code'] }}
-                    @endif
+                <p>                
+                    Payments should be made in favor of “{{ $data['bill_to'] }}”
                 </p>
+                <br>
+
+                <p><strong>ACCOUNT DETAILS</strong></p>
+                <br>
+                @if(!empty($data['companyBankDetails']) && is_array($data['companyBankDetails']))
+                @foreach($data['companyBankDetails'] as $bank)
+                <div style="{{ $loop->last ? '' : 'border-bottom: 1px solid #ddd; padding-bottom: 15px; margin-bottom: 15px;' }}">
+                    <strong>Account Name:</strong> {{ $bank['account_holder_name'] }}<br />
+                    <strong>Bank:</strong> {{ $bank['bank_name'] }}<br />
+                    <strong>Branch:</strong> {{ $bank['branch_name'] }}<br />
+                    <strong>Account Number:</strong> {{ $bank['account_no'] }}<br />
+
+                    @if (isset($bank['branch_name']) && strpos(strtolower(trim($bank['branch_name'])), 'dubai') !==
+                    false)
+                    <strong>IBAN No:</strong> {{ $bank['iban_no'] }}<br />
+                    <strong>SWIFT Code:</strong> {{ $bank['ifsc_code'] }}<br />
+                    @else
+                    <strong>IFSC Code:</strong> {{ $bank['ifsc_code'] }}<br />
+                    @endif
+                </div>
+                @endforeach
+                @else
+                <p>No bank details available.</p>
+                @endif
             </div>
         </div>
     </div>

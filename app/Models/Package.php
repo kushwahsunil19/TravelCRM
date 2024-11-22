@@ -16,11 +16,19 @@ class Package extends Model
      * @var array
      */
     protected $fillable = [
+        'user_id',
         'package_name',
         'description',
         'amount',
     ];
 
+    /**
+     * Get the User associated with the quotation.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class,'user_id', 'id');
+    }
     /**
      * The attributes that should be mutated to dates.
      *

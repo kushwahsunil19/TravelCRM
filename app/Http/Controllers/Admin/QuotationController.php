@@ -39,7 +39,7 @@ class QuotationController extends Controller
          $totalQuotations = Quotation::count();
      
          // Build the query for fetching quotations with the necessary relationships
-         $query = Quotation::with(['branch', 'partner', 'package', 'bank']);
+         $query = Quotation::with(['branch.companyBankDetail', 'partner', 'package', 'bank']);
      
          // Apply filters based on request parameters
          if ($request->filled('quotation_no')) {
@@ -67,7 +67,7 @@ class QuotationController extends Controller
      
          // Paginate the filtered results (you can adjust the number per page as needed)
          $quotations = $query->paginate( $totalQuotations); // Paginate the filtered results
-     
+         
          // Return the view with total quotations and paginated quotations
          return view('admin.quotations.index', compact('quotations', 'totalQuotations','cities','states','countries','suppliers'));
         } else {
@@ -115,15 +115,18 @@ class QuotationController extends Controller
             'currency_id' => 'required|exists:currencies,id',
             'bank_id' => 'required|exists:bank_details,id',           
             'no_of_night' => 'nullable|numeric',
-            'no_of_passenger' => 'nullable|numeric',            
+            'no_of_passenger' => 'nullable|numeric',
+            //  'discount_type' => 'required',
             'gst_tax' => 'nullable|numeric',
-            // 'discount_type' => 'required',            
-            // 'discount' => 'numeric',
+            'discount' => 'nullable|numeric',
         ]);
         $input = $request->all();
+       
+        $input['gst_tax'] = ($request->gst_tax !='')?$request->gst_tax:0.00;
+        $input['currency_rate'] = ($request->currency_rate !='')?$request->currency_rate:0.00;
         $input['discount'] = ($request->discount !='')?$request->discount:0.00;
         $quotation = Quotation::create($input);
-        $data =[]; 
+        $data = []; 
         foreach($request->supplier as $val){
             $data[] = [
                 'suplyer_id' => $val,
@@ -177,10 +180,12 @@ class QuotationController extends Controller
             'quotation_no' => 'required|unique:quotations,quotation_no,' . $quotation->id,
             'no_of_night' => 'nullable|numeric',
             'no_of_passenger' => 'nullable|numeric',          
-            'gst_tax' => 'numeric',
-            // 'discount' => 'nullable|numeric',
+             'gst_tax' => 'nullable|numeric',
+             'discount' => 'nullable|numeric',
         ]);
         $input = $request->all();
+        $input['gst_tax'] = ($request->gst_tax !='')?$request->gst_tax:0.00;
+        $input['currency_rate'] = ($request->currency_rate !='')?$request->currency_rate:0.00;
         $input['discount'] = ($request->discount !='')?$request->discount:0.00;
                 // Clear existing tmp_services records for this quotation
         TmpService::where('quotation_id', $quotation->id)->delete();
@@ -214,7 +219,7 @@ class QuotationController extends Controller
     public function generateQuotationPDF($id)
     {
         // Fetch the quotation by ID from the database
-        $quotation = Quotation::with(['branch', 'partner', 'package','bank','currency'])->findOrFail($id);
+        $quotation = Quotation::with(['branch.companyBankDetail', 'partner', 'package','bank','currency'])->findOrFail($id);
       
         // Get the package amount
         $package_amt = $quotation->package->amount;
@@ -251,7 +256,27 @@ class QuotationController extends Controller
                 'amount' => $quotation->package->amount,
             ];
         }
-
+        
+        // Get the branch ID from the quotation
+        $branchId = $quotation->branch_id;
+        
+        // Fetch the branch and related bank details
+        $branchDetails = Branch::with('companyBankDetail')->findOrFail($branchId);
+        
+        $companyBankDetails = [];
+        
+        if ($branchDetails->companyBankDetail->isNotEmpty()) {
+            foreach ($branchDetails->companyBankDetail as $bankDetail) {
+                $companyBankDetails[] = [
+                    'bank_name' => $bankDetail->bank_name,
+                    'account_holder_name' => $bankDetail->account_holder_name,
+                    'account_no' => $bankDetail->account_no,
+                    'branch_name' => $bankDetail->branch_name,
+                    'ifsc_code' => $bankDetail->ifsc_code,
+                    'iban_no' => $bankDetail->iban_no,
+                ];
+            }
+        }
         // Example: Adjust these fields based on your `quotations` table structure
         $data = [
             'currency_code'=>$quotation->currency->code,
@@ -279,6 +304,7 @@ class QuotationController extends Controller
             'bank_branch'=> isset($quotation->bank->branch_name)?$quotation->bank->branch_name:'',
             'ifsc_code'=> isset($quotation->bank->ifsc_code)?$quotation->bank->ifsc_code:'',
             'iban_no'=> isset($quotation->bank->iban_no)?$quotation->bank->iban_no:'',
+            'companyBankDetails' => $companyBankDetails,  
         ];
         
         // Load the view and pass data to it
@@ -291,7 +317,7 @@ class QuotationController extends Controller
     public function preview($id)
     {
         // Fetch the quotation by ID from the database
-        $quotation = Quotation::with(['branch', 'partner', 'package','bank','currency'])->findOrFail($id);
+        $quotation = Quotation::with(['branch.companyBankDetail', 'partner', 'package','bank','currency'])->findOrFail($id);
       
         // Get the package amount
         $package_amt = $quotation->package->amount;
@@ -329,8 +355,32 @@ class QuotationController extends Controller
             ];
         }
 
+
+        // Get the branch ID from the quotation
+        $branchId = $quotation->branch_id;
+        
+        // Fetch the branch and related bank details
+        $branchDetails = Branch::with('companyBankDetail')->findOrFail($branchId);
+        
+        $companyBankDetails = [];
+        
+        if ($branchDetails->companyBankDetail->isNotEmpty()) {
+            foreach ($branchDetails->companyBankDetail as $bankDetail) {
+                $companyBankDetails[] = [
+                    'bank_name' => $bankDetail->bank_name,
+                    'account_holder_name' => $bankDetail->account_holder_name,
+                    'account_no' => $bankDetail->account_no,
+                    'branch_name' => $bankDetail->branch_name,
+                    'ifsc_code' => $bankDetail->ifsc_code,
+                    'iban_no' => $bankDetail->iban_no,
+                ];
+            }
+        }
+
+
         // Example: Adjust these fields based on your `quotations` table structure
         $data = [
+            'currency_rate'=>$quotation->currency->rate,
             'currency_code'=>$quotation->currency->code,
             'curreny_symbol'=>$quotation->currency->symbol,
             'branch_address'=>$quotation->branch->address,
@@ -356,6 +406,7 @@ class QuotationController extends Controller
             'bank_branch'=> isset($quotation->bank->branch_name)?$quotation->bank->branch_name:'',
             'ifsc_code'=> isset($quotation->bank->ifsc_code)?$quotation->bank->ifsc_code:'',
             'iban_no'=> isset($quotation->bank->iban_no)?$quotation->bank->iban_no:'',
+            'companyBankDetails' => $companyBankDetails ,  
         ];
         
         // Load the view and pass data to it

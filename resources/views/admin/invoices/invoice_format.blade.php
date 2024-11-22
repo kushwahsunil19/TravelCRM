@@ -271,29 +271,38 @@
             <p><strong>Invoice Total :</strong> {{$curreny_symbol}}{{ number_format($total, 2) }} </p>
         </div>
 
-        <!-- Notes / Terms Section -->
-        <div class="note1">
+      <!-- Notes / Terms Section -->
+      <div class="note1">
             <div class="content-wrapper total-section">
                 <div class="notes">
                     <h6>Notes / Terms</h6>
                     <p>
-                        <!-- Dynamic Notes -->
-                        Timeline: <br />
-                        Advance: <br />
-                        Payments should be made in favor of “{{ $bill_to }}”<br /><br />
-                        <strong>ACCOUNT DETAIL</strong><br />
-                        Account Name: {{ $bill_to }}<br />
-                        Bank: {{ $bank_name }}<br />
-                        Branch: {{ $bank_branch }}<br />
-                        Account Number: {{ $account_no }}<br />
-                        @if (isset($branch_name) && strpos(strtolower(trim($branch_name)), 'dubai') !==
-                        false)
-                        IBAN No: {{ $iban_no }}<br />
-                        SWIFT Code: {{ $ifsc_code }}
-                        @else
-                        IFSC Code: {{ $ifsc_code }}
-                        @endif
+                        Payments should be made in favor of “{{ $bill_to }}”
                     </p>
+                    <br>
+
+                    <p><strong>ACCOUNT DETAILS</strong></p>
+                    <br>
+                    @if(!empty($companyBankDetails) && is_array($companyBankDetails))
+                    @foreach($companyBankDetails as $bank)
+                    <div style="{{ $loop->last ? '' : 'border-bottom: 1px solid #ddd; padding-bottom: 15px; margin-bottom: 15px;' }}">
+                        <strong>Account Name:</strong> {{ $bank['account_holder_name'] }}<br />
+                        <strong>Bank:</strong> {{ $bank['bank_name'] }}<br />
+                        <strong>Branch:</strong> {{ $bank['branch_name'] }}<br />
+                        <strong>Account Number:</strong> {{ $bank['account_no'] }}<br />
+
+                        @if (isset($bank['branch_name']) && strpos(strtolower(trim($bank['branch_name'])), 'dubai') !==
+                        false)
+                        <strong>IBAN No:</strong> {{ $bank['iban_no'] }}<br />
+                        <strong>SWIFT Code:</strong> {{ $bank['ifsc_code'] }}<br />
+                        @else
+                        <strong>IFSC Code:</strong> {{ $bank['ifsc_code'] }}<br />
+                        @endif
+                    </div>
+                    @endforeach
+                    @else
+                    <p>No bank details available.</p>
+                    @endif
                 </div>
             </div>
         </div>

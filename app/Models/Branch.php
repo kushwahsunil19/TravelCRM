@@ -18,6 +18,11 @@ class Branch extends Model
         return $this->hasMany(Quotation::class);
     }
 
+    public function companyBankDetail()
+    {
+        return $this->hasMany(CompanyBankDetail::class);
+    }
+
     /**
      * The attributes that should be mutated to dates.
      *

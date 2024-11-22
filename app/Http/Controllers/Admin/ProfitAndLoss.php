@@ -114,10 +114,13 @@ class ProfitAndLoss extends Controller
         $branches = Branch::all();
         // Initialize a query builder for Partner
         $suppliersQuery = Supplier::query();
-        $invoicesQuery = Invoice::with(['branch', 'partner', 'package', 'bank', 'currency','services']);
+        $invoicesQuery = Invoice::with(['branch', 'partner', 'package', 'bank', 'currency','services.suplyer.expenses']);
     
         // Apply filters if present in the request
         $currency_id  = 0;
+        if ($request->has('user_id') && $request->user_id) {            
+            $invoicesQuery->where('user_id', $request->user_id);          
+        }
         if ($request->has('branch') && $request->branch) {            
             $invoicesQuery->where('branch_id', $request->branch);
           
@@ -150,7 +153,7 @@ class ProfitAndLoss extends Controller
          if($userId !=1){
          $invoicesQuery->where('user_id',  $userId); 
         }
-        if ($user->hasRole($roleName) === 'Administrator') {
+        if ($user->hasRole($roleName) == 'Administrator') {
           // Admin sees all data, no filters applied
         } elseif ($user->hasRole($roleName)) {            
             $invoicesQuery->whereIn('user_id', $userIds);

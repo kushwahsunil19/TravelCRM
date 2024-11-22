@@ -243,7 +243,8 @@
                     <tr style="text-align:center;">
                         <td style="text-align:justify; border: 1px solid black;"><b>{{ $item['package_name'] }}</b></td>
                         <td style="text-align:justify; border: 1px solid black;">{!! $item['description'] !!}</td>
-                        <td style="text-align:justify; border: 1px solid black;">{{$curreny_symbol}}{{ number_format($item['amount'] ?? 0, 2) }}</td>
+                        <td style="text-align:justify; border: 1px solid black;">
+                            {{$curreny_symbol}}{{ number_format($item['amount'] ?? 0, 2) }}</td>
                     </tr>
                     @endif
                     @endforeach
@@ -256,7 +257,7 @@
             </table>
         </div>
 
-        
+
 
         <!-- Total and Notes Section -->
         <!-- <div class="total" style="padding: 0px">
@@ -267,7 +268,8 @@
         </div> -->
         <div class="total" style="padding: 0px">
             <p><strong>Sub Total :</strong> {{$curreny_symbol}}{{ number_format($subtotal, 2) }} </p>
-            <p><strong>Discount @if($discount_type == 'Percentage') (%) @endif: </strong>@if($discount_type == 'Fixed') {{$curreny_symbol}} @endif{{ number_format($discount, 2) }} </p>
+            <p><strong>Discount @if($discount_type == 'Percentage') (%) @endif: </strong>@if($discount_type == 'Fixed')
+                {{$curreny_symbol}} @endif{{ number_format($discount, 2) }} </p>
             <p><strong>Vat (%) : </strong>{{ number_format($tax, 2) }} </p>
             <p><strong>Estimate Total :</strong> {{$curreny_symbol}}{{ number_format($total, 2) }} </p>
         </div>
@@ -277,29 +279,37 @@
             <div class="content-wrapper total-section">
                 <div class="notes">
                     <h6>Notes / Terms</h6>
-                    <p>
-                        <!-- Dynamic Notes -->
-                        Timeline: <br />
-                        Advance: <br />
-                        Payments should be made in favor of “{{ $bill_to }}”<br /><br />
-                        <strong>ACCOUNT DETAIL</strong><br />
-                        Account Name: {{ $bill_to }}<br />
-                        Bank: {{ $bank_name }}<br />
-                        Branch: {{ $bank_branch }}<br />
-                        Account Number: {{ $account_no }}<br />
-                        @if (isset($branch_name) && strpos(strtolower(trim($branch_name)), 'dubai') !==
+                    <p>Payments should be made in favor of “{{ $bill_to }}” </p>
+                    <br>
+
+                    <p><strong>ACCOUNT DETAILS</strong></p>
+                    <br>
+                    @if(!empty($companyBankDetails) && is_array($companyBankDetails))
+                    @foreach($companyBankDetails as $bank)
+                    <div style="{{ $loop->last ? '' : 'border-bottom: 1px solid #ddd; padding-bottom: 15px; margin-bottom: 15px;' }}">
+                        <strong>Account Name:</strong> {{ $bank['account_holder_name'] }}<br />
+                        <strong>Bank:</strong> {{ $bank['bank_name'] }}<br />
+                        <strong>Branch:</strong> {{ $bank['branch_name'] }}<br />
+                        <strong>Account Number:</strong> {{ $bank['account_no'] }}<br />
+
+                        @if (isset($bank['branch_name']) && strpos(strtolower(trim($bank['branch_name'])), 'dubai') !==
                         false)
-                        IBAN No: {{ $iban_no }}<br />
-                        SWIFT Code: {{ $ifsc_code }}
+                        <strong>IBAN No:</strong> {{ $bank['iban_no'] }}<br />
+                        <strong>SWIFT Code:</strong> {{ $bank['ifsc_code'] }}<br />
                         @else
-                        IFSC Code: {{ $ifsc_code }}
+                        <strong>IFSC Code:</strong> {{ $bank['ifsc_code'] }}<br />
                         @endif
-                    </p>
+                    </div>
+                    @endforeach
+                    @else
+                    <p>No bank details available.</p>
+                    @endif
                 </div>
             </div>
         </div>
 
-        <div class="footer">            
+
+        <div class="footer">
             <p style="margin-top:-17px;"> Estimate #{{ $quotation_number }}</p>
         </div>
     </div>

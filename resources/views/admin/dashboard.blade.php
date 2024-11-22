@@ -102,7 +102,7 @@
 										<i class="fas fa-dollar-sign"></i>
 									</span>
 									<div class="dash-count">
-										<div class="dash-title">Amount Due</div>
+										<div class="dash-title">Total Income</div>
 										<div class="dash-counts">
 											<p>1,642</p>
 										</div>
@@ -123,7 +123,7 @@
 										<i class="fas fa-users"></i>
 									</span>
 									<div class="dash-count">
-										<div class="dash-title">Vendors</div>
+										<div class="dash-title">Total Expenses</div>
 										<div class="dash-counts">
 											<p>3,642</p>
 										</div>
@@ -144,7 +144,7 @@
 										<i class="fas fa-file-alt"></i>
 									</span>
 									<div class="dash-count">
-										<div class="dash-title">Invoices</div>
+										<div class="dash-title">Net Profit</div>
 										<div class="dash-counts">
 											<p>1,041</p>
 										</div>

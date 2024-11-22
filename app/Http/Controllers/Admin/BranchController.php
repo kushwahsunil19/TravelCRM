@@ -16,8 +16,8 @@ class BranchController extends Controller
     public function index()
     {
         // Fetch all branches, including soft-deleted ones if needed
-        $branches = Branch::latest()->get();
-
+        $branches = Branch::with('companyBankDetail')->latest()->get();
+       
         return view('admin.branches.index', compact('branches'));
     }
 

@@ -1516,7 +1516,12 @@ $(document).ready(function() {
                 // Clear the existing table body
                 const tableBody = $('#packageBody');
                 tableBody.empty(); // Clear existing rows
-
+                       var discount = $('.discount').val();
+                        var gst_tax = $('.gst_tax').val();
+                        var discount_type = $('#discount_type').val();
+                        var symbol = $('#currency_symbol').val();
+                        calculation(response.data.amount, gst_tax, discount, discount_type,
+                            symbol);
                 // Ensure that the response contains the expected fields
                 const packageData = response.data;
 
@@ -1534,7 +1539,7 @@ $(document).ready(function() {
                             </td>
                         </tr>
                     `;
-
+                
                 // Append the new row to the table body
                 tableBody.append(newRow);
                 $('#edit_package_details').modal('hide'); // Close modal after success
