@@ -20,6 +20,7 @@ class Package extends Model
         'package_name',
         'description',
         'amount',
+        'net_amount',
     ];
 
     /**

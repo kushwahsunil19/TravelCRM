@@ -81,7 +81,18 @@ td {
 
                                             </div>
                                         </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="input-block mb-3">
+                                                <label>Booking Reffrence No.</label>
+                                                <input type="number" class="form-control" name="booking_reference_no"
+                                                    placeholder="Enter Booking Reffrence No" value="{{ old('booking_reference_no')}}"
+                                                    min="0" required>
+                                                @if ($errors->has('booking_reference_no'))
+                                                <span class="text-danger">{{ $errors->first('booking_reference_no') }}</span>
+                                                @endif
 
+                                            </div>
+                                        </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="input-block mb-3">
                                                 <label> Branch</label>
@@ -145,36 +156,9 @@ td {
                                             </div>
                                         </div>
 
-                                        <div class="col-lg-6 col-md-6 col-sm-12">
-                                            <div class="input-block mb-3">
-                                                <label> Package</label>
-                                                <ul class="form-group-plus css-equal-heights">
-                                                    <li>
-                                                        <select class="select" name="package_id" id="package_id"
-                                                            required>
-                                                            <option value="">Select package </option>
-                                                            @foreach ($packages as $package)
-                                                            <option value="{{ $package->id }}"
-                                                                {{ old('package_id') == $package->id ? 'selected' : '' }}>
-                                                                {{ $package->package_name }}
-                                                            </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </li>
-                                                    <li>
-                                                        <a class="btn btn-primary form-plus-btn" href="#"
-                                                            data-bs-toggle="modal" data-bs-target="#package_details"><i
-                                                                class="fas fa-plus-circle"></i></a>
-                                                        <!-- <a class="btn btn-primary form-plus-btn"
-                                                            href="{{route('packages.create')}}"><i
-                                                                class="fas fa-plus-circle"></i></a> -->
-                                                    </li>
-                                                </ul>
-                                                @if ($errors->has('package_id'))
-                                                <span class="text-danger">{{ $errors->first('package_id') }}</span>
-                                                @endif
-                                            </div>
-                                        </div>
+                                        
+                                      
+                                      
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="input-block mb-3">
                                                 <label>No. of Night</label>
@@ -223,10 +207,41 @@ td {
                                                 @endif
                                             </div>
                                         </div>
+                                        <div class="col-lg-12 col-md-6 col-sm-12">
+                                            <div class="input-block mb-3">
+                                                <label> Package</label>
+                                                <ul class="form-group-plus css-equal-heights">
+                                                    <li>
+                                                        <select class="select" name="package_id" id="package_id"
+                                                            required>
+                                                            <option value="">Select package </option>
+                                                            @foreach ($packages as $package)
+                                                            <option value="{{ $package->id }}"
+                                                                {{ old('package_id') == $package->id ? 'selected' : '' }}>
+                                                                {{ $package->package_name }}
+                                                            </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </li>
+                                                    <li>
+                                                        <a class="btn btn-primary form-plus-btn" href="#"
+                                                            data-bs-toggle="modal" data-bs-target="#package_details"><i
+                                                                class="fas fa-plus-circle"></i></a>
+                                                        <!-- <a class="btn btn-primary form-plus-btn"
+                                                            href="{{route('packages.create')}}"><i
+                                                                class="fas fa-plus-circle"></i></a> -->
+                                                    </li>
+                                                </ul>
+                                                @if ($errors->has('package_id'))
+                                                <span class="text-danger">{{ $errors->first('package_id') }}</span>
+                                                @endif
+                                            </div>
+                                        </div>
 
                                     </div>
 
                                 </div>
+                                
                                 <div class="form-group-item">
                                     <div class="card-table">
                                         <div class="card-body">
@@ -237,12 +252,13 @@ td {
                                                             <th>Package Name</th>
                                                             <th>Discription</th>
                                                             <th>Amount</th>
+                                                            <th>Net Amount</th>
                                                             <th class="no-sort">Action</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="packageBody">
                                                         <tr class="odd">
-                                                            <td valign="top" colspan="4" class="dataTables_empty"
+                                                            <td valign="top" colspan="5" class="dataTables_empty"
                                                                 style="text-align:center;">No data available in table
                                                             </td>
                                                         </tr>
@@ -704,7 +720,7 @@ td {
                     @csrf
                     <!-- Include CSRF token for security -->
                     <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="col-lg-12 col-md-6 col-sm-12">
                             <div class="input-block mb-3">
                                 <label>Package Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="package_name"
@@ -718,12 +734,24 @@ td {
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <div class="input-block mb-3">
                                 <label>Amount</label>
-                                <input type="text" class="form-control" name="amount" placeholder="Enter Amount">
+                                <input type="number" class="form-control" name="amount" placeholder="Enter Amount" min="0"
+                                step="any">
                                 @if ($errors->has('amount'))
                                 <span class="text-danger">{{ $errors->first('amount') }}</span>
                                 @endif
                             </div>
                         </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="input-block mb-3">
+                                <label>Net Amount</label>
+                                <input type="number" class="form-control"  name="net_amount"
+                                    placeholder="Enter Net Amount" min="0"
+                                    step="any">
+                                @if ($errors->has('net_amount'))
+                                <span class="text-danger">{{ $errors->first('net_amount') }}</span>
+                                @endif
+                            </div>
+                        </div>'
 
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="input-block mb-3">
@@ -766,7 +794,7 @@ td {
                     <input type="hidden" name="package_id" id="pkg_id"> <!-- Hidden field for user ID -->
                     <!-- Include CSRF token for security -->
                     <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="col-lg-12 col-md-6 col-sm-12">
                             <div class="input-block mb-3">
                                 <label>Package Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="package_name" id="edit_package_name"
@@ -780,10 +808,22 @@ td {
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <div class="input-block mb-3">
                                 <label>Amount</label>
-                                <input type="text" class="form-control" id="edit_package_amt" name="amount"
-                                    placeholder="Enter Amount">
+                                <input type="number" class="form-control" id="edit_package_amt" name="amount"
+                                    placeholder="Enter Amount" min="0"
+                                    step="any">
                                 @if ($errors->has('amount'))
                                 <span class="text-danger">{{ $errors->first('amount') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="input-block mb-3">
+                                <label>Net Amount</label>
+                                <input type="number" class="form-control" id="edit_package_net_amt" name="net_amount"
+                                    placeholder="Enter Net Amount" min="0"
+                                    step="any">
+                                @if ($errors->has('net_amount'))
+                                <span class="text-danger">{{ $errors->first('net_amount') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -1482,7 +1522,10 @@ $(document).ready(function() {
                 $('#pkg_id').val(data.id); // Hidden user ID
                 $('#edit_package_name').val(data.package_name);
                 $('#edit_package_amt').val(data.amount);
+                $('#edit_package_net_amt').val(data.net_amount);
+                
                 $('#description_edit').val(data.description);
+
                 if (CKEDITOR.instances['description_edit']) {
                     CKEDITOR.instances['description_edit'].setData(data.description);
                 }
@@ -1531,6 +1574,7 @@ $(document).ready(function() {
                             <td>${packageData.package_name }</td> <!-- Package Name -->
                             <td  class="description-cell">${packageData.description }</td> <!-- Description -->
                             <td>${packageData.amount }</td> <!-- Amount -->
+                            <td>${packageData.net_amount }</td> <!-- Amount -->
                            <td class="d-flex align-items-center">
                                 <!-- Edit button that calls the 'packages.edit' route -->
                                 <a  class="btn-action-icon me-2">
@@ -1613,6 +1657,7 @@ $(document).ready(function() {
                             <td>${packageData.package_name }</td> <!-- Package Name -->
                             <td  class="description-cell">${packageData.description }</td> <!-- Description -->
                             <td>${packageData.amount }</td> <!-- Amount -->
+                            <td>${packageData.net_amount }</td> <!-- Amount -->
                            <td>
                                 <!-- Edit button that calls the 'packages.edit' route -->
                                 <a  class="btn-action-icon me-2">
@@ -1739,7 +1784,7 @@ $(document).ready(function() {
     function toggleIBANField() {
         var selectedBranch = $.trim($('#branch_id option:selected').text()).toLowerCase();
         if (selectedBranch === 'dubai') {
-            $('#currency_id').next('.select2-container').css('pointer-events', 'none');
+           // $('#currency_id').next('.select2-container').css('pointer-events', 'none');
             var currencySelect = $('#currency_id'); // Currency select element
             currencySelect.val('4').trigger('change');
 
@@ -1749,7 +1794,7 @@ $(document).ready(function() {
             // Change placeholder to Enter SWIFT Code
             $('#ifsc_code').attr('placeholder', 'Enter SWIFT Code');
         } else {
-            $('#currency_id').next('.select2-container').css('pointer-events', 'none');
+          //  $('#currency_id').next('.select2-container').css('pointer-events', 'none');
 
             var currencySelect = $('#currency_id'); // Currency select element
             currencySelect.val('1').trigger('change');

@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('branches', function (Blueprint $table) {
             $table->id(); // Auto-incrementing ID
-            $table->string('branch_name'); // Branch name
-            $table->string('city'); // City
-            $table->text('address'); // Address
+            $table->string('branch_name')->nullable(); // Branch name
+            $table->string('city')->nullable(); // City
+            $table->text('address')->nullable(); // Address
+            $table->string('email')->unique()->nullable();
+            $table->string('phone')->nullable();
             $table->timestamps(); // Created at and updated at timestamps
             $table->softDeletes(); // Soft delete timestamp
         });

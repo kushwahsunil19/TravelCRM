@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id(); // Auto-incrementing ID
             $table->string('package_name'); // Package Name
             $table->text('description')->nulleble(); // Description
-            $table->decimal('amount', 10, 2); // Amount (e.g., 99999999.99)
+            $table->decimal('amount', 10, 2)->default(0.00)->nullable();  
+            $table->decimal('net_amount', 10, 2)->default(0.00)->nullable();  
             $table->timestamps(); // Created at and updated at timestamps
             $table->softDeletes(); // Soft delete timestamp
         });

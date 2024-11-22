@@ -181,8 +181,8 @@ class InvoiceController extends Controller
             'invoice_no' => 'required|unique:invoices,invoice_no',        
             'no_of_night' => 'nullable|numeric',
             'no_of_passenger' => 'nullable|numeric',          
-             'vat' => 'nullable|numeric',           
-            'discount' => 'nullable|numeric',
+            //  'vat' => 'nullable|numeric',           
+            // 'discount' => 'nullable|numeric',
         ]);     
       
         $input = $request->all();
@@ -249,8 +249,8 @@ class InvoiceController extends Controller
             'invoice_no' => 'required|unique:invoices,invoice_no,' . $invoice->id,
             'no_of_night' => 'nullable|numeric',
             'no_of_passenger' => 'nullable|numeric',          
-            'vat' => 'nullable|numeric',
-            'discount' => 'nullable|numeric',
+            // 'vat' => 'nullable|numeric',
+            // 'discount' => 'nullable|numeric',
         ]);
         
        // Clear existing tmp_services records for this quotation

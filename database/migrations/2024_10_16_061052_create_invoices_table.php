@@ -19,12 +19,15 @@ return new class extends Migration
                 $table->unsignedBigInteger('partner_id'); // Foreign key
                 $table->foreign('partner_id')->references('id')->on('partners')->onDelete('cascade');    
                 $table->unsignedBigInteger('package_id'); // Foreign key
-                $table->foreign('package_id')->references('id')->on('packages')->onDelete('cascade');
+                $table->foreign('package_id')->references('id')->on('packages')->onDelete('cascade');                           
                 $table->integer('bank_id')->nullable();
-                $table->string('invoice_no')->unique(); // Unique quotation number              
-                $table->decimal('vat', 10, 2)->default(0.00);
-                $table->string('discount_type')->nullable();// Package Name
-                $table->decimal('discount', 10, 2)->default(0.00);
+                $table->integer('quotation_no')->unique();   
+                $table->string('booking_reference_no')->unique();  
+                $table->integer('no_of_night')->default(0)->nullable();
+                $table->integer('no_of_passenger')->default(0)->nullable();
+                $table->decimal('vat', 10, 2)->default(0.00)->nullable();
+                $table->string('discount_type')->nullable();
+                $table->decimal('discount', 10, 2)->default(0.00)->nullable();
                 $table->text('note')->nullable();
                 $table->text('term_condition')->nullable();
                 $table->tinyInteger('status')->default(2)->comment('0 for Declined, 1 for Accepted, 2 for Sent, 3 for Expired');

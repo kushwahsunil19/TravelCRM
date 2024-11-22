@@ -28,6 +28,7 @@ class Invoice extends Model
         'invoice_no',   
         'no_of_night',
         'no_of_passenger', 
+        'booking_reference_no',           
         'vat',       
         'discount_type',
         'discount',

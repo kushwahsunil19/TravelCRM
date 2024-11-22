@@ -329,7 +329,8 @@
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <div class="input-block mb-3">
                                 <label>Amount</label>
-                                <input type="text" class="form-control" name="amount" placeholder="Enter Amount">
+                                <input type="number" class="form-control" name="amount" placeholder="Enter Amount" min="0" step="any"
+                                value="0.00">
                                 @if ($errors->has('amount'))
                                 <span class="text-danger">{{ $errors->first('amount') }}</span>
                                 @endif
@@ -391,8 +392,9 @@
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <div class="input-block mb-3">
                                 <label>Amount</label>
-                                <input type="text" class="form-control" id="edit_package_amt" name="amount"
-                                    placeholder="Enter Amount">
+                                <input type="number" class="form-control" id="edit_package_amt" name="amount"
+                                    placeholder="Enter Amount" min="0" step="any"
+                                    value="0.00">
                                 @if ($errors->has('amount'))
                                 <span class="text-danger">{{ $errors->first('amount') }}</span>
                                 @endif

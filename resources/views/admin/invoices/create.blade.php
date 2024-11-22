@@ -1737,7 +1737,7 @@ $(document).ready(function() {
     function toggleIBANField() {
         var selectedBranch = $.trim($('#branch_id option:selected').text()).toLowerCase();
         if (selectedBranch === 'dubai') {
-            $('#currency_id').next('.select2-container').css('pointer-events', 'none');
+            //$('#currency_id').next('.select2-container').css('pointer-events', 'none');
 
             var currencySelect = $('#currency_id'); // Currency select element
             currencySelect.val('4').trigger('change');
@@ -1747,7 +1747,7 @@ $(document).ready(function() {
             // Change placeholder to Enter SWIFT Code
             $('#ifsc_code').attr('placeholder', 'Enter SWIFT Code');
         } else {
-            $('#currency_id').next('.select2-container').css('pointer-events', 'none');
+           // $('#currency_id').next('.select2-container').css('pointer-events', 'none');
 
             var currencySelect = $('#currency_id'); 
             currencySelect.val('1').trigger('change');

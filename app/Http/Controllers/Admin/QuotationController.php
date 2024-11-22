@@ -117,8 +117,8 @@ class QuotationController extends Controller
             'no_of_night' => 'nullable|numeric',
             'no_of_passenger' => 'nullable|numeric',
             //  'discount_type' => 'required',
-            'gst_tax' => 'nullable|numeric',
-            'discount' => 'nullable|numeric',
+            // 'gst_tax' => 'nullable|numeric',
+            // 'discount' => 'nullable|numeric',
         ]);
         $input = $request->all();
        
@@ -180,8 +180,8 @@ class QuotationController extends Controller
             'quotation_no' => 'required|unique:quotations,quotation_no,' . $quotation->id,
             'no_of_night' => 'nullable|numeric',
             'no_of_passenger' => 'nullable|numeric',          
-             'gst_tax' => 'nullable|numeric',
-             'discount' => 'nullable|numeric',
+            //  'gst_tax' => 'nullable|numeric',
+            //  'discount' => 'nullable|numeric',
         ]);
         $input = $request->all();
         $input['gst_tax'] = ($request->gst_tax !='')?$request->gst_tax:0.00;

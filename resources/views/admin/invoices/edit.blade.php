@@ -1822,13 +1822,13 @@ $(document).ready(function() {
         // Optional: You can remove this alert in the final version
      
     }
-    $('#currency_id').next('.select2-container').css('pointer-events', 'none');
+   // $('#currency_id').next('.select2-container').css('pointer-events', 'none');
 
     $('#branch_id').change(function() {
         var selectedBranch = $.trim($('#branch_id option:selected').text()).toLowerCase();
         $('.iban_no').hide();
         if (selectedBranch === 'dubai') {
-            $('#currency_id').next('.select2-container').css('pointer-events', 'none');
+          //  $('#currency_id').next('.select2-container').css('pointer-events', 'none');
 
             var currencySelect = $('#currency_id'); // Currency select element
             currencySelect.val('4').trigger('change');

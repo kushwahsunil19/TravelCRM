@@ -12,6 +12,8 @@ class Branch extends Model
         'branch_name',
         'city',
         'address',
+        'phone',
+        'email',
     ];
     public function quotations()
     {
