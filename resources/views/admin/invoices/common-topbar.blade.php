@@ -359,8 +359,15 @@ $url = $_SERVER['REQUEST_URI'];
                                                 <a href="">{{$invoice->partner->name }} <span><span class="__cf_email__"
                                                             data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $invoice->partner->email }}]</span></span></a>
                                         </td>
-
-                                        <td>{{ $invoice->discount_type }}</td>
+                                        <td> @if($invoice->discount_type == 'Fixed')
+                                                {{ $invoice->discount_type }}
+                                                @elseif($invoice->discount_type == 'Percentage')
+                                                {{ $invoice->discount_type }}
+                                                @else
+                                                N/A
+                                                @endif
+                                        </td>
+                                        <!-- <td>{{ $invoice->discount_type }}</td> -->
                                         <td>{{ $invoice->discount }}{{ ($invoice->discount_type=='Fixed')?'':'%'}}
                                         </td>
                                         <td>{{ $invoice->vat }}%</td>
