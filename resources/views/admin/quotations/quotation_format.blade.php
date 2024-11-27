@@ -23,6 +23,26 @@
         padding: 10px;
         border: 0.5px solid #ddd;
     }
+    /* Fixed Header Styling */
+    .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background-color: #fff;
+        padding: 0px 0;
+        z-index: 1000;
+        border-bottom: 1px solid #ddd;
+       
+    }
+    .header .navbar-brand img {
+        height: 10px;
+    }
+
+    .header .company-info {
+        text-align: right;
+    }
+
 
     /* Fixed Footer Styling */
     .footer {
@@ -35,6 +55,7 @@
         line-height: 40px;
         background-color: #f8f9fa;
     }
+
 
     /* Table Styling */
     .table {
@@ -135,6 +156,7 @@
             left: 0;
             right: 0;
             background-color: #f8f9fa;
+            page-break-before: always;
         }
 
         .content-wrapper {
@@ -149,10 +171,7 @@
             display: table-header-group;
         }
 
-        .footer {
-            page-break-before: always;
-        }
-
+     
         .notes {
             page-break-inside: avoid;
         }
@@ -160,6 +179,12 @@
 
     ul li {
         list-style-type: none !important;
+    }
+    b, strong {
+        font-weight: bold !important;
+    }
+    h1{
+        font-weight: bold !important;
     }
     </style>
 </head>
@@ -169,13 +194,13 @@
         <div class="header">
             <nav class="navbar navbar-expand-lg navbar-light">
                 <div class="container-fluid" style="padding: 0px">
-                    <br>
+                  
                     <a class="navbar-brand" href="#">
                         <!-- Dynamic Image Placeholder -->
                         <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('assets/img/logo2.png'))) }}"
                             alt="Company Logo" />
                     </a>
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0" style="float:right;">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0" style="float:right;margin-top:-50px;">
                         <li class="nav-item text-end">
                             <h1>ESTIMATE</h1>
                             <!-- Dynamic Company Info -->
@@ -186,7 +211,7 @@
             </nav>
         </div>
 
-        <hr />
+       
 
         <div class="content-wrapper" style="padding: 0px">
             <div class="row">
@@ -211,6 +236,7 @@
                         <td style="width: 50%; vertical-align: top; text-align: right;">
                             <p>
                                 <b>Estimate Number:</b> {{ $quotation_number }}<br />
+                                <b>Booking Reffrence Number:</b> {{ $booking_reference_no }}<br />
                                 <b>Estimate Date:</b> {{ $quotation_date }}<br />
                                 <b>No. of Night:</b> {{ $no_of_night }}<br />
                                 <b>No. of Passenger:</b> {{ $no_of_passenger }}<br />
@@ -271,7 +297,11 @@
             <p><strong>Discount @if($discount_type == 'Percentage') (%) @endif: </strong>@if($discount_type == 'Fixed')
                 {{$curreny_symbol}} @endif{{ number_format($discount, 2) }} </p>
             <p><strong>Vat (%) : </strong>{{ number_format($tax, 2) }} </p>
-            <p><strong>Estimate Total :</strong> {{$curreny_symbol}}{{ number_format($total, 2) }} </p>
+            <!-- Converted Amounts (Dynamic) -->
+        <strong>Estimate Total (AED) :</strong> د.إ <span>{{ number_format($total_in_aed, 2) }} </spa><br />
+        <strong>Estimate Total (USD) :</strong> $ <span>{{ number_format($total_in_usd, 2) }}</span><br />
+        <strong>Estimate Total (INR) :</strong> ₹ <span>{{ number_format($total_in_inr, 2) }}</span><br />
+        <!-- <strong>Estimate Total (EUR) :</strong> <span>{{ number_format($total_in_eur, 2) }} €</span><br /> -->
         </div>
 
         <!-- Notes / Terms Section -->
@@ -309,9 +339,9 @@
         </div>
 
 
-        <div class="footer">
+        <!-- <div class="footer">
             <p style="margin-top:-17px;"> Estimate #{{ $quotation_number }}</p>
-        </div>
+        </div> -->
     </div>
 </body>
 

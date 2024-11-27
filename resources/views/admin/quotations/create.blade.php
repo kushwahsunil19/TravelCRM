@@ -274,10 +274,10 @@ td {
                                             <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Currency</label>
-                                                    <select class="select" name="currency_id" id="currency_id" required>
+                                                    <select class="select" name="currency_id" id="currency_id" onchange="updateCurrencyRate(this)" required>
                                                         <option value="">Select Currency </option>
                                                         @foreach ($currencies as $currency)
-                                                        <option value="{{ $currency->id }}"
+                                                        <option value="{{ $currency->id }}"  data-code="{{$currency->code}}"
                                                             data-symbol="{{$currency->symbol}}"
                                                             {{ old('currency_id') == $currency->id ? 'selected' : '' }}>
                                                             {{ $currency->code }}
@@ -295,14 +295,63 @@ td {
                                                 <div class="input-block mb-2">
                                                     <label>Currency Rate </label>
                                                     <input type="number" class="form-control currency_rate"
-                                                        name="currency_rate" placeholder="Enter Rate" min="0" step="any"
-                                                        value="0.00">
+                                                        name="currency_rate" id="currency_rate" placeholder="Enter Rate"
+                                                        min="0" step="any" value="0.00" readonly>
                                                     @if ($errors->has('currency_rate'))
                                                     <span
                                                         class="text-danger">{{ $errors->first('currency_rate') }}</span>
                                                     @endif
                                                 </div>
                                             </div>
+
+                                            <script>
+                                                const baseCurrency = 'USD';
+                                                const apiKey = 'db45eeefc8d49d0b5b537e69';
+                                                const apiUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseCurrency}`;
+                                                const currencyRateInput = document.getElementById('currency_rate');
+
+                                                async function updateCurrencyRate(selectElement) {
+                                                    const selectedOption = selectElement.options[selectElement.selectedIndex];
+                                                    const targetCurrency = selectedOption.getAttribute('data-code');
+
+                                                    if (!targetCurrency) {
+                                                        currencyRateInput.value = "0.00";
+                                                        console.log('No currency selected');
+                                                        return;
+                                                    }
+
+                                                    try {
+                                                        const response = await fetch(apiUrl);
+
+                                                        if (!response.ok) {
+                                                            console.error('API response not OK. Status:', response.status);
+                                                            currencyRateInput.value = "0.00";
+                                                            return;
+                                                        }
+
+                                                        const data = await response.json();
+
+                                                        if (data.result === "success") {
+                                                            const conversionRate = data.conversion_rates[targetCurrency];
+
+                                                            if (conversionRate) {
+                                                                currencyRateInput.value = conversionRate.toFixed(2); // Update input with conversion rate
+                                                                console.log(`1 ${baseCurrency} = ${conversionRate.toFixed(2)} ${targetCurrency}`);
+                                                            } else {
+                                                                console.warn(`No conversion rate found for ${targetCurrency}`);
+                                                                currencyRateInput.value = "0.00";
+                                                            }
+                                                        } else {
+                                                            console.error('Invalid API response:', data);
+                                                            currencyRateInput.value = "0.00";
+                                                        }
+                                                    } catch (error) {
+                                                        console.error('Error fetching currency rate:', error);
+                                                        currencyRateInput.value = "0.00";
+                                                    }
+                                                }
+                                            </script>
+
                                             <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Discount Type</label>
@@ -751,7 +800,7 @@ td {
                                 <span class="text-danger">{{ $errors->first('net_amount') }}</span>
                                 @endif
                             </div>
-                        </div>'
+                        </div>
 
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="input-block mb-3">

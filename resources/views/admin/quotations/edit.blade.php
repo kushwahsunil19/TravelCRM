@@ -89,7 +89,7 @@ td {
                                             <div class="input-block mb-3">
                                                 <label>Booking Reffrence No.</label>
                                                 <input type="number" class="form-control" name="booking_reference_no"
-                                                    placeholder="Enter Booking Reffrence No" value="{{ old('booking_reference_no')}}"
+                                                    placeholder="Enter Booking Reffrence No" value="{{ old('booking_reference_no', $quotation->booking_reference_no) }}"
                                                     min="0" required>
                                                 @if ($errors->has('booking_reference_no'))
                                                 <span class="text-danger">{{ $errors->first('booking_reference_no') }}</span>
@@ -292,18 +292,19 @@ td {
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="row">
-                                            <div class="col-lg-3">
+                                        <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Currency</label>
-                                                    <select class="select" name="currency_id" id="currency_id" required>
-                                                        <option value="">Select Currency </option>
+                                                    <select class="select form-control" name="currency_id"
+                                                        id="currency_id" onchange="updateCurrencyRate(this)" required>
+                                                        <option value="">Select Currency</option>
                                                         @foreach ($currencies as $currency)
                                                         <option value="{{ $currency->id }}"
-                                                            data-symbol="{{$currency->symbol}}"
+                                                            data-symbol="{{ $currency->symbol }}"
+                                                            data-code="{{ $currency->code }}"
                                                             {{ (old('currency_id', $quotation->currency_id) == $currency->id) ? 'selected' : '' }}>
                                                             {{ $currency->code }}
                                                         </option>
-
                                                         @endforeach
                                                     </select>
                                                     @if ($errors->has('currency_id'))
@@ -313,18 +314,92 @@ td {
                                                         value="{{ $quotation->currency->symbol }}">
                                                 </div>
                                             </div>
+
                                             <div class="col-lg-2">
                                                 <div class="input-block mb-2">
-                                                    <label>Currency Rate </label>
+                                                    <label>Currency Rate</label>
                                                     <input type="number" class="form-control currency_rate"
-                                                        name="currency_rate" placeholder="Enter Rate" min="0" step="any"
-                                                        value="{{ old('currency_rate', $quotation->currency_rate) }}">
+                                                        name="currency_rate" id="currency_rate" placeholder="Enter Rate"
+                                                        min="0" step="any"
+                                                        value="{{ old('currency_rate', $quotation->currency_rate) }}"
+                                                        readonly>
                                                     @if ($errors->has('currency_rate'))
                                                     <span
                                                         class="text-danger">{{ $errors->first('currency_rate') }}</span>
                                                     @endif
                                                 </div>
+
+
                                             </div>
+                                            <script>
+                                            const baseCurrency = 'USD'; // Change this to your base currency if needed
+                                            const apiKey = 'db45eeefc8d49d0b5b537e69'; // Your Exchange Rate API Key
+                                            const apiUrl =
+                                                `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseCurrency}`;
+
+                                            const currencyRateInput = document.getElementById('currency_rate');
+                                            const currencySelect = document.getElementById('currency_id');
+
+                                            async function updateCurrencyRate(selectElement) {
+                                                const selectedOption = selectElement.options[selectElement
+                                                    .selectedIndex];
+                                                const targetCurrency = selectedOption.getAttribute('data-code');
+
+                                                if (!targetCurrency) {
+                                                    currencyRateInput.value = "0.00";
+                                                    console.log('No currency selected');
+                                                    return;
+                                                }
+
+                                                try {
+                                                    const response = await fetch(apiUrl);
+
+                                                    if (!response.ok) {
+                                                        console.error('API response not OK. Status:', response
+                                                            .status);
+                                                        currencyRateInput.value = "0.00";
+                                                        return;
+                                                    }
+
+                                                    const data = await response.json();
+
+                                                    if (data.result === "success") {
+                                                        const conversionRate = data.conversion_rates[
+                                                        targetCurrency];
+
+                                                        if (conversionRate) {
+                                                            currencyRateInput.value = conversionRate.toFixed(
+                                                            2); // Update the input with conversion rate
+                                                            console.log(
+                                                                `1 ${baseCurrency} = ${conversionRate.toFixed(2)} ${targetCurrency}`
+                                                                );
+                                                        } else {
+                                                            console.warn(
+                                                                `No conversion rate found for ${targetCurrency}`
+                                                                );
+                                                            currencyRateInput.value = "0.00";
+                                                        }
+                                                    } else {
+                                                        console.error('Invalid API response:', data);
+                                                        currencyRateInput.value = "0.00";
+                                                    }
+                                                } catch (error) {
+                                                    console.error('Error fetching currency rate:', error);
+                                                    currencyRateInput.value = "0.00";
+                                                }
+                                            }
+
+                                            // Trigger rate update on page load for edit form
+                                            document.addEventListener('DOMContentLoaded', function() {
+                                                const selectedCurrency = currencySelect.value;
+
+                                                if (selectedCurrency) {
+                                                    updateCurrencyRate(
+                                                    currencySelect); // Populate rate based on pre-selected currency
+                                                }
+                                            });
+                                            </script>
+
 
                                             <div class="col-lg-3">
                                                 <div class="input-block mb-3">

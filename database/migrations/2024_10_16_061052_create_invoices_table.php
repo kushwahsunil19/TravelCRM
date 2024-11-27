@@ -21,7 +21,7 @@ return new class extends Migration
                 $table->unsignedBigInteger('package_id'); // Foreign key
                 $table->foreign('package_id')->references('id')->on('packages')->onDelete('cascade');                           
                 $table->integer('bank_id')->nullable();
-                $table->integer('quotation_no')->unique();   
+                $table->integer('invoice_no')->unique();   
                 $table->string('booking_reference_no')->unique();  
                 $table->integer('no_of_night')->default(0)->nullable();
                 $table->integer('no_of_passenger')->default(0)->nullable();
