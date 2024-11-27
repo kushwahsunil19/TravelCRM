@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\{Invoice,Branch,Partner,Package,Bank,Currency,Country,State,City,Supplier,Service};
 use PDF;
+use Mpdf\Mpdf;
+
 class InvoiceController extends Controller
 {
     /**
@@ -177,7 +179,7 @@ class InvoiceController extends Controller
             'partner_id' => 'required|exists:partners,id',
             'package_id' => 'required|exists:packages,id',
             'currency_id' => 'required|exists:currencies,id',
-            'bank_id' => 'required',
+            // 'bank_id' => 'required',
             'invoice_no' => 'required|unique:invoices,invoice_no',        
             'no_of_night' => 'nullable|numeric',
             'no_of_passenger' => 'nullable|numeric',          
@@ -192,15 +194,22 @@ class InvoiceController extends Controller
         $input['user_id'] = auth()->id();
         $invoice = Invoice::create($input);
         
-        $data =[]; 
-        foreach($request->supplier as $val){
-            $data[] = [
-                'suplyer_id' => $val,
-                'invoice_id' => $invoice->id,
-            ];
+     // Check if $request->supplier is not empty
+        if (!empty($request->supplier) && is_array($request->supplier)) {
+            $data = [];
+            foreach ($request->supplier as $val) {
+                // Add each supplier's data to the $data array
+                $data[] = [
+                    'suplyer_id' => $val,
+                    'invoice_id' => $invoice->id,
+                ];
+            }
+
+            // Only insert data if $data array is not empty
+            if (!empty($data)) {
+                Service::insert($data);
+            }
         }
-   
-       Service::insert($data);
         return redirect()->route('invoices.edit', $invoice->id)
                          ->with('success', 'Invioce created successfully and you are now editing it.');
     
@@ -245,7 +254,7 @@ class InvoiceController extends Controller
             'partner_id' => 'required|exists:partners,id',
             'package_id' => 'required|exists:packages,id',
             'currency_id' => 'required|exists:currencies,id',
-            'bank_id' => 'required',
+            // 'bank_id' => 'required',
             'invoice_no' => 'required|unique:invoices,invoice_no,' . $invoice->id,
             'no_of_night' => 'nullable|numeric',
             'no_of_passenger' => 'nullable|numeric',          
@@ -253,16 +262,21 @@ class InvoiceController extends Controller
             // 'discount' => 'nullable|numeric',
         ]);
         
-       // Clear existing tmp_services records for this quotation
-       Service::where('invoice_id', $invoice->id)->delete();
-       // Insert new suppliers
-       $suppliers = $request->input('supplier');
-       foreach ($suppliers as $supplier_id) {
-           Service::create([
-               'suplyer_id' => $supplier_id,
-               'invoice_id' => $invoice->id,
-           ]);
-       }
+            // Clear existing tmp_services records for this quotation
+        Service::where('invoice_id', $invoice->id)->delete();
+
+        // Get the suppliers from the request
+        $suppliers = $request->input('supplier');
+
+        // Check if suppliers are not empty before processing
+        if (!empty($suppliers) && is_array($suppliers)) {
+            foreach ($suppliers as $supplier_id) {
+                Service::create([
+                    'suplyer_id' => $supplier_id,
+                    'invoice_id' => $invoice->id,
+                ]);
+            }
+        }
         $input = $request->all();
         $input['user_id'] = auth()->id();
         $input['vat'] = ($request->vat !='')?$request->vat:0.00;
@@ -411,6 +425,21 @@ class InvoiceController extends Controller
         fclose($handle);
         exit;
     }
+    public function fetchCurrencyRates($apiUrl)
+    {
+        try {
+            $response = file_get_contents($apiUrl);
+            $data = json_decode($response, true);
+    
+            if ($data['result'] == 'success') {
+                return $data['conversion_rates'];
+            }
+    
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
     public function generateQuotationPDF($id)
     {
         // Fetch the quotation by ID from the database
@@ -440,7 +469,24 @@ class InvoiceController extends Controller
 
         // Total amount after applying discount and adding tax
         $total_amt = $amount_after_discount + $tax_amt;
+        // Currency conversion logic
+        $baseCurrency = $invoice->currency->code;
+        $apiKey = 'db45eeefc8d49d0b5b537e69';  // Replace with your API key
+        $apiUrl = "https://v6.exchangerate-api.com/v6/$apiKey/latest/$baseCurrency";
+        
+        $conversionRates = $this->fetchCurrencyRates($apiUrl);  // Fetch the conversion rates from the API
 
+        
+        if ($conversionRates) {
+        
+            $total_in_inr = $total_amt * $conversionRates['INR'];
+            $total_in_aed = $total_amt * $conversionRates['AED'];
+            $total_in_eur = $total_amt * $conversionRates['EUR'];
+            $total_in_usd = $total_amt * $conversionRates['USD'];
+        } else {
+            // Default to original amounts if conversion fails
+            $totalInINR = $totalInAED = $totalInEUR = $totalInUSD = $total_amt;
+        }
         $currentDateTime = now()->format('Y-m-d_H-i-s');  // e.g., 2024-10-04_14-30-00
         $items = [];
     
@@ -479,6 +525,7 @@ class InvoiceController extends Controller
             'branch_name'=>$invoice->branch->branch_name,
             'invoice_date' => now()->toDateString(),
             'invoice_number' => $invoice->invoice_no,  // Assume there's an invoice number
+            'booking_reference_no'=> $invoice->booking_reference_no,
             'no_of_night' => $invoice->no_of_night,
             'no_of_passenger' => $invoice->no_of_passenger, 
             'bill_to' => $invoice->partner->name,  // Assuming you have customer info in your invoice
@@ -499,13 +546,50 @@ class InvoiceController extends Controller
             'ifsc_code'=> isset($invoice->bank->ifsc_code)?$invoice->bank->ifsc_code:'',
             'iban_no'=> isset($invoice->bank->iban_no)?$invoice->bank->iban_no:'',
             'companyBankDetails' => $companyBankDetails,
+            'total_in_inr'=>$total_in_inr,
+            'total_in_aed'=>$total_in_aed,
+            'total_in_eur'=>$total_in_eur,
+            'total_in_usd'=>$total_in_usd,
         ];
         
         // Load the view and pass data to it
-        $pdf = PDF::loadView('admin.invoices.invoice_format', $data);
+      //  $pdf = PDF::loadView('admin.invoices.invoice_format', $data);
+            // Render the Blade view
+            $html = view('admin.invoices.invoice_format', $data)->render();
+
+            // Initialize Mpdf
+            $mpdf = new Mpdf([
+                'mode' => 'utf-8',
+                'format' => 'A4',
+                'orientation' => 'P', // Portrait
+                'margin_left' => 5,
+                'margin_right' => 5,
+                // 'margin_top' => 20,
+                // 'margin_bottom' => 10,
+            ]);
+
+        // Set the footer for each page
+        $footer = '<div style="text-align: center; ">
+        Invoice # ' . $invoice->invoice_no . '
+        </div>';
+
+        // Apply the footer to every page
+        $mpdf->SetFooter($footer);
+
+        // Write HTML content to the PDF
+        $mpdf->WriteHTML($html);
+
+        // Generate file name with timestamp
+        $currentDateTime = now()->format('Y-m-d_H-i-s');
+        $fileName = 'Invoice-' . $currentDateTime . '.pdf';
+
+        // Output the PDF (download it)
+        return response()->make($mpdf->Output($fileName, 'D'), 200, [
+        'Content-Type' => 'application/pdf',
+        ]);
 
         // Return the PDF file
-        return $pdf->download('Invoice-' . $currentDateTime . '.pdf');
+      //  return $pdf->download('Invoice-' . $currentDateTime . '.pdf');
     }
     
     public function preview($id)
@@ -577,6 +661,7 @@ class InvoiceController extends Controller
             'branch_name'=>$invoice->branch->branch_name,
             'invoice_date' => now()->toDateString(),
             'invoice_number' => $invoice->invoice_no,  // Assume there's an invoice number
+            'booking_reference_no'=> $invoice->booking_reference_no,
             'no_of_night' => $invoice->no_of_night,
             'no_of_passenger' => $invoice->no_of_passenger, 
             'bill_to' => $invoice->partner->name,  // Assuming you have customer info in your invoice

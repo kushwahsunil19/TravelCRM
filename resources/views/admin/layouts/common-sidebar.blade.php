@@ -761,9 +761,9 @@
                                     <li><a href="{{route('expenses.index')}}"
                                             class="{{strpos($url,'expenses') !== false ? 'active' : '' }}"><i class="fe fe-file-plus"></i> <span>Expenses</span></a>
                                     </li>
-                                    <li><a href="{{route('expenses.profit-loss-expenses')}}"
+                                    <!-- <li><a href="{{route('expenses.profit-loss-expenses')}}"
                                             class="{{strpos($url,'profit-loss-expenses') !== false ? 'active' : '' }}"><i class="fe fe-file-plus"></i> <span>Profit & Loss Expenses</span></a>
-                                    </li>
+                                    </li> -->
 
                                 </ul>
                             </li>
@@ -846,10 +846,10 @@
                             <!-- /Finance & Accounts -->
 
 
-                            <li class="menu-title"><span>Itineraries</span></li>
+                            <!-- <li class="menu-title"><span>Itineraries</span></li>
                             <li>
                                 <a href="#"><i class="fe fe-clipboard"></i> <span>Itineraries</span></a>
-                            </li>
+                            </li> -->
                             <!-- <li>
                                     <a href="delivery-challans.html"><i class="fe fe-file-text"></i> <span>Delivery Challans</span></a>
                                 </li> -->
@@ -858,7 +858,7 @@
                             <!-- Reports -->
                             <li class="menu-title"><span>Reports </span></li>
                             <li>
-                                <a href="#"><i class="fe fe-credit-card"></i> <span>Payment Summary</span></a>
+                                <!-- <a href="#"><i class="fe fe-credit-card"></i> <span>Payment Summary</span></a> -->
                             <li class="submenu">
                                 <a href="#"><i class="fe fe-box"></i><span>Reports</span> <span
                                         class="menu-arrow"></span></a>
@@ -866,14 +866,14 @@
                                     <!-- <li><a href="#">Expense Report</a></li> -->
                                     <!-- <li><a href="purchase-report.html">Purchase Report</a></li>
                                         <li><a href="purchase-return.html">Purchase Return Report</a></li> -->
-                                    <li><a href="#">Sales Report</a></li>
+                                    <!-- <li><a href="#">Sales Report</a></li> -->
                                     <!-- <li><a href="#">Sales Return Report</a></li> -->
                                     @if($listQuotationReport) <li><a href="{{route('quotation-report.index')}}" class="{{strpos($url,'quotation-report') !== false ? 'active' : '' }}">Quotation Report</a></li>@endif
                                     @if($listSupplierReport) <li><a href="{{route('supplier.supplier-report')}}"  class="{{strpos($url,'supplier-report') !== false ? 'active' : '' }}">Supplier Report</a></li>@endif
                                     @if($listStaffReport) <li><a href="{{route('staff-wise-report.index')}}" class="{{strpos($url,'staff-report') !== false ? 'active' : '' }}">Staff Report</a></li> @endif
                                     @if($listHotelReport) <li><a href="{{route('hotel-report.index')}}" class="{{strpos($url,'hotel-report') !== false ? 'active' : '' }}">Hotel Report</a></li>@endif
                                     @if($listPartnersReport) <li><a href="{{route('partners.partners-report')}}" class="{{strpos($url,'partners-report') !== false ? 'active' : '' }}">Partner Report</a></li>@endif
-                                    <li><a href="#">Payment Report </a></li>
+                                    <!-- <li><a href="#">Payment Report </a></li> -->
                                     <!-- <li><a href="stock-report.html">Stock Report</a></li> -->
                                     <!-- <li><a href="low-stock-report.html">Low Stock Report</a></li>
                                         <li><a href="income-report.html">Income Report</a></li>

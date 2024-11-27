@@ -138,7 +138,14 @@
                                         <td>{{ isset($quotation->package->package_name)?$quotation->package->package_name:'' }}
                                         </td>
                                         <td>{{ isset($quotation->partner->name)?$quotation->partner->name:'' }}</td>
-                                        <td>{{ $quotation->discount_type }}</td>
+                                        <td> @if($quotation->discount_type == 'Fixed')
+                                                {{ $quotation->discount_type }}
+                                                @elseif($quotation->discount_type == 'Percentage')
+                                                {{ $quotation->discount_type }}
+                                                @else
+                                                N/A
+                                                @endif
+                                        </td>
                                         <td>{{ ($quotation->discount_type=='Fixed') ? $quotation->currency->symbol : '' }}{{ $quotation->discount }}{{ ($quotation->discount_type=='Fixed')?'':'%'}}
                                         </td>
                                         <td>{{ $quotation->gst_tax }}%</td>

@@ -7,34 +7,34 @@
 
 <!-- /Main Wrapper -->
 <style>
-.description-cell p {
-    word-wrap: break-word !important;
-    /* Ensure long words break */
-    overflow-wrap: break-word !important;
-    /* Ensure long words break */
-    white-space: normal !important;
-    /* Allow text to wrap naturally */
-    max-width: 300px !important;
-    text-align: justify !important;
-    /* Optional: Limit the width of the cell */
-}
+    .description-cell p {
+        word-wrap: break-word !important;
+        /* Ensure long words break */
+        overflow-wrap: break-word !important;
+        /* Ensure long words break */
+        white-space: normal !important;
+        /* Allow text to wrap naturally */
+        max-width: 300px !important;
+        text-align: justify !important;
+        /* Optional: Limit the width of the cell */
+    }
 
-.description-cell2 {
-    word-wrap: break-word !important;
-    /* Ensure long words break */
-    overflow-wrap: break-word !important;
-    /* Ensure long words break */
-    white-space: normal !important;
-    /* Allow text to wrap naturally */
-    max-width: 300px !important;
-    /* Optional: Limit the width of the cell */
-    text-align: justify !important;
-}
+    .description-cell2 {
+        word-wrap: break-word !important;
+        /* Ensure long words break */
+        overflow-wrap: break-word !important;
+        /* Ensure long words break */
+        white-space: normal !important;
+        /* Allow text to wrap naturally */
+        max-width: 300px !important;
+        /* Optional: Limit the width of the cell */
+        text-align: justify !important;
+    }
 
-td {
-    vertical-align: top;
-    /* Align the content to the top of the cell */
-}
+    td {
+        vertical-align: top;
+        /* Align the content to the top of the cell */
+    }
 </style>
 <!-- Page Wrapper -->
 <div class="page-wrapper">
@@ -76,7 +76,7 @@ td {
                                                 <input type="number" class="form-control" name="quotation_no"
                                                     placeholder="" value="{{ $quotation_no}}" readonly>
                                                 @if ($errors->has('quotation_no'))
-                                                <span class="text-danger">{{ $errors->first('quotation_no') }}</span>
+                                                    <span class="text-danger">{{ $errors->first('quotation_no') }}</span>
                                                 @endif
 
                                             </div>
@@ -85,10 +85,11 @@ td {
                                             <div class="input-block mb-3">
                                                 <label>Booking Reffrence No.</label>
                                                 <input type="number" class="form-control" name="booking_reference_no"
-                                                    placeholder="Enter Booking Reffrence No" value="{{ old('booking_reference_no')}}"
-                                                    min="0" required>
+                                                    placeholder="Enter Booking Reffrence No"
+                                                    value="{{ old('booking_reference_no')}}" min="0" required>
                                                 @if ($errors->has('booking_reference_no'))
-                                                <span class="text-danger">{{ $errors->first('booking_reference_no') }}</span>
+                                                    <span
+                                                        class="text-danger">{{ $errors->first('booking_reference_no') }}</span>
                                                 @endif
 
                                             </div>
@@ -101,10 +102,9 @@ td {
                                                         <select class="select" name="branch_id" id="branch_id" required>
                                                             <option value="">Select Branch</option>
                                                             @foreach ($branches as $branch)
-                                                            <option value="{{ $branch->id }}"
-                                                                {{ old('branch_id') == $branch->id ? 'selected' : '' }}>
-                                                                {{ $branch->city }}
-                                                            </option>
+                                                                <option value="{{ $branch->id }}" {{ old('branch_id') == $branch->id ? 'selected' : '' }}>
+                                                                    {{ $branch->city }}
+                                                                </option>
                                                             @endforeach
                                                         </select>
 
@@ -120,7 +120,7 @@ td {
 
                                                 </ul>
                                                 @if ($errors->has('branch_id'))
-                                                <span class="text-danger">{{ $errors->first('branch_id') }}</span>
+                                                    <span class="text-danger">{{ $errors->first('branch_id') }}</span>
                                                 @endif
                                             </div>
                                         </div>
@@ -134,10 +134,9 @@ td {
                                                             required>
                                                             <option value="">Select Partner </option>
                                                             @foreach ($partners as $partner)
-                                                            <option value="{{ $partner->id }}"
-                                                                {{ old('partner_id') == $partner->id ? 'selected' : '' }}>
-                                                                {{ $partner->name }}
-                                                            </option>
+                                                                <option value="{{ $partner->id }}" {{ old('partner_id') == $partner->id ? 'selected' : '' }}>
+                                                                    {{ $partner->name }}
+                                                                </option>
                                                             @endforeach
                                                         </select>
                                                     </li>
@@ -151,14 +150,14 @@ td {
                                                     </li>
                                                 </ul>
                                                 @if ($errors->has('partner_id'))
-                                                <span class="text-danger">{{ $errors->first('partner_id') }}</span>
+                                                    <span class="text-danger">{{ $errors->first('partner_id') }}</span>
                                                 @endif
                                             </div>
                                         </div>
 
-                                        
-                                      
-                                      
+
+
+
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="input-block mb-3">
                                                 <label>No. of Night</label>
@@ -166,7 +165,7 @@ td {
                                                     placeholder="Enter No. of Night" value="{{ old('no_of_night')}}"
                                                     min="0">
                                                 @if ($errors->has('no_of_night'))
-                                                <span class="text-danger">{{ $errors->first('no_of_night') }}</span>
+                                                    <span class="text-danger">{{ $errors->first('no_of_night') }}</span>
                                                 @endif
 
                                             </div>
@@ -178,7 +177,7 @@ td {
                                                     placeholder="Enter No. of Passenger"
                                                     value="{{ old('no_of_passenger')}}" min="0">
                                                 @if ($errors->has('no_of_passenger'))
-                                                <span class="text-danger">{{ $errors->first('no_of_passenger') }}</span>
+                                                    <span class="text-danger">{{ $errors->first('no_of_passenger') }}</span>
                                                 @endif
 
                                             </div>
@@ -188,22 +187,21 @@ td {
                                         <div class="col-lg-12 col-md-12 col-sm-12">
                                             <div class="input-block mb-3">
                                                 <label>Supplier</label>
-                                                
+
                                                 <select class="form-select @error('supplier') is-invalid @enderror"
-                                                    multiple aria-label="supplier" id="suppliers"
-                                                    name="supplier[]" style="height: 210px;">
+                                                    multiple aria-label="supplier" id="suppliers" name="supplier[]"
+                                                    style="height: 210px;">
 
                                                     @forelse ($suppliers as $supplier)
-                                                    <option value="{{ $supplier->id }}"
-                                                        {{ in_array($supplier->id, old('supplier') ?? []) ? 'selected' : '' }}>
-                                                        {{ $supplier->name }}
-                                                    </option>
+                                                        <option value="{{ $supplier->id }}" {{ in_array($supplier->id, old('supplier') ?? []) ? 'selected' : '' }}>
+                                                            {{ $supplier->name }}
+                                                        </option>
                                                     @empty
 
                                                     @endforelse
                                                 </select>
                                                 @if ($errors->has('supplier'))
-                                                <span class="text-danger">{{ $errors->first('supplier') }}</span>
+                                                    <span class="text-danger">{{ $errors->first('supplier') }}</span>
                                                 @endif
                                             </div>
                                         </div>
@@ -216,10 +214,9 @@ td {
                                                             required>
                                                             <option value="">Select package </option>
                                                             @foreach ($packages as $package)
-                                                            <option value="{{ $package->id }}"
-                                                                {{ old('package_id') == $package->id ? 'selected' : '' }}>
-                                                                {{ $package->package_name }}
-                                                            </option>
+                                                                <option value="{{ $package->id }}" {{ old('package_id') == $package->id ? 'selected' : '' }}>
+                                                                    {{ $package->package_name }}
+                                                                </option>
                                                             @endforeach
                                                         </select>
                                                     </li>
@@ -233,7 +230,7 @@ td {
                                                     </li>
                                                 </ul>
                                                 @if ($errors->has('package_id'))
-                                                <span class="text-danger">{{ $errors->first('package_id') }}</span>
+                                                    <span class="text-danger">{{ $errors->first('package_id') }}</span>
                                                 @endif
                                             </div>
                                         </div>
@@ -241,7 +238,7 @@ td {
                                     </div>
 
                                 </div>
-                                
+
                                 <div class="form-group-item">
                                     <div class="card-table">
                                         <div class="card-body">
@@ -274,10 +271,10 @@ td {
                                             <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Currency</label>
-                                                    <select class="select" name="currency_id" id="currency_id" required>
+                                                    <select class="select" name="currency_id" id="currency_id" onchange="updateCurrencyRate(this)" required>
                                                         <option value="">Select Currency </option>
                                                         @foreach ($currencies as $currency)
-                                                        <option value="{{ $currency->id }}"
+                                                        <option value="{{ $currency->id }}"  data-code="{{$currency->code}}"
                                                             data-symbol="{{$currency->symbol}}"
                                                             {{ old('currency_id') == $currency->id ? 'selected' : '' }}>
                                                             {{ $currency->code }}
@@ -291,18 +288,68 @@ td {
                                                     <input type="hidden" id="currency_symbol" value="₹">
                                                 </div>
                                             </div>
+
                                             <div class="col-lg-2">
                                                 <div class="input-block mb-2">
-                                                    <label>Currency Rate </label>
+                                                    <label>Currency Rate</label>
                                                     <input type="number" class="form-control currency_rate"
-                                                        name="currency_rate" placeholder="Enter Rate" min="0" step="any"
-                                                        value="0.00">
+                                                        name="currency_rate" id="currency_rate" placeholder="Enter Rate"
+                                                        min="0" step="any" value="0.00" readonly>
                                                     @if ($errors->has('currency_rate'))
-                                                    <span
-                                                        class="text-danger">{{ $errors->first('currency_rate') }}</span>
+                                                        <span
+                                                            class="text-danger">{{ $errors->first('currency_rate') }}</span>
                                                     @endif
                                                 </div>
                                             </div>
+
+                                            <script>
+                                                const baseCurrency = 'USD';
+                                                const apiKey = 'db45eeefc8d49d0b5b537e69';
+                                                const apiUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseCurrency}`;
+                                                const currencyRateInput = document.getElementById('currency_rate');
+
+                                                async function updateCurrencyRate(selectElement) {
+                                                    const selectedOption = selectElement.options[selectElement.selectedIndex];
+                                                    const targetCurrency = selectedOption.getAttribute('data-code');
+
+                                                    if (!targetCurrency) {
+                                                        currencyRateInput.value = "0.00";
+                                                        console.log('No currency selected');
+                                                        return;
+                                                    }
+
+                                                    try {
+                                                        const response = await fetch(apiUrl);
+
+                                                        if (!response.ok) {
+                                                            console.error('API response not OK. Status:', response.status);
+                                                            currencyRateInput.value = "0.00";
+                                                            return;
+                                                        }
+
+                                                        const data = await response.json();
+
+                                                        if (data.result === "success") {
+                                                            const conversionRate = data.conversion_rates[targetCurrency];
+
+                                                            if (conversionRate) {
+                                                                currencyRateInput.value = conversionRate.toFixed(2); // Update input with conversion rate
+                                                                console.log(`1 ${baseCurrency} = ${conversionRate.toFixed(2)} ${targetCurrency}`);
+                                                            } else {
+                                                                console.warn(`No conversion rate found for ${targetCurrency}`);
+                                                                currencyRateInput.value = "0.00";
+                                                            }
+                                                        } else {
+                                                            console.error('Invalid API response:', data);
+                                                            currencyRateInput.value = "0.00";
+                                                        }
+                                                    } catch (error) {
+                                                        console.error('Error fetching currency rate:', error);
+                                                        currencyRateInput.value = "0.00";
+                                                    }
+                                                }
+                                            </script>
+
                                             <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Discount Type</label>
@@ -312,8 +359,8 @@ td {
                                                         <option value="Fixed">Fixed</option>
                                                     </select>
                                                     @if ($errors->has('discount_type'))
-                                                    <span
-                                                        class="text-danger">{{ $errors->first('discount_type') }}</span>
+                                                        <span
+                                                            class="text-danger">{{ $errors->first('discount_type') }}</span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -323,7 +370,7 @@ td {
                                                     <input type="number" class="form-control discount" name="discount"
                                                         placeholder="Enter discount" min="0" step="any" value="0.00">
                                                     @if ($errors->has('discount'))
-                                                    <span class="text-danger">{{ $errors->first('discount') }}</span>
+                                                        <span class="text-danger">{{ $errors->first('discount') }}</span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -354,11 +401,12 @@ td {
                                                     <div class="col-md-8">
                                                         <div class="input-block mb-3">
                                                             <label>Select Bank</label>
-                                                            <select class="select" id="bank_id" name="bank_id" required>
+                                                            <select class="select" id="bank_id" name="bank_id" >
                                                                 <option value="">Select Bank</option>
                                                                 @foreach($bankDetails as $res)
-                                                                <option value="{{ $res->id}}">{{  $res->bank_name}}
-                                                                </option>
+                                                                    <option value="{{ $res->id}}">
+                                                                        {{  $res->bank_name}}
+                                                                    </option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -370,7 +418,7 @@ td {
                                                         </div>
                                                     </div>
                                                     @if ($errors->has('bank_id'))
-                                                    <span class="text-danger">{{ $errors->first('bank_id') }}</span>
+                                                        <span class="text-danger">{{ $errors->first('bank_id') }}</span>
                                                     @endif
                                                 </div>
 
@@ -409,7 +457,8 @@ td {
                                                         </div> -->
                                                     </div>
                                                     <div class="invoice-total-footer">
-                                                        <h4>Total Amount <span class="total_amt">00.00</span></h4>
+                                                        <h4>Total Amount <span class="total_amt">00.00</span>
+                                                        </h4>
                                                     </div>
                                                 </div>
                                                 <!-- <div class="input-block mb-3">
@@ -542,7 +591,7 @@ td {
                                 <label>Branch Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="branch_name" placeholder="Enter Name">
                                 @if ($errors->has('branch_name'))
-                                <span class="text-danger">{{ $errors->first('branch_name') }}</span>
+                                    <span class="text-danger">{{ $errors->first('branch_name') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -551,7 +600,7 @@ td {
                                 <label>City</label>
                                 <input type="text" class="form-control" name="city" placeholder="Enter City">
                                 @if ($errors->has('city'))
-                                <span class="text-danger">{{ $errors->first('city') }}</span>
+                                    <span class="text-danger">{{ $errors->first('city') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -560,7 +609,7 @@ td {
                                 <label>Address</label>
                                 <textarea class="form-control" name="address"></textarea>
                                 @if ($errors->has('address'))
-                                <span class="text-danger">{{ $errors->first('address') }}</span>
+                                    <span class="text-danger">{{ $errors->first('address') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -618,7 +667,7 @@ td {
                                     <label>Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="name" placeholder="Enter Name">
                                     @if ($errors->has('name'))
-                                    <span class="text-danger">{{ $errors->first('name') }}</span>
+                                        <span class="text-danger">{{ $errors->first('name') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -629,7 +678,7 @@ td {
                                     <input type="email" class="form-control" name="email"
                                         placeholder="Enter Email Address">
                                     @if ($errors->has('email'))
-                                    <span class="text-danger">{{ $errors->first('email') }}</span>
+                                        <span class="text-danger">{{ $errors->first('email') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -640,7 +689,7 @@ td {
                                     <input type="text" id="mobile_code" name="mobile" class="form-control"
                                         placeholder="Phone Number" name="name">
                                     @if ($errors->has('mobile'))
-                                    <span class="text-danger">{{ $errors->first('mobile') }}</span>
+                                        <span class="text-danger">{{ $errors->first('mobile') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -651,11 +700,11 @@ td {
                                     <select id="country" class="form-control" name="country_id">
                                         <option value="">Select Country</option>
                                         @foreach($countries as $country)
-                                        <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                            <option value="{{ $country->id }}">{{ $country->name }}</option>
                                         @endforeach
                                     </select>
                                     @if ($errors->has('country'))
-                                    <span class="text-danger">{{ $errors->first('country') }}</span>
+                                        <span class="text-danger">{{ $errors->first('country') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -668,7 +717,7 @@ td {
                                         <option value="">Select State</option>
                                     </select>
                                     @if ($errors->has('state'))
-                                    <span class="text-danger">{{ $errors->first('state') }}</span>
+                                        <span class="text-danger">{{ $errors->first('state') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -681,7 +730,7 @@ td {
                                         <option value="">Select City</option>
                                     </select>
                                     @if ($errors->has('city'))
-                                    <span class="text-danger">{{ $errors->first('city') }}</span>
+                                        <span class="text-danger">{{ $errors->first('city') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -726,7 +775,7 @@ td {
                                 <input type="text" class="form-control" name="package_name"
                                     placeholder="Enter Package Name">
                                 @if ($errors->has('package_name'))
-                                <span class="text-danger">{{ $errors->first('package_name') }}</span>
+                                    <span class="text-danger">{{ $errors->first('package_name') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -734,24 +783,23 @@ td {
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <div class="input-block mb-3">
                                 <label>Amount</label>
-                                <input type="number" class="form-control" name="amount" placeholder="Enter Amount" min="0"
-                                step="any">
+                                <input type="number" class="form-control" name="amount" placeholder="Enter Amount"
+                                    min="0" step="any">
                                 @if ($errors->has('amount'))
-                                <span class="text-danger">{{ $errors->first('amount') }}</span>
+                                    <span class="text-danger">{{ $errors->first('amount') }}</span>
                                 @endif
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <div class="input-block mb-3">
                                 <label>Net Amount</label>
-                                <input type="number" class="form-control"  name="net_amount"
-                                    placeholder="Enter Net Amount" min="0"
-                                    step="any">
+                                <input type="number" class="form-control" name="net_amount"
+                                    placeholder="Enter Net Amount" min="0" step="any">
                                 @if ($errors->has('net_amount'))
-                                <span class="text-danger">{{ $errors->first('net_amount') }}</span>
+                                    <span class="text-danger">{{ $errors->first('net_amount') }}</span>
                                 @endif
                             </div>
-                        </div>'
+                        </div>
 
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="input-block mb-3">
@@ -759,7 +807,7 @@ td {
                                 <textarea class="form-control" name="description" id="description"></textarea>
 
                                 @if ($errors->has('description'))
-                                <span class="text-danger">{{ $errors->first('description') }}</span>
+                                    <span class="text-danger">{{ $errors->first('description') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -800,7 +848,7 @@ td {
                                 <input type="text" class="form-control" name="package_name" id="edit_package_name"
                                     placeholder="Enter Package Name">
                                 @if ($errors->has('package_name'))
-                                <span class="text-danger">{{ $errors->first('package_name') }}</span>
+                                    <span class="text-danger">{{ $errors->first('package_name') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -809,10 +857,9 @@ td {
                             <div class="input-block mb-3">
                                 <label>Amount</label>
                                 <input type="number" class="form-control" id="edit_package_amt" name="amount"
-                                    placeholder="Enter Amount" min="0"
-                                    step="any">
+                                    placeholder="Enter Amount" min="0" step="any">
                                 @if ($errors->has('amount'))
-                                <span class="text-danger">{{ $errors->first('amount') }}</span>
+                                    <span class="text-danger">{{ $errors->first('amount') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -820,10 +867,9 @@ td {
                             <div class="input-block mb-3">
                                 <label>Net Amount</label>
                                 <input type="number" class="form-control" id="edit_package_net_amt" name="net_amount"
-                                    placeholder="Enter Net Amount" min="0"
-                                    step="any">
+                                    placeholder="Enter Net Amount" min="0" step="any">
                                 @if ($errors->has('net_amount'))
-                                <span class="text-danger">{{ $errors->first('net_amount') }}</span>
+                                    <span class="text-danger">{{ $errors->first('net_amount') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -834,7 +880,7 @@ td {
                                 <textarea class="form-control" name="description" id="description_edit"></textarea>
 
                                 @if ($errors->has('description'))
-                                <span class="text-danger">{{ $errors->first('description') }}</span>
+                                    <span class="text-danger">{{ $errors->first('description') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -1287,595 +1333,592 @@ td {
 <script src="https://cdn.ckeditor.com/4.20.1/standard/ckeditor.js"></script>
 
 <script>
-$(document).ready(function() {
-    CKEDITOR.replace('description');
-    CKEDITOR.replace('description_edit');
-    $('#suppliers').select2({
-        placeholder: "Select Supliers",
-        allowClear: true
+    $(document).ready(function () {
+        CKEDITOR.replace('description');
+        CKEDITOR.replace('description_edit');
+        $('#suppliers').select2({
+            placeholder: "Select Supliers",
+            allowClear: true
+        });
+
     });
-   
-});
 </script>
 <script type="text/javascript">
-$(document).ready(function() {
-    toastr.options = {
-        "closeButton": true,
-        "debug": false,
-        "newestOnTop": true,
-        "progressBar": true,
-        "positionClass": "toast-top-right", // Position of the toast
-        "preventDuplicates": false,
-        "showDuration": "300",
-        "hideDuration": "1000",
-        "timeOut": "5000", // Duration for which the toast is shown
-        "extendedTimeOut": "1000",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn", // Use fadeIn or slideDown
-        "hideMethod": "fadeOut" // Use fadeOut or slideUp
-    };
+    $(document).ready(function () {
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right", // Position of the toast
+            "preventDuplicates": false,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000", // Duration for which the toast is shown
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn", // Use fadeIn or slideDown
+            "hideMethod": "fadeOut" // Use fadeOut or slideUp
+        };
 
 
 
-    $('#bank_details_form').on('submit', function(e) {
-        e.preventDefault(); // Prevent the form from submitting normally
+        $('#bank_details_form').on('submit', function (e) {
+            e.preventDefault(); // Prevent the form from submitting normally
 
-        var formData = new FormData(this); // Create FormData object from the form
+            var formData = new FormData(this); // Create FormData object from the form
 
-        $.ajax({
-            url: $(this).attr('action'), // Get the action URL from the form
-            type: 'POST',
-            data: formData, // Send FormData object
-            contentType: false, // Important for file upload
-            processData: false, // Important for file upload
-            success: function(response) {
-                toastr.success(response.message); // Display success message
+            $.ajax({
+                url: $(this).attr('action'), // Get the action URL from the form
+                type: 'POST',
+                data: formData, // Send FormData object
+                contentType: false, // Important for file upload
+                processData: false, // Important for file upload
+                success: function (response) {
+                    toastr.success(response.message); // Display success message
 
-                // Optionally, reset the form or close the modal
-                $('#bank_details').modal('hide'); // Close modal
-                $('#bank_details_form')[0].reset(); // Reset the form
-                // Populate the select box with the latest bank details
-                var bankSelect = $('#bank_id');
-                bankSelect.empty(); // Clear the existing options
-                bankSelect.append(
-                    '<option value="">Select Bank</option>'); // Add default option
+                    // Optionally, reset the form or close the modal
+                    $('#bank_details').modal('hide'); // Close modal
+                    $('#bank_details_form')[0].reset(); // Reset the form
+                    // Populate the select box with the latest bank details
+                    var bankSelect = $('#bank_id');
+                    bankSelect.empty(); // Clear the existing options
+                    bankSelect.append(
+                        '<option value="">Select Bank</option>'); // Add default option
 
-                // Loop through the returned bank data and append to select box
-                $.each(response.data, function(index, bank) {
-                    bankSelect.append('<option value="' + bank.id + '">' + bank
-                        .bank_name + '</option>');
-                });
-
-                // Refresh the select2 dropdown (if using select2)
-                bankSelect.trigger('change');
-
-
-            },
-            error: function(xhr) {
-                if (xhr.responseJSON.errors) {
-                    $.each(xhr.responseJSON.errors, function(key, value) {
-                        toastr.error(value[0]); // Display each error message
+                    // Loop through the returned bank data and append to select box
+                    $.each(response.data, function (index, bank) {
+                        bankSelect.append('<option value="' + bank.id + '">' + bank
+                            .bank_name + '</option>');
                     });
-                } else {
-                    toastr.error('Error uploading profile.'); // Generic error message
+
+                    // Refresh the select2 dropdown (if using select2)
+                    bankSelect.trigger('change');
+
+
+                },
+                error: function (xhr) {
+                    if (xhr.responseJSON.errors) {
+                        $.each(xhr.responseJSON.errors, function (key, value) {
+                            toastr.error(value[0]); // Display each error message
+                        });
+                    } else {
+                        toastr.error('Error uploading profile.'); // Generic error message
+                    }
                 }
-            }
+            });
         });
-    });
 
-    $('#branch_details_form').on('submit', function(e) {
-        e.preventDefault(); // Prevent the form from submitting normally
+        $('#branch_details_form').on('submit', function (e) {
+            e.preventDefault(); // Prevent the form from submitting normally
 
-        var formData = new FormData(this); // Create FormData object from the form
+            var formData = new FormData(this); // Create FormData object from the form
 
-        $.ajax({
-            url: $(this).attr('action'), // Get the action URL from the form
-            type: 'POST',
-            data: formData, // Send FormData object
-            contentType: false, // Important for file upload
-            processData: false, // Important for file upload
-            success: function(response) {
-                toastr.success(response.message); // Display success message
+            $.ajax({
+                url: $(this).attr('action'), // Get the action URL from the form
+                type: 'POST',
+                data: formData, // Send FormData object
+                contentType: false, // Important for file upload
+                processData: false, // Important for file upload
+                success: function (response) {
+                    toastr.success(response.message); // Display success message
 
-                // Optionally, reset the form or close the modal
-                $('#branch_details').modal('hide'); // Close modal
-                $('#branch_details_form')[0].reset(); // Reset the form
-                // Populate the select box with the latest bank details
-                var branchSelect = $('#branch_id');
-                branchSelect.empty(); // Clear the existing options
-                branchSelect.append(
-                    '<option value="">Select Branch</option>'); // Add default option
+                    // Optionally, reset the form or close the modal
+                    $('#branch_details').modal('hide'); // Close modal
+                    $('#branch_details_form')[0].reset(); // Reset the form
+                    // Populate the select box with the latest bank details
+                    var branchSelect = $('#branch_id');
+                    branchSelect.empty(); // Clear the existing options
+                    branchSelect.append(
+                        '<option value="">Select Branch</option>'); // Add default option
 
-                // Loop through the returned bank data and append to select box
-                $.each(response.data, function(index, branch) {
-                    branchSelect.append('<option value="' + branch.id + '">' +
-                        branch
-                        .branch_name + '</option>');
-                });
-
-                // Refresh the select2 dropdown (if using select2)
-                branchSelect.trigger('change');
-
-
-            },
-            error: function(xhr) {
-                if (xhr.responseJSON.errors) {
-                    $.each(xhr.responseJSON.errors, function(key, value) {
-                        toastr.error(value[0]); // Display each error message
+                    // Loop through the returned bank data and append to select box
+                    $.each(response.data, function (index, branch) {
+                        branchSelect.append('<option value="' + branch.id + '">' +
+                            branch
+                                .branch_name + '</option>');
                     });
-                } else {
-                    toastr.error('Error uploading profile.'); // Generic error message
+
+                    // Refresh the select2 dropdown (if using select2)
+                    branchSelect.trigger('change');
+
+
+                },
+                error: function (xhr) {
+                    if (xhr.responseJSON.errors) {
+                        $.each(xhr.responseJSON.errors, function (key, value) {
+                            toastr.error(value[0]); // Display each error message
+                        });
+                    } else {
+                        toastr.error('Error uploading profile.'); // Generic error message
+                    }
                 }
-            }
+            });
         });
-    });
 
-    $('#partner_details_form').on('submit', function(e) {
-        e.preventDefault(); // Prevent the form from submitting normally
+        $('#partner_details_form').on('submit', function (e) {
+            e.preventDefault(); // Prevent the form from submitting normally
 
-        var formData = new FormData(this); // Create FormData object from the form
+            var formData = new FormData(this); // Create FormData object from the form
 
-        $.ajax({
-            url: $(this).attr('action'), // Get the action URL from the form
-            type: 'POST',
-            data: formData, // Send FormData object
-            contentType: false, // Important for file upload
-            processData: false, // Important for file upload
-            success: function(response) {
-                toastr.success(response.message); // Display success message
+            $.ajax({
+                url: $(this).attr('action'), // Get the action URL from the form
+                type: 'POST',
+                data: formData, // Send FormData object
+                contentType: false, // Important for file upload
+                processData: false, // Important for file upload
+                success: function (response) {
+                    toastr.success(response.message); // Display success message
 
-                // Optionally, reset the form or close the modal
-                $('#partner_details').modal('hide'); // Close modal
-                $('#partner_details_form')[0].reset(); // Reset the form
-                // Populate the select box with the latest bank details
-                var partnerSelect = $('#partner_id');
-                partnerSelect.empty(); // Clear the existing options
-                partnerSelect.append(
-                    '<option value="">Select Partner</option>'); // Add default option
+                    // Optionally, reset the form or close the modal
+                    $('#partner_details').modal('hide'); // Close modal
+                    $('#partner_details_form')[0].reset(); // Reset the form
+                    // Populate the select box with the latest bank details
+                    var partnerSelect = $('#partner_id');
+                    partnerSelect.empty(); // Clear the existing options
+                    partnerSelect.append(
+                        '<option value="">Select Partner</option>'); // Add default option
 
-                // Loop through the returned bank data and append to select box
-                $.each(response.data, function(index, partner) {
-                    partnerSelect.append('<option value="' + partner.id + '">' +
-                        partner
-                        .name + '</option>');
-                });
-
-                // Refresh the select2 dropdown (if using select2)
-                partnerSelect.trigger('change');
-
-
-            },
-            error: function(xhr) {
-                if (xhr.responseJSON.errors) {
-                    $.each(xhr.responseJSON.errors, function(key, value) {
-                        toastr.error(value[0]); // Display each error message
+                    // Loop through the returned bank data and append to select box
+                    $.each(response.data, function (index, partner) {
+                        partnerSelect.append('<option value="' + partner.id + '">' +
+                            partner
+                                .name + '</option>');
                     });
-                } else {
-                    toastr.error('Error uploading profile.'); // Generic error message
+
+                    // Refresh the select2 dropdown (if using select2)
+                    partnerSelect.trigger('change');
+
+
+                },
+                error: function (xhr) {
+                    if (xhr.responseJSON.errors) {
+                        $.each(xhr.responseJSON.errors, function (key, value) {
+                            toastr.error(value[0]); // Display each error message
+                        });
+                    } else {
+                        toastr.error('Error uploading profile.'); // Generic error message
+                    }
                 }
-            }
+            });
         });
-    });
-    // add package
-    $('#package_details_form').on('submit', function(e) {
-        e.preventDefault(); // Prevent the form from submitting normally
-        for (instance in CKEDITOR.instances) {
-            CKEDITOR.instances[instance].updateElement();
-        }
-        var formData = new FormData(this); // Create FormData object from the form
+        // add package
+        $('#package_details_form').on('submit', function (e) {
+            e.preventDefault(); // Prevent the form from submitting normally
+            for (instance in CKEDITOR.instances) {
+                CKEDITOR.instances[instance].updateElement();
+            }
+            var formData = new FormData(this); // Create FormData object from the form
 
-        $.ajax({
-            url: $(this).attr('action'), // Get the action URL from the form
-            type: 'POST',
-            data: formData, // Send FormData object
-            contentType: false, // Important for file upload
-            processData: false, // Important for file upload
-            success: function(response) {
-                toastr.success(response.message); // Display success message
+            $.ajax({
+                url: $(this).attr('action'), // Get the action URL from the form
+                type: 'POST',
+                data: formData, // Send FormData object
+                contentType: false, // Important for file upload
+                processData: false, // Important for file upload
+                success: function (response) {
+                    toastr.success(response.message); // Display success message
 
-                // Optionally, reset the form or close the modal
-                $('#package_details').modal('hide'); // Close modal
-                $('#package_details_form')[0].reset(); // Reset the form
-                // Populate the select box with the latest bank details
-                var packageSelect = $('#package_id');
-                packageSelect.empty(); // Clear the existing options
-                packageSelect.append(
-                    '<option value="">Select Package</option>'); // Add default option
+                    // Optionally, reset the form or close the modal
+                    $('#package_details').modal('hide'); // Close modal
+                    $('#package_details_form')[0].reset(); // Reset the form
+                    // Populate the select box with the latest bank details
+                    var packageSelect = $('#package_id');
+                    packageSelect.empty(); // Clear the existing options
+                    packageSelect.append(
+                        '<option value="">Select Package</option>'); // Add default option
 
-                // Loop through the returned bank data and append to select box
-                $.each(response.data, function(index, package) {
-                    packageSelect.append('<option value="' + package.id + '">' +
-                        package
-                        .package_name + '</option>');
-                });
-
-                // Refresh the select2 dropdown (if using select2)
-                packageSelect.trigger('change');
-
-
-            },
-            error: function(xhr) {
-                if (xhr.responseJSON.errors) {
-                    $.each(xhr.responseJSON.errors, function(key, value) {
-                        toastr.error(value[0]); // Display each error message
+                    // Loop through the returned bank data and append to select box
+                    $.each(response.data, function (index, package) {
+                        packageSelect.append('<option value="' + package.id + '">' +
+                            package
+                                .package_name + '</option>');
                     });
-                } else {
-                    toastr.error('Error uploading profile.'); // Generic error message
+
+                    // Refresh the select2 dropdown (if using select2)
+                    packageSelect.trigger('change');
+
+
+                },
+                error: function (xhr) {
+                    if (xhr.responseJSON.errors) {
+                        $.each(xhr.responseJSON.errors, function (key, value) {
+                            toastr.error(value[0]); // Display each error message
+                        });
+                    } else {
+                        toastr.error('Error uploading profile.'); // Generic error message
+                    }
                 }
-            }
+            });
         });
-    });
 
-    $(document).on('click', '.edit_package', function() {
-        var id = $(this).data('id'); // Get user ID from the button
+        $(document).on('click', '.edit_package', function () {
+            var id = $(this).data('id'); // Get user ID from the button
 
-        // Make an AJAX request to fetch the user data
-        $.ajax({
-            url: '{{ route("packages.edit", ":id") }}'.replace(':id',
-                id), // Replace ':id' with the actual user ID
-            type: 'GET',
-            success: function(response) {
-                var data = response.data;
+            // Make an AJAX request to fetch the user data
+            $.ajax({
+                url: '{{ route("packages.edit", ":id") }}'.replace(':id',
+                    id), // Replace ':id' with the actual user ID
+                type: 'GET',
+                success: function (response) {
+                    var data = response.data;
 
-                // Populate the form fields with the fetched data
-                $('#pkg_id').val(data.id); // Hidden user ID
-                $('#edit_package_name').val(data.package_name);
-                $('#edit_package_amt').val(data.amount);
-                $('#edit_package_net_amt').val(data.net_amount);
-                
-                $('#description_edit').val(data.description);
+                    // Populate the form fields with the fetched data
+                    $('#pkg_id').val(data.id); // Hidden user ID
+                    $('#edit_package_name').val(data.package_name);
+                    $('#edit_package_amt').val(data.amount);
+                    $('#edit_package_net_amt').val(data.net_amount);
 
-                if (CKEDITOR.instances['description_edit']) {
-                    CKEDITOR.instances['description_edit'].setData(data.description);
+                    $('#description_edit').val(data.description);
+
+                    if (CKEDITOR.instances['description_edit']) {
+                        CKEDITOR.instances['description_edit'].setData(data.description);
+                    }
+                    // Open the modal
+                    $('#edit_package_details').modal('show');
+                },
+                error: function (xhr) {
+                    toastr.error('Error fetching user data.');
                 }
-                // Open the modal
-                $('#edit_package_details').modal('show');
-            },
-            error: function(xhr) {
-                toastr.error('Error fetching user data.');
-            }
+            });
         });
-    });
-    // Edit package
-    $('#edit_package_details_form').on('submit', function(e) {
-        e.preventDefault(); // Prevent the form from submitting normally
-        for (instance in CKEDITOR.instances) {
-            CKEDITOR.instances[instance].updateElement();
-        }
-        var formData = new FormData(this); // FormData for file uploads
-        var id = $('#pkg_id').val(); // Get user ID from hidden input
-        $.ajax({
-            url: '{{ route("packages.update", ":id") }}'.replace(':id', id), // Update route
-            type: 'POST', // POST method with method override
-            data: formData,
-            contentType: false,
-            processData: false,
-            headers: {
-                'X-HTTP-Method-Override': 'PUT' // Spoofing PUT
-            },
-            success: function(response) {
-                toastr.success(response.message);
-                // Clear the existing table body
-                const tableBody = $('#packageBody');
-                tableBody.empty(); // Clear existing rows
-                       var discount = $('.discount').val();
-                        var gst_tax = $('.gst_tax').val();
-                        var discount_type = $('#discount_type').val();
-                        var symbol = $('#currency_symbol').val();
-                        calculation(response.data.amount, gst_tax, discount, discount_type,
-                            symbol);
-                // Ensure that the response contains the expected fields
-                const packageData = response.data;
+        // Edit package
+        $('#edit_package_details_form').on('submit', function (e) {
+            e.preventDefault(); // Prevent the form from submitting normally
+            for (instance in CKEDITOR.instances) {
+                CKEDITOR.instances[instance].updateElement();
+            }
+            var formData = new FormData(this); // FormData for file uploads
+            var id = $('#pkg_id').val(); // Get user ID from hidden input
+            $.ajax({
+                url: '{{ route("packages.update", ":id") }}'.replace(':id', id), // Update route
+                type: 'POST', // POST method with method override
+                data: formData,
+                contentType: false,
+                processData: false,
+                headers: {
+                    'X-HTTP-Method-Override': 'PUT' // Spoofing PUT
+                },
+                success: function (response) {
+                    toastr.success(response.message);
+                    // Clear the existing table body
+                    const tableBody = $('#packageBody');
+                    tableBody.empty(); // Clear existing rows
+                    var discount = $('.discount').val();
+                    var gst_tax = $('.gst_tax').val();
+                    var discount_type = $('#discount_type').val();
+                    var symbol = $('#currency_symbol').val();
+                    calculation(response.data.amount, gst_tax, discount, discount_type,
+                        symbol);
+                    // Ensure that the response contains the expected fields
+                    const packageData = response.data;
 
-                // Create a new row with package details
-                const newRow = `
+                    // Create a new row with package details
+                    const newRow = `
                         <tr>
-                            <td>${packageData.package_name }</td> <!-- Package Name -->
-                            <td  class="description-cell">${packageData.description }</td> <!-- Description -->
-                            <td>${packageData.amount }</td> <!-- Amount -->
-                            <td>${packageData.net_amount }</td> <!-- Amount -->
+                            <td>${packageData.package_name}</td> <!-- Package Name -->
+                            <td  class="description-cell">${packageData.description}</td> <!-- Description -->
+                            <td>${packageData.amount}</td> <!-- Amount -->
+                            <td>${packageData.net_amount}</td> <!-- Amount -->
                            <td class="d-flex align-items-center">
                                 <!-- Edit button that calls the 'packages.edit' route -->
                                 <a  class="btn-action-icon me-2">
-                                    <span><i data-id="${packageData.id }" class="fe fe-edit edit_package"></i></span>
+                                    <span><i data-id="${packageData.id}" class="fe fe-edit edit_package"></i></span>
                                 </a>
                             </td>
                         </tr>
                     `;
-                
-                // Append the new row to the table body
-                tableBody.append(newRow);
-                $('#edit_package_details').modal('hide'); // Close modal after success
 
-            },
-            error: function(xhr) {
-                // Display error messages from the server if any
-                let errors = xhr.responseJSON.errors;
-                if (errors) {
-                    $.each(errors, function(key, value) {
-                        toastr.error(value[0]);
-                    });
-                } else {
-                    toastr.error('Error updating user.');
+                    // Append the new row to the table body
+                    tableBody.append(newRow);
+                    $('#edit_package_details').modal('hide'); // Close modal after success
+
+                },
+                error: function (xhr) {
+                    // Display error messages from the server if any
+                    let errors = xhr.responseJSON.errors;
+                    if (errors) {
+                        $.each(errors, function (key, value) {
+                            toastr.error(value[0]);
+                        });
+                    } else {
+                        toastr.error('Error updating user.');
+                    }
                 }
-            }
+            });
         });
-    });
 
-    // onchange Symbol
-    function updateSymbol() {
-        var selectedOption = $('#currency_id option:selected'); // Get selected option
-        var symbol = selectedOption.data('symbol'); // Get symbol from the data attribute
+        // onchange Symbol
+        function updateSymbol() {
+            var selectedOption = $('#currency_id option:selected'); // Get selected option
+            var symbol = selectedOption.data('symbol'); // Get symbol from the data attribute
 
-        if (!symbol) {
-            symbol = '₹'; // Default to ₹ symbol if none selected
+            if (!symbol) {
+                symbol = '₹'; // Default to ₹ symbol if none selected
+            }
+            // Update all relevant fields with the new symbol
+
+            var discount_type = $('#discount_type').val();
+            var package_amt = $('#package_amt').val(); // Default to 0 if not a number
+            var discount = $('.discount').val();
+            var gst_tax = $('.gst_tax').val();
+
+            $('#currency_symbol').val(symbol);
+            calculation(package_amt, gst_tax, discount, discount_type, symbol);
+
         }
-        // Update all relevant fields with the new symbol
+        // Call the function on page load in case a currency is already selected
+        updateSymbol();
+        // Update symbol when the selection changes
+        $('#currency_id').on('change', updateSymbol);
+        // Symbol end 
+        $(document).on('change', '#package_id', function () {
+            var packageId = $(this).val();
 
-        var discount_type = $('#discount_type').val();
-        var package_amt = $('#package_amt').val(); // Default to 0 if not a number
-        var discount = $('.discount').val();
-        var gst_tax = $('.gst_tax').val();
+            if (packageId) {
+                $.ajax({
+                    url: '{{ route("packages.details", ":id") }}'.replace(':id', packageId),
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (response) {
+                        console.log(response); // Log the response for debugging
 
-        $('#currency_symbol').val(symbol);
-        calculation(package_amt, gst_tax, discount, discount_type, symbol);
+                        if (response.success) {
+                            // Update package amounts
+                            // $('.amount').text(symbol + response.data.amount);
+                            $('#package_amt').val(response.data.amount);
+                            // $('.total_amt').text(symbol + response.data.amount);
 
-    }
-    // Call the function on page load in case a currency is already selected
-    updateSymbol();
-    // Update symbol when the selection changes
-    $('#currency_id').on('change', updateSymbol);
-    // Symbol end 
-    $(document).on('change', '#package_id', function() {
-        var packageId = $(this).val();
+                            // Clear the existing table body
+                            const tableBody = $('#packageBody');
+                            tableBody.empty(); // Clear existing rows
 
-        if (packageId) {
-            $.ajax({
-                url: '{{ route("packages.details", ":id") }}'.replace(':id', packageId),
-                type: 'GET',
-                dataType: 'json',
-                success: function(response) {
-                    console.log(response); // Log the response for debugging
+                            // Ensure that the response contains the expected fields
+                            const packageData = response.data;
 
-                    if (response.success) {
-                        // Update package amounts
-                        // $('.amount').text(symbol + response.data.amount);
-                        $('#package_amt').val(response.data.amount);
-                        // $('.total_amt').text(symbol + response.data.amount);
-
-                        // Clear the existing table body
-                        const tableBody = $('#packageBody');
-                        tableBody.empty(); // Clear existing rows
-
-                        // Ensure that the response contains the expected fields
-                        const packageData = response.data;
-
-                        // Create a new row with package details
-                        const newRow = `
+                            // Create a new row with package details
+                            const newRow = `
                         <tr>
-                            <td>${packageData.package_name }</td> <!-- Package Name -->
-                            <td  class="description-cell">${packageData.description }</td> <!-- Description -->
-                            <td>${packageData.amount }</td> <!-- Amount -->
-                            <td>${packageData.net_amount }</td> <!-- Amount -->
+                            <td>${packageData.package_name}</td> <!-- Package Name -->
+                            <td  class="description-cell">${packageData.description}</td> <!-- Description -->
+                            <td>${packageData.amount}</td> <!-- Amount -->
+                            <td>${packageData.net_amount}</td> <!-- Amount -->
                            <td>
                                 <!-- Edit button that calls the 'packages.edit' route -->
                                 <a  class="btn-action-icon me-2">
-                                    <span><i data-id="${packageData.id }" class="fe fe-edit edit_package"></i></span>
+                                    <span><i data-id="${packageData.id}" class="fe fe-edit edit_package"></i></span>
                                 </a>
                             </td>
                         </tr>
                     `;
 
-                        // Append the new row to the table body
-                        tableBody.append(newRow);
-                        var discount = $('.discount').val();
-                        var gst_tax = $('.gst_tax').val();
-                        var discount_type = $('#discount_type').val();
-                        var symbol = $('#currency_symbol').val();
-                        calculation(response.data.amount, gst_tax, discount, discount_type,
-                            symbol);
+                            // Append the new row to the table body
+                            tableBody.append(newRow);
+                            var discount = $('.discount').val();
+                            var gst_tax = $('.gst_tax').val();
+                            var discount_type = $('#discount_type').val();
+                            var symbol = $('#currency_symbol').val();
+                            calculation(response.data.amount, gst_tax, discount, discount_type,
+                                symbol);
 
-                    } else {
-                        alert('Package not found');
+                        } else {
+                            alert('Package not found');
+                            clearPackageFormFields(); // Reset fields if needed
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText); // Log error for debugging
+                        alert('An error occurred while fetching package details.');
                         clearPackageFormFields(); // Reset fields if needed
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error(xhr.responseText); // Log error for debugging
-                    alert('An error occurred while fetching package details.');
-                    clearPackageFormFields(); // Reset fields if needed
-                }
-            });
-        } else {
-            const tableBody = $('#packageBody');
-            tableBody.empty(); // Clear existing rows
-            const newRow = `<tr class="odd"> <td valign="top" colspan="4" class="dataTables_empty"
+                });
+            } else {
+                const tableBody = $('#packageBody');
+                tableBody.empty(); // Clear existing rows
+                const newRow = `<tr class="odd"> <td valign="top" colspan="4" class="dataTables_empty"
                                                                 style="text-align:center;">No data available in table
                                                             </td>
                                                         </tr>
                     `;
-            // Append the new row to the table body
-            tableBody.append(newRow);
+                // Append the new row to the table body
+                tableBody.append(newRow);
 
-        }
-    });
+            }
+        });
 
 
-    $(document).on('change', '#discount_type', function() {
-        var discount_type = $(this).val();
-        if (discount_type === 'Fixed') {
-            var discount = $('.discount').val();
+        $(document).on('change', '#discount_type', function () {
+            var discount_type = $(this).val();
+            if (discount_type === 'Fixed') {
+                var discount = $('.discount').val();
+                var gst_tax = $('.gst_tax').val();
+                var package_amt = $('#package_amt').val();
+                var symbol = $('#currency_symbol').val();
+            } else {
+                var discount = $('.discount').val();
+                var gst_tax = $('.gst_tax').val();
+                var package_amt = $('#package_amt').val();
+                var symbol = $('#currency_symbol').val();
+            }
+            calculation(package_amt, gst_tax, discount, discount_type, symbol);
+        });
+
+        $(document).on('input', '.discount', function () {
+            var discount_type = $('#discount_type').val();
+
+            // Get the current discount value
+            var discount = $(this).val(); // Default to 0 if not a number
+            // alert(discount);
+            // Get package amount and GST tax values
+            var package_amt = $('#package_amt').val(); // Default to 0 if not a number
             var gst_tax = $('.gst_tax').val();
-            var package_amt = $('#package_amt').val();
             var symbol = $('#currency_symbol').val();
-        } else {
+            calculation(package_amt, gst_tax, discount, discount_type, symbol);
+        });
+
+        $(document).on('input', '.gst_tax', function () {
+            var gst_tax = $(this).val();
+            var discount_type = $('#discount_type').val();
+            var package_amt = $('#package_amt').val(); // Default to 0 if not a number
             var discount = $('.discount').val();
-            var gst_tax = $('.gst_tax').val();
-            var package_amt = $('#package_amt').val();
             var symbol = $('#currency_symbol').val();
-        }
-        calculation(package_amt, gst_tax, discount, discount_type, symbol);
-    });
+            calculation(package_amt, gst_tax, discount, discount_type, symbol);
+        });
 
-    $(document).on('input', '.discount', function() {
-        var discount_type = $('#discount_type').val();
-
-        // Get the current discount value
-        var discount = $(this).val(); // Default to 0 if not a number
-        // alert(discount);
-        // Get package amount and GST tax values
-        var package_amt = $('#package_amt').val(); // Default to 0 if not a number
-        var gst_tax = $('.gst_tax').val();
-        var symbol = $('#currency_symbol').val();
-        calculation(package_amt, gst_tax, discount, discount_type, symbol);
-    });
-
-    $(document).on('input', '.gst_tax', function() {
-        var gst_tax = $(this).val();
-        var discount_type = $('#discount_type').val();
-        var package_amt = $('#package_amt').val(); // Default to 0 if not a number
-        var discount = $('.discount').val();
-        var symbol = $('#currency_symbol').val();
-        calculation(package_amt, gst_tax, discount, discount_type, symbol);
-    });
-
-    function calculation(amount, tax, discount, discount_type, symbol) {
+        function calculation(amount, tax, discount, discount_type, symbol) {
 
 
-        $('#discount').val(discount);
-        $('#gst_tax').val(tax);
+            $('#discount').val(discount);
+            $('#gst_tax').val(tax);
 
-        // Get package amount and GST tax values
-        var package_amt = parseFloat(amount) || 0; // Default to 0 if not a number
-        var gst_tax = parseFloat(tax) || 0; // Default to 0 if not a number
-        var discount = parseFloat(discount) || 0; // Default to 0 if not a number
+            // Get package amount and GST tax values
+            var package_amt = parseFloat(amount) || 0; // Default to 0 if not a number
+            var gst_tax = parseFloat(tax) || 0; // Default to 0 if not a number
+            var discount = parseFloat(discount) || 0; // Default to 0 if not a number
 
-        // Update the displayed discount value
-        $('.amount').text(symbol + package_amt.toFixed(2));
-        //$('.discount').text(symbol + discount.toFixed(2));
-        $('.gst_tax').text(gst_tax.toFixed(2) + '%');
-        // Calculate the discount amount
-        var discountAmount = 0;
-        if (discount_type === 'Fixed') {
-            discountAmount = discount; // For fixed discount, use the discount value directly
-            $('.discount').text(symbol + discount.toFixed(2));
-        } else if (discount_type === 'Percentage') {
+            // Update the displayed discount value
+            $('.amount').text(symbol + package_amt.toFixed(2));
+            //$('.discount').text(symbol + discount.toFixed(2));
+            $('.gst_tax').text(gst_tax.toFixed(2) + '%');
+            // Calculate the discount amount
+            var discountAmount = 0;
+            if (discount_type === 'Fixed') {
+                discountAmount = discount; // For fixed discount, use the discount value directly
+                $('.discount').text(symbol + discount.toFixed(2));
+            } else if (discount_type === 'Percentage') {
 
-            discountAmount = (package_amt * discount) / 100; // For percentage discount
-            $('.discount').text(discount.toFixed(2) + '%');
-        } else {
-            $('.discount').text(symbol + discount.toFixed(2));
+                discountAmount = (package_amt * discount) / 100; // For percentage discount
+                $('.discount').text(discount.toFixed(2) + '%');
+            } else {
+                $('.discount').text(symbol + discount.toFixed(2));
+            }
+
+
+            // Calculate the amount after discount
+            var amountAfterDiscount = package_amt - discountAmount;
+
+            // Calculate the GST amount based on the amount after discount
+            var gstAmount = (amountAfterDiscount * gst_tax) / 100;
+
+            // Calculate the total amount including GST
+            var total_amt = amountAfterDiscount + gstAmount;
+            // Display the calculated total amount
+            $('.total_amt').text(symbol + total_amt.toFixed(2)); // Format to 2 decimal places
         }
 
+        function toggleIBANField() {
+            var selectedBranch = $.trim($('#branch_id option:selected').text()).toLowerCase();
+            if (selectedBranch === 'dubai') {
+                // $('#currency_id').next('.select2-container').css('pointer-events', 'none');
+                var currencySelect = $('#currency_id'); // Currency select element
+                currencySelect.val('4').trigger('change');
 
-        // Calculate the amount after discount
-        var amountAfterDiscount = package_amt - discountAmount;
+                $('.iban_no').show();
+                // Change label text to SWIFT Code
+                $('label[for="ifsc_code"]').text('SWIFT Code');
+                // Change placeholder to Enter SWIFT Code
+                $('#ifsc_code').attr('placeholder', 'Enter SWIFT Code');
+            } else {
+                //  $('#currency_id').next('.select2-container').css('pointer-events', 'none');
 
-        // Calculate the GST amount based on the amount after discount
-        var gstAmount = (amountAfterDiscount * gst_tax) / 100;
-
-        // Calculate the total amount including GST
-        var total_amt = amountAfterDiscount + gstAmount;
-        // Display the calculated total amount
-        $('.total_amt').text(symbol + total_amt.toFixed(2)); // Format to 2 decimal places
-    }
-
-    function toggleIBANField() {
-        var selectedBranch = $.trim($('#branch_id option:selected').text()).toLowerCase();
-        if (selectedBranch === 'dubai') {
-           // $('#currency_id').next('.select2-container').css('pointer-events', 'none');
-            var currencySelect = $('#currency_id'); // Currency select element
-            currencySelect.val('4').trigger('change');
-
-            $('.iban_no').show();
-            // Change label text to SWIFT Code
-            $('label[for="ifsc_code"]').text('SWIFT Code');
-            // Change placeholder to Enter SWIFT Code
-            $('#ifsc_code').attr('placeholder', 'Enter SWIFT Code');
-        } else {
-          //  $('#currency_id').next('.select2-container').css('pointer-events', 'none');
-
-            var currencySelect = $('#currency_id'); // Currency select element
-            currencySelect.val('1').trigger('change');
-            $('.iban_no').hide();
-            // Revert back to IFSC Code for other branches
-            $('label[for="ifsc_code"]').text('IFSC Code');
-            // Revert placeholder to Enter IFSC Code
-            $('#ifsc_code').attr('placeholder', 'Enter IFSC Code');
+                var currencySelect = $('#currency_id'); // Currency select element
+                currencySelect.val('1').trigger('change');
+                $('.iban_no').hide();
+                // Revert back to IFSC Code for other branches
+                $('label[for="ifsc_code"]').text('IFSC Code');
+                // Revert placeholder to Enter IFSC Code
+                $('#ifsc_code').attr('placeholder', 'Enter IFSC Code');
+            }
         }
-    }
 
-    // Check the branch on page load (for edit case)
-    toggleIBANField();
-
-    // Listen for changes in the branch selection
-    $('#branch_id').change(function() {
+        // Check the branch on page load (for edit case)
         toggleIBANField();
-    });
 
-}); //end redy function
+        // Listen for changes in the branch selection
+        $('#branch_id').change(function () {
+            toggleIBANField();
+        });
+
+    }); //end redy function
 </script>
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function() {
-    // When a country is selected, load the respective states
-    $(document).on('change', '#country', function() {
-        var countryId = $(this).val();
-        $('#state_id').prop('disabled', false).empty().append('<option value="">Select State</option>');
-        $('#city').prop('disabled', true).empty().append('<option value="">Select City</option>');
+    $(document).ready(function () {
+        // When a country is selected, load the respective states
+        $(document).on('change', '#country', function () {
+            var countryId = $(this).val();
+            $('#state_id').prop('disabled', false).empty().append('<option value="">Select State</option>');
+            $('#city').prop('disabled', true).empty().append('<option value="">Select City</option>');
 
-        if (countryId) {
-            let fullUrl = '{{ url("/states") }}/' + countryId;
-            $.ajax({
-                url: fullUrl, // Adjust URL as per your route
-                method: 'GET',
-                success: function(states) {
-                    // Ensure that the response is parsed as an array
-                    if (Array.isArray(states)) {
-                        states.forEach(function(state) {
-                            //  alert(state.id );
-                            $('#state_id').append('<option value="' + state.id +
-                                '">' + state.name + '</option>');
-                        });
-                    } else {
-                        console.error("Invalid response format");
+            if (countryId) {
+                let fullUrl = '{{ url("/states") }}/' + countryId;
+                $.ajax({
+                    url: fullUrl, // Adjust URL as per your route
+                    method: 'GET',
+                    success: function (states) {
+                        // Ensure that the response is parsed as an array
+                        if (Array.isArray(states)) {
+                            states.forEach(function (state) {
+                                //  alert(state.id );
+                                $('#state_id').append('<option value="' + state.id +
+                                    '">' + state.name + '</option>');
+                            });
+                        } else {
+                            console.error("Invalid response format");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching states: ", error);
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error fetching states: ", error);
-                }
-            });
-        }
+                });
+            }
+        });
+
+
+
+        // When a state is selected, load the respective cities
+        $(document).on('change', '#state_id', function () {
+            var stateId = $(this).val();
+            $('#city_id').prop('disabled', false).empty().append('<option value="">Select City</option>');
+
+            if (stateId) {
+                let fullUrl = '{{ url("/cities") }}/' + stateId;
+                $.ajax({
+                    url: fullUrl, // Get cities for the selected state
+                    method: 'GET',
+                    success: function (cities) {
+                        cities.forEach(function (city) {
+                            $('#city_id').append('<option value="' + city.id + '">' +
+                                city.name + '</option>');
+                        });
+                    }
+                });
+            }
+        });
     });
-
-
-
-    // When a state is selected, load the respective cities
-    $(document).on('change', '#state_id', function() {
-        var stateId = $(this).val();
-        $('#city_id').prop('disabled', false).empty().append('<option value="">Select City</option>');
-
-        if (stateId) {
-            let fullUrl = '{{ url("/cities") }}/' + stateId;
-            $.ajax({
-                url: fullUrl, // Get cities for the selected state
-                method: 'GET',
-                success: function(cities) {
-                    cities.forEach(function(city) {
-                        $('#city_id').append('<option value="' + city.id + '">' +
-                            city.name + '</option>');
-                    });
-                }
-            });
-        }
-    });
-});
 </script>
 <!-- /Theme Setting -->
 @endsection
-
-
-
