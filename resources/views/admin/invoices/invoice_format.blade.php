@@ -16,11 +16,10 @@
         background: #fff;
         font-family: 'DejaVu Sans', sans-serif;
     }
-
     .container {
-        width: 695px;
+        width: 700px;
         margin: 0 auto;
-        padding: 10px;
+        padding: 3px;
         border: 0.5px solid #ddd;
     }
     /* Fixed Header Styling */
