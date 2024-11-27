@@ -236,18 +236,70 @@
         </table>
     </div>
 
-
-    <!-- Total and Notes Section -->
-    <div class="total" style="padding: 0px">
-        <p>
-            <strong>Sub Total :</strong> {{$data['curreny_symbol']}}{{ number_format($data['subtotal'], 2) }}<br />
-        <p><strong>Discount @if($data['discount_type'] == 'Percentage') (%) @endif: </strong>@if($data['discount_type']
-            == 'Fixed') {{$data['curreny_symbol'] }} @endif{{ number_format($data['discount'], 2) }} </p>
+<div class="total" style="padding: 0px">
+    <p>
+        <strong>Sub Total :</strong> {{$data['curreny_symbol']}}{{ number_format($data['subtotal'], 2) }}<br />
+        <p><strong>Discount @if($data['discount_type'] == 'Percentage') (%) @endif: </strong>@if($data['discount_type'] == 'Fixed') {{$data['curreny_symbol']}} @endif{{ number_format($data['discount'], 2) }} </p>
         <p><strong>Vat % : </strong>{{ number_format($data['tax'], 2) }} </p>
-        <strong>Estimate Total :</strong> {{$data['curreny_symbol']}}{{ number_format($data['total'], 2) }}
-        </p>
-      
-    </div>
+        <!-- <strong>Estimate Total ({{ $data['curreny_symbol'] }}) :</strong> {{$data['curreny_symbol']}}{{ number_format($data['total'], 2) }}<br /> -->
+
+        <!-- Converted Amounts (Dynamic) -->
+        <strong>Estimate Total (AED) :</strong> <span id="total_in_aed">د.إ{{ number_format($data['total'] , 2) }}</span><br />
+        <strong>Estimate Total (USD) :</strong> <span id="total_in_usd">$ {{ number_format($data['total'], 2) }}</span><br />
+        <strong>Estimate Total (INR) :</strong> <span id="total_in_inr">₹{{ number_format($data['total'] , 2) }}</span><br />
+       
+        <!-- <strong>Estimate Total (EUR) :</strong> <span id="total_in_eur">€{{ number_format($data['total'] , 2) }}</span><br /> -->
+    </p>
+</div>
+
+<script>
+    // Currency conversion API configuration
+    const baseCurrency = '{{ $data['currency_code'] ?? 'USD' }}'; 
+    
+// Dynamically get the base currency from server-side data
+    const apiKey = 'db45eeefc8d49d0b5b537e69'; // Replace with your API key
+    const apiUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseCurrency}`;
+
+    async function fetchCurrencyRates() {
+        try {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+
+            if (data.result === "success") {
+                // Extract the conversion rates for INR, AED, EUR dynamically
+                const inrRate = data.conversion_rates['INR'];
+                const aedRate = data.conversion_rates['AED'];
+                const eurRate = data.conversion_rates['EUR'];
+                const usdRate = data.conversion_rates['USD'];
+              
+
+                // Get the total amount in the base currency (from the server)
+                const totalInBaseCurrency = {{ $data['total'] ?? 0 }};  // Dynamically fetch the total value from server-side
+
+                // Convert the total to INR, AED, EUR
+                const totalInINR = (totalInBaseCurrency * inrRate).toFixed(2);
+                const totalInAED = (totalInBaseCurrency * aedRate).toFixed(2);
+                const totalInEUR = (totalInBaseCurrency * eurRate).toFixed(2);
+                const totalInUSD = (totalInBaseCurrency * usdRate).toFixed(2);
+                
+                
+                // Update the page with the converted values
+                document.getElementById('total_in_inr').innerText = '₹' + totalInINR;
+                document.getElementById('total_in_aed').innerText = 'د.إ' + totalInAED;
+                document.getElementById('total_in_eur').innerText = '€' + totalInEUR;
+             
+            } else {
+                console.error('Error fetching conversion rates');
+            }
+        } catch (error) {
+            console.error('Error fetching currency rates:', error);
+        }
+    }
+
+    // Fetch currency rates when the page is loaded
+    fetchCurrencyRates();
+</script>
+
 
 
     <!-- Notes / Terms Section -->

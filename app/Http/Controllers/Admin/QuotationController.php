@@ -219,32 +219,50 @@ class QuotationController extends Controller
     public function generateQuotationPDF($id)
     {
         // Fetch the quotation by ID from the database
-        $quotation = Quotation::with(['branch.companyBankDetail', 'partner', 'package','bank','currency'])->findOrFail($id);
-      
+        $quotation = Quotation::with(['branch.companyBankDetail', 'partner', 'package', 'bank', 'currency'])->findOrFail($id);
+        
         // Get the package amount
         $package_amt = $quotation->package->amount;
-
+    
         // GST Tax in percentage
         $tax = $quotation->gst_tax;
-
+    
         // Discount in percentage
         $discount = $quotation->discount;
-        if($quotation->discount_type=='Fixed'){
-            $discount_amt =  $discount;
-        }else{
+        if ($quotation->discount_type == 'Fixed') {
+            $discount_amt = $discount;
+        } else {
             $discount_amt = ($package_amt * $discount) / 100;
         }
-        // Calculate discount amount (discount percentage applied to the package amount)
-       
-
+    
         // Amount after discount
         $amount_after_discount = $package_amt - $discount_amt;
-
+    
         // Calculate tax amount (GST percentage applied to the amount after discount)
         $tax_amt = ($amount_after_discount * $tax) / 100;
-
+    
         // Total amount after applying discount and adding tax
         $total_amt = $amount_after_discount + $tax_amt;
+    
+        // Currency conversion logic
+        $baseCurrency = $quotation->currency->code;
+        $apiKey = 'db45eeefc8d49d0b5b537e69';  // Replace with your API key
+        $apiUrl = "https://v6.exchangerate-api.com/v6/$apiKey/latest/$baseCurrency";
+        
+        $conversionRates = $this->fetchCurrencyRates($apiUrl);  // Fetch the conversion rates from the API
+    
+        
+        if ($conversionRates) {
+           
+            $total_in_inr = $total_amt * $conversionRates['INR'];
+            $total_in_aed = $total_amt * $conversionRates['AED'];
+            $total_in_eur = $total_amt * $conversionRates['EUR'];
+            $total_in_usd = $total_amt * $conversionRates['USD'];
+        } else {
+            // Default to original amounts if conversion fails
+            $totalInINR = $totalInAED = $totalInEUR = $totalInUSD = $total_amt;
+        }
+    
 
         $currentDateTime = now()->format('Y-m-d_H-i-s');  // e.g., 2024-10-04_14-30-00
         $items = [];
@@ -277,6 +295,7 @@ class QuotationController extends Controller
                 ];
             }
         }
+       
         // Example: Adjust these fields based on your `quotations` table structure
         $data = [
             'currency_code'=>$quotation->currency->code,
@@ -305,7 +324,15 @@ class QuotationController extends Controller
             'ifsc_code'=> isset($quotation->bank->ifsc_code)?$quotation->bank->ifsc_code:'',
             'iban_no'=> isset($quotation->bank->iban_no)?$quotation->bank->iban_no:'',
             'companyBankDetails' => $companyBankDetails,  
+            'total_in_inr'=>$total_in_inr,
+            'total_in_aed'=>$total_in_aed,
+            'total_in_eur'=>$total_in_eur,
+            'total_in_usd'=>$total_in_usd,
+
+
+
         ];
+        
         
         // Load the view and pass data to it
         $pdf = PDF::loadView('admin.quotations.quotation_format', $data);
@@ -313,6 +340,22 @@ class QuotationController extends Controller
         // Return the PDF file
         return $pdf->download('Quotation-' . $currentDateTime . '.pdf');
     }
+
+    public function fetchCurrencyRates($apiUrl)
+{
+    try {
+        $response = file_get_contents($apiUrl);
+        $data = json_decode($response, true);
+
+        if ($data['result'] == 'success') {
+            return $data['conversion_rates'];
+        }
+
+        return false;
+    } catch (\Exception $e) {
+        return false;
+    }
+}
     
     public function preview($id)
     {
