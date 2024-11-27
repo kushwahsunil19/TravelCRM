@@ -299,53 +299,7 @@ td {
                                                 </div>
                                             </div>
 
-                                            <script>
-                                                const baseCurrency = 'USD';
-                                                const apiKey = 'db45eeefc8d49d0b5b537e69';
-                                                const apiUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseCurrency}`;
-                                                const currencyRateInput = document.getElementById('currency_rate');
-
-                                                async function updateCurrencyRate(selectElement) {
-                                                    const selectedOption = selectElement.options[selectElement.selectedIndex];
-                                                    const targetCurrency = selectedOption.getAttribute('data-code');
-
-                                                    if (!targetCurrency) {
-                                                        currencyRateInput.value = "0.00";
-                                                        console.log('No currency selected');
-                                                        return;
-                                                    }
-
-                                                    try {
-                                                        const response = await fetch(apiUrl);
-
-                                                        if (!response.ok) {
-                                                            console.error('API response not OK. Status:', response.status);
-                                                            currencyRateInput.value = "0.00";
-                                                            return;
-                                                        }
-
-                                                        const data = await response.json();
-
-                                                        if (data.result === "success") {
-                                                            const conversionRate = data.conversion_rates[targetCurrency];
-
-                                                            if (conversionRate) {
-                                                                currencyRateInput.value = conversionRate.toFixed(2); // Update input with conversion rate
-                                                                console.log(`1 ${baseCurrency} = ${conversionRate.toFixed(2)} ${targetCurrency}`);
-                                                            } else {
-                                                                console.warn(`No conversion rate found for ${targetCurrency}`);
-                                                                currencyRateInput.value = "0.00";
-                                                            }
-                                                        } else {
-                                                            console.error('Invalid API response:', data);
-                                                            currencyRateInput.value = "0.00";
-                                                        }
-                                                    } catch (error) {
-                                                        console.error('Error fetching currency rate:', error);
-                                                        currencyRateInput.value = "0.00";
-                                                    }
-                                                }
-                                            </script>
+                                            
                                             <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Discount Type</label>
@@ -1565,6 +1519,9 @@ $(document).ready(function() {
         var vat = $('.vat').val();
         $('#currency_symbol').val(symbol);
         calculation(package_amt, vat, discount, discount_type, symbol);
+        var currency_code = selectedOption.data('code');
+        var branch = $.trim($('#branch_id option:selected').text()).toLowerCase();  
+        currencyWiseCalculate(package_amt, vat, discount, discount_type, symbol,branch,currency_code);
 
     }
     // Call the function on page load in case a currency is already selected
@@ -1782,6 +1739,54 @@ $(document).ready(function() {
         var symbol = $('#currency_symbol').val();
         calculation(package_amt, vat, discount, discount_type, symbol);
     });
+    function currencyWiseCalculate(package_amt, vat, discount, discount_type, symbol,branch,currency_code){
+         // Currency conversion API configuration
+        if (branch === "dubai") {
+            baseCurrency = 'AED';
+        } else if (branch === "new delhi") {
+            baseCurrency = 'INR';
+        } else {
+            baseCurrency = 'USD'; // Default currency if needed
+        }
+    // Dynamically get the base currency from server-side data
+        //const apiKey = 'db45eeefc8d49d0b5b537e69'; // Replace with your API key
+        const apiKey = $('meta[name="current-currency-api"]').attr('content'); // Assuming it's stored in a meta tag
+
+        const apiUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseCurrency}`;
+    
+        async function fetchCurrencyRates() {
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+    
+                if (data.result === "success") {
+                    // Extract the conversion rates for INR, AED, EUR dynamically
+                    const rate = data.conversion_rates[currency_code];
+                    $('#currency_rate').val(rate);                  
+               
+                    // Get the total amount in the base currency (from the server)
+                    const totalInBaseCurrency = package_amt;  // Dynamically fetch the total value from server-side
+    
+                    // Convert the total to INR, AED, EUR
+                    const totalPkg= (totalInBaseCurrency * rate).toFixed(2);                 
+                    var discountAmount = 0;
+                    if (discount_type === 'Fixed') {
+                        const discountAmount = (discount * rate).toFixed(2);
+                    }
+                    calculation(totalPkg, vat, discountAmount, discount_type, symbol)
+                  
+                 
+                } else {
+                    console.error('Error fetching conversion rates');
+                }
+            } catch (error) {
+                console.error('Error fetching currency rates:', error);
+            }
+        }
+    
+        // Fetch currency rates when the page is loaded
+        fetchCurrencyRates();
+    }
 
     function calculation(amount, tax, discount, discount_type, symbol) {
         // Parse discount and tax values as floats, default to 0 if not a number
@@ -1829,7 +1834,7 @@ $(document).ready(function() {
             //$('#currency_id').next('.select2-container').css('pointer-events', 'none');
 
             var currencySelect = $('#currency_id'); // Currency select element
-            currencySelect.val('4').trigger('change');
+           // currencySelect.val('4').trigger('change');
             $('.iban_no').show();
             // Change label text to SWIFT Code
             $('label[for="ifsc_code"]').text('SWIFT Code');
@@ -1839,7 +1844,7 @@ $(document).ready(function() {
            // $('#currency_id').next('.select2-container').css('pointer-events', 'none');
 
             var currencySelect = $('#currency_id'); 
-            currencySelect.val('1').trigger('change');
+          //  currencySelect.val('1').trigger('change');
             $('.iban_no').hide();
             // Revert back to IFSC Code for other branches
             $('label[for="ifsc_code"]').text('IFSC Code');

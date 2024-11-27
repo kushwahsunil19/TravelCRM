@@ -1721,6 +1721,9 @@ $total_amt = $amount_after_discount + $tax_amt;
             var gst_tax = $('.gst_tax').val();
             $('#currency_symbol').val(symbol);
             calculation(package_amt, gst_tax, discount, discount_type, symbol);
+            var currency_code = selectedOption.data('code');
+        var branch = $.trim($('#branch_id option:selected').text()).toLowerCase();  
+        currencyWiseCalculate(package_amt, gst_tax, discount, discount_type, symbol,branch,currency_code);
 
         }
         // Call the function on page load in case a currency is already selected
@@ -1838,6 +1841,54 @@ $total_amt = $amount_after_discount + $tax_amt;
 
             calculation(package_amt, gst_tax, discount, discount_type, symbol);
         });
+        function currencyWiseCalculate(package_amt, gst_tax, discount, discount_type, symbol,branch,currency_code){
+         // Currency conversion API configuration
+        if (branch === "dubai") {
+            baseCurrency = 'AED';
+        } else if (branch === "new delhi") {
+            baseCurrency = 'INR';
+        } else {
+            baseCurrency = 'USD'; // Default currency if needed
+        }
+    // Dynamically get the base currency from server-side data
+        //const apiKey = 'db45eeefc8d49d0b5b537e69'; // Replace with your API key
+        const apiKey = $('meta[name="current-currency-api"]').attr('content'); // Assuming it's stored in a meta tag
+
+        const apiUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseCurrency}`;
+    
+        async function fetchCurrencyRates() {
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+    
+                if (data.result === "success") {
+                    // Extract the conversion rates for INR, AED, EUR dynamically
+                    const rate = data.conversion_rates[currency_code];
+                    $('#currency_rate').val(rate);                  
+               
+                    // Get the total amount in the base currency (from the server)
+                    const totalInBaseCurrency = package_amt;  // Dynamically fetch the total value from server-side
+    
+                    // Convert the total to INR, AED, EUR
+                    const totalPkg= (totalInBaseCurrency * rate).toFixed(2);                 
+                    var discountAmount = 0;
+                    if (discount_type === 'Fixed') {
+                        const discountAmount = (discount * rate).toFixed(2);
+                    }
+                    calculation(totalPkg, gst_tax, discountAmount, discount_type, symbol)
+                  
+                 
+                } else {
+                    console.error('Error fetching conversion rates');
+                }
+            } catch (error) {
+                console.error('Error fetching currency rates:', error);
+            }
+        }
+    
+        // Fetch currency rates when the page is loaded
+        fetchCurrencyRates();
+    }
 
         function calculation(amount, tax, discount, discount_type, symbol) {
             //  alert(symbol);

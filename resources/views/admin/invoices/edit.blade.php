@@ -90,10 +90,8 @@ td {
                                                 <label>Booking Reffrence No.</label>
                                                 <input type="number" class="form-control" name="booking_reference_no"
                                                     placeholder="Enter Booking Reffrence No" value="{{ old('booking_reference_no', $invoice->booking_reference_no) }}"
-                                                    min="0" required>
-                                                @if ($errors->has('booking_reference_no'))
-                                                <span class="text-danger">{{ $errors->first('booking_reference_no') }}</span>
-                                                @endif
+                                                    min="0" >
+                                             
 
                                             </div>
                                         </div>
@@ -327,74 +325,7 @@ td {
 
 
                                             </div>
-                                            <script>
-                                            const baseCurrency = 'USD'; // Change this to your base currency if needed
-                                            const apiKey = 'db45eeefc8d49d0b5b537e69'; // Your Exchange Rate API Key
-                                            const apiUrl =
-                                                `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseCurrency}`;
-
-                                            const currencyRateInput = document.getElementById('currency_rate');
-                                            const currencySelect = document.getElementById('currency_id');
-
-                                            async function updateCurrencyRate(selectElement) {
-                                                const selectedOption = selectElement.options[selectElement
-                                                    .selectedIndex];
-                                                const targetCurrency = selectedOption.getAttribute('data-code');
-
-                                                if (!targetCurrency) {
-                                                    currencyRateInput.value = "0.00";
-                                                    console.log('No currency selected');
-                                                    return;
-                                                }
-
-                                                try {
-                                                    const response = await fetch(apiUrl);
-
-                                                    if (!response.ok) {
-                                                        console.error('API response not OK. Status:', response
-                                                            .status);
-                                                        currencyRateInput.value = "0.00";
-                                                        return;
-                                                    }
-
-                                                    const data = await response.json();
-
-                                                    if (data.result === "success") {
-                                                        const conversionRate = data.conversion_rates[
-                                                        targetCurrency];
-
-                                                        if (conversionRate) {
-                                                            currencyRateInput.value = conversionRate.toFixed(
-                                                            2); // Update the input with conversion rate
-                                                            console.log(
-                                                                `1 ${baseCurrency} = ${conversionRate.toFixed(2)} ${targetCurrency}`
-                                                                );
-                                                        } else {
-                                                            console.warn(
-                                                                `No conversion rate found for ${targetCurrency}`
-                                                                );
-                                                            currencyRateInput.value = "0.00";
-                                                        }
-                                                    } else {
-                                                        console.error('Invalid API response:', data);
-                                                        currencyRateInput.value = "0.00";
-                                                    }
-                                                } catch (error) {
-                                                    console.error('Error fetching currency rate:', error);
-                                                    currencyRateInput.value = "0.00";
-                                                }
-                                            }
-
-                                            // Trigger rate update on page load for edit form
-                                            document.addEventListener('DOMContentLoaded', function() {
-                                                const selectedCurrency = currencySelect.value;
-
-                                                if (selectedCurrency) {
-                                                    updateCurrencyRate(
-                                                    currencySelect); // Populate rate based on pre-selected currency
-                                                }
-                                            });
-                                            </script>
+                                          
                                             <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Discount Type</label>
@@ -1674,7 +1605,8 @@ $(document).ready(function() {
     function updateSymbol() {
         var selectedOption = $('#currency_id option:selected'); // Get selected option
         var symbol = selectedOption.data('symbol'); // Get symbol from the data attribute
-
+     
+      
         if (!symbol) {
             symbol = '₹'; // Default to ₹ symbol if none selected
         }
@@ -1682,10 +1614,14 @@ $(document).ready(function() {
 
         var discount_type = $('#discount_type').val();
         var package_amt = $('#package_amt').val(); // Default to 0 if not a number
-        var discount = $('.discount').val();
+        var discount = $('.discount').val();            
         var vat = $('.vat').val();
+      
         $('#currency_symbol').val(symbol);
         calculation(package_amt, vat, discount, discount_type, symbol);
+        var currency_code = selectedOption.data('code');
+        var branch = $.trim($('#branch_id option:selected').text()).toLowerCase();  
+        currencyWiseCalculate(package_amt, vat, discount, discount_type, symbol,branch,currency_code);
 
     }
     // Call the function on page load in case a currency is already selected
@@ -1897,6 +1833,55 @@ $(document).ready(function() {
 
         calculation(package_amt, vat, discount, discount_type, symbol);
     });
+    
+    function currencyWiseCalculate(package_amt, vat, discount, discount_type, symbol,branch,currency_code){
+         // Currency conversion API configuration
+        if (branch === "dubai") {
+            baseCurrency = 'AED';
+        } else if (branch === "new delhi") {
+            baseCurrency = 'INR';
+        } else {
+            baseCurrency = 'USD'; // Default currency if needed
+        }
+    // Dynamically get the base currency from server-side data
+        //const apiKey = 'db45eeefc8d49d0b5b537e69'; // Replace with your API key
+        const apiKey = $('meta[name="current-currency-api"]').attr('content'); // Assuming it's stored in a meta tag
+
+        const apiUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseCurrency}`;
+    
+        async function fetchCurrencyRates() {
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+    
+                if (data.result === "success") {
+                    // Extract the conversion rates for INR, AED, EUR dynamically
+                    const rate = data.conversion_rates[currency_code];
+                    $('#currency_rate').val(rate);                  
+               
+                    // Get the total amount in the base currency (from the server)
+                    const totalInBaseCurrency = package_amt;  // Dynamically fetch the total value from server-side
+    
+                    // Convert the total to INR, AED, EUR
+                    const totalPkg= (totalInBaseCurrency * rate).toFixed(2);                 
+                    var discountAmount = 0;
+                    if (discount_type === 'Fixed') {
+                        const discountAmount = (discount * rate).toFixed(2);
+                    }
+                    calculation(totalPkg, vat, discountAmount, discount_type, symbol)
+                  
+                 
+                } else {
+                    console.error('Error fetching conversion rates');
+                }
+            } catch (error) {
+                console.error('Error fetching currency rates:', error);
+            }
+        }
+    
+        // Fetch currency rates when the page is loaded
+        fetchCurrencyRates();
+    }
 
     function calculation(amount, tax, discount, discount_type, symbol) {
         // Parse discount and tax values as floats, default to 0 if not a number

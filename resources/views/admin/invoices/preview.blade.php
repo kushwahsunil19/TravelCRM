@@ -257,7 +257,8 @@
 
 <script>
     // Currency conversion API configuration
-    const baseCurrency = '{{ $data['currency_code'] ?? 'USD' }}'; 
+    const baseCurrency = '{{ $data['currency_code'] ?? 'USD' }}';
+    alert(baseCurrency); 
     
 // Dynamically get the base currency from server-side data
     const apiKey = 'db45eeefc8d49d0b5b537e69'; // Replace with your API key

@@ -114,7 +114,9 @@ class QuotationController extends Controller
             'partner_id' => 'required|exists:partners,id',
             'package_id' => 'required|exists:packages,id',
             'currency_id' => 'required|exists:currencies,id',
-            // 'bank_id' => 'nullable|exists:bank_details,id',           
+            // 'bank_id' => 'nullable|exists:bank_details,id',  
+            'quotation_no' => 'required|unique:quotations,quotation_no',  
+            'booking_reference_no' => 'required|unique:quotations,booking_reference_no',          
             'no_of_night' => 'nullable|numeric',
             'no_of_passenger' => 'nullable|numeric',
             //  'discount_type' => 'required',
@@ -183,6 +185,7 @@ class QuotationController extends Controller
             'currency_id' => 'required|exists:currencies,id',
             // 'bank_id' => 'nullable|exists:bank_details,id',
             'quotation_no' => 'required|unique:quotations,quotation_no,' . $quotation->id,
+                
             'no_of_night' => 'nullable|numeric',
             'no_of_passenger' => 'nullable|numeric',          
             //  'gst_tax' => 'nullable|numeric',
