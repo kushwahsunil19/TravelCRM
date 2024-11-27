@@ -373,7 +373,7 @@ class QuotationController extends Controller
                 'orientation' => 'P', // Portrait
                 'margin_left' => 5,
                 'margin_right' => 5,
-                // 'margin_top' => 10,
+                // 'margin_top' => 20,
                 // 'margin_bottom' => 10,
             ]);
 
