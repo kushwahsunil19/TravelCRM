@@ -396,7 +396,7 @@ td {
                                                     <div class="col-md-8">
                                                         <div class="input-block mb-3">
                                                             <label>Select Bank</label>
-                                                            <select class="select" id="bank_id" name="bank_id" required>
+                                                            <select class="select" id="bank_id" name="bank_id">
                                                                 <option value="">Select Bank</option>
                                                                 @foreach($bankDetails as $res)
                                                                 <option value="{{ $res->id}}">{{  $res->bank_name}}
