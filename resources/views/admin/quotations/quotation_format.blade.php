@@ -4,18 +4,16 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Static Estimate</title>
-
+    <title>Estimate PDF</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
     <style>
-    /* General Layout */
-    body {
-        margin: 0;
-        padding: 0;
-        background: #fff;
-        font-family: 'DejaVu Sans', sans-serif;
-    }
+        body {
+            font-family: 'DejaVu Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #fff;
+        }
 
     .container {
         width: 700px;
@@ -114,8 +112,11 @@
 
         .table th,
         .table td {
-            border: none;
+            border: 1px solid black;
             padding: 4px;
+            word-wrap: break-word;
+            word-break: break-word;
+            white-space: normal;
         }
 
         .table th {
@@ -136,15 +137,27 @@
             height: 70px;
         }
 
-        .header {
-            position: static;
-            top: 0;
-            z-index: 1;
-            page-break-after: avoid;
+        @media print {
+            .table {
+                page-break-inside: auto;
+            }
+
+            .table tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+
+            .table thead {
+                display: table-header-group;
+            }
+
+            .table tbody tr {
+                display: table-row;
+            }
         }
 
-        body {
-            margin-top: 50px;
+        ul li {
+            list-style-type: none !important;
         }
 
         .no-print {
@@ -192,12 +205,12 @@
 
 <body>
     <div class="container">
+        <!-- Header Section -->
         <div class="header">
-            <nav class="navbar navbar-expand-lg navbar-light">
+            <nav class="navbar navbar-light">
                 <div class="container-fluid" style="padding: 0px">
                   
                     <a class="navbar-brand" href="#">
-                        <!-- Dynamic Image Placeholder -->
                         <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('assets/img/logo2.png'))) }}"
                             alt="Company Logo" />
                     </a>
@@ -253,44 +266,44 @@
         </div>
 
         <!-- Services Table -->
-        <div class="content-wrapper" style="padding: 0px">
-            <table class="table" style="border: 1px solid black;">
+        <div>
+            <table class="table">
                 <thead>
                     <tr>
-                        <th style="text-align:left; border: 1px solid black; ">Service</th>
-                        <th style="text-align:left; border: 1px solid black; ">Description</th>
-                        <th style="text-align:left; border: 1px solid black; ">Amount ({{$currency_code}})</th>
+                        <th style="text-align: left;">Service</th>
+                        <th style="text-align: left;">Description</th>
+                        <th style="text-align: left;">Amount ({{$currency_code}})</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Dynamic Items -->
                     @if(!empty($items) && is_array($items))
-                    @foreach($items as $item)
-                    @if(is_array($item))
-                    <tr style="text-align:center;">
-                        <td style="text-align:justify; border: 1px solid black;"><b>{{ $item['package_name'] }}</b></td>
-                        <td style="text-align:justify; border: 1px solid black;">{!! $item['description'] !!}</td>
-                        <td style="text-align:justify; border: 1px solid black;">
-                            {{$curreny_symbol}}{{ number_format($item['amount'] ?? 0, 2) }}</td>
-                    </tr>
-                    @endif
-                    @endforeach
+                        @foreach($items as $item)
+                            @if(is_array($item))
+                                <tr>
+                                    <td><b>{{ $item['package_name'] }}</b></td>
+                                    <td>{!! $item['description'] !!}</td>
+                                    <td>{{$curreny_symbol}}{{ number_format($item['amount'] ?? 0, 2) }}</td>
+                                </tr>
+                            @endif
+                        @endforeach
                     @else
-                    <tr>
-                        <td colspan="3" class="text-center">No items available</td>
-                    </tr>
+                        <tr>
+                            <td colspan="3" class="text-center">No items available</td>
+                        </tr>
                     @endif
                 </tbody>
             </table>
         </div>
 
-
-
-        <!-- Total and Notes Section -->
-        <!-- <div class="total" style="padding: 0px">
+        <!-- Total Section -->
+       <!-- <div class="total" style="margin-top: 20px;">
             <p>
-                <strong>Total:</strong> ${{ number_format($total, 2) }}<br />
-                <strong>Estimate Total (INR):</strong> ${{ number_format($total, 2) }}
+                <strong>Sub Total :</strong> {{$curreny_symbol}}{{ number_format($subtotal, 2) }}<br />
+                <strong>Discount:</strong> @if($discount_type == 'Fixed') {{$curreny_symbol}} @endif{{ number_format($discount, 2) }}<br />
+                <strong>Vat %:</strong> {{ number_format($tax, 2) }}<br />
+                <strong>Estimate Total (AED):</strong> د.إ{{ number_format($total_in_aed, 2) }}<br />
+                <strong>Estimate Total (USD):</strong> ${{ number_format($total_in_usd, 2) }}<br />
+                <strong>Estimate Total (INR):</strong> ₹{{ number_format($total_in_inr, 2) }}
             </p>
         </div> -->
         <div class="total" style="padding: 0px">
@@ -305,31 +318,19 @@
         <!-- <strong>Estimate Total (EUR) :</strong> <span>{{ number_format($total_in_eur, 2) }} €</span><br /> -->
         </div>
 
-        <!-- Notes / Terms Section -->
-        <div class="note1">
-            <div class="content-wrapper total-section">
-                <div class="notes">
-                    <h6>Notes / Terms</h6>
-                    <p>Payments should be made in favor of “{{ $bill_to }}” </p>
-                    <br>
-
-                    <p><strong>ACCOUNT DETAILS</strong></p>
-                    <br>
-                    @if(!empty($companyBankDetails) && is_array($companyBankDetails))
-                    @foreach($companyBankDetails as $bank)
+        <!-- Notes Section -->
+        <div class="notes" style="margin-top: 20px;">
+            <h6>Notes / Terms</h6>
+            <p>Payments should be made in favor of “{{ $bill_to }}”</p>
+            <p><strong>ACCOUNT DETAILS</strong></p>
+            @if(!empty($companyBankDetails) && is_array($companyBankDetails))
+                @foreach($companyBankDetails as $bank)
                     <div style="{{ $loop->last ? '' : 'border-bottom: 1px solid #ddd; padding-bottom: 15px; margin-bottom: 15px;' }}">
                         <strong>Account Name:</strong> {{ $bank['account_holder_name'] }}<br />
                         <strong>Bank:</strong> {{ $bank['bank_name'] }}<br />
                         <strong>Branch:</strong> {{ $bank['branch_name'] }}<br />
                         <strong>Account Number:</strong> {{ $bank['account_no'] }}<br />
-
-                        @if (isset($bank['branch_name']) && strpos(strtolower(trim($bank['branch_name'])), 'dubai') !==
-                        false)
-                        <strong>IBAN No:</strong> {{ $bank['iban_no'] }}<br />
-                        <strong>SWIFT Code:</strong> {{ $bank['ifsc_code'] }}<br />
-                        @else
                         <strong>IFSC Code:</strong> {{ $bank['ifsc_code'] }}<br />
-                        @endif
                     </div>
                     @endforeach
                     @else
