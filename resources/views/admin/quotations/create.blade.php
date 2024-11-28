@@ -1503,7 +1503,7 @@
                 }
             });
         });
-        // add package
+    
         $('#package_details_form').on('submit', function (e) {
             e.preventDefault(); // Prevent the form from submitting normally
             for (instance in CKEDITOR.instances) {
@@ -1512,7 +1512,7 @@
             var formData = new FormData(this); // Create FormData object from the form
 
             $.ajax({
-                url: $(this).attr('action'), // Get the action URL from the form
+                url: $(this).attr('action'), 
                 type: 'POST',
                 data: formData, // Send FormData object
                 contentType: false, // Important for file upload
@@ -1544,28 +1544,28 @@
                 error: function (xhr) {
                     if (xhr.responseJSON.errors) {
                         $.each(xhr.responseJSON.errors, function (key, value) {
-                            toastr.error(value[0]); // Display each error message
+                            toastr.error(value[0]); 
                         });
                     } else {
-                        toastr.error('Error uploading profile.'); // Generic error message
+                        toastr.error('Error uploading profile.'); 
                     }
                 }
             });
         });
 
         $(document).on('click', '.edit_package', function () {
-            var id = $(this).data('id'); // Get user ID from the button
-
-            // Make an AJAX request to fetch the user data
+            var id = $(this).data('id'); 
+        
             $.ajax({
                 url: '{{ route("packages.edit", ":id") }}'.replace(':id',
-                    id), // Replace ':id' with the actual user ID
+                    id),
                 type: 'GET',
                 success: function (response) {
                     var data = response.data;
 
-                    // Populate the form fields with the fetched data
-                    $('#pkg_id').val(data.id); // Hidden user ID
+                  
+                    $('#pkg_id').val(data.id); 
+
                     $('#edit_package_name').val(data.package_name);
                     $('#edit_package_amt').val(data.amount);
                     $('#edit_package_net_amt').val(data.net_amount);
@@ -1585,20 +1585,20 @@
         });
         // Edit package
         $('#edit_package_details_form').on('submit', function (e) {
-            e.preventDefault(); // Prevent the form from submitting normally
+            e.preventDefault();
             for (instance in CKEDITOR.instances) {
                 CKEDITOR.instances[instance].updateElement();
             }
-            var formData = new FormData(this); // FormData for file uploads
-            var id = $('#pkg_id').val(); // Get user ID from hidden input
+            var formData = new FormData(this); 
+            var id = $('#pkg_id').val(); 
             $.ajax({
-                url: '{{ route("packages.update", ":id") }}'.replace(':id', id), // Update route
-                type: 'POST', // POST method with method override
+                url: '{{ route("packages.update", ":id") }}'.replace(':id', id), 
+                type: 'POST',
                 data: formData,
                 contentType: false,
                 processData: false,
                 headers: {
-                    'X-HTTP-Method-Override': 'PUT' // Spoofing PUT
+                    'X-HTTP-Method-Override': 'PUT' 
                 },
                 success: function (response) {
                     toastr.success(response.message);
@@ -1785,6 +1785,7 @@
             var symbol = $('#currency_symbol').val();
             calculation(package_amt, gst_tax, discount, discount_type, symbol);
         });
+        
 
         function calculation(amount, tax, discount, discount_type, symbol) {
 

@@ -191,15 +191,7 @@
                                                                     Invoice</button>
                                                             </form>
                                                         </li>
-                                                        <!-- <li>
-																		<a class="dropdown-item" href="{{ route('quotations.show', $quotation->id) }}"><i class="far fa-eye me-2"></i>View</a>
-																	</li> -->
-                                                        <!-- <li>
-																		<a class="dropdown-item" href="active-customers.html"><i class="fa-solid fa-power-off me-2"></i>Activate</a>
-																	</li>
-																	<li>
-																		<a class="dropdown-item" href="deactive-customers.html"><i class="far fa-bell-slash me-2"></i>Deactivate</a>
-																	</li> -->
+                                                       
                                                     </ul>
                                                 </div>
                                             </div>
