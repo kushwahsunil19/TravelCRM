@@ -1873,7 +1873,9 @@ $total_amt = $amount_after_discount + $tax_amt;
                     const totalPkg= (totalInBaseCurrency * rate).toFixed(2);                 
                     var discountAmount = 0;
                     if (discount_type === 'Fixed') {
-                        const discountAmount = (discount * rate).toFixed(2);
+                        var discountAmount = (discount * rate).toFixed(2);
+                    }else{
+                        var discountAmount = discount;
                     }
                     calculation(totalPkg, gst_tax, discountAmount, discount_type, symbol)
                   
