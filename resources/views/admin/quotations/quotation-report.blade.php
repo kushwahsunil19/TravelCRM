@@ -113,8 +113,7 @@
                                     </button>
                                     <!-- Reset Button -->
                                     <button type="button"
-                                        class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary"
-                                        onclick="resetForm()">
+                                        class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary" id="reset-btn">
                                         Reset
                                     </button>
                                 </div>
@@ -205,9 +204,14 @@
         </div> <!-- /content -->
     </div> <!-- /page-wrapper -->
 </div> <!-- /main-wrapper -->
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <!-- JavaScript to toggle the filter sidebar -->
 <script>
+    $(document).ready(function() {
+    $(document).on('click', '#reset-btn', function() {   
+        window.location.href = "{{ route('quotation-report.index') }}";
+    });
+});
 document.addEventListener("DOMContentLoaded", function() {
     var filterToggle = document.getElementById('filterToggle');
     var filterSidebar = document.querySelector('.toggle-sidebar');
@@ -225,18 +229,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-function resetForm() {
-    // Clear the input values by setting them to an empty string
-    document.getElementById('quotation_no').value = '';
-    document.getElementById('branch').value = '';
-    document.getElementById('package').value = '';
-    document.getElementById('partner').value = '';
-    document.getElementById('discount_type').value = '';
 
-    window.location.reload();
-
-
-}
 </script>
 
 @endsection

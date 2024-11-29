@@ -2,24 +2,24 @@
 
             <!-- Header -->
             <div class="header header-one">
-                <a href="{{route('dashboard')}}"
+                <a href="{{route('dashboard.index')}}"
                     class="d-inline-flex d-sm-inline-flex align-items-center d-md-inline-flex d-lg-none align-items-center device-logo">
                     <img src="{{url('public/assets/img/logo2.png')}}" class="img-fluid logo2 mobile-logo" alt="Logo">
                 </a>
                 <div class="main-logo d-inline float-start d-lg-flex align-items-center d-none d-sm-none d-md-none">
                     <div class="logo-white">
-                        <a href="{{route('dashboard')}}">
+                        <a href="{{route('dashboard.index')}}">
                             <img src="{{url('public/assets/img/logo2.png')}}" class="img-fluid logo-blue" alt="Logo">
                         </a>
-                        <a href="{{route('dashboard')}}">
+                        <a href="{{route('dashboard.index')}}">
                             <img src="{{url('public/assets/img/logo2.png')}}" class="img-fluid logo-small" alt="Logo">
                         </a>
                     </div>
                     <div class="logo-color">
-                        <a href="{{route('dashboard')}}">
+                        <a href="{{route('dashboard.index')}}">
                             <img src="{{url('public/assets/img/logo2.png')}}" class="img-fluid logo-blue mobile-logo" alt="Logo">
                         </a>
-                        <a href="{{route('dashboard')}}">
+                        <a href="{{route('dashboard.index')}}">
                             <img src="{{url('public/assets/img/logo-small.png')}}" class="img-fluid logo-small"
                                 alt="Logo">
                         </a>
@@ -230,11 +230,11 @@
                             <ul class="list-inline-item list-unstyled links">
                                 <li class="menu-title"><span>Main</span></li>
                                 <li class="submenu">
-                                    <a href="{{route('dashboard')}}"><i class="fe fe-home"></i> <span> Dashboard</span>
+                                    <a href="{{route('dashboard.index')}}"><i class="fe fe-home"></i> <span> Dashboard</span>
                                         <span class="menu-arrow"></span></a>
 
                                     <!-- <ul>
-                                            <li><a href="{{route('dashboard')}}" class="active">Admin Dashboard</a></li>
+                                            <li><a href="{{route('dashboard.index')}}" class="active">Admin Dashboard</a></li>
                                         </ul> -->
 
                                 </li>
@@ -679,7 +679,7 @@
 
                             <li class="menu-title"><span>Main </span></li>
                             <li>
-                                <a href="{{route('dashboard')}}"><i class="fe fe-home"></i> <span> Dashboard</span></a>
+                                <a href="{{route('dashboard.index')}}"><i class="fe fe-home"></i> <span> Dashboard</span></a>
                             </li>
                         <!-- Invoices Section -->
                         @if(isset($rolePermissions[$userRole]))

@@ -441,6 +441,7 @@ class InvoiceController extends Controller
             return false;
         }
     }
+
     public function generateQuotationPDF($id)
     {
         // Fetch the quotation by ID from the database
@@ -471,8 +472,8 @@ class InvoiceController extends Controller
         // Total amount after applying discount and adding tax
         $total_amt = $amount_after_discount + $tax_amt;
         // Currency conversion logic
-        $baseCurrency = $invoice->currency->code;
-        $apiKey = 'db45eeefc8d49d0b5b537e69';  // Replace with your API key
+        $baseCurrency = ($invoice->branch->branch_name=='Dubai')?'AED':'INR';
+        $apiKey = env('CURRENT_CURRENCY_RATE_KEY');  
         $apiUrl = "https://v6.exchangerate-api.com/v6/$apiKey/latest/$baseCurrency";
         
         $conversionRates = $this->fetchCurrencyRates($apiUrl);  // Fetch the conversion rates from the API

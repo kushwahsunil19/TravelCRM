@@ -36,7 +36,7 @@ class BranchController extends Controller
     {
         // Validate the incoming data
         $request->validate([
-            'branch_name' => 'required|string|max:255',
+            'branch_name' => 'required|string|max:255|unique:branches,branch_name',
             'city' => 'required|string|max:255',
             'address' => 'required|string|max:500',
         ]);

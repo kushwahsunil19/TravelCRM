@@ -276,8 +276,8 @@ class QuotationController extends Controller
             $total_amt = $amount_after_discount + $tax_amt;
         
             // Currency conversion logic
-            $baseCurrency = $quotation->currency->code;
-            $apiKey = 'db45eeefc8d49d0b5b537e69';  // Replace with your API key
+            $baseCurrency = ($quotation->branch->branch_name=='Dubai')?'AED':'INR';
+            $apiKey = env('CURRENT_CURRENCY_RATE_KEY');  
             $apiUrl = "https://v6.exchangerate-api.com/v6/$apiKey/latest/$baseCurrency";
             
             $conversionRates = $this->fetchCurrencyRates($apiUrl);  // Fetch the conversion rates from the API
@@ -289,6 +289,14 @@ class QuotationController extends Controller
                 $total_in_aed = $total_amt * $conversionRates['AED'];
                 $total_in_eur = $total_amt * $conversionRates['EUR'];
                 $total_in_usd = $total_amt * $conversionRates['USD'];
+                
+                // $rate = $conversion_rates[$quotation->currency->code] ?? 0.00; // Pass $conversion_rates to the view
+                // $discountType = $quotation->discount_type ?? '';
+                // $discountAmt = $quotation->discount ?? 0;
+                // $discount = ($discountType === 'Fixed') 
+                // ? number_format($discountAmt * $rate, 2) 
+                // : number_format($discountAmt, 2);
+              
             } else {
                 // Default to original amounts if conversion fails
                 $totalInINR = $totalInAED = $totalInEUR = $totalInUSD = $total_amt;
@@ -326,6 +334,7 @@ class QuotationController extends Controller
                     ];
                 }
             }
+           
             // Example: Adjust these fields based on your `quotations` table structure
             $data = [
                 'currency_code'=>$quotation->currency->code,

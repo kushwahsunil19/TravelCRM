@@ -33,7 +33,8 @@ class BankController extends Controller
     {
         // Validate the incoming data
         $request->validate([
-            'bank_name' => 'required|string|max:255',
+           
+            'bank_name' => 'required|string|unique:currencies,bank_details',
             'account_no' => 'required|numeric',
             'branch_name' => 'nullable|string|min:1',
             'ifsc_code' => 'required|string|min:1',

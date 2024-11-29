@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="current-currency-api" content="{{ env('CURRENT_CURRENCY_RATE_KEY') }}">
     <title>Estimate</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -205,7 +206,7 @@
                     <b>No. of Night:</b> {{ $data['no_of_night'] }}<br />
                     <b>No. of Passenger:</b> {{ $data['no_of_passenger'] }}<br />
                     <b>Valid Until:</b> {{ now()->addDays(30)->toDateString() }}<br />
-                    <b>Estimate Total:</b> {{$data['curreny_symbol']}}{{ number_format($data['total'], 2) }}
+                    <b>Estimate Total({{ $data['branch_name'] == 'Dubai' ? 'AED' : 'INR' }}):</b> {{ number_format($data['total'], 2) }}
                 </p>
             </div>
         </div>
@@ -218,7 +219,7 @@
                 <tr>
                     <th style="text-align:left; border: 1px solid black; ">Service</th>
                     <th style="text-align:left; border: 1px solid black; ">Description</th>
-                    <th style="text-align:left; border: 1px solid black; ">Amount ({{$data['currency_code']}})</th>
+                    <th style="text-align:left; border: 1px solid black; ">Amount ({{ $data['branch_name'] == 'Dubai' ? 'AED' : 'INR' }})</th>
                 </tr>
             </thead>
             <tbody>
@@ -229,7 +230,7 @@
                     <td style="text-align:justify; border: 1px solid black;"><b>{{ $item['package_name'] }}</b></td>
                     <td style="text-align:justify; border: 1px solid black;">{!! $item['description'] !!}</td>
                     <td style="text-align:justify; border: 1px solid black;">
-                        {{$data['curreny_symbol']}}{{ number_format($item['amount'], 2) }}</td>
+                       {{ number_format($item['amount'], 2) }}</td>
                 </tr>
                 @endforeach
                 @endif
@@ -241,7 +242,11 @@
     <div class="total" style="padding: 0px">
     <p>
         <strong>Sub Total :</strong> {{$data['curreny_symbol']}}{{ number_format($data['subtotal'], 2) }}<br />
-        <p><strong>Discount @if($data['discount_type'] == 'Percentage') (%) @endif: </strong>@if($data['discount_type'] == 'Fixed') {{$data['curreny_symbol']}} @endif{{ number_format($data['discount'], 2) }} </p>
+    <p>
+    <strong>Discount @if($data['discount_type'] == 'Percentage') (%) @endif:</strong>
+    <span id="discount">      
+    </span>
+   </p>
         <p><strong>Vat % : </strong>{{ number_format($data['tax'], 2) }} </p>
         <!-- <strong>Estimate Total ({{ $data['curreny_symbol'] }}) :</strong> {{$data['curreny_symbol']}}{{ number_format($data['total'], 2) }}<br /> -->
 
@@ -256,10 +261,13 @@
 
 <script>
     // Currency conversion API configuration
-    const baseCurrency = '{{ $data['currency_code'] ?? 'USD' }}'; 
+    const baseCurrency = '{{ $data['branch_name'] == 'Dubai' ? 'AED' : 'INR' }}';
+  
     
 // Dynamically get the base currency from server-side data
+    //const apiKey = $('meta[name="current-currency-api"]').attr('content');
     const apiKey = 'db45eeefc8d49d0b5b537e69'; // Replace with your API key
+ 
     const apiUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseCurrency}`;
 
     async function fetchCurrencyRates() {
@@ -273,11 +281,18 @@
                 const aedRate = data.conversion_rates['AED'];
                 const eurRate = data.conversion_rates['EUR'];
                 const usdRate = data.conversion_rates['USD'];
-              
-
+                const seletected_currency =  '{{ $data['currency_code']}}';
+                const rate = data.conversion_rates[seletected_currency];
+                
                 // Get the total amount in the base currency (from the server)
                 const totalInBaseCurrency = {{ $data['total'] ?? 0 }};  // Dynamically fetch the total value from server-side
-
+                const discountAmt = {{ $data['discount'] ?? 0.00 }};
+                const discountType = '{{ $data['discount_type'] ?? '' }}';
+                const discountAmt = {{ $data['discount'] ?? 0.00 }};
+                const discount = (discountType === 'Fixed') 
+                    ? (discountAmt * rate).toFixed(2) 
+                    : discountAmt;
+                 document.getElementById('discount').innerText = discount; 
                 // Convert the total to INR, AED, EUR
                 const totalInINR = (totalInBaseCurrency * inrRate).toFixed(2);
                 const totalInAED = (totalInBaseCurrency * aedRate).toFixed(2);
@@ -290,6 +305,8 @@
                 document.getElementById('total_in_inr').innerText = '₹' + totalInINR;
                 document.getElementById('total_in_aed').innerText = 'د.إ' + totalInAED;
                 document.getElementById('total_in_eur').innerText = '€' + totalInEUR;
+             
+               
 
              
             } else {

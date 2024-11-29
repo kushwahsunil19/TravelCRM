@@ -258,8 +258,7 @@
                             Apply
                         </button>
                         <button type="button"
-                            class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary"
-                            onclick="resetForm()">
+                            class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary " id="reset-btn">
                             Reset
                         </button>
                     </div>
@@ -1229,18 +1228,10 @@ function calculateSum() {
 </script>
 
 <script>
-function resetForm() {
-    // Clear all input fields
-    document.querySelector('input[name="name"]').value = '';
-    document.querySelector('input[name="email"]').value = '';
-    document.querySelector('input[name="mobile"]').value = '';
-    document.querySelector('input[name="city"]').value = '';
-    document.querySelector('input[name="state"]').value = '';
-    document.querySelector('input[name="country"]').value = '';
 
-    // Redirect to the main suppliers page to reset filters
-    window.location.reload();
-}
+$(document).on('click','#reset-btn',function(){   
+       window.location.href = "{{ route('suppliers.index') }}";
+});
 </script>
 
 <script>

@@ -33,7 +33,7 @@ class CurrencyController extends Controller
     {
         // Validate the incoming data
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:currencies,name',
             'code' => 'required|string|max:3',
             'symbol' => 'nullable|string|max:10',
             // 'exchange_rate' => 'required|numeric',

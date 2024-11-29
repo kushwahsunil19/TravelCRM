@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="current-currency-api" content="{{ env('CURRENT_CURRENCY_RATE_KEY') }}">
     <title>Invoice</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -240,7 +241,7 @@
                                 <b>No. of Night:</b> {{ $no_of_night }}<br />
                                 <b>No. of Passenger:</b> {{ $no_of_passenger }}<br />
                                 <b>Valid Until:</b> {{ now()->addDays(30)->toDateString() }}<br />
-                                <b>Invoice Total:</b> {{$curreny_symbol}}{{ number_format($total, 2) }}
+                                <b>Invoice Total ({{ $branch_name == 'Dubai' ? 'AED' : 'INR' }}):</b> {{ number_format($total, 2) }}
                             </p>
                         </td>
                     </tr>
@@ -257,7 +258,7 @@
                     <tr>
                         <th style="text-align:left; border: 1px solid black; ">Service</th>
                         <th style="text-align:left; border: 1px solid black; ">Description</th>
-                        <th style="text-align:left; border: 1px solid black; ">Amount ({{$currency_code}})</th>
+                        <th style="text-align:left; border: 1px solid black; ">Amount ({{ $branch_name == 'Dubai' ? 'AED' : 'INR' }})</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -269,7 +270,7 @@
                         <td style="text-align:justify; border: 1px solid black;"><b>{{ $item['package_name'] }}</b></td>
                         <td style="text-align:justify; border: 1px solid black;">{!! $item['description'] !!}</td>
                         <td style="text-align:justify; border: 1px solid black;">
-                            {{$curreny_symbol}}{{ number_format($item['amount'] ?? 0, 2) }}</td>
+                            {{ number_format($item['amount'] ?? 0, 2) }}</td>
                     </tr>
                     @endif
                     @endforeach
@@ -292,9 +293,9 @@
             </p>
         </div> -->
         <div class="total" style="padding: 0px">
-            <p><strong>Sub Total :</strong> {{$curreny_symbol}}{{ number_format($subtotal, 2) }} </p>
+            <p><strong>Sub Total :</strong> {{ number_format($subtotal, 2) }} </p>
             <p><strong>Discount @if($discount_type == 'Percentage') (%) @endif: </strong>@if($discount_type == 'Fixed')
-                {{$curreny_symbol}} @endif{{ number_format($discount, 2) }} </p>
+              @endif{{ number_format($discount, 2) }} </p>
             <p><strong>Vat (%) : </strong>{{ number_format($tax, 2) }} </p>
             <!-- Converted Amounts (Dynamic) -->
         <strong>Invoice Total (AED) :</strong> د.إ <span>{{ number_format($total_in_aed, 2) }} </spa><br />

@@ -2,9 +2,9 @@
 
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\{AuthController,ForgotPasswordController,ProfileController,UserController,QuotationController,ExpensesController,PartnerController,BranchController,PackageController,CurrencyController,RolesPermissionController,VendorController,InvoiceController,SupplierController,QuotationReportController,SupplierReportController,PartnerReportController,BankController,StaffwiseController,HotelReportController};
+use App\Http\Controllers\Admin\{AuthController,DashboardController,ForgotPasswordController,ProfileController,UserController,QuotationController,ExpensesController,PartnerController,BranchController,PackageController,CurrencyController,RolesPermissionController,VendorController,InvoiceController,SupplierController,QuotationReportController,SupplierReportController,PartnerReportController,BankController,StaffwiseController,HotelReportController};
 use App\Http\Controllers\Admin\ProfitAndLoss;
-
+use App\Http\Controllers\Admin\CronjobController;
 use App\Http\Controllers\admin\TestController;
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +39,7 @@ Route::controller(AuthController::class)->group(function() {
    
 });
 
+Route::get('current-currency-rate', [CronjobController::class, 'index'])->name('current-currency-rate');
 
 
 Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
@@ -48,7 +49,8 @@ Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPass
 Route::middleware(['auth'])->group(function() {
       Route::resource('profile', ProfileController::class);
   
-    Route::get('/dashboard',[AuthController::class, 'dashboard'] )->name('dashboard');
+   // Route::get('/dashboard',[AuthController::class, 'dashboard'] )->name('dashboard');
+    Route::resource('dashboard', DashboardController::class); 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     // Resource route for users
     Route::resource('users', UserController::class); // Adjust middleware as needed
