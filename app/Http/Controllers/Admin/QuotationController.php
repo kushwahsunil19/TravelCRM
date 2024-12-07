@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Quotation,Invoice,Branch,Partner,Package,Bank,Currency,City,Country,State,Supplier,Service,TmpService};
+use App\Models\{Quotation,Invoice,Branch,Partner,Package,Bank,Currency,City,Country,State,Supplier,Service,TmpService,CompanyBankDetail};
 use PDF;
 use Spatie\Permission\Models\Role;
 use Mpdf\Mpdf;
@@ -88,9 +88,10 @@ class QuotationController extends Controller
         $states = State::all();
         $cities = City::all();
         $suppliers = Supplier::all();
-        $quotation = Quotation::with(['branch', 'partner', 'package'])
+        $quotation = Quotation::with(['branch', 'partner', 'package.expenses'])
                       ->latest('id')  // Sort by the latest ID
                       ->first(); 
+                 
          $quotation_no = 100;           
         if(isset( $quotation->id)){
             $quotation_no =  $quotation->quotation_no +1 ;
@@ -128,6 +129,7 @@ class QuotationController extends Controller
         $input['gst_tax'] = ($request->gst_tax !='')?$request->gst_tax:0.00;
         $input['currency_rate'] = ($request->currency_rate !='')?$request->currency_rate:0.00;
         $input['discount'] = ($request->discount !='')?$request->discount:0.00;
+        $input['user_id'] = auth()->id();
         $quotation = Quotation::create($input);
       
         if (!empty($request->supplier) && is_array($request->supplier)) {
@@ -170,6 +172,7 @@ class QuotationController extends Controller
         $suppliers = Supplier::all();
         $bankDetails = Bank::latest()->get();
         $selectedSuppliers = $quotation->tmpServices->pluck('suplyer_id')->toArray();
+       
         return view('admin.quotations.edit', compact('quotation', 'branches', 'partners', 'packages','bankDetails','currencies','countries','states','cities','suppliers','selectedSuppliers'));
     }
 
@@ -195,6 +198,7 @@ class QuotationController extends Controller
         $input['gst_tax'] = ($request->gst_tax !='')?$request->gst_tax:0.00;
         $input['currency_rate'] = ($request->currency_rate !='')?$request->currency_rate:0.00;
         $input['discount'] = ($request->discount !='')?$request->discount:0.00;
+        $input['user_id'] = auth()->id();
                 // Clear existing tmp_services records for this quotation
                 // Delete existing services for the quotation
             TmpService::where('quotation_id', $quotation->id)->delete();
@@ -249,9 +253,9 @@ class QuotationController extends Controller
         
             // Fetch the quotation by ID from the database
             $quotation = Quotation::with(['branch.companyBankDetail', 'partner', 'package','bank','currency'])->findOrFail($id);
-        
+   
             // Get the package amount
-            $package_amt = $quotation->package->amount;
+           $package_amt = $quotation->package->amount *  $quotation->no_of_passenger;
 
             // GST Tax in percentage
             $tax = $quotation->gst_tax;
@@ -274,21 +278,16 @@ class QuotationController extends Controller
 
             // Total amount after applying discount and adding tax
             $total_amt = $amount_after_discount + $tax_amt;
-        
-            // Currency conversion logic
-            $baseCurrency = ($quotation->branch->branch_name=='Dubai')?'AED':'INR';
-            $apiKey = env('CURRENT_CURRENCY_RATE_KEY');  
-            $apiUrl = "https://v6.exchangerate-api.com/v6/$apiKey/latest/$baseCurrency";
-            
-            $conversionRates = $this->fetchCurrencyRates($apiUrl);  // Fetch the conversion rates from the API
+       
+            $rates = getCurrencyRate($quotation->currency->code);   
         
             
-            if ($conversionRates) {
+            if (!empty($rates)) {
             
-                $total_in_inr = $total_amt * $conversionRates['INR'];
-                $total_in_aed = $total_amt * $conversionRates['AED'];
-                $total_in_eur = $total_amt * $conversionRates['EUR'];
-                $total_in_usd = $total_amt * $conversionRates['USD'];
+                $total_in_inr = $total_amt * $rates['INR'];
+                $total_in_aed = $total_amt * $rates['AED'];
+                $total_in_eur = $total_amt * $rates['EUR'];
+                $total_in_usd = $total_amt * $rates['USD'];
                 
                 // $rate = $conversion_rates[$quotation->currency->code] ?? 0.00; // Pass $conversion_rates to the view
                 // $discountType = $quotation->discount_type ?? '';
@@ -310,7 +309,7 @@ class QuotationController extends Controller
                 $items[] = [
                     'package_name' => $quotation->package->package_name,
                     'description' => $quotation->package->description,
-                    'amount' => $quotation->package->amount,
+                    'amount' => $package_amt,
                 ];
             }
             
@@ -318,12 +317,11 @@ class QuotationController extends Controller
             $branchId = $quotation->branch_id;
             
             // Fetch the branch and related bank details
-            $branchDetails = Branch::with('companyBankDetail')->findOrFail($branchId);
-            
+           // $branchDetails = Branch::with('companyBankDetail')->findOrFail($branchId);
+            $bankDetails = CompanyBankDetail::get();
             $companyBankDetails = [];
-            
-            if ($branchDetails->companyBankDetail->isNotEmpty()) {
-                foreach ($branchDetails->companyBankDetail as $bankDetail) {
+            if ($bankDetails->isNotEmpty()) {
+                foreach ($bankDetails as $bankDetail) {
                     $companyBankDetails[] = [
                         'bank_name' => $bankDetail->bank_name,
                         'account_holder_name' => $bankDetail->account_holder_name,
@@ -418,9 +416,10 @@ class QuotationController extends Controller
     {
         // Fetch the quotation by ID from the database
         $quotation = Quotation::with(['branch.companyBankDetail', 'partner', 'package','bank','currency'])->findOrFail($id);
-      
+        
         // Get the package amount
-        $package_amt = $quotation->package->amount;
+        $package_amt = $quotation->package->amount * $quotation->no_of_passenger;
+        
 
         // GST Tax in percentage
         $tax = $quotation->gst_tax;
@@ -451,7 +450,7 @@ class QuotationController extends Controller
             $items[] = [
                 'package_name' => $quotation->package->package_name,
                 'description' => $quotation->package->description,
-                'amount' => $quotation->package->amount,
+                'amount' => $package_amt,
             ];
         }
 
@@ -460,12 +459,11 @@ class QuotationController extends Controller
         $branchId = $quotation->branch_id;
         
         // Fetch the branch and related bank details
-        $branchDetails = Branch::with('companyBankDetail')->findOrFail($branchId);
-        
-        $companyBankDetails = [];
-        
-        if ($branchDetails->companyBankDetail->isNotEmpty()) {
-            foreach ($branchDetails->companyBankDetail as $bankDetail) {
+       // $branchDetails = Branch::with('companyBankDetail')->findOrFail($branchId);        
+       $bankDetails = CompanyBankDetail::get();
+       $companyBankDetails = [];
+       if ($bankDetails->isNotEmpty()) {
+           foreach ($bankDetails as $bankDetail) {
                 $companyBankDetails[] = [
                     'bank_name' => $bankDetail->bank_name,
                     'account_holder_name' => $bankDetail->account_holder_name,
@@ -562,7 +560,7 @@ class QuotationController extends Controller
         if (!$existingInvoice) {
          
             $invoice = Invoice::create([
-                'user_id' => $user_id,
+                'user_id' => $quotation->user_id,
                 'invoice_no' => $invoice_no,
                 'no_of_night' => $quotation->no_of_night,
                 'no_of_passenger' => $quotation->no_of_passenger,   
@@ -586,7 +584,6 @@ class QuotationController extends Controller
                     'id' => $existingInvoice->id,                     
                 ], // The unique key for the invoice (could be quotation_id)
                 [
-                    'user_id' => $user_id,
                     'branch_id' => $quotation->branch_id,
                     'no_of_night' => $quotation->no_of_night,
                     'no_of_passenger' => $quotation->no_of_passenger,    

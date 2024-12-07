@@ -14,6 +14,7 @@ class Quotation extends Model
      * The attributes that are mass assignable.
      */
     protected $fillable = [
+        'user_id',
         'branch_id',
         'partner_id',
         'package_id',
@@ -76,5 +77,16 @@ class Quotation extends Model
     {
         return $this->tmpServices()->pluck('suplyer_id')->toArray();
     }
-
+    /**
+     * Get the User associated with the quotation.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class,'user_id', 'id');
+    }
+    
+    public function services()
+    {
+        return $this->hasMany(Service::class, 'invoice_id', 'id');
+    }
 }

@@ -49,8 +49,8 @@ $url = $_SERVER['REQUEST_URI'];
 
 
                     <li>
-                            <a class="btn btn-primary" href="{{route('invoices.create')}}"><i
-                                    class="fa fa-plus-circle me-2" aria-hidden="true"></i>New Invoice</a>
+                            <!-- <a class="btn btn-primary" href="{{route('invoices.create')}}"><i
+                                    class="fa fa-plus-circle me-2" aria-hidden="true"></i>New Invoice</a> -->
                         </li>
                 </div>
             </div>
@@ -84,7 +84,9 @@ $url = $_SERVER['REQUEST_URI'];
         </div> -->
         <!-- /Search Filter -->
         @php
-          $total_invoice_amt = 0;
+        $total_invoice_amt_INR = 0;
+        $total_invoice_amt_AED = 0;
+        $total_invoice_amt_USD = 0;
           $total_outstanding_amt = 0;
           $total_overdue_amt = 0;
           $total_cancelled_amt = 0;
@@ -94,9 +96,10 @@ $url = $_SERVER['REQUEST_URI'];
         @endphp  
         @foreach ($invoices as $invoice)
             @php
+          
             $symbol = isset($invoice->currency->symbol) ?
             $invoice->currency->symbol : '₹';
-            $package_amt = $invoice->package->amount;
+            $package_amt = $invoice->package->amount * $invoice->no_of_passenger;
             // GST Tax in percentage
             $tax = $invoice->vat;
             // Discount in percentage
@@ -110,7 +113,14 @@ $url = $_SERVER['REQUEST_URI'];
             // Amount after discount
             $amount_after_discount = $package_amt - $discount_amt;
             $tax_amt = ($amount_after_discount * $tax) / 100;
-            $total_invoice_amt += $amount_after_discount + $tax_amt;
+            if($invoice->currency->code == 'INR'){
+                  $total_invoice_amt_INR += $amount_after_discount + $tax_amt;                
+            }else if($invoice->currency->code == 'AED'){
+                $total_invoice_amt_AED += $amount_after_discount + $tax_amt;
+            }else if($invoice->currency->code == 'USD'){
+                $total_invoice_amt_USD += $amount_after_discount + $tax_amt;
+            }
+           
             @endphp              
         @endforeach
         <!-- Inovices card -->
@@ -123,9 +133,9 @@ $url = $_SERVER['REQUEST_URI'];
                                 <img src="{{url('public/assets/img/icons/receipt-item.svg')}}" alt="invoice">
                             </span>
                             <div class="dash-count">
-                                <div class="dash-title">Total Invoice</div>
+                                <div class="dash-title">Total Invoice(INR)</div>
                                 <div class="dash-counts">
-                                    <p>{{number_format($total_invoice_amt,2)}}</p>
+                                    <p>{{number_format($total_invoice_amt_INR,2)}}</p>
                                 </div>
                             </div>
                         </div>
@@ -138,7 +148,9 @@ $url = $_SERVER['REQUEST_URI'];
                     </div>
                 </div>
             </div>
-            <!-- <div class="col-xl-3 col-lg-4 col-sm-6 col-12 d-flex">
+           
+            
+          <div class="col-xl-3 col-lg-4 col-sm-6 col-12 d-flex">
                 <div class="card inovices-card w-100">
                     <div class="card-body">
                         <div class="dash-widget-header">
@@ -147,18 +159,18 @@ $url = $_SERVER['REQUEST_URI'];
 
                             </span>
                             <div class="dash-count">
-                                <div class="dash-title">Outstanding</div>
+                                <div class="dash-title">Total Invoice(AED)</div>
                                 <div class="dash-counts">
-                                    <p>{{ number_format($total_outstanding_amt, 2) }}</p>
+                                    <p>{{ number_format($total_invoice_amt_AED, 2) }}</p>
                                 </div>
                             </div>
                         </div>
-                         <div class="d-flex justify-content-between align-items-center">
+                         <!-- <div class="d-flex justify-content-between align-items-center">
                             <p class="inovices-all">No of Invoice <span class="rounded-circle bg-light-gray">03</span>
                             </p>
                             <p class="inovice-trending text-success-light">04 <span class="ms-2"><i
                                         class="fe fe-trending-up"></i></span></p>
-                        </div> 
+                        </div>  -->
                     </div>
                 </div>
             </div>
@@ -171,21 +183,21 @@ $url = $_SERVER['REQUEST_URI'];
 
                             </span>
                             <div class="dash-count">
-                                <div class="dash-title">Total Overdue</div>
+                                <div class="dash-title">Total Invoice(USD)</div>
                                 <div class="dash-counts">
-                                    <p>{{number_format($total_overdue_amt,2)}}</p>
+                                    <p>{{number_format($total_invoice_amt_USD,2)}}</p>
                                 </div>
                             </div>
                         </div>
-                         <div class="d-flex justify-content-between align-items-center">
+                         <!-- <div class="d-flex justify-content-between align-items-center">
                             <p class="inovices-all">No of Invoice <span class="rounded-circle bg-light-gray">01</span>
                             </p>
                             <p class="inovice-trending text-danger-light">03 <span class="ms-2"><i
                                         class="fe fe-trending-down"></i></span></p>
-                        </div> 
+                        </div>  -->
                     </div>
                 </div>
-            </div> -->
+            </div>
             <div class="col-xl-3 col-lg-4 col-sm-6 col-12 d-flex">
                 <div class="card inovices-card w-100">
                     <div class="card-body">
@@ -314,7 +326,7 @@ $url = $_SERVER['REQUEST_URI'];
                                         <th>Discount Type</th>
                                         <th>Discount</th>
                                         <th>Vat</th>
-                                        <th>Total</th>
+                                        <th>Amount</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -324,7 +336,7 @@ $url = $_SERVER['REQUEST_URI'];
                                     @php
                                     $symbol = isset($invoice->currency->symbol) ?
                                     $invoice->currency->symbol : '₹';
-                                    $package_amt = $invoice->package->amount;
+                                    $package_amt = $invoice->package->amount * $invoice->no_of_passenger;
                                     // GST Tax in percentage
                                     $tax = $invoice->vat;
                                     // Discount in percentage

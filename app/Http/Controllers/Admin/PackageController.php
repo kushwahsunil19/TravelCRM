@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Package;
+use App\Models\{Package,PackageExpense};
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Redirect;
@@ -22,7 +22,7 @@ class PackageController extends Controller
     }
     public function getPackageDetails($id)
     {
-        $package = Package::find($id);
+        $package = Package::with('expenses')->find($id);
     
         if (!$package) {
             return response()->json([
@@ -59,7 +59,26 @@ class PackageController extends Controller
         // Create a new package
         $input = $request->all();
         $input['user_id'] = auth()->id();
-        Package::create($input);
+        $pkg_id = Package::create($input)->id;
+         // Process expense titles and amounts
+    $titles = $request->title; // Titles array from form
+    $amounts = $request->exp_amount; // Amount array from form
+
+    // Prepare expense data for batch insert
+    $data = [];
+    foreach ($titles as $key => $title) {
+        $data[] = [
+            'package_id' =>$pkg_id,
+            'title' => $title,
+            'amount' => $amounts[$key] ?? 0,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+    }
+ 
+    // Insert all expenses at once
+    PackageExpense::insert($data);
+
         $packageDetails = Package::with('user')->latest()->get();
         return response()->json(['status'=>true,'data'=>$packageDetails ,'message' => 'Package details added successfully']);
    
@@ -78,7 +97,7 @@ class PackageController extends Controller
      */
     public function edit(Package $package)
     {
-      
+        $package->load(relations: 'expenses');
         return response()->json(['status'=>true,'data'=>$package ,'message' => 'Package details added successfully']);
 
         return view('admin.packages.edit', compact('package'));
@@ -95,13 +114,55 @@ class PackageController extends Controller
             'description' => 'required|string',
             'amount' => 'required|numeric|min:0',
         ]);
+       
 
-        // Update the package
+     // Update the package
         $package->update($request->all());
+          // Process expense titles and amounts
+          $titles = $request->title; // Titles array from form
+          $amounts = $request->exp_amount; // Amount array from form
+          $ids = $request->exp_id ?? []; // Expense IDs from form, if provided
+        
+          if(!empty($titles)){
+              // Loop through the titles and amounts to create or update each expense
+              foreach ($titles as $key => $title) {  
+                  // Prepare the matching conditions (for updating)
+                  $matchThese = [
+                      'id' => $ids[$key] ?? 0, // Use the expense ID for matching, or 0 if not provided
+                      'package_id' => $package->id,
+                  ];
+
+                  // Prepare the data to insert or update
+                  $updateData = [
+                      'package_id' => $package->id,
+                      'title' => $title,
+                      'amount' => $amounts[$key] ?? 0,
+                  ];
+
+                  // Call updateOrCreate for each expense entry
+                  PackageExpense::updateOrCreate($matchThese, $updateData);
+              }
+          }
+          $package->load(relations: 'expenses');
         return response()->json(['status'=>true,'data'=>$package ,'message' => 'Package details updated successfully']);
 
 
         // return redirect()->route('quotations.create')->with('success', 'Package updated successfully.');
+    }
+    public function deleteExp($id)
+    {
+      
+        try {
+            // Find the PackageExpense by its ID and delete it
+            $expense = PackageExpense::findOrFail($id); // Throws exception if not found
+            $expense->delete();
+    
+            // Return success response if deletion is successful
+            return response()->json(['success' => true, 'message' => 'Expense deleted successfully']);
+        } catch (\Exception $e) {
+            // Return error response if something goes wrong
+            return response()->json(['success' => false, 'message' => 'Error deleting expense']);
+        }
     }
 
     /**
@@ -114,6 +175,7 @@ class PackageController extends Controller
 
         return redirect()->route('packages.index')->with('success', 'Package deleted successfully.');
     }
+    
 
     /**
      * Restore a soft-deleted package.

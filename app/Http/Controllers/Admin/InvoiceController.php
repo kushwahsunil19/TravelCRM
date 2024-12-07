@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Invoice,Branch,Partner,Package,Bank,Currency,Country,State,City,Supplier,Service};
+use App\Models\{Invoice,Branch,Partner,Package,Bank,Currency,Country,State,City,Supplier,Service,CompanyBankDetail};
 use PDF;
 use Mpdf\Mpdf;
 
@@ -59,7 +59,7 @@ class InvoiceController extends Controller
           $totalInvoices = $query->count();
       
           // Paginate the filtered results (you can adjust the number per page as needed)
-          $invoices = $query->paginate(10); // Paginate the filtered results
+          $invoices = $query->paginate($totalInvoices); // Paginate the filtered results
       
           // Return the view with total invoices and paginated invoices
           return view('admin.invoices.invoices', compact('invoices', 'totalInvoices','states','countries','cities','suppliers'));
@@ -191,8 +191,7 @@ class InvoiceController extends Controller
         $input = $request->all();
         $input['vat'] = ($request->vat !='')?$request->vat:0.00;
         $input['discount'] = ($request->discount !='')?$request->discount:0.00;
-        $input['currency_rate'] = ($request->currency_rate !='')?$request->currency_rate:0.00;
-        $input['user_id'] = auth()->id();
+        $input['currency_rate'] = ($request->currency_rate !='')?$request->currency_rate:0.00;       
         $invoice = Invoice::create($input);
         
      // Check if $request->supplier is not empty
@@ -279,7 +278,7 @@ class InvoiceController extends Controller
             }
         }
         $input = $request->all();
-        $input['user_id'] = auth()->id();
+      
         $input['vat'] = ($request->vat !='')?$request->vat:0.00;
         $input['discount'] = ($request->discount !='')?$request->discount:0.00;
         $input['currency_rate'] = ($request->currency_rate !='')?$request->currency_rate:0.00;
@@ -355,7 +354,7 @@ class InvoiceController extends Controller
         date_default_timezone_set('Asia/Kolkata'); 
     
         // Reuse the filtering logic from index()
-        $query = Invoice::with(['branch', 'partner', 'package', 'bank']);
+        $query = Invoice::with(['branch', 'partner', 'package', 'bank', 'currency']);
     
         // Apply filters (same as in the index method)
         if ($request->filled('quotation_no')) {
@@ -381,10 +380,10 @@ class InvoiceController extends Controller
         }
     
         // Get the filtered data
-        $quotations = $query->get();
+        $invoices = $query->get();
     
-        // Check if quotations exist before generating the CSV
-        if ($quotations->isEmpty()) {
+        // Check if invoices exist before generating the CSV
+        if ($invoices->isEmpty()) {
             return redirect()->back()->with('error', 'No invoices found for the selected filters.');
         }
     
@@ -399,33 +398,54 @@ class InvoiceController extends Controller
         // Add CSV headers
         fputcsv($handle, [
             'S.No',
-            'Quotation No',
+            'Invoice No',
             'Branch',
             'Package',
             'Partner',
             'Discount Type',
             'Discount',
             'VAT',
+            'Amount'
         ]);
+    
         $serialNumber = 1;
-
+    
         // Add the filtered data rows
-        foreach ($quotations as $quotation) {
+        foreach ($invoices as $invoice) {
+            $symbol = isset($invoice->currency->code) ? '(' . $invoice->currency->code . ')' : '(INR)';
+
+            $package_amt = $invoice->package->amount * $invoice->no_of_passenger;
+            $tax = $invoice->vat;
+            $discount = $invoice->discount;
+    
+            // Calculate discount
+            $discount_amt = $invoice->discount_type == 'Fixed' ? $discount : ($package_amt * $discount) / 100;
+            $amount_after_discount = $package_amt - $discount_amt;
+    
+            // Calculate tax
+            $tax_amt = ($amount_after_discount * $tax) / 100;
+    
+            // Calculate total
+            $total_amt = $amount_after_discount + $tax_amt;
+    
+            // Write data to CSV
             fputcsv($handle, [
                 $serialNumber++,
-                $quotation->quotation_no,
-                $quotation->branch ? $quotation->branch->city : 'N/A',
-                $quotation->package ? $quotation->package->package_name : 'N/A',
-                $quotation->partner->name . ' (' . $quotation->partner->email . ')',
-                $quotation->discount_type,
-                $quotation->discount . ($quotation->discount_type == 'Fixed' ? '' : '%'),
-                $quotation->gst_tax . '%',
+                $invoice->invoice_no,
+                $invoice->branch ? $invoice->branch->city : 'N/A',
+                $invoice->package ? $invoice->package->package_name : 'N/A',
+                $invoice->partner->name . ' (' . $invoice->partner->email . ')',
+                $invoice->discount_type?$invoice->discount_type:'N/A',
+                $invoice->discount . ($invoice->discount_type == 'Fixed' ? '' : '%'),
+                $invoice->vat . '%',
+                $symbol . number_format($total_amt, 2),
             ]);
         }
     
         fclose($handle);
         exit;
     }
+    
     public function fetchCurrencyRates($apiUrl)
     {
         try {
@@ -448,7 +468,7 @@ class InvoiceController extends Controller
         $invoice = Invoice::with(['branch', 'partner', 'package','bank','currency'])->findOrFail($id);
       
         // Get the package amount
-        $package_amt = $invoice->package->amount;
+        $package_amt = $invoice->package->amount *  $invoice->no_of_passenger;;
 
         // GST Tax in percentage
         $tax = $invoice->vat;
@@ -472,19 +492,12 @@ class InvoiceController extends Controller
         // Total amount after applying discount and adding tax
         $total_amt = $amount_after_discount + $tax_amt;
         // Currency conversion logic
-        $baseCurrency = ($invoice->branch->branch_name=='Dubai')?'AED':'INR';
-        $apiKey = env('CURRENT_CURRENCY_RATE_KEY');  
-        $apiUrl = "https://v6.exchangerate-api.com/v6/$apiKey/latest/$baseCurrency";
-        
-        $conversionRates = $this->fetchCurrencyRates($apiUrl);  // Fetch the conversion rates from the API
-
-        
-        if ($conversionRates) {
-        
-            $total_in_inr = $total_amt * $conversionRates['INR'];
-            $total_in_aed = $total_amt * $conversionRates['AED'];
-            $total_in_eur = $total_amt * $conversionRates['EUR'];
-            $total_in_usd = $total_amt * $conversionRates['USD'];
+        $rates = getCurrencyRate($invoice->currency->code); 
+        if (!empty($rates)) {
+            $total_in_inr = $total_amt * $rates['INR'];
+            $total_in_aed = $total_amt * $rates['AED'];
+            $total_in_eur = $total_amt * $rates['EUR'];
+            $total_in_usd = $total_amt * $rates['USD'];
         } else {
             // Default to original amounts if conversion fails
             $totalInINR = $totalInAED = $totalInEUR = $totalInUSD = $total_amt;
@@ -496,19 +509,18 @@ class InvoiceController extends Controller
             $items[] = [
                 'package_name' => $invoice->package->package_name,
                 'description' => $invoice->package->description,
-                'amount' => $invoice->package->amount,
+                'amount' =>  $package_amt ,
             ];
         }
          // Get the branch ID from the quotation
          $branchId = $invoice->branch_id;
         
          // Fetch the branch and related bank details
-         $branchDetails = Branch::with('companyBankDetail')->findOrFail($branchId);
-         
+         //$branchDetails = Branch::with('companyBankDetail')->findOrFail($branchId);
+         $bankDetails = CompanyBankDetail::get();
          $companyBankDetails = [];
-         
-         if ($branchDetails->companyBankDetail->isNotEmpty()) {
-             foreach ($branchDetails->companyBankDetail as $bankDetail) {
+         if ($bankDetails->isNotEmpty()) {
+             foreach ($bankDetails as $bankDetail) {
                  $companyBankDetails[] = [
                      'bank_name' => $bankDetail->bank_name,
                      'account_holder_name' => $bankDetail->account_holder_name,
@@ -600,7 +612,7 @@ class InvoiceController extends Controller
         $invoice = Invoice::with(['branch', 'partner', 'package','bank','currency'])->findOrFail($id);
       
         // Get the package amount
-        $package_amt = $invoice->package->amount;
+        $package_amt = $invoice->package->amount *  $invoice->no_of_passenger;;
 
         // GST Tax in percentage
         $tax = $invoice->vat;
@@ -631,19 +643,19 @@ class InvoiceController extends Controller
             $items[] = [
                 'package_name' => $invoice->package->package_name,
                 'description' => $invoice->package->description,
-                'amount' => $invoice->package->amount,
+                'amount' => $package_amt,
             ];
         }
         // Get the branch ID from the quotation
         $branchId = $invoice->branch_id;
         
         // Fetch the branch and related bank details
-        $branchDetails = Branch::with('companyBankDetail')->findOrFail($branchId);
+       // $branchDetails = Branch::with('companyBankDetail')->findOrFail($branchId);
         
-        $companyBankDetails = [];
-        
-        if ($branchDetails->companyBankDetail->isNotEmpty()) {
-            foreach ($branchDetails->companyBankDetail as $bankDetail) {
+       $bankDetails = CompanyBankDetail::get();
+       $companyBankDetails = [];
+       if ($bankDetails->isNotEmpty()) {
+           foreach ($bankDetails as $bankDetail) {
                 $companyBankDetails[] = [
                     'bank_name' => $bankDetail->bank_name,
                     'account_holder_name' => $bankDetail->account_holder_name,

@@ -45,8 +45,8 @@ class SupplierReportController extends Controller
         }
 
         // Get the filtered suppliers
-        $Suppliers = $query->with('expenses','currency','country','state','city')->get();
-
+        $Suppliers = $query->with('expenses','currency','country','state','city','invoices.package')->get();
+       
         return view('admin.suppliers.supplier-report', compact('Suppliers'));
     }
     /**
@@ -85,7 +85,7 @@ class SupplierReportController extends Controller
     }
 
     // Get the filtered data
-    $suppliers = $query->with('expenses','currency','country','state','city')->get();
+    $suppliers = $query->with('expenses','currency','country','state','city','invoices.package')->get();
 
     // Check if suppliers exist before generating the PDF
     if ($suppliers->isEmpty()) {
@@ -135,7 +135,7 @@ public function downloadCSV(Request $request)
     }
 
     // Get the filtered data
-    $suppliers = $query->with('expenses','currency','country','state','city')->get();
+    $suppliers = $query->with('expenses', 'currency', 'country', 'state', 'city', 'invoices.package')->get();
 
     if ($suppliers->isEmpty()) {
         return redirect()->back()->with('error', 'No suppliers found for the selected filters.');
@@ -157,13 +157,38 @@ public function downloadCSV(Request $request)
         'City', 
         'State',
         'Country',
-        'Amount'
+        'Gross Amount',
+        'Net Amount',
+        'Net Profit'
     ]);
-    
+
     $serialNumber = 1;
+
+    // Initialize totals
+    $totalGrossAmount = 0;
+    $totalNetAmount = 0;
+    $totalNetProfit = 0;
 
     // Add the filtered data rows
     foreach ($suppliers as $supplier) {
+        $grossAmount = 0;
+        $netAmount = 0;
+        $netProfit = 0;
+
+        // Calculate amounts based on invoices
+        foreach ($supplier->invoices as $invoice) {
+            $grossAmount += $invoice->package->amount;
+            $netAmount += $invoice->package->net_amount;
+        }
+
+        $netProfit = $grossAmount - $netAmount;
+
+        // Accumulate totals
+        $totalGrossAmount += $grossAmount;
+        $totalNetAmount += $netAmount;
+        $totalNetProfit += $netProfit;
+
+        // Add supplier data to CSV (without currency symbol)
         fputcsv($handle, [
             $serialNumber++,
             $supplier->name,
@@ -172,12 +197,30 @@ public function downloadCSV(Request $request)
             $supplier->city->name,
             $supplier->state->name,
             $supplier->country->name,
-            $supplier->amount,
+            number_format($grossAmount, 2),
+            number_format($netAmount, 2),
+            number_format($netProfit, 2)
         ]);
     }
+
+    // Add total row at the end (without currency symbol)
+    fputcsv($handle, [
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        'Total Amount:',
+        number_format($totalGrossAmount, 2),
+        number_format($totalNetAmount, 2),
+        number_format($totalNetProfit, 2)
+    ]);
 
     fclose($handle);
     exit;
 }
+
+
 
 }

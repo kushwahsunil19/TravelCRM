@@ -1,40 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profit & Loss Report</title>
-
     <style>
-          body {
-        font-family: 'DejaVu Sans', sans-serif;
-        margin: 0;
-        padding: 0;
-        background: #fff;
-    }
-     
-
-        .table-responsive {
-            width: 100%;
-            margin: 20px 0;
+        body {
+            font-family: 'DejaVu Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #fff;
         }
 
-        .table-profit-loss {
+        table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 10px; /* Adjust font size */
         }
 
-        .table-profit-loss th, .table-profit-loss td {
+        th, td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 4px; /* Reduce padding */
             text-align: center;
-            font-size: 14px;
         }
 
-        .thead-light {
+        thead {
             background-color: #f8f9fa;
-            color: #495057;
         }
 
         .thead-light th {
@@ -46,37 +37,16 @@
             font-weight: bold;
         }
 
-        .total-expense td {
-            text-align: right;
-        }
-
-        .table-center {
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        .total-expense td, .profitloss-bg td {
-            font-size: 16px;
-        }
-
         .text-left {
             text-align: left;
         }
+
         .text-right {
             text-align: right;
         }
 
         .text-center {
             text-align: center;
-        }
-
-        .expenses {
-            text-align: left;
-            margin-left: 1px;
-        }
-
-        .expenses div {
-            margin-bottom: 5px;
         }
 
         .footer {
@@ -90,134 +60,107 @@
             font-size: 12px;
         }
 
-        .expense-total-row td {
-            text-align: right;
+        td {
+            word-wrap: break-word;
+            white-space: normal;
         }
 
-        .expense-details {
-            display: flex;
-            justify-content: space-between;
+        .expenses-section {
+            background-color: #f9f9f9;
+            font-size: 9px;
         }
 
-        .expense-details .expense-text {
-            text-align: left;
+        .expenses-section strong {
+            display: block;
+            margin-top: 5px;
         }
-
-        .expense-details .expense-total {
-            text-align: right;
-        }
-
     </style>
 </head>
-
 <body>
-    <h1>Profit & loss </h1>
+    <h1 style="text-align: center;">Profit & Loss Report</h1>
     <div class="table-responsive">
-        <div class="table-profit-loss">
-            <table class="table table-center table-bordered">
-                <thead class="thead-light">
-                    <tr>
-                        <th>Branch</th>
-                        <th>Package</th>
-                        <th>Month</th>
-                        <th>Year</th>
-                        <th>User</th>
-                        <th>Created Date</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php 
-                        $total_invoice_amt = 0;  
-                        $total_supplier_expenses = 0;
-                        $symbol = '₹'; 
-                    @endphp
-                    @forelse ($invoices as $invoice)
-                        @php
-                            $symbol = $invoice->currency->symbol ?? '₹';
-                            $package_amt = $invoice->package->amount;
-                            $tax = $invoice->vat;
-                            $discount = $invoice->discount;
-                            $discount_amt = ($invoice->discount_type == 'Fixed') ? $discount : ($package_amt * $discount) / 100;
-                            $amount_after_discount = $package_amt - $discount_amt;
-                            $tax_amt = ($amount_after_discount * $tax) / 100;
-                            $total_amt = $amount_after_discount + $tax_amt;
-                            $total_invoice_amt += $total_amt;
-                        @endphp
+    <table>
+        <thead class="thead-light">
+            <tr>
+                <th>Branch</th>
+                <th>Package</th>
+                <th>Month</th>
+                <th>Year</th>
+                <th>User</th>
+                <th>Created Date</th>
+                <th>Gross Amount</th>
+                <th>Net Cost</th>
+                <th>Net Profit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php
+                $total_invoice_amt = 0;
+                $total_net_amt = 0;
+                $net_profit_amt = 0;
+                $rates = getCurrencyRate('AED' );
+                $symbol = 'د.إ';
+            @endphp
 
-                        <tr>
-                            <td>{{ $invoice->branch->branch_name ?? '' }}</td>
-                            <td>{{ $invoice->package->package_name ?? '' }}</td>
-                            <td>{{ \Carbon\Carbon::parse($invoice->created_at)->format('F') }}</td>
-                            <td>{{ \Carbon\Carbon::parse($invoice->created_at)->format('Y') }}</td>
-                            <td>{{ $invoice->user->first_name ?? '' }} {{ $invoice->user->last_name ?? '' }}</td>
-                            <td>{{ \Carbon\Carbon::parse($invoice->created_at)->format('d-M-Y h:i A') }}</td>
-                            <td>{{ $symbol }}{{ number_format($total_amt, 2) }}</td>
-                        </tr>
+            @forelse ($invoices as $invoice)
+                @php
+                    $currency_code = $invoice->currency->code ?? 'AED';
+                    $package_amt = ($invoice->package->amount ?? 0) * ($invoice->no_of_passenger ?? 1);
+                    $net_amt_row = ($invoice->package->net_amount ?? 0) * ($invoice->no_of_passenger ?? 1);
+                    if($currency_code == 'AED'){
+                        $package_amt *= $rates['AED'];
+                        $net_amt_row *= $rates['AED'];
+                    } elseif($currency_code == 'INR') {
+                        $package_amt *= $rates['INR'];
+                        $net_amt_row *= $rates['INR'];
+                    } elseif($currency_code == 'USD') {
+                        $package_amt *= $rates['USD'];
+                        $net_amt_row *= $rates['USD'];
+                    }
 
-                        @php
-                            $invoice_total_expense = 0; 
-                        @endphp
+                    $tax = $invoice->vat ?? 0;
+                    $discount = $invoice->discount ?? 0;
+                    $discount_amt = ($invoice->discount_type == 'Fixed') ? $discount : ($package_amt * $discount) / 100;
+                    $amount_after_discount = $package_amt - $discount_amt;
+                    $tax_amt = ($amount_after_discount * $tax) / 100;
+                    $total_amt = $amount_after_discount + $tax_amt;
 
-                        @foreach ($invoice->services as $service)
-                            @php
-                                $supplier = $service->suplyer;
-                                $supplier_expenses = $supplier->expenses;
-                                $supplier_expense_total = $supplier_expenses->sum('amount');
-                                $invoice_total_expense += $supplier_expense_total;
-                                $total_supplier_expenses += $supplier_expense_total;
-                            @endphp
-
-                            <!-- Supplier Details Row -->
-                            <tr>
-                                <td colspan="2" class="text-left"><strong>Supplier: {{ $supplier->name }}</strong></td>
-                                <td colspan="5">
-                                    <div class="text-left"><strong>Expenses:</strong></div>
-                                    <div class="expenses">
-                                        @foreach ($supplier_expenses as $expense)
-                                            <div>{{ $expense->title }} - {{ $symbol }}{{ number_format($expense->amount, 2) }}</div>
-                                            <br>
-                                        @endforeach
-                                    </div>
-                                    <div class="text-right"><strong>Total:</strong> {{ $symbol }}{{ number_format($supplier_expense_total, 2) }}</div>
-                                </td>
-                            </tr>
-                        @endforeach
-
-                        <!-- Total Expense for the invoice -->
-                        <tr class="total-expense">
-                            <td colspan="6"><strong>Total Expense for this Invoice</strong></td>
-                            <td><strong>{{ $symbol }}{{ number_format($invoice_total_expense, 2) }}</strong></td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7" class="text-center">No invoices found.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-
-                <tr class="profitloss-bg">
-                <td colspan="6"><strong>Total Income</strong></td>                   
-                    <td><strong>{{ $symbol }}{{ number_format($total_invoice_amt, 2) }}</strong></td>
+                    $total_invoice_amt_row = $total_amt;
+                    $total_invoice_amt += $total_invoice_amt_row;
+                    $net_profit_amt_row = $total_invoice_amt_row - $net_amt_row;
+                    $net_profit_amt += $net_profit_amt_row;
+                    $total_net_amt += $net_amt_row;
+                @endphp
+                <tr>
+                    <td>{{ $invoice->branch->branch_name ?? '' }}</td>
+                    <td>{{ $invoice->package->package_name ?? '' }}</td>
+                    <td>{{ \Carbon\Carbon::parse($invoice->created_at)->format('F') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($invoice->created_at)->format('Y') }}</td>
+                    <td>{{ $invoice->user->first_name ?? '' }} {{ $invoice->user->last_name ?? '' }}</td>
+                    <td>{{ \Carbon\Carbon::parse($invoice->created_at)->format('d-M-Y h:i A') }}</td>
+                    <td>{{ number_format($total_amt, 2) }}</td>
+                    <td>{{ number_format($net_amt_row, 2) }}</td>
+                    <td>{{ number_format($net_profit_amt_row, 2) }}</td>
                 </tr>
-
-                <tr class="profitloss-bg">
-                   <td colspan="6"><strong>Total Expense</strong></td>                  
-                    <td><strong>{{ $symbol }}{{ number_format($total_supplier_expenses, 2) }}</strong></td>
+            @empty
+                <tr>
+                    <td colspan="9" class="text-center">No invoices found.</td>
                 </tr>
-
-                <tr class="profitloss-bg">
-                    <td colspan="6"><strong>Net Income</strong></td>                  
-                    <td><strong>{{ $symbol }}{{ number_format($total_invoice_amt - $total_supplier_expenses, 2) }}</strong></td>
-                </tr>
-            </table>
-        </div>
+            @endforelse
+        </tbody>
+        <tfoot>
+            <tr class="profitloss-bg">
+                <td colspan="6" class="text-end"><strong>Total Amount:</strong></td>
+                <td><strong>{{ $symbol }}{{ number_format($total_invoice_amt, 2) }}</strong></td>
+                <td><strong>{{ $symbol }}{{ number_format($total_net_amt, 2) }}</strong></td>
+                <td><strong>{{ $symbol }}{{ number_format($net_profit_amt, 2) }}</strong></td>
+            </tr>
+        </tfoot>
+    </table>
     </div>
 
-    <!-- Footer for PDF -->
     <div class="footer">
         <p>Profit & Loss Report - Powered by Your Company</p>
     </div>
 </body>
-
 </html>

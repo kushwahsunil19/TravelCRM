@@ -241,7 +241,7 @@
                                 <b>No. of Night:</b> {{ $no_of_night }}<br />
                                 <b>No. of Passenger:</b> {{ $no_of_passenger }}<br />
                                 <b>Valid Until:</b> {{ now()->addDays(30)->toDateString() }}<br />
-                                <b>Invoice Total ({{ $branch_name == 'Dubai' ? 'AED' : 'INR' }}):</b> {{ number_format($total, 2) }}
+                                <b>Invoice Total ({{$currency_code}}):</b> {{ number_format($total, 2) }}
                             </p>
                         </td>
                     </tr>
@@ -258,7 +258,7 @@
                     <tr>
                         <th style="text-align:left; border: 1px solid black; ">Service</th>
                         <th style="text-align:left; border: 1px solid black; ">Description</th>
-                        <th style="text-align:left; border: 1px solid black; ">Amount ({{ $branch_name == 'Dubai' ? 'AED' : 'INR' }})</th>
+                        <th style="text-align:left; border: 1px solid black; ">Amount ({{ $currency_code }})</th>
                     </tr>
                 </thead>
                 <tbody>

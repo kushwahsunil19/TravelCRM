@@ -47,7 +47,10 @@ class User extends Authenticatable
     {
         return $this->getRoleNames()->contains($role);
     }
-
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class, 'user_id', 'id');
+    }
     /**
      * Assign a role to the user.
      */

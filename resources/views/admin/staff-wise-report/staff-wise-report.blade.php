@@ -6,7 +6,7 @@
 
 <div class="page-wrapper">
     <div class="content container-fluid">
-    
+
         <!-- Page Header -->
         <div class="page-header">
             <div class="content-page-header">
@@ -75,8 +75,8 @@
                         <!-- Mobile Filter -->
                         <div class="form-group">
                             <label for="mobile">Mobile</label>
-                            <input type="text" name="mobile" id="mobile" class="form-control" placeholder="Enter mobile number"
-                                value="{{ request('mobile') }}">
+                            <input type="text" name="mobile" id="mobile" class="form-control"
+                                placeholder="Enter mobile number" value="{{ request('mobile') }}">
                         </div>
 
                         <!-- Role Filter -->
@@ -85,9 +85,9 @@
                             <select name="role" id="role" class="form-control">
                                 <option value="" {{ request('role') == '' ? 'selected' : '' }}>Choose Role</option>
                                 @foreach ($roles as $role)
-                                    <option value="{{ $role->id }}" {{ request('role') == $role->id ? 'selected' : '' }}>
-                                        {{ $role->name }}
-                                    </option>
+                                <option value="{{ $role->id }}" {{ request('role') == $role->id ? 'selected' : '' }}>
+                                    {{ $role->name }}
+                                </option>
                                 @endforeach
                             </select>
                         </div>
@@ -106,11 +106,14 @@
                         <div style="margin-top: 12px">
                             <div class="filter-buttons">
                                 <!-- Apply Button -->
-                                <button type="submit" class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary">
+                                <button type="submit"
+                                    class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary">
                                     Apply
                                 </button>
                                 <!-- Reset Button -->
-                                <button type="button" class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary" onclick="resetForm()">
+                                <button type="button"
+                                    class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary"
+                                    onclick="resetForm()">
                                     Reset
                                 </button>
                             </div>
@@ -136,27 +139,64 @@
                                         <th>Role</th>
                                         <th>Created On</th>
                                         <th>Status</th>
+                                        <th>Gross Amount</th>
+                                        <th>Net Cost</th>
+                                        <th>Net Profit</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @php
+                                    $totalGrossAmount = 0;
+                                    $totalNetCost = 0;
+                                    $totalNetProfit = 0;
+                                    @endphp
+
                                     @if($users->isEmpty())
-                                        <tr>
-                                            <td colspan="7" class="text-center">No data available</td>
-                                        </tr>
+                                    <tr>
+                                        <td colspan="10" class="text-center">No data available</td>
+                                    </tr>
                                     @else
-                                        @foreach ($users as $user)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $user->first_name . ' ' . $user->last_name }}</td>
-                                                <td>{{ $user->email }}</td>
-                                                <td>{{ $user->mobile ?? 'N/A' }}</td>
-                                                <td>{{ $user->roles->isNotEmpty() ? $user->roles->first()->name : 'No Role' }}</td>
-                                                <td>{{ $user->created_at->format('Y-m-d') }}</td>
-                                                <td>{{ $user->status == 1 ? 'Active' : 'Inactive' }}</td> <!-- Added status display -->
-                                            </tr>
-                                        @endforeach
+                                    @foreach ($users as $user)
+                                    @php
+                                    $grossAmountRow = 0;
+                                    $netAmountRow = 0;
+
+                                    foreach ($user->invoices as $invoice) {
+                                    $grossAmountRow += $invoice->package->amount;
+                                    $netAmountRow += $invoice->package->net_amount;
+                                    }
+                                    $profitAmountRow = $grossAmountRow - $netAmountRow;
+
+                                    // Accumulate totals
+                                    $totalGrossAmount += $grossAmountRow;
+                                    $totalNetCost += $netAmountRow;
+                                    $totalNetProfit += $profitAmountRow;
+                                    @endphp
+
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $user->first_name . ' ' . $user->last_name }}</td>
+                                        <td>{{ $user->email }}</td>
+                                        <td>{{ $user->mobile ?? 'N/A' }}</td>
+                                        <td>{{ $user->roles->isNotEmpty() ? $user->roles->first()->name : 'No Role' }}
+                                        </td>
+                                        <td>{{ $user->created_at->format('Y-m-d') }}</td>
+                                        <td>{{ $user->status == 1 ? 'Active' : 'Inactive' }}</td>
+                                        <td>{{ number_format($grossAmountRow, 2) }}</td>
+                                        <td>{{ number_format($netAmountRow, 2) }}</td>
+                                        <td>{{ number_format($profitAmountRow, 2) }}</td>
+                                    </tr>
+                                    @endforeach
                                     @endif
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="7" class="text-center"><strong>Total Amount:</strong></td>
+                                        <td><strong>{{ number_format($totalGrossAmount, 2) }}</strong></td>
+                                        <td><strong>{{ number_format($totalNetCost, 2) }}</strong></td>
+                                        <td><strong>{{ number_format($totalNetProfit, 2) }}</strong></td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -164,46 +204,48 @@
             </div>
         </div>
 
+
         <!-- Pagination -->
         <div class="row">
             <div class="col-sm-12">
-                {{ $users->links() }} <!-- Laravel pagination links -->
+                {{ $users->links() }}
+                <!-- Laravel pagination links -->
             </div>
         </div>
-    
+
     </div>
 </div>
 
 <!-- JavaScript to toggle the filter sidebar -->
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var filterToggle = document.getElementById('filterToggle');
-        var filterSidebar = document.querySelector('.toggle-sidebar');
+document.addEventListener("DOMContentLoaded", function() {
+    var filterToggle = document.getElementById('filterToggle');
+    var filterSidebar = document.querySelector('.toggle-sidebar');
 
-        filterToggle.addEventListener('click', function (event) {
-            event.preventDefault();
-            filterSidebar.classList.toggle('active');
-        });
-
-        // Close button functionality
-        var closeSidebar = document.querySelector('.sidebar-closes');
-        closeSidebar.addEventListener('click', function (event) {
-            event.preventDefault();
-            filterSidebar.classList.remove('active');
-        });
+    filterToggle.addEventListener('click', function(event) {
+        event.preventDefault();
+        filterSidebar.classList.toggle('active');
     });
 
-    function resetForm() {
-        // Clear the input values by setting them to an empty string
-        document.getElementById('user_name').value = '';
-        document.getElementById('email').value = '';
-        document.getElementById('mobile').value = '';
-        document.getElementById('role').value = '';
-        document.getElementById('status').value = ''; // Ensure status filter is cleared
+    // Close button functionality
+    var closeSidebar = document.querySelector('.sidebar-closes');
+    closeSidebar.addEventListener('click', function(event) {
+        event.preventDefault();
+        filterSidebar.classList.remove('active');
+    });
+});
 
-        // Redirect to the same page to reload with default values
-        window.location.href = '{{ route("staff-wise-report.index") }}';
-    }
+function resetForm() {
+    // Clear the input values by setting them to an empty string
+    document.getElementById('user_name').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('mobile').value = '';
+    document.getElementById('role').value = '';
+    document.getElementById('status').value = ''; // Ensure status filter is cleared
+
+    // Redirect to the same page to reload with default values
+    window.location.href = '{{ route("staff-wise-report.index") }}';
+}
 </script>
 
 @endsection

@@ -30,6 +30,11 @@ class Package extends Model
     {
         return $this->belongsTo(User::class,'user_id', 'id');
     }
+    public function expenses()
+    {
+        return $this->hasMany(PackageExpense::class, 'package_id', 'id');
+       
+    }
     /**
      * The attributes that should be mutated to dates.
      *

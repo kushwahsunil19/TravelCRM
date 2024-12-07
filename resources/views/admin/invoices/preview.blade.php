@@ -206,7 +206,7 @@
                     <b>No. of Night:</b> {{ $data['no_of_night'] }}<br />
                     <b>No. of Passenger:</b> {{ $data['no_of_passenger'] }}<br />
                     <b>Valid Until:</b> {{ now()->addDays(30)->toDateString() }}<br />
-                    <b>Invoice Total({{ $data['branch_name'] == 'Dubai' ? 'AED' : 'INR' }}):</b> {{ number_format($data['total'], 2) }}
+                    <b>Invoice Total({{ $data['currency_code'] }}):</b> {{ number_format($data['total'], 2) }}
                 </p>
             </div>
         </div>
@@ -219,7 +219,7 @@
                 <tr>
                     <th style="text-align:left; border: 1px solid black; ">Service</th>
                     <th style="text-align:left; border: 1px solid black; ">Description</th>
-                    <th style="text-align:left; border: 1px solid black; ">Amount ({{ $data['branch_name'] == 'Dubai' ? 'AED' : 'INR' }})</th>
+                    <th style="text-align:left; border: 1px solid black; ">Amount ({{ $data['currency_code'] }})</th>
                 </tr>
             </thead>
             <tbody>
@@ -245,80 +245,22 @@
         <strong>Sub Total :</strong> {{ number_format($data['subtotal'], 2) }}<br />
     <p>
     <strong>Discount @if($data['discount_type'] == 'Percentage') (%) @endif:</strong>
-    <span id="discount">      
-    </span>
+    {{ $data['discount'] }}
    </p>
         <p><strong>Vat % : </strong>{{ number_format($data['tax'], 2) }} </p>
         <!-- <strong>Estimate Total ({{ $data['curreny_symbol'] }}) :</strong> {{$data['curreny_symbol']}}{{ number_format($data['total'], 2) }}<br /> -->
-
+        @php 
+        $rates = getCurrencyRate($data['currency_code'] );       
+        @endphp
         <!-- Converted Amounts (Dynamic) -->
-        <strong>Estimate Total (AED) :</strong> <span id="total_in_aed">د.إ{{ number_format($data['total'] , 2) }}</span><br />
-        <strong>Estimate Total (USD) :</strong> <span id="total_in_usd">$ {{ number_format($data['total'], 2) }}</span><br />
-        <strong>Estimate Total (INR) :</strong> <span id="total_in_inr">₹{{ number_format($data['total'] , 2) }}</span><br />
+        <strong>Estimate Total (AED) :</strong> <span id="total_in_aed">د.إ{{ number_format($data['total'] * $rates['AED'], 2) }}</span><br />
+        <strong>Estimate Total (USD) :</strong> <span id="total_in_usd">$ {{ number_format($data['total'] * $rates['USD'], 2) }}</span><br />
+        <strong>Estimate Total (INR) :</strong> <span id="total_in_inr">₹{{ number_format($data['total'] * $rates['INR'], 2) }}</span><br />
        
         <!-- <strong>Estimate Total (EUR) :</strong> <span id="total_in_eur">€{{ number_format($data['total'] , 2) }}</span><br /> -->
     </p>
 </div>
 
-<script>
-    // Currency conversion API configuration
-    const baseCurrency = '{{ $data['branch_name'] == 'Dubai' ? 'AED' : 'INR' }}';
-   
-   
-// Dynamically get the base currency from server-side data
-    //const apiKey = $('meta[name="current-currency-api"]').attr('content');
-    const apiKey = 'db45eeefc8d49d0b5b537e69'; // Replace with your API key
-    const apiUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseCurrency}`;
-
-    async function fetchCurrencyRates() {
-        try {
-            const response = await fetch(apiUrl);
-            const data = await response.json();
-
-            if (data.result === "success") {
-                // Extract the conversion rates for INR, AED, EUR dynamically
-                const inrRate = data.conversion_rates['INR'];
-                const aedRate = data.conversion_rates['AED'];
-                const eurRate = data.conversion_rates['EUR'];
-                const usdRate = data.conversion_rates['USD'];
-                const seletected_currency =  '{{ $data['currency_code']}}';
-                const rate = data.conversion_rates[seletected_currency];
-               
-                // Get the total amount in the base currency (from the server)
-                const totalInBaseCurrency = {{ $data['total'] ?? 0 }};  // Dynamically fetch the total value from server-side
-                const discountType = '{{ $data['discount_type'] ?? '' }}';
-              alert(discountType);
-                const discount = (discountType === 'Fixed') 
-                    ? (discountAmt * rate).toFixed(2) 
-                    : discountAmt;
-                   
-                 document.getElementById('discount').innerText = discount; 
-               
-                // Convert the total to INR, AED, EUR
-                const totalInINR = (totalInBaseCurrency * inrRate).toFixed(2);
-                const totalInAED = (totalInBaseCurrency * aedRate).toFixed(2);
-                const totalInEUR = (totalInBaseCurrency * eurRate).toFixed(2);
-                const totalInUSD = (totalInBaseCurrency * usdRate).toFixed(2);
-                
-                
-                // Update the page with the converted values
-                document.getElementById('total_in_usd').innerText = '$' + totalInUSD;
-                document.getElementById('total_in_inr').innerText = '₹' + totalInINR;
-                document.getElementById('total_in_aed').innerText = 'د.إ' + totalInAED;
-                document.getElementById('total_in_eur').innerText = '€' + totalInEUR;
-
-             
-            } else {
-                console.error('Error fetching conversion rates');
-            }
-        } catch (error) {
-            console.error('Error fetching currency rates:', error);
-        }
-    }
-
-    // Fetch currency rates when the page is loaded
-    fetchCurrencyRates();
-</script>
 
 
 

@@ -14,7 +14,7 @@ class QuotationReportController extends Controller
      */
     public function index(Request $request)
 {
-    $query = Quotation::with(['branch', 'partner', 'package', 'bank']);
+    $query = Quotation::with(['user','branch', 'partner', 'package', 'bank','currency','services.suplyer.expenses']);
 
     // Apply filters based on user input
     if ($request->filled('quotation_no')) {
@@ -40,8 +40,7 @@ class QuotationReportController extends Controller
     }
 
     $rowCount = Quotation::count();
-    $quotations = $query->paginate($rowCount);
-
+    $quotations = $query->paginate($rowCount);   
     return view('admin.quotations.quotation-report', compact('quotations'));
 }
 
@@ -155,7 +154,7 @@ class QuotationReportController extends Controller
         date_default_timezone_set('Asia/Kolkata'); 
     
         // Reuse the filtering logic from index()
-        $query = Quotation::with(['branch', 'partner', 'package', 'bank']);
+        $query = Quotation::with(['user', 'branch', 'partner', 'package', 'bank', 'currency', 'services.suplyer.expenses']);
     
         // Apply filters (same as in the index method)
         if ($request->filled('quotation_no')) {
@@ -206,26 +205,48 @@ class QuotationReportController extends Controller
             'Discount Type',
             'Discount',
             'VAT',
+            'Amount',
         ]);
+    
         $serialNumber = 1;
-
+    
         // Add the filtered data rows
         foreach ($quotations as $quotation) {
+            $symbol = isset($quotation->currency->code) ? '(' . $quotation->currency->code . ')' : '(INR)';
+    
+            // Calculate amounts
+            $package_amt = $quotation->package->amount * $quotation->no_of_passenger;
+            $tax = $quotation->gst_tax;
+            $discount = $quotation->discount;
+    
+            // Calculate discount
+            $discount_amt = $quotation->discount_type == 'Fixed' ? $discount : ($package_amt * $discount) / 100;
+            $amount_after_discount = $package_amt - $discount_amt;
+    
+            // Calculate tax
+            $tax_amt = ($amount_after_discount * $tax) / 100;
+    
+            // Calculate total
+            $total_amt = $amount_after_discount + $tax_amt;
+    
+            // Write data to CSV
             fputcsv($handle, [
                 $serialNumber++,
                 $quotation->quotation_no,
                 $quotation->branch ? $quotation->branch->city : 'N/A',
                 $quotation->package ? $quotation->package->package_name : 'N/A',
                 $quotation->partner->name . ' (' . $quotation->partner->email . ')',
-                $quotation->discount_type,
+                $quotation->discount_type ? $quotation->discount_type : 'N/A',
                 $quotation->discount . ($quotation->discount_type == 'Fixed' ? '' : '%'),
                 $quotation->gst_tax . '%',
+                $symbol . number_format($total_amt, 2),
             ]);
         }
     
         fclose($handle);
         exit;
     }
+    
     
 
    

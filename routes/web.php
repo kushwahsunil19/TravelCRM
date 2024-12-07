@@ -76,6 +76,8 @@ Route::middleware(['auth'])->group(function() {
     // Optional: Route to restore soft-deleted packages
     Route::post('packages/{id}/restore', [PackageController::class, 'restore'])->name('packages.restore');
     Route::resource('quotations', QuotationController::class); 
+    Route::get('/package/delete-exp/{id}', [PackageController::class, 'deleteExp'])->name('package.delete-exp');
+
     Route::get('/quotation/pdf/{id}', [QuotationController::class, 'generateQuotationPDF'])->name('quotation.estimate');
     Route::post('/bank-details', [QuotationController::class, 'addBankDetail'])->name('bank-details.add');
     Route::get('quotations/preview/{id}', [QuotationController::class, 'preview'])->name('quotations.preview');

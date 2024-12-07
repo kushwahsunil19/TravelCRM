@@ -44,3 +44,56 @@ if (!function_exists('getAuth')) {
         }
     }
 }
+
+if (!function_exists('getCurrencyRate')) {
+    /**
+     * Get the currency conversion rate.
+     *
+     * @param string $branch Branch name (e.g., 'Dubai').
+     * @param string $currency_code Target currency code (e.g., 'USD').
+     * @return float|bool The conversion rate, or false on failure.
+     */
+    function getCurrencyRate( $currency_code = '')
+    {
+        // Determine base currency based on the branch
+        $baseCurrency = ($currency_code) ? $currency_code:'AED';
+        
+        // API Key and URL
+        $apiKey = env('CURRENT_CURRENCY_RATE_KEY');
+        if (!$apiKey) {
+            throw new \Exception('Currency API key is not set in the environment.');
+        }
+        $apiUrl = "https://v6.exchangerate-api.com/v6/$apiKey/latest/$baseCurrency";
+
+        // Fetch the conversion rates
+        $conversionRates = fetchCurrencyRates($apiUrl);
+        return $conversionRates;
+        // Return the conversion rate for the requested currency code
+        return $conversionRates[$currency_code] ?? false;
+    }
+
+    /**
+     * Fetch currency rates from an API.
+     *
+     * @param string $apiUrl API URL to fetch conversion rates.
+     * @return array|bool An array of conversion rates, or false on failure.
+     */
+    function fetchCurrencyRates($apiUrl)
+    {
+        try {
+            
+            $response = file_get_contents($apiUrl);
+            $data = json_decode($response, true);
+        
+            if (isset($data['result']) && $data['result'] === 'success') {
+                return $data['conversion_rates'];
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            // Log the exception (optional)
+            \Log::error('Error fetching currency rates: ' . $e->getMessage());
+            return false;
+        }
+    }
+}

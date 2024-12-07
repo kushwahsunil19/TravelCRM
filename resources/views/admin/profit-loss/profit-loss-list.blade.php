@@ -63,7 +63,8 @@
                         <label>Branch</label>
                         <ul class="form-group">
                             <li>
-                                <select class="select" name="branch" id="branch">                                   
+                                <select class="select" name="branch" id="branch">   
+                                <option value="">Select Branch</option>                                
                                     @foreach ($branches as $branch)
                                     <option value="{{ $branch->id }}"
                                         {{ old('branch_id') == $branch->id ? 'selected' : '' }}>
@@ -209,7 +210,7 @@
                         <div class="table-responsive">
                             <div id="profit-loss-table">
                                 @include('admin.profit-loss.profit-loss-table-ajx', ['invoices' => $invoices,
-                                'suppliers' => $suppliers])
+                                'suppliers' => $suppliers,'currencies'=>$currencies])
                             </div>
                         </div>
                     </div>

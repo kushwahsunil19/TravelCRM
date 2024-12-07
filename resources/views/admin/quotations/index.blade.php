@@ -115,139 +115,136 @@
                 <div class="card-table">
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-center table-hover datatable">
-                                <thead>
-                                    <tr>
-                                        <th>S.No </th>
-                                        <th>Quotation No</th>
-                                        <th>Branch</th>
-                                        <th>Package</th>
-                                        <th>Partner</th>
-                                        <th>Discount Type</th>
-                                        <th>Discount</th>
-                                        <th>Vat</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse ($quotations as $quotation)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td> <!-- Serial number -->
-                                        <td>{{ $quotation->quotation_no }}</td>
-                                        <td>{{ ($quotation->branch->city)?$quotation->branch->city:'' }}</td>
-                                        <td>{{ isset($quotation->package->package_name)?$quotation->package->package_name:'' }}
-                                        </td>
-                                        <td>{{ isset($quotation->partner->name)?$quotation->partner->name:'' }}</td>
-                                        <td> @if($quotation->discount_type == 'Fixed')
-                                                {{ $quotation->discount_type }}
-                                                @elseif($quotation->discount_type == 'Percentage')
-                                                {{ $quotation->discount_type }}
-                                                @else
-                                                N/A
-                                                @endif
-                                        </td>
-                                        <td>{{ ($quotation->discount_type=='Fixed') ? $quotation->currency->symbol : '' }}{{ $quotation->discount }}{{ ($quotation->discount_type=='Fixed')?'':'%'}}
-                                        </td>
-                                        <td>{{ $quotation->gst_tax }}%</td>
+                        <table class="table table-center table-hover datatable">
+                        <thead>
+                            <tr>
+                                <th>S.No </th>
+                                <th>Quotation No</th>
+                                <th>Branch</th>
+                                <th>Package</th>
+                                <th>Partner</th>
+                                <th>Discount Type</th>
+                                <th>Discount</th>
+                                <th>VAT</th>
+                                <th>Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($quotations as $quotation)
+                                @php
+                                    $symbol = isset($quotation->currency->symbol) ? $quotation->currency->symbol : '₹';
+                                    $package_amt = $quotation->package->amount * $quotation->no_of_passenger;
 
-                                        <td>
+                                    // GST Tax in percentage
+                                    $tax = $quotation->gst_tax;
 
-                                            <div class="dropdown dropdown-action">
-                                                <a href="#" class=" btn-action-icon " data-bs-toggle="dropdown"
-                                                    aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <ul>
-                                                        @if(collect(getPermission())->contains('name',
-                                                        'edit-quotation'))
+                                    // Discount in percentage or fixed amount
+                                    $discount = $quotation->discount;
+
+                                    // Calculate discount amount
+                                    $discount_amt = ($quotation->discount_type == 'Fixed') ? $discount : ($package_amt * $discount) / 100;
+
+                                    // Calculate the amount after discount
+                                    $amount_after_discount = $package_amt - $discount_amt;
+
+                                    // Calculate VAT amount
+                                    $tax_amt = ($amount_after_discount * $tax) / 100;
+
+                                    // Calculate total amount
+                                    $total_amt = $amount_after_discount + $tax_amt;
+                                @endphp
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $quotation->quotation_no }}</td>
+                                    <td>{{ $quotation->branch->city ?? 'N/A' }}</td>
+                                    <td>{{ $quotation->package->package_name ?? 'N/A' }}</td>
+                                    <td>{{ $quotation->partner->name ?? 'N/A' }}</td>
+                                    <td>{{ $quotation->discount_type ?? 'N/A' }}</td>
+                                    <td>
+                                        {{ ($quotation->discount_type == 'Fixed') ? $symbol : '' }}
+                                        {{ $quotation->discount }}
+                                        {{ ($quotation->discount_type == 'Fixed') ? '' : '%' }}
+                                    </td>
+                                    <td>{{ $quotation->gst_tax }}%</td>
+                                    <td>{{ $symbol }}{{ number_format($total_amt, 2) }}</td>
+                                    <td>
+                                        <div class="dropdown dropdown-action">
+                                            <a href="#" class="btn-action-icon" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-v"></i>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-end">
+                                                <ul>
+                                                    @if(collect(getPermission())->contains('name', 'edit-quotation'))
                                                         <li>
-                                                            <a class="dropdown-item"
-                                                                href="{{ route('quotations.edit', $quotation->id) }}"><i
-                                                                    class="far fa-edit me-2"></i>Edit</a>
+                                                            <a class="dropdown-item" href="{{ route('quotations.edit', $quotation->id) }}">
+                                                                <i class="far fa-edit me-2"></i>Edit
+                                                            </a>
                                                         </li>
-                                                        @endif
-                                                        @if(collect(getPermission())->contains('name',
-                                                        'delete-quotation'))
+                                                    @endif
+                                                    @if(collect(getPermission())->contains('name', 'delete-quotation'))
                                                         <li>
-                                                            <a class="dropdown-item" href="javascript:void(0);"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#delete_modal{{$quotation->id}}"><i
-                                                                    class="far fa-trash-alt me-2"></i>Delete</a>
+                                                            <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete_modal{{ $quotation->id }}">
+                                                                <i class="far fa-trash-alt me-2"></i>Delete
+                                                            </a>
                                                         </li>
-                                                        @endif
-                                                        <li>
-                                                            <form method="GET"
-                                                                action="{{ route('quotation.estimate', $quotation->id) }}">
-                                                                <button type="submit" class="dropdown-item"><i
-                                                                        class="fe fe-download me-2"></i>Estimate</button>
-                                                            </form>
-                                                            <!-- <a class="dropdown-item" href="javascript:void(0);"><i
-                                                                    class="fe fe-download me-2"></i>Download</a> -->
-                                                        </li>
-                                                        <li>
-                                                            <form method="GET"
-                                                                action="{{ route('convert-invoice.estimate', $quotation->id) }}">
-                                                                <button type="submit" class="dropdown-item"><i
-                                                                        class="fe fe-file-text me-2"></i>Convert to
-                                                                    Invoice</button>
-                                                            </form>
-                                                        </li>
-                                                        <!-- <li>
-																		<a class="dropdown-item" href="{{ route('quotations.show', $quotation->id) }}"><i class="far fa-eye me-2"></i>View</a>
-																	</li> -->
-                                                        <!-- <li>
-																		<a class="dropdown-item" href="active-customers.html"><i class="fa-solid fa-power-off me-2"></i>Activate</a>
-																	</li>
-																	<li>
-																		<a class="dropdown-item" href="deactive-customers.html"><i class="far fa-bell-slash me-2"></i>Deactivate</a>
-																	</li> -->
-                                                    </ul>
-                                                </div>
+                                                    @endif
+                                                    <li>
+                                                        <form method="GET" action="{{ route('quotation.estimate', $quotation->id) }}">
+                                                            <button type="submit" class="dropdown-item">
+                                                                <i class="fe fe-download me-2"></i>Estimate
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                    <li>
+                                                        <form method="GET" action="{{ route('convert-invoice.estimate', $quotation->id) }}">
+                                                            <button type="submit" class="dropdown-item">
+                                                                <i class="fe fe-file-text me-2"></i>Convert to Invoice
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
                                             </div>
-                                            <!-- Delete Items Modal -->
-                                            <div class="modal custom-modal fade" id="delete_modal{{$quotation->id}}"
-                                                role="dialog">
-                                                <div class="modal-dialog modal-dialog-centered modal-md">
-                                                    <div class="modal-content">
-                                                        <div class="modal-body">
-                                                            <div class="form-header">
-                                                                <h3>Delete quotation</h3>
-                                                                <p>Are you sure want to delete?</p>
-                                                            </div>
-                                                            <div class="modal-btn delete-action">
-                                                                <div class="row">
-                                                                    <div class="col-6">
-                                                                        <form
-                                                                            action="{{ route('quotations.destroy', $quotation->id) }}"
-                                                                            method="POST" style="display:inline;">
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <button type="submit"
-                                                                                data-bs-dismiss="modal"
-                                                                                class="w-100 btn btn-danger paid-continue-btn">Delete</button>
+                                        </div>
 
-                                                                        </form>
-
-                                                                    </div>
-                                                                    <div class="col-6">
-                                                                        <button type="submit" data-bs-dismiss="modal"
-                                                                            class="w-100 btn btn-primary paid-cancel-btn">Cancel</button>
-                                                                    </div>
+                                        <!-- Delete Modal -->
+                                        <div class="modal custom-modal fade" id="delete_modal{{ $quotation->id }}" role="dialog">
+                                            <div class="modal-dialog modal-dialog-centered modal-md">
+                                                <div class="modal-content">
+                                                    <div class="modal-body">
+                                                        <div class="form-header">
+                                                            <h3>Delete Quotation</h3>
+                                                            <p>Are you sure you want to delete?</p>
+                                                        </div>
+                                                        <div class="modal-btn delete-action">
+                                                            <div class="row">
+                                                                <div class="col-6">
+                                                                    <form action="{{ route('quotations.destroy', $quotation->id) }}" method="POST" style="display:inline;">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit" class="w-100 btn btn-danger paid-continue-btn">Delete</button>
+                                                                    </form>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <button type="button" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-cancel-btn">Cancel</button>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- /Delete Items Modal -->
-                                        </td>
-                                    </tr>
-                                    @empty
-                                    <tr>
-                                        <td colspan="9" class="text-center">No quotations found.</td>
-                                    </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
+                                        </div>
+                                        <!-- /Delete Modal -->
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="10" class="text-center">No quotations found.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+
                         </div>
 
                     </div>

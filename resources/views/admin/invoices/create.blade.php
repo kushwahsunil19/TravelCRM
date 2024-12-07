@@ -83,10 +83,10 @@ td {
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="input-block mb-3">
-                                                <label>Booking Reffrence No.</label>
-                                                <input type="number" class="form-control" name="booking_reference_no"
-                                                    placeholder="Enter Booking Reffrence No" value="{{ old('booking_reference_no')}}"
-                                                    min="0" required>
+                                                <label>Booking Reffrence No</label>
+                                                <input type="text" class="form-control" name="booking_reference_no"
+                                                    placeholder="Enter booking reffrence no" value="{{ old('booking_reference_no')}}"
+                                                     required>
                                                 @if ($errors->has('booking_reference_no'))
                                                 <span class="text-danger">{{ $errors->first('booking_reference_no') }}</span>
                                                 @endif
@@ -172,7 +172,7 @@ td {
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="input-block mb-3">
                                                 <label>No. of Passenger</label>
-                                                <input type="number" class="form-control" name="no_of_passenger"
+                                                <input type="number" class="form-control" name="no_of_passenger" id="no_of_passenger"
                                                     placeholder="Enter No. of Passenger" value="{{ old('no_of_passenger')}}"  min="0">
                                                 @if ($errors->has('no_of_passenger'))
                                                 <span class="text-danger">{{ $errors->first('no_of_passenger') }}</span>
@@ -248,6 +248,7 @@ td {
                                                             <th>Discription</th>
                                                             <th>Amount</th>
                                                             <th>Net Amount</th>
+                                                            <th>Net Profit</th>
                                                             <th class="no-sort">Action</th>
                                                         </tr>
                                                     </thead>
@@ -269,7 +270,7 @@ td {
                                         <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Currency</label>
-                                                    <select class="select" name="currency_id" id="currency_id" onchange="updateCurrencyRate(this)" required>
+                                                    <select class="select" name="currency_id" id="currency_id"  required>
                                                         <option value="">Select Currency </option>
                                                         @foreach ($currencies as $currency)
                                                         <option value="{{ $currency->id }}"  data-code="{{$currency->code}}"
@@ -1518,10 +1519,15 @@ $(document).ready(function() {
         var discount = $('.discount').val();
         var vat = $('.vat').val();
         $('#currency_symbol').val(symbol);
-        calculation(package_amt, vat, discount, discount_type, symbol);
+        var no_of_passenger = $('#no_of_passenger').val();
+        calculation(package_amt, vat, discount, discount_type, symbol,no_of_passenger);
         var currency_code = selectedOption.data('code');
         var branch = $.trim($('#branch_id option:selected').text()).toLowerCase();  
-        currencyWiseCalculate(package_amt, vat, discount, discount_type, symbol,branch,currency_code);
+        if (currency_code !== undefined ) { 
+           let  rate = 1.00;
+            $('#currency_rate').val(rate.toFixed(2));
+        } 
+        //currencyWiseCalculate(package_amt, vat, discount, discount_type, symbol,branch,currency_code);
 
     }
     // Call the function on page load in case a currency is already selected
@@ -1585,8 +1591,9 @@ $(document).ready(function() {
                 var vat = $('.vat').val();
                 var discount_type = $('#discount_type').val();
                 var symbol = $('#currency_symbol').val();
+                var no_of_passenger = $('#no_of_passenger').val();
                 calculation(response.data.amount, vat, discount, discount_type,
-                    symbol);
+                    symbol,no_of_passenger);
                 // Ensure that the response contains the expected fields
                 const packageData = response.data;
 
@@ -1597,6 +1604,7 @@ $(document).ready(function() {
                             <td  class="description-cell">${packageData.description }</td> <!-- Description -->
                             <td>${packageData.amount }</td> <!-- Amount -->
                             <td>${packageData.net_amount }</td> <!-- Amount -->
+                            <td>${(packageData.amount - packageData.net_amount).toFixed(2)}</td> <!-- Profit & Loss Amount -->
                            <td class="d-flex align-items-center">
                                 <!-- Edit button that calls the 'packages.edit' route -->
                                 <a  class="btn-action-icon me-2">
@@ -1657,6 +1665,7 @@ $(document).ready(function() {
                             <td  class="description-cell">${packageData.description }</td> <!-- Description -->
                             <td>${packageData.amount }</td> <!-- Amount -->
                             <td>${packageData.net_amount }</td> <!-- Amount -->
+                            <td>${(packageData.amount - packageData.net_amount).toFixed(2)}</td> <!-- Profit & Loss Amount -->
                            <td >
                                 <!-- Edit button that calls the 'packages.edit' route -->
                                 <a  class="btn-action-icon me-2">
@@ -1672,8 +1681,9 @@ $(document).ready(function() {
                         var vat = $('.vat').val();
                         var discount_type = $('#discount_type').val();
                         var symbol = $('#currency_symbol').val();
+                        var no_of_passenger = $('#no_of_passenger').val();
                         calculation(response.data.amount, vat, discount, discount_type,
-                            symbol);
+                            symbol,no_of_passenger);
 
                     } else {
                         alert('Package not found');
@@ -1715,7 +1725,8 @@ $(document).ready(function() {
             var package_amt = $('#package_amt').val();
 
         }
-        calculation(package_amt, vat, discount, discount_type, symbol);
+        var no_of_passenger = $('#no_of_passenger').val();
+        calculation(package_amt, vat, discount, discount_type, symbol,no_of_passenger);
     });
 
     $(document).on('input', '.discount', function() {
@@ -1728,7 +1739,8 @@ $(document).ready(function() {
         var package_amt = $('#package_amt').val(); // Default to 0 if not a number
         var vat = $('.vat').val();
         var symbol = $('#currency_symbol').val();
-        calculation(package_amt, vat, discount, discount_type, symbol);
+        var no_of_passenger = $('#no_of_passenger').val();
+        calculation(package_amt, vat, discount, discount_type, symbol,no_of_passenger);
     });
 
     $(document).on('input', '.vat', function() {
@@ -1737,17 +1749,28 @@ $(document).ready(function() {
         var package_amt = $('#package_amt').val(); // Default to 0 if not a number
         var discount = $('.discount').val();
         var symbol = $('#currency_symbol').val();
-        calculation(package_amt, vat, discount, discount_type, symbol);
+        var no_of_passenger = $('#no_of_passenger').val();
+        calculation(package_amt, vat, discount, discount_type, symbol,no_of_passenger);
+    });
+    $(document).on('input', '#no_of_passenger', function() {
+        var vat = $('.vat').val();
+        var discount_type = $('#discount_type').val();
+        var package_amt = $('#package_amt').val(); // Default to 0 if not a number
+        var discount = $('.discount').val();
+        var symbol = $('#currency_symbol').val();
+        var no_of_passenger = $(this).val();
+        calculation(package_amt, vat, discount, discount_type, symbol,no_of_passenger);
     });
     function currencyWiseCalculate(package_amt, vat, discount, discount_type, symbol,branch,currency_code){
          // Currency conversion API configuration
-        if (branch === "dubai") {
-            baseCurrency = 'AED';
-        } else if (branch === "new delhi") {
-            baseCurrency = 'INR';
-        } else {
-            baseCurrency = 'USD'; // Default currency if needed
-        }
+        // if (branch === "dubai") {
+        //     baseCurrency = 'AED';
+        // } else if (branch === "new delhi") {
+        //     baseCurrency = 'INR';
+        // } else {
+        //     baseCurrency = 'USD'; // Default currency if needed
+        // }
+        let baseCurrency = currency_code;
     // Dynamically get the base currency from server-side data
         //const apiKey = 'db45eeefc8d49d0b5b537e69'; // Replace with your API key
         const apiKey = $('meta[name="current-currency-api"]').attr('content'); // Assuming it's stored in a meta tag
@@ -1773,7 +1796,8 @@ $(document).ready(function() {
                     if (discount_type === 'Fixed') {
                         const discountAmount = (discount * rate).toFixed(2);
                     }
-                    calculation(totalPkg, vat, discountAmount, discount_type, symbol)
+                    var no_of_passenger = $('#no_of_passenger').val();
+                    calculation(totalPkg, vat, discountAmount, discount_type, symbol,no_of_passenger)
                   
                  
                 } else {
@@ -1788,12 +1812,13 @@ $(document).ready(function() {
         fetchCurrencyRates();
     }
 
-    function calculation(amount, tax, discount, discount_type, symbol) {
+    function calculation(amount, tax, discount, discount_type, symbol,no_of_passenger) {
         // Parse discount and tax values as floats, default to 0 if not a number
         var discount = parseFloat(discount) || 0;
         var vat = parseFloat(tax) || 0;
         var package_amt = parseFloat(amount) || 0;
-
+        var no_of_passenger = parseFloat(no_of_passenger) || 0;
+        var package_amt = package_amt * no_of_passenger;    
         // Update the input and display values
         $('#discount').val(discount);
         $('#vat').val(vat);

@@ -29,16 +29,16 @@
                                 <div class="dropdown-menu dropdown-menu-end">
                                     <ul class="d-block">
                                         <li>
-                                        <a class="d-flex align-items-center download-item"
-   href="{{ route('supplier-report.downloadPDF', request()->query()) }}">
-   <i class="far fa-file-pdf me-2"></i>PDF
-</a>
+                                            <a class="d-flex align-items-center download-item"
+                                                href="{{ route('supplier-report.downloadPDF', request()->query()) }}">
+                                                <i class="far fa-file-pdf me-2"></i>PDF
+                                            </a>
                                         </li>
                                         <li>
-                                        <a class="d-flex align-items-center download-item"
-   href="{{ route('supplier-report.downloadCSV', request()->query()) }}">
-   <i class="far fa-file-text me-2"></i>CSV
-</a>
+                                            <a class="d-flex align-items-center download-item"
+                                                href="{{ route('supplier-report.downloadCSV', request()->query()) }}">
+                                                <i class="far fa-file-text me-2"></i>CSV
+                                            </a>
                                         </li>
 
                                     </ul>
@@ -94,47 +94,95 @@
                                         <th>City</th>
                                         <th>State</th>
                                         <th>Country</th>
-                                        <th>Amount</th>
-                                        
+                                        <th>Gross Amount</th>
+                                        <th>Net Amount</th>
+                                        <th>Net Profit</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @php
+                                        $totalGrossAmount = 0;
+                                        $totalNetAmount = 0;
+                                        $totalNetProfit = 0;
+                                    @endphp
+
                                     @forelse ($Suppliers as $Supplier)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td> <!-- Serial number -->
-                                        <td>
-                                            <h2 class="table-avatar">
-                                                @php
-                                                $avatar = $Supplier->image ? url('public/profile/' . $Supplier->image) :
-                                                url('public/assets/img/profiles/default.png');
-                                                @endphp
-                                                <a href="" class="avatar avatar-md me-2"><img
-                                                        class="avatar-img rounded-circle" src="{{$avatar}}"
-                                                        alt="User Image"></a>
-                                                <a href="">{{ $Supplier->name }} <span><span class="__cf_email__"
-                                                            data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $Supplier->email }}]</span></span></a>
+                                        @php
+                                            $grossAmount = 0;
+                                            $netAmount = 0;
+                                            $netProfit = 0;
+                                        @endphp
 
-                                        <td>{{ $Supplier->mobile }}</td>
+                                        @foreach($Supplier->invoices as $invoice)
+                                            @php
+                                                // Assuming the gross and net amounts are part of the invoice data
+                                                $grossAmount += $invoice->package->amount; // Replace with the correct calculation or data
+                                                $netAmount += $invoice->package->net_amount; // Replace with the correct calculation or data
+                                                $netProfit = $grossAmount - $netAmount; // Net profit is calculated here
+                                            @endphp
+                                        @endforeach
 
-                                        <td>{{ $Supplier->city->name }}</td>
-                                        <td>{{ $Supplier->state->name }}</td>
-                                        <td>{{ $Supplier->country->name }}</td>
-                                        <td>{{ $Supplier->currency->symbol}} {{ $Supplier->amount }}</td>
-                                        
-                                    </tr>
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td> <!-- Serial number -->
+                                            <td>
+                                                <h2 class="table-avatar">
+                                                    @php
+                                                        $avatar = $Supplier->image
+                                                            ? url('public/profile/' . $Supplier->image)
+                                                            : url('public/assets/img/profiles/default.png');
+                                                    @endphp
+                                                    <a href="" class="avatar avatar-md me-2">
+                                                        <img class="avatar-img rounded-circle" src="{{ $avatar }}" alt="User Image">
+                                                    </a>
+                                                    <a href="">{{ $Supplier->name }}
+                                                        <span>
+                                                            <span class="__cf_email__" data-cfemail="">
+                                                                [{{ $Supplier->email }}]
+                                                            </span>
+                                                        </span>
+                                                    </a>
+                                                </h2>
+                                            </td>
+                                            <td>{{ $Supplier->mobile }}</td>
+                                            <td>{{ $Supplier->city->name }}</td>
+                                            <td>{{ $Supplier->state->name }}</td>
+                                            <td>{{ $Supplier->country->name }}</td>
+                                            <td> {{ number_format($grossAmount, 2) }}</td>
+                                            <td> {{ number_format($netAmount, 2) }}</td>
+                                            <td> {{ number_format($netProfit, 2) }}</td>
+                                        </tr>
+
+                                        @php
+                                            // Add the calculated amounts to the totals
+                                            $totalGrossAmount += $grossAmount;
+                                            $totalNetAmount += $netAmount;
+                                            $totalNetProfit += $netProfit;
+                                        @endphp
+
                                     @empty
-                                    <tr>
-                                        <td colspan="9" class="text-center">No Suppliers found.</td>
-                                    </tr>
+                                        <tr>
+                                            <td colspan="9" class="text-center">No Suppliers found.</td>
+                                        </tr>
                                     @endforelse
                                 </tbody>
-                            </table>
 
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="6" class="text-end"><strong>Total Amount:</strong></td>
+                                        <td><strong> {{ number_format($totalGrossAmount, 2) }}</strong></td>
+                                        <td><strong> {{ number_format($totalNetAmount, 2) }}</strong></td>
+                                        <td><strong> {{ number_format($totalNetProfit, 2) }}</strong></td>
+                                    </tr>
+                                </tfoot>
+
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+
     </div>
 </div>
 <!-- /Page Wrapper -->
@@ -149,7 +197,7 @@
 
         <div class="sidebar-body">
             <form id="filterForm" action="{{ route('supplier.supplier-report') }}" method="GET" autocomplete="off">
-                
+
                 <!-- Name Filter -->
                 <div class="form-group">
                     <label for="name">Name</label>
@@ -180,7 +228,8 @@
                         </button>
 
                         <!-- Reset button that clears filters and submits the form -->
-                        <button type="button" class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary"
+                        <button type="button"
+                            class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary"
                             onclick="resetFilters()">
                             Reset
                         </button>
@@ -975,15 +1024,15 @@ $(document).ready(function() {
 
 
 <script>
-    function resetFilters() {
-        // Clear the inputs
-        document.querySelector('input[name="name"]').value = '';
-        document.querySelector('input[name="email"]').value = '';
-        document.querySelector('input[name="mobile"]').value = '';
+function resetFilters() {
+    // Clear the inputs
+    document.querySelector('input[name="name"]').value = '';
+    document.querySelector('input[name="email"]').value = '';
+    document.querySelector('input[name="mobile"]').value = '';
 
-        // Submit the form with cleared values
-        document.getElementById('filterForm').submit();
-    }
+    // Submit the form with cleared values
+    document.getElementById('filterForm').submit();
+}
 </script>
 
 

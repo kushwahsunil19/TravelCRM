@@ -5,7 +5,12 @@
 <!-- Main Wrapper -->
 @include('admin.layouts.common-sidebar')
 <!-- /Main Wrapper -->
-
+<style>
+    .datatable th {
+    word-wrap: break-word !important;
+    white-space: normal; /* Allow word wrapping in case of long words */
+}
+</style>
     <!-- Page Content -->
     <div class="page-wrapper">
         <div class="content container-fluid">
@@ -129,64 +134,105 @@
                     <div class="card-table">
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-center table-hover datatable">
-                                    <thead class="thead-light">
-                                        <tr>
-                                            <th>S.NO</th>
-                                            <th>Quotation No</th>
-                                            <th>Branch</th>
-                                            <th>Package</th>
-                                            <th>Partner</th>
-                                            <th>Discount Type</th>
-                                            <th>Discount</th>
-                                            <th>VAT</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if($quotations->isEmpty())
-                                        <tr>
-                                            <td colspan="8" class="text-center">
+                            <table class="table table-center table-hover datatable">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>S.NO</th>
+                                    <th>Quotation No</th>
+                                    <th>Branch</th>
+                                    <th>Package</th>
+                                    <th>No of Passenger</th>
+                                    <th>Partner</th>
+                                    <th>Discount Type</th>
+                                    <th>Discount</th>
+                                    <th>VAT</th>
+                                    <th>Gross Amount</th>
+                                    <th>Net Cost</th>
+                                    <th>Net Profit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                $totalGrossAmount = 0;
+                                $totalNetCost = 0;
+                                $totalNetProfit = 0;
+                                @endphp
 
-                                            </td>
-                                        </tr>
+                                @if($quotations->isEmpty())
+                                <tr>
+                                    <td colspan="11" class="text-center">No data available</td>
+                                </tr>
+                                @else
+                                @foreach ($quotations as $quotation)
+                                @php
+                                // Calculate values
+                                $grossAmount = $quotation->package ? $quotation->package->amount  * $quotation->no_of_passenger : 0;
+                                $discountAmount = $quotation->discount_type === 'Percentage' 
+                                                    ? ($grossAmount * $quotation->discount / 100) 
+                                                    : ($quotation->discount_type === 'Fixed' 
+                                                        ? $quotation->discount 
+                                                        : 0);
+                                $vatAmount = ($grossAmount - $discountAmount) * $quotation->gst_tax / 100;
+                                $netCost = $quotation->package->amount?$quotation->package->amount:0.00;
+                                $netProfit = $grossAmount - $netCost;
+
+                                // Add to totals
+                                $totalGrossAmount += $grossAmount;
+                                $totalNetCost += $netCost;
+                                $totalNetProfit += $netProfit;
+                                @endphp
+
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $quotation->quotation_no }}</td>
+                                    <td>{{ $quotation->branch ? $quotation->branch->city : 'N/A' }}</td>
+                                    <td>{{ $quotation->package ? $quotation->package->package_name : 'N/A' }}</td>
+                                    <td>{{$quotation->no_of_passenger}}</td>
+                                    <td>
+                                        <h2 class="table-avatar">
+                                            @php
+                                            $avatar = $quotation->partner->image 
+                                                    ? url('public/profile/' . $quotation->partner->image) 
+                                                    : url('public/assets/img/profiles/default.png');
+                                            @endphp
+                                            <a href="" class="avatar avatar-md me-2">
+                                                <img class="avatar-img rounded-circle" src="{{ $avatar }}" alt="User Image">
+                                            </a>
+                                            <a href="">{{ $quotation->partner->name }} 
+                                                <span>
+                                                    <span class="__cf_email__" data-cfemail="">{{ $quotation->partner->email }}</span>
+                                                </span>
+                                            </a>
+                                        </h2>
+                                    </td>
+                                    <td>{{ isset($quotation->discount_type)?$quotation->discount_type:'N/A' }}</td>
+                                    <td>
+                                        @if($quotation->discount_type == 'Fixed')
+                                        ₹{{ $quotation->discount }}
+                                        @elseif($quotation->discount_type == 'Percentage')
+                                        {{ $quotation->discount }}%
                                         @else
-                                        @foreach ($quotations as $quotation)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $quotation->quotation_no }}</td>
-                                            <td>{{ $quotation->branch ? $quotation->branch->city : 'N/A' }}</td>
-                                            <td>{{ $quotation->package ? $quotation->package->package_name : 'N/A' }}
-                                            </td>
-                                            <td>
-                                            <h2 class="table-avatar">
-                                                @php
-                                                $avatar = $quotation->partner->image ? url('public/profile/' .
-                                                $quotation->partner->image) :
-                                                url('public/assets/img/profiles/default.png');
-                                                @endphp
-                                                <a href="" class="avatar avatar-md me-2"><img
-                                                        class="avatar-img rounded-circle" src="{{$avatar}}"
-                                                        alt="User Image"></a>
-                                                <a href="">{{$quotation->partner->name }} <span><span class="__cf_email__"
-                                                            data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $quotation->partner->email }}]</span></span></a>
-                                        </td>
-                                           
-                                            <td>{{ $quotation->discount_type }}</td>
-                                            <td>
-                                                @if($quotation->discount_type == 'Fixed')
-                                                ₹{{ $quotation->discount }}
-                                                @elseif($quotation->discount_type == 'Percentage')
-                                                {{ $quotation->discount }}%
-                                                @else
-                                                N/A
-                                                @endif
-                                            </td>
-                                            <td>{{ $quotation->gst_tax . '%' }}</td>
-                                        </tr>
-                                        @endforeach
+                                        N/A
                                         @endif
-                                    </tbody>
-                                </table>
+                                    </td>
+                                    <td>{{ $quotation->gst_tax . '%' }}</td>
+                                    <td>{{ number_format($grossAmount, 2) }}</td>
+                                    <td>{{ number_format($netCost, 2) }}</td>
+                                    <td>{{ number_format($netProfit, 2) }}</td>
+                                </tr>
+                                @endforeach
+                                @endif
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="8" class="text-center"><strong>Total Amount:</strong></td>
+                                    <td><strong>{{ number_format($totalGrossAmount, 2) }}</strong></td>
+                                    <td><strong>{{ number_format($totalNetCost, 2) }}</strong></td>
+                                    <td><strong>{{ number_format($totalNetProfit, 2) }}</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
                             </div>
                         </div>
                     </div>
