@@ -151,8 +151,9 @@
                                 $totalNetProfit = 0;
                         
                                 $symbol = 'د.إ'; // Default currency symbol (AED)
+                             
                                 @endphp
-                        
+                                
                                 @if($users->isEmpty())
                                 <tr>
                                     <td colspan="10" class="text-center">No data available</td>
@@ -167,21 +168,18 @@
                                 foreach ($user->invoices as $invoice) {
                                     // Fetch currency and conversion rates
                                     $currency_code = $invoice->currency->code ?? 'AED';
-                                    $rates = getCurrencyRate($currency_code); // Assume this function returns an array of rates.
-                        
                                     // Calculate Gross and Net Amount
-                                    $grossAmount = ($invoice->package->amount ?? 0) * ($invoice->no_of_passenger ?? 1);
-                                    $netAmount = ($invoice->package->net_amount ?? 0) * ($invoice->no_of_passenger ?? 1);
+                                    $grossAmount = ($invoice->package->amount ?? 0) * ($invoice->no_of_passenger ?? 1);                                 
+                                    $netAmount = ($invoice->package->net_amount ?? 0) ;                                 
                         
                                     // Apply Discounts
                                     $discount = $invoice->discount ?? 0;
                                     $discountAmount = ($invoice->discount_type === 'Fixed') ? $discount : ($grossAmount * $discount) / 100;
                         
-                                    // Currency Conversion
-                                    $grossAmount *= $rates['AED'] ?? 1;
-                                    $netAmount *= $rates['AED'] ?? 1;
-                                    $discountAmount *= $rates['AED'] ?? 1;
-                        
+                                    // Currency Conversion                             
+                                    $grossAmount = getCurrencyRateAmt($invoice->currency->code,'AED',$grossAmount);
+                                    $netAmount = getCurrencyRateAmt($invoice->currency->code,'AED',$netAmount);
+                                    $discountAmount = getCurrencyRateAmt($invoice->currency->code,'AED',$discountAmount);
                                     // Apply Tax
                                     $taxRate = $invoice->vat ?? 0;
                                     $amountAfterDiscount = $grossAmount - $discountAmount;

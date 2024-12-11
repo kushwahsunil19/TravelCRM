@@ -164,31 +164,7 @@ td {
 
 
 
-                                        <div class="col-lg-6 col-md-6 col-sm-12">
-                                            <div class="input-block mb-3">
-                                                <label>No. of Night</label>
-                                                <input type="number" class="form-control" name="no_of_night"
-                                                    placeholder="Enter No. of Night"
-                                                    value="{{ old('no_of_night', $invoice->no_of_night) }}" min="0">
-                                                @if ($errors->has('no_of_night'))
-                                                <span class="text-danger">{{ $errors->first('no_of_night') }}</span>
-                                                @endif
-
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12">
-                                            <div class="input-block mb-3">
-                                                <label>No. of Passenger</label>
-                                                <input type="number" class="form-control" name="no_of_passenger"
-                                                    placeholder="Enter No. of Passenger" id="no_of_passenger"
-                                                    value="{{ old('no_of_passenger', $invoice->no_of_passenger) }}"
-                                                    min="0">
-                                                @if ($errors->has('no_of_passenger'))
-                                                <span class="text-danger">{{ $errors->first('no_of_passenger') }}</span>
-                                                @endif
-
-                                            </div>
-                                        </div>
+                                    
                                         <div class="col-lg-12 col-md-12 col-sm-12">
                                             <div class="input-block mb-3">
                                                 <label>Supplier</label>
@@ -308,6 +284,31 @@ td {
                                     </div>
                                 </div>
                                 <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="input-block mb-3">
+                                                <label>No. of Night</label>
+                                                <input type="number" class="form-control" name="no_of_night"
+                                                    placeholder="Enter No. of Night"
+                                                    value="{{ old('no_of_night', $invoice->no_of_night) }}" min="0">
+                                                @if ($errors->has('no_of_night'))
+                                                <span class="text-danger">{{ $errors->first('no_of_night') }}</span>
+                                                @endif
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="input-block mb-3">
+                                                <label>No. of Passenger</label>
+                                                <input type="number" class="form-control" name="no_of_passenger"
+                                                    placeholder="Enter No. of Passenger" id="no_of_passenger"
+                                                    value="{{ old('no_of_passenger', $invoice->no_of_passenger) }}"
+                                                    min="0">
+                                                @if ($errors->has('no_of_passenger'))
+                                                <span class="text-danger">{{ $errors->first('no_of_passenger') }}</span>
+                                                @endif
+
+                                            </div>
+                                        </div>
                                     <div class="col-md-12">
                                         <div class="row">
 

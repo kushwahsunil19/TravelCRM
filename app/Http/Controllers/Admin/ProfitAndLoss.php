@@ -171,129 +171,136 @@ class ProfitAndLoss extends Controller
     
     public function downloadCSV(Request $request)
     {
+        // Set timezone
+        date_default_timezone_set('Asia/Kolkata');
         $user = auth()->user();
-        $roleName = auth()->user()->getRoleNames()->first();
+        $roleName = $user->getRoleNames()->first();
         $userIds = User::role($roleName)->pluck('id');
     
+        // Query with necessary relations
         $invoicesQuery = Invoice::with(['branch', 'package.expenses', 'currency', 'user']);
-        
+    
         // Apply filters
-        if ($request->has('branch') && $request->branch) $invoicesQuery->where('branch_id', $request->branch);
-        if ($request->has('year') && $request->year) $invoicesQuery->whereYear('created_at', $request->year);
-        if ($request->has('month') && $request->month) $invoicesQuery->whereMonth('created_at', $request->month);
-        if ($request->has('package') && $request->package) $invoicesQuery->where('package_id', $request->package);
+        if ($request->has('branch') && $request->branch) {
+            $invoicesQuery->where('branch_id', $request->branch);
+        }
+        if ($request->has('year') && $request->year) {
+            $invoicesQuery->whereYear('created_at', $request->year);
+        }
+        if ($request->has('month') && $request->month) {
+            $invoicesQuery->whereMonth('created_at', $request->month);
+        }
+        if ($request->has('package') && $request->package) {
+            $invoicesQuery->where('package_id', $request->package);
+        }
         if ($request->has('from_date') && $request->from_date && $request->has('to_date') && $request->to_date) {
             $fromDate = Carbon::parse($request->from_date)->startOfDay();
             $toDate = Carbon::parse($request->to_date)->endOfDay();
             $invoicesQuery->whereBetween('created_at', [$fromDate, $toDate]);
         }
     
-        if (auth()->id() != 1) $invoicesQuery->where('user_id', auth()->id());
-        if ($user->hasRole($roleName) && $roleName != 'Administrator') $invoicesQuery->whereIn('user_id', $userIds);
+        if ($user->id != 1) {
+            $invoicesQuery->where('user_id', $user->id);
+        }
+        if ($user->hasRole($roleName) && $roleName != 'Administrator') {
+            $invoicesQuery->whereIn('user_id', $userIds);
+        }
     
         $invoices = $invoicesQuery->get();
         if ($invoices->isEmpty()) {
             return redirect()->back()->with('error', 'No data found for the selected filters.');
         }
     
-        $rates = getCurrencyRate('AED') ?? ['AED' => 1, 'INR' => 1, 'USD' => 1, 'EUR' => 1];
-        $csvFilename = 'Profit_Loss_Report_' . now()->format('Y-m-d_H-i-s') . '.csv';
-        $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=\"$csvFilename\"",
-        ];
+        // Prepare CSV file
+        $timestamp = date('Y-m-d_H-i-s');
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="Profit_Loss_Report_' . $timestamp . '.csv"');
     
-        $totalInvoiceAmt = 0;
-        $totalNetAmt = 0;
-        $netProfitAmt = 0;
+        $handle = fopen('php://output', 'w');
     
-        $callback = function () use ($invoices, &$totalInvoiceAmt, &$totalNetAmt, &$netProfitAmt, $rates) {
-            $file = fopen('php://output', 'w');
-            fwrite($file, "\xEF\xBB\xBF"); // Add BOM for UTF-8
-    
-               // Write CSV headers
-    fputcsv($file, ['Branch', 'Package', 'Month', 'Year', 'User', 'Created Date', 'Gross Amount', 'Net Cost', 'Net Profit']);
-
-    foreach ($invoices as $invoice) {
-        $currencyCode = $invoice->currency->code ?? 'AED';
-        $packageAmt = ($invoice->package->amount ?? 0) * ($invoice->no_of_passenger ?? 1);
-        $netAmtRow = ($invoice->package->net_amount ?? 0) * ($invoice->no_of_passenger ?? 1);
-        $rates = getCurrencyRate($currencyCode);
-       if ($currencyCode == 'INR') {
-            $packageAmt *= $rates['AED'];
-            $netAmtRow *= $rates['AED'];
-        } elseif ($currencyCode == 'USD') {
-            $packageAmt *= $rates['AED'];
-            $netAmtRow *= $rates['AED'];
-        } elseif ($currencyCode == 'EUR') {
-            $packageAmt *= $rates['AED'];
-            $netAmtRow *= $rates['AED'];
-        }
-
-        $tax = $invoice->vat ?? 0;
-        $discount = $invoice->discount ?? 0;
-        $discountAmt = ($invoice->discount_type == 'Fixed') ? $discount : ($packageAmt * $discount) / 100;
-
-        $amountAfterDiscount = $packageAmt - $discountAmt;
-        $taxAmt = ($amountAfterDiscount * $tax) / 100;
-        $totalAmt = $amountAfterDiscount + $taxAmt;
-
-        // Combine expenses and total into one column
-        $packageExpenses = '';
-        $totalExpenses = 0;
-        if ($invoice->package && $invoice->package->expenses) {
-            foreach ($invoice->package->expenses as $expense) {
-                $expenseAmount = ($expense->amount * $invoice->no_of_passenger ?? 0) * ($rates[$currencyCode] ?? 1);
-                $packageExpenses .= "{$expense->title}: " . number_format($expenseAmount, 2) . ", ";
-                $totalExpenses += $expenseAmount;
-            }
-            $packageExpenses .= "Total: " . number_format($totalExpenses, 2);
-        }
-
-        // Adjust net cost by adding total expenses
-        $netAmtRow += $totalExpenses;
-
-        // Calculate net profit
-        $totalInvoiceAmtRow = $totalAmt;
-        $netProfitAmtRow = $totalInvoiceAmtRow - $totalExpenses;
-
-        // Update totals
-        $totalInvoiceAmt += $totalInvoiceAmtRow;
-        $totalNetAmt += $netAmtRow;
-        $netProfitAmt += $netProfitAmtRow;
-
-        // Write data to CSV
-        fputcsv($file, [
-            $invoice->branch->branch_name ?? '',
-            $invoice->package->package_name ?? '',
-            \Carbon\Carbon::parse($invoice->created_at)->format('F'),
-            \Carbon\Carbon::parse($invoice->created_at)->format('Y'),
-            $invoice->user->first_name . ' ' . $invoice->user->last_name ?? '',
-            \Carbon\Carbon::parse($invoice->created_at)->format('d-M-Y h:i A'),
-            number_format($totalInvoiceAmtRow, 2),
-            $packageExpenses,
-            number_format($netProfitAmtRow, 2),
-           
+        // Add CSV header
+        fputcsv($handle, [
+            'S.No', 'Branch', 'Package', 'Month', 'Year', 'User', 'Created Date', 
+            'Gross Amount', 'Expenses', 'Net Profit'
         ]);
-    }
-
-    // Add total row
-    fputcsv($file, []);
-    fputcsv($file, [
-        '', '', '', '', '', 'Total Amount',
-        number_format($totalInvoiceAmt, 2),
-        number_format($totalNetAmt, 2),
-        number_format($netProfitAmt, 2),
-        '',
-    ]);
-
-    fclose($file);
-};
-        return response()->stream($callback, 200, $headers);
-    }
     
-
+        // Initialize totals
+        $serialNumber = 1;
+        $totalGrossAmount = 0;
+        $totalExpenses = 0;
+        $totalNetProfit = 0;
+        $symbol = '(AED)';
     
+        foreach ($invoices as $invoice) {
+            $currencyCode = $invoice->currency->code ?? 'AED';
+            $packageAmount = ($invoice->package->amount ?? 0) * ($invoice->no_of_passenger ?? 1);
+            $netAmountRow = ($invoice->package->net_amount ?? 0);
+    
+            $packageAmount = getCurrencyRateAmt($currencyCode, 'AED', $packageAmount);
+            $netAmountRow = getCurrencyRateAmt($currencyCode, 'AED', $netAmountRow);
+    
+            $discount = $invoice->discount ?? 0;
+            $discountAmount = ($invoice->discount_type == 'Fixed')
+                ? $discount
+                : ($packageAmount * $discount) / 100;
+            $discountAmount = getCurrencyRateAmt($currencyCode, 'AED', $discountAmount);
+    
+            $amountAfterDiscount = $packageAmount - $discountAmount;
+            $vatAmount = ($amountAfterDiscount * ($invoice->vat ?? 0)) / 100;
+            $totalInvoiceAmount = $amountAfterDiscount + $vatAmount;
+    
+            $netProfitRow = $totalInvoiceAmount - $netAmountRow;
+    
+            // Calculate expenses
+            $packageExpenses = '';
+            $invoiceExpenses = 0;
+    
+            if ($invoice->package && $invoice->package->expenses) {
+                foreach ($invoice->package->expenses as $expense) {
+                    $expenseAmount = getCurrencyRateAmt($currencyCode, 'AED', $expense->amount);
+                    $packageExpenses .= "{$expense->title}: " . number_format($expenseAmount, 2) . ", ";
+                    $invoiceExpenses += $expenseAmount;
+                }
+                $packageExpenses .= "Total: " . number_format($invoiceExpenses, 2);
+            }
+    
+            // Update totals
+            $totalGrossAmount += $totalInvoiceAmount;
+            $totalExpenses += $invoiceExpenses;
+            $totalNetProfit += $netProfitRow;
+    
+            // Add row to CSV
+            fputcsv($handle, [
+                $serialNumber++,
+                $invoice->branch->branch_name ?? '',
+                $invoice->package->package_name ?? '',
+                Carbon::parse($invoice->created_at)->format('F'),
+                Carbon::parse($invoice->created_at)->format('Y'),
+                $invoice->user->first_name . ' ' . $invoice->user->last_name ?? '',
+                Carbon::parse($invoice->created_at)->format('d-M-Y h:i A'),
+                number_format($totalInvoiceAmount, 2),
+                $packageExpenses,
+                number_format($netProfitRow, 2),
+            ]);
+        }
+    
+        // Add totals row
+        fputcsv($handle, [
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            'Total Amount',
+            $symbol . number_format($totalGrossAmount, 2),
+            $symbol . number_format($totalExpenses, 2),
+            $symbol . number_format($totalNetProfit, 2),
+        ]);
+    
+        fclose($handle);
+        exit;
+    }
     
     /**
      * Show the form for creating a new resource.

@@ -20,43 +20,23 @@
                 $total_invoice_amt = 0;
                 $total_net_amt = 0;
                 $net_profit_amt = 0;
-                $rates = getCurrencyRate('AED' );
                 $symbol = 'د.إ';
                 @endphp
-
+              
                 @forelse ($invoices as $invoice)
                 @php
-
+                $package_amt = 0;
+                $net_amt_row = 0;
                 $currency_code = $invoice->currency->code ?? 'AED';
                 $package_amt = ($invoice->package->amount ?? 0) * ($invoice->no_of_passenger ?? 1);
-                $net_amt_row = ($invoice->package->net_amount ?? 0) * ($invoice->no_of_passenger ?? 1);
-                $rates = getCurrencyRate($currency_code );
+                $net_amt_row = ($invoice->package->net_amount ?? 0);
 
+                $package_amt = getCurrencyRateAmt($invoice->currency->code,'AED',$package_amt);
+                $net_amt_row = getCurrencyRateAmt($invoice->currency->code,'AED',$net_amt_row);
                 $discount = $invoice->discount ?? 0;
-                $discount_amt = ($invoice->discount_type == 'Fixed') ? $discount  : ($package_amt *
+                $discount_amt = ($invoice->discount_type == 'Fixed') ? $discount : ($package_amt *
                 $discount) / 100;
-                
-                if($currency_code =='INR'){
-                $package_amt = $package_amt * $rates['AED'];
-                $net_amt_row = $net_amt_row * $rates['AED'];
-                $discount = $invoice->discount ?? 0;
-                $discount_amt = ($invoice->discount_type == 'Fixed') ? $discount * $rates['AED'] : ($package_amt *
-                $discount) / 100;
-                }else if($currency_code =='USD'){
-                $package_amt = $package_amt * $rates['AED'];
-                $net_amt_row = $net_amt_row * $rates['AED'];
-                $discount = $invoice->discount ?? 0;
-                $discount_amt = ($invoice->discount_type == 'Fixed') ? $discount * $rates['AED'] : ($package_amt *
-                $discount) / 100;
-                }else if($currency_code =='EUR'){
-
-                $package_amt = $package_amt * $rates['AED'];
-                $net_amt_row = $net_amt_row * $rates['AED'];
-                $discount = $invoice->discount ?? 0;
-                $discount_amt = ($invoice->discount_type == 'Fixed') ? $discount * $rates['AED'] : ($package_amt *
-                $discount) / 100;
-                }
-
+                $discount_amt = getCurrencyRateAmt($invoice->currency->code,'AED',$discount_amt);
 
                 $total_net_amt += $net_amt_row;
 
@@ -89,33 +69,18 @@
                         @if(isset($invoice->package->expenses))
                         @foreach($invoice->package->expenses as $expense)
                         @php
-                        // Calculate the converted amount based on the currency code
-                        $convertedAmount = 0;
-                        if ($currency_code == 'AED') {
-                        $convertedAmount = $expense->amount * $rates['AED'];
-                        } elseif ($currency_code == 'INR') {
-                        $convertedAmount = $expense->amount * $rates['AED'];
-                        } elseif ($currency_code == 'USD') {
-                        $convertedAmount = $expense->amount * $rates['AED'];
-                        } elseif ($currency_code == 'EUR') {
-                        $convertedAmount = $expense->amount * $rates['AED'];
-                        }
-
                         // Add to the total expenses
-                        $convertedAmount = $convertedAmount * ($invoice->no_of_passenger ?? 1);
+                        $expAmount = $expense->amount;
+                        $convertedAmount = getCurrencyRateAmt($currency_code,'AED',$expAmount );
                         $totalExpenses += $convertedAmount ;
                         @endphp
-
                         {{ $expense->title }}: {{ number_format($convertedAmount  , 2) }}<br>
                         @endforeach
                         @endif
-
                         <hr>
                         <strong>Total: {{ number_format($totalExpenses, 2) }}</strong><br>
 
                     </td>
-
-
                     <td>{{ number_format($net_profit_amt_row, 2) }}</td>
                 </tr>
                 @empty

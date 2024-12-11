@@ -113,21 +113,8 @@ $url = $_SERVER['REQUEST_URI'];
             // Amount after discount
             $amount_after_discount = $package_amt - $discount_amt;
             $tax_amt = ($amount_after_discount * $tax) / 100;
-            $rates = getCurrencyRate($invoice->currency->code);
-            if(isset($rates['AED'])){
-                if($invoice->currency->code == 'INR'){
-                  $total_invoice_amt_INR += $amount_after_discount + $tax_amt; 
-                 $total_invoice_amt_INR *= $rates['AED'];                                 
-            }else if($invoice->currency->code == 'AED'){
-                $total_invoice_amt_AED += $amount_after_discount + $tax_amt;                
-            }else if($invoice->currency->code == 'USD'){
-                $total_invoice_amt_USD += $amount_after_discount + $tax_amt;
-                $total_invoice_amt_USD *= $rates['AED'];
-            }    
-            }
-            
-            
-
+            $rates = getCurrencyRate($invoice->currency->code);            
+            $total_invoice_amt_AED += getCurrencyRateAmt($invoice->currency->code,'AED',($amount_after_discount + $tax_amt));
             @endphp              
         @endforeach
         @php 

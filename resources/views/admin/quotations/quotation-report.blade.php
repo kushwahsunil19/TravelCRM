@@ -170,36 +170,30 @@
                                 @php
                                 $currency_code = $quotation->currency->code ?? 'AED';
                                 $grossAmount = ($quotation->package->amount ?? 0) * ($quotation->no_of_passenger ?? 1);
-                                $netCost = ($quotation->package->net_amount ?? 0) * ($quotation->no_of_passenger ?? 1);
-                                $rates = getCurrencyRate($currency_code);
-                                    $discount = $quotation->discount ?? 0;
-                                    $discountAmount = ($quotation->discount_type == 'Fixed') ? $discount * $rates['AED'] : ($grossAmount *
-                                    $discount) / 100;
-                                if($currency_code == 'INR') {
-                                    $rates = getCurrencyRate($currency_code);
-                                    $grossAmount *= $rates['AED'];
-                                    $netCost *= $rates['AED'];
-                                    $discount = $quotation->discount ?? 0;
-                                    $discountAmount = ($quotation->discount_type == 'Fixed') ? $discount * $rates['AED'] : ($grossAmount *
-                                    $discount) / 100;
-                                } elseif($currency_code == 'USD') {
-                                    $rates = getCurrencyRate($currency_code);
-                                    $grossAmount *= $rates['AED'];
-                                    $netCost *= $rates['AED'];
-                                    $discount = $quotation->discount ?? 0;
-                                    $discountAmount = ($quotation->discount_type == 'Fixed') ? $discount * $rates['AED'] : ($grossAmount *
-                                    $discount) / 100;
-                                }
+                                $netCost = ($quotation->package->net_amount ?? 0) ;
+                              
+                                $discount = $quotation->discount ?? 0;
+                                $discountAmount = ($quotation->discount_type == 'Fixed') ? $discount : ($grossAmount *
+                                $discount) / 100;
+                               
+                                // Currency Conversion                             
+                                    $grossAmount = getCurrencyRateAmt($quotation->currency->code,'AED',$grossAmount);
+                                    $netAmount = getCurrencyRateAmt($quotation->currency->code,'AED',$netCost);
+                                    $discountAmount = getCurrencyRateAmt($quotation->currency->code,'AED',$discountAmount);
                                 // Calculate values
                             
-                                $vatAmount = ($grossAmount - $discountAmount) * $quotation->gst_tax / 100;
-                              
-                                $netProfit = $grossAmount - $netCost;
+                            
 
-                                // Add to totals
+                                $tax = $quotation->gst_tax ?? 0;
+                                $amount_after_discount = $grossAmount - $discountAmount;
+                                $tax_amt = ($amount_after_discount * $tax) / 100;
+                                $total_amt = $amount_after_discount + $tax_amt;
+
+                                $grossAmount = $total_amt;
                                 $totalGrossAmount += $grossAmount;
-                                $totalNetCost += $netCost;
-                                $totalNetProfit += $netProfit;
+
+                                $net_profit_amt_row = $grossAmount - $netAmount;
+                                $totalNetProfit += $net_profit_amt_row;
                                 @endphp
 
                                 <tr>
@@ -247,18 +241,11 @@
                                     @php
                                     // Calculate the converted amount based on the currency code
                                     $convertedAmount = 0;
-                                    if ($currency_code == 'AED') {
-                                    $convertedAmount = $expense->amount * $rates['AED'];
-                                    } elseif ($currency_code == 'INR') {
-                                    $convertedAmount = $expense->amount * $rates['AED'];
-                                    } elseif ($currency_code == 'USD') {
-                                    $convertedAmount = $expense->amount * $rates['AED'];
-                                    } elseif ($currency_code == 'EUR') {
-                                    $convertedAmount = $expense->amount * $rates['AED'];
-                                    }
+                                   
+                                    $convertedAmount = getCurrencyRateAmt($quotation->currency->code,'AED',$expense->amount);
 
                                     // Add to the total expenses
-                                    $convertedAmount = $convertedAmount * ($quotation->no_of_passenger ?? 1);
+                                 
                                     $totalExpenses += $convertedAmount ;
                                     @endphp
 
@@ -270,7 +257,7 @@
                                     <strong>Total: {{ number_format($totalExpenses, 2) }}</strong><br>
 
                                 </td>
-                                    <td>{{ number_format($netProfit, 2) }}</td>
+                                    <td>{{ number_format($net_profit_amt_row, 2) }}</td>
                                 </tr>
                                @php $totalNetExpenses += $totalExpenses; @endphp
                                 @endforeach
@@ -281,7 +268,7 @@
                                     <td colspan="8" class="text-end"><strong>Total Amount:</strong></td>
                                     <td><strong>{{$symbol}} {{ number_format($totalGrossAmount, 2) }}</strong></td>
                                     <td><strong>{{$symbol}} {{ number_format($totalNetExpenses , 2) }}</strong></td>
-                                    <td><strong>{{$symbol}} {{ number_format($totalNetProfit, 2) }}</strong></td>
+                                    <td><strong>{{$symbol}} {{ number_format($totalGrossAmount - $totalNetExpenses , 2) }}</strong></td>
                                 </tr>
                             </tfoot>
                         </table>

@@ -130,7 +130,7 @@ class StaffwiseController extends Controller
 
     public function downloadCSV(Request $request)
     {
-        $query = User::with(['invoices', 'roles']);
+        $query = User::with(['invoices.package', 'invoices.currency', 'roles']);
     
         // Apply filters based on user input
         if ($request->filled('user_name')) {
@@ -178,6 +178,7 @@ class StaffwiseController extends Controller
     
         // Add CSV headers
         fputcsv($handle, [
+            'S.No', 
             'User Name', 
             'Email', 
             'Mobile', 
@@ -190,44 +191,64 @@ class StaffwiseController extends Controller
         ]);
     
         // Initialize totals
+        $serialNumber = 1;
         $totalGrossAmount = 0;
         $totalNetCost = 0;
         $totalNetProfit = 0;
     
         // Add data rows
         foreach ($users as $user) {
-            $grossAmount = 0;
-            $netCost = 0;
+            $grossAmountRow = 0;
+            $netCostRow = 0;
     
             foreach ($user->invoices as $invoice) {
-                $grossAmount += $invoice->package->amount;
-                $netCost += $invoice->package->net_amount;
+                $currencyCode = $invoice->currency->code ?? 'AED';
+                $packageAmount = ($invoice->package->amount ?? 0) * ($invoice->no_of_passenger ?? 1);
+                $netAmount = ($invoice->package->net_amount ?? 0);
+    
+                // Apply Discounts
+                $discount = $invoice->discount ?? 0;
+                $discountAmount = ($invoice->discount_type === 'Fixed') ? $discount : ($packageAmount * $discount) / 100;
+    
+                // Currency Conversion
+                $packageAmount = getCurrencyRateAmt($currencyCode, 'AED', $packageAmount);
+                $netAmount = getCurrencyRateAmt($currencyCode, 'AED', $netAmount);
+                $discountAmount = getCurrencyRateAmt($currencyCode, 'AED', $discountAmount);
+    
+                // Apply Tax
+                $taxRate = $invoice->vat ?? 0;
+                $amountAfterDiscount = $packageAmount - $discountAmount;
+                $taxAmount = ($amountAfterDiscount * $taxRate) / 100;
+    
+                $grossAmountRow += $amountAfterDiscount + $taxAmount;
+                $netCostRow += $netAmount;
             }
     
-            $netProfit = $grossAmount - $netCost;
+            $profitRow = $grossAmountRow - $netCostRow;
     
             // Update totals
-            $totalGrossAmount += $grossAmount;
-            $totalNetCost += $netCost;
-            $totalNetProfit += $netProfit;
+            $totalGrossAmount += $grossAmountRow;
+            $totalNetCost += $netCostRow;
+            $totalNetProfit += $profitRow;
     
+            // Add user row to CSV
             fputcsv($handle, [
+                $serialNumber++,
                 $user->first_name . ' ' . $user->last_name,
                 $user->email,
                 $user->mobile ?? 'N/A',
                 $user->roles->isNotEmpty() ? $user->roles->first()->name : 'No Role',
                 $user->created_at->format('Y-m-d'),
                 $user->status == 1 ? 'Active' : 'Inactive',
-                number_format($grossAmount, 2),
-                number_format($netCost, 2),
-                number_format($netProfit, 2),
+                number_format($grossAmountRow, 2),
+                number_format($netCostRow, 2),
+                number_format($profitRow, 2),
             ]);
         }
     
         // Add totals row
         fputcsv($handle, [
-            'Total',
-            '', '', '', '', '', // Empty fields to align totals with the correct columns
+            '','', '', '', '', '', 'Total Amount', 
             number_format($totalGrossAmount, 2),
             number_format($totalNetCost, 2),
             number_format($totalNetProfit, 2),
