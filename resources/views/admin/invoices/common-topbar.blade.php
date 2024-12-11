@@ -113,16 +113,28 @@ $url = $_SERVER['REQUEST_URI'];
             // Amount after discount
             $amount_after_discount = $package_amt - $discount_amt;
             $tax_amt = ($amount_after_discount * $tax) / 100;
-            if($invoice->currency->code == 'INR'){
-                  $total_invoice_amt_INR += $amount_after_discount + $tax_amt;                
+            $rates = getCurrencyRate($invoice->currency->code);
+            if(isset($rates['AED'])){
+                if($invoice->currency->code == 'INR'){
+                  $total_invoice_amt_INR += $amount_after_discount + $tax_amt; 
+                 $total_invoice_amt_INR *= $rates['AED'];                                 
             }else if($invoice->currency->code == 'AED'){
-                $total_invoice_amt_AED += $amount_after_discount + $tax_amt;
+                $total_invoice_amt_AED += $amount_after_discount + $tax_amt;                
             }else if($invoice->currency->code == 'USD'){
                 $total_invoice_amt_USD += $amount_after_discount + $tax_amt;
+                $total_invoice_amt_USD *= $rates['AED'];
+            }    
             }
-           
+            
+            
+
             @endphp              
         @endforeach
+        @php 
+         $totalAED = 0;
+         $totalAED = $total_invoice_amt_USD +  $total_invoice_amt_AED + $total_invoice_amt_INR; 
+            
+        @endphp
         <!-- Inovices card -->
         <div class="row">
             <div class="col-xl-3 col-lg-4 col-sm-6 col-12 d-flex">
@@ -133,9 +145,9 @@ $url = $_SERVER['REQUEST_URI'];
                                 <img src="{{url('public/assets/img/icons/receipt-item.svg')}}" alt="invoice">
                             </span>
                             <div class="dash-count">
-                                <div class="dash-title">Total Invoice(INR)</div>
+                                <div class="dash-title">Total Invoice(AED)</div>
                                 <div class="dash-counts">
-                                    <p>{{number_format($total_invoice_amt_INR,2)}}</p>
+                                    <p>{{number_format($totalAED,2)}}</p>
                                 </div>
                             </div>
                         </div>
@@ -150,7 +162,7 @@ $url = $_SERVER['REQUEST_URI'];
             </div>
            
             
-          <div class="col-xl-3 col-lg-4 col-sm-6 col-12 d-flex">
+          <!-- <div class="col-xl-3 col-lg-4 col-sm-6 col-12 d-flex">
                 <div class="card inovices-card w-100">
                     <div class="card-body">
                         <div class="dash-widget-header">
@@ -159,22 +171,22 @@ $url = $_SERVER['REQUEST_URI'];
 
                             </span>
                             <div class="dash-count">
-                                <div class="dash-title">Total Invoice(AED)</div>
+                                <div class="dash-title">Total Invoice(USD)</div>
                                 <div class="dash-counts">
-                                    <p>{{ number_format($total_invoice_amt_AED, 2) }}</p>
+                                    <p>{{ number_format($totalAED, 2) }}</p>
                                 </div>
                             </div>
                         </div>
-                         <!-- <div class="d-flex justify-content-between align-items-center">
+                          <div class="d-flex justify-content-between align-items-center">
                             <p class="inovices-all">No of Invoice <span class="rounded-circle bg-light-gray">03</span>
                             </p>
                             <p class="inovice-trending text-success-light">04 <span class="ms-2"><i
                                         class="fe fe-trending-up"></i></span></p>
-                        </div>  -->
+                        </div> 
                     </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-sm-6 col-12 d-flex">
+            </div> -->
+            <!-- <div class="col-xl-3 col-lg-4 col-sm-6 col-12 d-flex">
                 <div class="card inovices-card w-100">
                     <div class="card-body">
                         <div class="dash-widget-header">
@@ -183,21 +195,21 @@ $url = $_SERVER['REQUEST_URI'];
 
                             </span>
                             <div class="dash-count">
-                                <div class="dash-title">Total Invoice(USD)</div>
+                                <div class="dash-title">Total Invoice(INR)</div>
                                 <div class="dash-counts">
-                                    <p>{{number_format($total_invoice_amt_USD,2)}}</p>
+                                    <p>{{number_format($totalAED,2)}}</p>
                                 </div>
                             </div>
                         </div>
-                         <!-- <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex justify-content-between align-items-center">
                             <p class="inovices-all">No of Invoice <span class="rounded-circle bg-light-gray">01</span>
                             </p>
                             <p class="inovice-trending text-danger-light">03 <span class="ms-2"><i
                                         class="fe fe-trending-down"></i></span></p>
-                        </div>  -->
+                        </div> 
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="col-xl-3 col-lg-4 col-sm-6 col-12 d-flex">
                 <div class="card inovices-card w-100">
                     <div class="card-body">

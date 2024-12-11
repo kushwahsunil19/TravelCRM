@@ -129,75 +129,106 @@
                 <div class="card-table">
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-center table-hover datatable">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th>S.NO</th>
-                                        <th>User Name</th>
-                                        <th>Email</th>
-                                        <th>Mobile</th>
-                                        <th>Role</th>
-                                        <th>Created On</th>
-                                        <th>Status</th>
-                                        <th>Gross Amount</th>
-                                        <th>Net Cost</th>
-                                        <th>Net Profit</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php
-                                    $totalGrossAmount = 0;
-                                    $totalNetCost = 0;
-                                    $totalNetProfit = 0;
-                                    @endphp
+                           <table class="table table-center table-hover datatable">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>S.NO</th>
+                                    <th>User Name</th>
+                                    <th>Email</th>
+                                    <th>Mobile</th>
+                                    <th>Role</th>
+                                    <th>Created On</th>
+                                    <th>Status</th>
+                                    <th>Gross Amount</th>
+                                    <th>Net Cost</th>
+                                    <th>Net Profit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                $totalGrossAmount = 0;
+                                $totalNetCost = 0;
+                                $totalNetProfit = 0;
+                        
+                                $symbol = 'د.إ'; // Default currency symbol (AED)
+                                @endphp
+                        
+                                @if($users->isEmpty())
+                                <tr>
+                                    <td colspan="10" class="text-center">No data available</td>
+                                </tr>
+                                @else
+                                @foreach ($users as $user)
+                                @php
+                                $grossAmountRow = 0;
+                                $netAmountRow = 0;
+                        
+                                // Iterate through each user's invoices
+                                foreach ($user->invoices as $invoice) {
+                                    // Fetch currency and conversion rates
+                                    $currency_code = $invoice->currency->code ?? 'AED';
+                                    $rates = getCurrencyRate($currency_code); // Assume this function returns an array of rates.
+                        
+                                    // Calculate Gross and Net Amount
+                                    $grossAmount = ($invoice->package->amount ?? 0) * ($invoice->no_of_passenger ?? 1);
+                                    $netAmount = ($invoice->package->net_amount ?? 0) * ($invoice->no_of_passenger ?? 1);
+                        
+                                    // Apply Discounts
+                                    $discount = $invoice->discount ?? 0;
+                                    $discountAmount = ($invoice->discount_type === 'Fixed') ? $discount : ($grossAmount * $discount) / 100;
+                        
+                                    // Currency Conversion
+                                    $grossAmount *= $rates['AED'] ?? 1;
+                                    $netAmount *= $rates['AED'] ?? 1;
+                                    $discountAmount *= $rates['AED'] ?? 1;
+                        
+                                    // Apply Tax
+                                    $taxRate = $invoice->vat ?? 0;
+                                    $amountAfterDiscount = $grossAmount - $discountAmount;
+                                    $taxAmount = ($amountAfterDiscount * $taxRate) / 100;
+                        
+                                    $grossAmount = $amountAfterDiscount + $taxAmount;
+                        
+                                    // Accumulate totals for the current user
+                                    $grossAmountRow += $grossAmount;
+                                    $netAmountRow += $netAmount;
+                                }
+                        
+                                // Calculate Profit for the User
+                                $profitAmountRow = $grossAmountRow - $netAmountRow;
+                        
+                                // Accumulate global totals
+                                $totalGrossAmount += $grossAmountRow;
+                                $totalNetCost += $netAmountRow;
+                                $totalNetProfit += $profitAmountRow;
+                                @endphp
+                        
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $user->first_name . ' ' . $user->last_name }}</td>
+                                    <td>{{ $user->email }}</td>
+                                    <td>{{ $user->mobile ?? 'N/A' }}</td>
+                                    <td>{{ $user->roles->isNotEmpty() ? $user->roles->first()->name : 'No Role' }}</td>
+                                    <td>{{ $user->created_at->format('Y-m-d') }}</td>
+                                    <td>{{ $user->status == 1 ? 'Active' : 'Inactive' }}</td>
+                                    <td>{{ number_format($grossAmountRow, 2) }}</td>
+                                    <td>{{ number_format($netAmountRow, 2) }}</td>
+                                    <td>{{ number_format($profitAmountRow, 2) }}</td>
+                                </tr>
+                                @endforeach
+                                @endif
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="7" class="text-end"><strong>Total Amount:</strong></td>
+                                    <td><strong>{{ $symbol }} {{ number_format($totalGrossAmount, 2) }}</strong></td>
+                                    <td><strong>{{ $symbol }} {{ number_format($totalNetCost, 2) }}</strong></td>
+                                    <td><strong>{{ $symbol }} {{ number_format($totalNetProfit, 2) }}</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
 
-                                    @if($users->isEmpty())
-                                    <tr>
-                                        <td colspan="10" class="text-center">No data available</td>
-                                    </tr>
-                                    @else
-                                    @foreach ($users as $user)
-                                    @php
-                                    $grossAmountRow = 0;
-                                    $netAmountRow = 0;
 
-                                    foreach ($user->invoices as $invoice) {
-                                    $grossAmountRow += $invoice->package->amount;
-                                    $netAmountRow += $invoice->package->net_amount;
-                                    }
-                                    $profitAmountRow = $grossAmountRow - $netAmountRow;
-
-                                    // Accumulate totals
-                                    $totalGrossAmount += $grossAmountRow;
-                                    $totalNetCost += $netAmountRow;
-                                    $totalNetProfit += $profitAmountRow;
-                                    @endphp
-
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $user->first_name . ' ' . $user->last_name }}</td>
-                                        <td>{{ $user->email }}</td>
-                                        <td>{{ $user->mobile ?? 'N/A' }}</td>
-                                        <td>{{ $user->roles->isNotEmpty() ? $user->roles->first()->name : 'No Role' }}
-                                        </td>
-                                        <td>{{ $user->created_at->format('Y-m-d') }}</td>
-                                        <td>{{ $user->status == 1 ? 'Active' : 'Inactive' }}</td>
-                                        <td>{{ number_format($grossAmountRow, 2) }}</td>
-                                        <td>{{ number_format($netAmountRow, 2) }}</td>
-                                        <td>{{ number_format($profitAmountRow, 2) }}</td>
-                                    </tr>
-                                    @endforeach
-                                    @endif
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="7" class="text-center"><strong>Total Amount:</strong></td>
-                                        <td><strong>{{ number_format($totalGrossAmount, 2) }}</strong></td>
-                                        <td><strong>{{ number_format($totalNetCost, 2) }}</strong></td>
-                                        <td><strong>{{ number_format($totalNetProfit, 2) }}</strong></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
                         </div>
                     </div>
                 </div>

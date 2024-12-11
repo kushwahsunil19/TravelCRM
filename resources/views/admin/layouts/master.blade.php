@@ -48,7 +48,19 @@
     <script src="{{url('/public/assets/js/layout.js')}}"></script>
     <!-- Summernote CSS -->
     <link rel="stylesheet" href="{{url('/public/assets/plugins/summernote/summernote-bs4.min.css')}}">
+    <style>
+    .remove-field {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
+    .edit-remove-field {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
 </head>
 
 <body>

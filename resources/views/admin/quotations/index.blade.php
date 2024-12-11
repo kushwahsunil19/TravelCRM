@@ -36,7 +36,7 @@
                                 </a>
                             </li>
                             <li>
-                                <div class="dropdown dropdown-action" data-bs-toggle="tooltip"
+                                <!-- <div class="dropdown dropdown-action" data-bs-toggle="tooltip"
                                      data-bs-placement="bottom" title="Download">
                                     <a href="#" class="btn-filters" data-bs-toggle="dropdown" aria-expanded="false">
                                         <span><i class="fe fe-download"></i></span>
@@ -45,8 +45,8 @@
                                         <ul class="d-block">
                                         <li>
                                         <a class="d-flex align-items-center download-item" href="{{ route('quotations.downloadPDF', request()->query()) }}">
-    <i class="far fa-file-pdf me-2"></i>PDF
-</a>
+                                            <i class="far fa-file-pdf me-2"></i>PDF
+                                        </a>
 
                                         </li>
                                         <li>
@@ -57,7 +57,7 @@
                                         </li>
                                         </ul>
                                     </div>
-                                </div>
+                                </div> -->
                             </li>  
                         <!-- <li>
 										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filter"><span class="me-2"><img src="{{url('public/assets/img/icons/filter-icon.svg')}}" alt="Filter"></span>Filter </a>

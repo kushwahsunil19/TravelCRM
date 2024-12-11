@@ -14,7 +14,7 @@ class QuotationReportController extends Controller
      */
     public function index(Request $request)
 {
-    $query = Quotation::with(['user','branch', 'partner', 'package', 'bank','currency','services.suplyer.expenses']);
+    $query = Quotation::with(['user','branch', 'partner', 'package.expenses', 'bank','currency','services.suplyer.expenses']);
 
     // Apply filters based on user input
     if ($request->filled('quotation_no')) {
@@ -102,7 +102,7 @@ class QuotationReportController extends Controller
         date_default_timezone_set('Asia/Kolkata'); 
         
         // Reuse the filtering logic from index()
-        $query = Quotation::with(['branch', 'partner', 'package', 'bank']);
+        $query = Quotation::with(['branch', 'partner', 'package.expenses', 'bank']);
         
         // Apply filters (same as in the index method)
         if ($request->filled('quotation_no')) {
@@ -150,13 +150,13 @@ class QuotationReportController extends Controller
 
     public function downloadCSV(Request $request)
     {
-        // Set the timezone to Indian Standard Time (IST)
-        date_default_timezone_set('Asia/Kolkata'); 
+        // Set timezone
+        date_default_timezone_set('Asia/Kolkata');
     
-        // Reuse the filtering logic from index()
-        $query = Quotation::with(['user', 'branch', 'partner', 'package', 'bank', 'currency', 'services.suplyer.expenses']);
+        // Query with necessary relations
+        $query = Quotation::with(['user', 'branch', 'partner', 'package.expenses', 'bank', 'currency']);
     
-        // Apply filters (same as in the index method)
+        // Apply filters
         if ($request->filled('quotation_no')) {
             $query->where('quotation_no', 'like', '%' . $request->quotation_no . '%');
         }
@@ -179,23 +179,20 @@ class QuotationReportController extends Controller
             $query->where('discount_type', $request->discount_type);
         }
     
-        // Get the filtered data
         $quotations = $query->get();
     
-        // Check if quotations exist before generating the CSV
         if ($quotations->isEmpty()) {
             return redirect()->back()->with('error', 'No quotations found for the selected filters.');
         }
     
-        // Create a CSV handle
-        $handle = fopen('php://output', 'w');
-    
-        // Format the date for the filename
+        // Prepare CSV file
         $timestamp = date('Y-m-d_H-i-s');
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="quotation_report_' . $timestamp . '.csv"');
     
-        // Add CSV headers
+        $handle = fopen('php://output', 'w');
+    
+        // CSV headers
         fputcsv($handle, [
             'S.No',
             'Quotation No',
@@ -205,47 +202,95 @@ class QuotationReportController extends Controller
             'Discount Type',
             'Discount',
             'VAT',
-            'Amount',
+            'Gross Amount',
+            'Net Cost',
+            'Net Profit',
         ]);
     
         $serialNumber = 1;
+        $totalGrossAmount = 0;
+        $totalNetCost = 0;
+        $totalNetProfit = 0;
     
-        // Add the filtered data rows
+        $symbol = '(AED)';
+    
         foreach ($quotations as $quotation) {
-            $symbol = isset($quotation->currency->code) ? '(' . $quotation->currency->code . ')' : '(INR)';
+            $currencyCode = $quotation->currency->code ?? 'AED';
+            $rates = getCurrencyRate($currencyCode);
+            $grossAmount = ($quotation->package->amount ?? 0) * ($quotation->no_of_passenger ?? 1);
+            $netCost = ($quotation->package->net_amount ?? 0) * ($quotation->no_of_passenger ?? 1);
+           
+            if($currencyCode == 'INR') {
+                $grossAmount *= $rates['AED'];
+                $netCost *= $rates['AED'];
+            }else if($currencyCode == 'USD'){              
+                $grossAmount *= $rates['AED'];
+                $netCost *= $rates['AED'];
+            }
     
-            // Calculate amounts
-            $package_amt = $quotation->package->amount * $quotation->no_of_passenger;
-            $tax = $quotation->gst_tax;
-            $discount = $quotation->discount;
+            $discount = $quotation->discount ?? 0;
+            $discountAmount = $quotation->discount_type === 'Fixed'
+                ? $discount
+                : ($grossAmount * $discount) / 100;
     
-            // Calculate discount
-            $discount_amt = $quotation->discount_type == 'Fixed' ? $discount : ($package_amt * $discount) / 100;
-            $amount_after_discount = $package_amt - $discount_amt;
+                $packageExpenses = '';
+                $totalExpenses = 0;
+                if ($quotation->package && $quotation->package->expenses) {
+                    foreach ($quotation->package->expenses as $expense) {
+                        $expenseAmount = ($expense->amount * $quotation->no_of_passenger ?? 0) * ($rates['AED'] ?? 1);
+                        $packageExpenses .= "{$expense->title}: " . number_format($expenseAmount, 2) . ", ";
+                        $totalExpenses += $expenseAmount;
+                    }
+                    $packageExpenses .= "Total: " . number_format($totalExpenses, 2);
+                }
+        
+            
     
-            // Calculate tax
-            $tax_amt = ($amount_after_discount * $tax) / 100;
+            $netCost += $totalExpenses;
+            $vatAmount = ($grossAmount - $discountAmount) * ($quotation->gst_tax / 100);
+            $netProfit = $grossAmount - $totalExpenses;
     
-            // Calculate total
-            $total_amt = $amount_after_discount + $tax_amt;
+            $totalGrossAmount += $grossAmount;
+            $totalNetCost += $netCost;
+            $totalNetProfit += $netProfit;
     
-            // Write data to CSV
             fputcsv($handle, [
                 $serialNumber++,
                 $quotation->quotation_no,
-                $quotation->branch ? $quotation->branch->city : 'N/A',
-                $quotation->package ? $quotation->package->package_name : 'N/A',
-                $quotation->partner->name . ' (' . $quotation->partner->email . ')',
-                $quotation->discount_type ? $quotation->discount_type : 'N/A',
-                $quotation->discount . ($quotation->discount_type == 'Fixed' ? '' : '%'),
+                $quotation->branch->city ?? 'N/A',
+                $quotation->package->package_name ?? 'N/A',
+                $quotation->partner->name ?? 'N/A',
+                $quotation->discount_type ?? 'N/A',
+                $quotation->discount . ($quotation->discount_type === 'Fixed' ? '' : '%'),
                 $quotation->gst_tax . '%',
-                $symbol . number_format($total_amt, 2),
+                number_format($grossAmount, 2),
+                $packageExpenses,
+                number_format($netProfit, 2),
             ]);
         }
+    
+        // Totals row
+        fputcsv($handle, [
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            'Total',
+            $symbol . number_format($totalGrossAmount, 2),
+            $symbol . number_format($totalNetCost, 2),
+            $symbol . number_format($totalNetProfit, 2),
+        ]);
     
         fclose($handle);
         exit;
     }
+    
+    
+    
+    
     
     
 

@@ -107,15 +107,16 @@
                     $currency_code = $invoice->currency->code ?? 'AED';
                     $package_amt = ($invoice->package->amount ?? 0) * ($invoice->no_of_passenger ?? 1);
                     $net_amt_row = ($invoice->package->net_amount ?? 0) * ($invoice->no_of_passenger ?? 1);
-                    if($currency_code == 'AED'){
+                    $rates = getCurrencyRate($currency_code );
+                    if($currency_code == 'INR') {
                         $package_amt *= $rates['AED'];
                         $net_amt_row *= $rates['AED'];
-                    } elseif($currency_code == 'INR') {
-                        $package_amt *= $rates['INR'];
-                        $net_amt_row *= $rates['INR'];
                     } elseif($currency_code == 'USD') {
-                        $package_amt *= $rates['USD'];
-                        $net_amt_row *= $rates['USD'];
+                        $package_amt *= $rates['AED'];
+                        $net_amt_row *= $rates['AED'];
+                    } elseif($currency_code == 'EUR') {
+                        $package_amt *= $rates['AED'];
+                        $net_amt_row *= $rates['AED'];
                     }
 
                     $tax = $invoice->vat ?? 0;
@@ -139,7 +140,39 @@
                     <td>{{ $invoice->user->first_name ?? '' }} {{ $invoice->user->last_name ?? '' }}</td>
                     <td>{{ \Carbon\Carbon::parse($invoice->created_at)->format('d-M-Y h:i A') }}</td>
                     <td>{{ number_format($total_amt, 2) }}</td>
-                    <td>{{ number_format($net_amt_row, 2) }}</td>
+                    <td>
+    @php
+        $totalExpenses = 0; // Initialize total expenses
+    @endphp
+
+    @if(isset($invoice->package->expenses))
+        @foreach($invoice->package->expenses as $expense)
+            @php
+                // Calculate the converted amount based on the currency code
+                $convertedAmount = 0;
+                if ($currency_code == 'AED') {
+                    $convertedAmount = $expense->amount * $rates['AED'];
+                } elseif ($currency_code == 'INR') {
+                    $convertedAmount = $expense->amount * $rates['AED'];
+                } elseif ($currency_code == 'USD') {
+                    $convertedAmount = $expense->amount * $rates['AED'];
+                } elseif ($currency_code == 'EUR') {
+                    $convertedAmount = $expense->amount * $rates['AED'];
+                }
+
+                // Add to the total expenses
+                $convertedAmount = $convertedAmount * ($invoice->no_of_passenger ?? 1);
+                $totalExpenses += $convertedAmount ;
+            @endphp
+
+            {{ $expense->title }}: {{ number_format($convertedAmount  , 2) }}<br>
+        @endforeach
+    @endif
+
+    <hr>
+    <strong>Total: {{ number_format($totalExpenses, 2) }}</strong><br>
+    
+</td>
                     <td>{{ number_format($net_profit_amt_row, 2) }}</td>
                 </tr>
             @empty

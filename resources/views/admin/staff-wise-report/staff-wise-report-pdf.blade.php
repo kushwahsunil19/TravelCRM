@@ -102,6 +102,9 @@
             $totalGrossAmount = 0;
             $totalNetCost = 0;
             $totalNetProfit = 0;
+           
+                                    $totalNetExpenses = 0;
+                                    $symbol = 'د.إ';
         @endphp
 
         @foreach ($users as $user)
@@ -110,8 +113,11 @@
                 $netAmountRow = 0;
 
                 foreach ($user->invoices as $invoice) {
-                    $grossAmountRow += $invoice->package->amount;
-                    $netAmountRow += $invoice->package->net_amount;
+                    $currency_code = $invoice->currency->code ?? 'AED';
+                                    $grossAmountRow = ($invoice->package->amount ?? 0) * ($invoice->no_of_passenger ?? 1);
+                                    $netAmountRow = ($invoice->package->net_amount ?? 0) * ($invoice->no_of_passenger ?? 1);
+                                  
+
                 }
 
                 $profitAmountRow = $grossAmountRow - $netAmountRow;
@@ -143,9 +149,9 @@
         <!-- Total Row -->
         <tr class="total-row">
             <td colspan="7" class="center">Total Amount:</td>
-            <td class="center">{{ number_format($totalGrossAmount, 2) }}</td>
-            <td class="center">{{ number_format($totalNetCost, 2) }}</td>
-            <td class="center">{{ number_format($totalNetProfit, 2) }}</td>
+            <td class="center">{{ $symbol }} {{ number_format($totalGrossAmount, 2) }}</td>
+            <td class="center">{{ $symbol }} {{ number_format($totalNetCost, 2) }}</td>
+            <td class="center">{{ $symbol }} {{ number_format($totalNetProfit, 2) }}</td>
         </tr>
     </tbody>
 </table>

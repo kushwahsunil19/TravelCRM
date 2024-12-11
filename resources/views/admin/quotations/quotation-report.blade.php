@@ -156,6 +156,9 @@
                                 $totalGrossAmount = 0;
                                 $totalNetCost = 0;
                                 $totalNetProfit = 0;
+                              
+                                $totalNetExpenses = 0;
+                                $symbol = 'د.إ';
                                 @endphp
 
                                 @if($quotations->isEmpty())
@@ -165,15 +168,32 @@
                                 @else
                                 @foreach ($quotations as $quotation)
                                 @php
+                                $currency_code = $quotation->currency->code ?? 'AED';
+                                $grossAmount = ($quotation->package->amount ?? 0) * ($quotation->no_of_passenger ?? 1);
+                                $netCost = ($quotation->package->net_amount ?? 0) * ($quotation->no_of_passenger ?? 1);
+                                $rates = getCurrencyRate($currency_code);
+                                    $discount = $quotation->discount ?? 0;
+                                    $discountAmount = ($quotation->discount_type == 'Fixed') ? $discount * $rates['AED'] : ($grossAmount *
+                                    $discount) / 100;
+                                if($currency_code == 'INR') {
+                                    $rates = getCurrencyRate($currency_code);
+                                    $grossAmount *= $rates['AED'];
+                                    $netCost *= $rates['AED'];
+                                    $discount = $quotation->discount ?? 0;
+                                    $discountAmount = ($quotation->discount_type == 'Fixed') ? $discount * $rates['AED'] : ($grossAmount *
+                                    $discount) / 100;
+                                } elseif($currency_code == 'USD') {
+                                    $rates = getCurrencyRate($currency_code);
+                                    $grossAmount *= $rates['AED'];
+                                    $netCost *= $rates['AED'];
+                                    $discount = $quotation->discount ?? 0;
+                                    $discountAmount = ($quotation->discount_type == 'Fixed') ? $discount * $rates['AED'] : ($grossAmount *
+                                    $discount) / 100;
+                                }
                                 // Calculate values
-                                $grossAmount = $quotation->package ? $quotation->package->amount  * $quotation->no_of_passenger : 0;
-                                $discountAmount = $quotation->discount_type === 'Percentage' 
-                                                    ? ($grossAmount * $quotation->discount / 100) 
-                                                    : ($quotation->discount_type === 'Fixed' 
-                                                        ? $quotation->discount 
-                                                        : 0);
+                            
                                 $vatAmount = ($grossAmount - $discountAmount) * $quotation->gst_tax / 100;
-                                $netCost = $quotation->package->amount?$quotation->package->amount:0.00;
+                              
                                 $netProfit = $grossAmount - $netCost;
 
                                 // Add to totals
@@ -208,7 +228,7 @@
                                     <td>{{ isset($quotation->discount_type)?$quotation->discount_type:'N/A' }}</td>
                                     <td>
                                         @if($quotation->discount_type == 'Fixed')
-                                        ₹{{ $quotation->discount }}
+                                        {{ $discountAmount }}
                                         @elseif($quotation->discount_type == 'Percentage')
                                         {{ $quotation->discount }}%
                                         @else
@@ -217,18 +237,51 @@
                                     </td>
                                     <td>{{ $quotation->gst_tax . '%' }}</td>
                                     <td>{{ number_format($grossAmount, 2) }}</td>
-                                    <td>{{ number_format($netCost, 2) }}</td>
+                                    <td>
+                                    @php
+                                    $totalExpenses = 0; // Initialize total expenses
+                                    @endphp
+
+                                    @if(isset($quotation->package->expenses))
+                                    @foreach($quotation->package->expenses as $expense)
+                                    @php
+                                    // Calculate the converted amount based on the currency code
+                                    $convertedAmount = 0;
+                                    if ($currency_code == 'AED') {
+                                    $convertedAmount = $expense->amount * $rates['AED'];
+                                    } elseif ($currency_code == 'INR') {
+                                    $convertedAmount = $expense->amount * $rates['AED'];
+                                    } elseif ($currency_code == 'USD') {
+                                    $convertedAmount = $expense->amount * $rates['AED'];
+                                    } elseif ($currency_code == 'EUR') {
+                                    $convertedAmount = $expense->amount * $rates['AED'];
+                                    }
+
+                                    // Add to the total expenses
+                                    $convertedAmount = $convertedAmount * ($quotation->no_of_passenger ?? 1);
+                                    $totalExpenses += $convertedAmount ;
+                                    @endphp
+
+                                    {{ $expense->title }}: {{ number_format($convertedAmount  , 2) }}<br>
+                                    @endforeach
+                                    @endif
+
+                                    <hr>
+                                    <strong>Total: {{ number_format($totalExpenses, 2) }}</strong><br>
+
+                                </td>
                                     <td>{{ number_format($netProfit, 2) }}</td>
                                 </tr>
+                               @php $totalNetExpenses += $totalExpenses; @endphp
                                 @endforeach
                                 @endif
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="8" class="text-center"><strong>Total Amount:</strong></td>
-                                    <td><strong>{{ number_format($totalGrossAmount, 2) }}</strong></td>
-                                    <td><strong>{{ number_format($totalNetCost, 2) }}</strong></td>
-                                    <td><strong>{{ number_format($totalNetProfit, 2) }}</strong></td>
+                                    <td colspan="8" class="text-end"><strong>Total Amount:</strong></td>
+                                    <td><strong>{{$symbol}} {{ number_format($totalGrossAmount, 2) }}</strong></td>
+                                    <td><strong>{{$symbol}} {{ number_format($totalNetExpenses , 2) }}</strong></td>
+                                    <td><strong>{{$symbol}} {{ number_format($totalNetProfit, 2) }}</strong></td>
                                 </tr>
                             </tfoot>
                         </table>

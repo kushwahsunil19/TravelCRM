@@ -13,7 +13,7 @@ class CronjobController extends Controller
      */
     public function index()
     {
-        $baseCurrency = 'USD'; // Base currency for comparison
+        $baseCurrency = 'AED'; // Base currency for comparison
         $apiKey = env('CURRENT_CURRENCY_RATE_KEY'); // Get API key from environment
         $apiUrl = "https://v6.exchangerate-api.com/v6/$apiKey/latest/$baseCurrency";
     

@@ -198,7 +198,7 @@ class QuotationController extends Controller
         $input['gst_tax'] = ($request->gst_tax !='')?$request->gst_tax:0.00;
         $input['currency_rate'] = ($request->currency_rate !='')?$request->currency_rate:0.00;
         $input['discount'] = ($request->discount !='')?$request->discount:0.00;
-        $input['user_id'] = auth()->id();
+        // $input['user_id'] = auth()->id();
                 // Clear existing tmp_services records for this quotation
                 // Delete existing services for the quotation
             TmpService::where('quotation_id', $quotation->id)->delete();
@@ -252,7 +252,7 @@ class QuotationController extends Controller
         {
         
             // Fetch the quotation by ID from the database
-            $quotation = Quotation::with(['branch.companyBankDetail', 'partner', 'package','bank','currency'])->findOrFail($id);
+            $quotation = Quotation::with(['branch.companyBankDetail', 'partner', 'package.expenses','bank','currency'])->findOrFail($id);
    
             // Get the package amount
            $package_amt = $quotation->package->amount *  $quotation->no_of_passenger;
