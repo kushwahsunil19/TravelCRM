@@ -36,6 +36,10 @@ class Partner extends Model
     {
         return $this->belongsTo(City::class , 'city_id', 'id');  
     }
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class, 'partner_id', 'id');
+    }
 
 
 }

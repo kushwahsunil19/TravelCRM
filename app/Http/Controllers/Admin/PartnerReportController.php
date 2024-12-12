@@ -43,7 +43,8 @@ class PartnerReportController extends Controller
         }
 
         // Get the filtered partners
-        $partners = $query->with(['city', 'state', 'country'])->get();
+        $partners = $query->with(['city', 'state', 'country','invoices'])->get();
+       echo "<pre>"; print_r($partners );die;
 
         return view('admin.partners.partners-report', compact('partners'));
     }

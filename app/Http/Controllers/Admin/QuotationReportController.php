@@ -216,28 +216,23 @@ class QuotationReportController extends Controller
     
         foreach ($quotations as $quotation) {
             $currencyCode = $quotation->currency->code ?? 'AED';
-            $rates = getCurrencyRate($currencyCode);
-            $grossAmount = ($quotation->package->amount ?? 0) * ($quotation->no_of_passenger ?? 1);
-            $netCost = ($quotation->package->net_amount ?? 0) * ($quotation->no_of_passenger ?? 1);
            
-            if($currencyCode == 'INR') {
-                $grossAmount *= $rates['AED'];
-                $netCost *= $rates['AED'];
-            }else if($currencyCode == 'USD'){              
-                $grossAmount *= $rates['AED'];
-                $netCost *= $rates['AED'];
-            }
-    
+            $grossAmount = ($quotation->package->amount ?? 0) * ($quotation->no_of_passenger ?? 1);
+            $netCost = ($quotation->package->net_amount ?? 0);
+           
+            $grossAmount = getCurrencyRateAmt($quotation->currency->code,'AED',$grossAmount);
+            $netCost = getCurrencyRateAmt($quotation->currency->code,'AED',$netCost);
+               
             $discount = $quotation->discount ?? 0;
             $discountAmount = $quotation->discount_type === 'Fixed'
                 ? $discount
                 : ($grossAmount * $discount) / 100;
-    
+            $discountAmount = getCurrencyRateAmt($quotation->currency->code,'AED',$discountAmount);
                 $packageExpenses = '';
                 $totalExpenses = 0;
                 if ($quotation->package && $quotation->package->expenses) {
-                    foreach ($quotation->package->expenses as $expense) {
-                        $expenseAmount = ($expense->amount * $quotation->no_of_passenger ?? 0) * ($rates['AED'] ?? 1);
+                    foreach ($quotation->package->expenses as $expense) {                      
+                        $expenseAmount = getCurrencyRateAmt($quotation->currency->code,'AED',$expense->amount );               
                         $packageExpenses .= "{$expense->title}: " . number_format($expenseAmount, 2) . ", ";
                         $totalExpenses += $expenseAmount;
                     }
@@ -246,13 +241,18 @@ class QuotationReportController extends Controller
         
             
     
-            $netCost += $totalExpenses;
-            $vatAmount = ($grossAmount - $discountAmount) * ($quotation->gst_tax / 100);
-            $netProfit = $grossAmount - $totalExpenses;
-    
+            
+
+            $tax = $quotation->gst_tax ?? 0;
+            $amount_after_discount = $grossAmount - $discountAmount;
+            $tax_amt = ($amount_after_discount * $tax) / 100;
+            $total_amt = $amount_after_discount + $tax_amt;
+
+            $grossAmount = $total_amt;
             $totalGrossAmount += $grossAmount;
-            $totalNetCost += $netCost;
-            $totalNetProfit += $netProfit;
+
+            $net_profit_amt_row = $grossAmount - $totalExpenses;
+            $totalNetProfit += $net_profit_amt_row;
     
             fputcsv($handle, [
                 $serialNumber++,
@@ -263,9 +263,9 @@ class QuotationReportController extends Controller
                 $quotation->discount_type ?? 'N/A',
                 $quotation->discount . ($quotation->discount_type === 'Fixed' ? '' : '%'),
                 $quotation->gst_tax . '%',
-                number_format($grossAmount, 2),
+                number_format($total_amt, 2),
                 $packageExpenses,
-                number_format($netProfit, 2),
+                number_format($net_profit_amt_row, 2),
             ]);
         }
     
@@ -280,8 +280,8 @@ class QuotationReportController extends Controller
             '',
             'Total',
             $symbol . number_format($totalGrossAmount, 2),
-            $symbol . number_format($totalNetCost, 2),
-            $symbol . number_format($totalNetProfit, 2),
+            $symbol . number_format($totalExpenses, 2),
+            $symbol . number_format($totalGrossAmount - $totalExpenses, 2),
         ]);
     
         fclose($handle);

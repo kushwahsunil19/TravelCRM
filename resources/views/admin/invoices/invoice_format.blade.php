@@ -301,7 +301,6 @@
         <strong>Invoice Total (AED) :</strong> د.إ <span>{{ number_format($total_in_aed, 2) }} </spa><br />
         <strong>Invoice Total (USD) :</strong> $ <span>{{ number_format($total_in_usd, 2) }}</span><br />
         <strong>Invoice Total (INR) :</strong> ₹ <span>{{ number_format($total_in_inr, 2) }}</span><br />
-        <!-- <strong>Invoice Total (EUR) :</strong> <span>{{ number_format($total_in_eur, 2) }} €</span><br /> -->
         </div>
 
         <!-- Notes / Terms Section -->

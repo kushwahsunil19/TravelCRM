@@ -492,16 +492,11 @@ class InvoiceController extends Controller
         // Total amount after applying discount and adding tax
         $total_amt = $amount_after_discount + $tax_amt;
         // Currency conversion logic
-        $rates = getCurrencyRate($invoice->currency->code); 
-        if (!empty($rates)) {
-            $total_in_inr = $total_amt * $rates['INR'];
-            $total_in_aed = $total_amt * $rates['AED'];
-            $total_in_eur = $total_amt * $rates['EUR'];
-            $total_in_usd = $total_amt * $rates['USD'];
-        } else {
-            // Default to original amounts if conversion fails
-            $totalInINR = $totalInAED = $totalInEUR = $totalInUSD = $total_amt;
-        }
+     
+        $total_in_aed = getCurrencyRateAmt($invoice->currency->code,'AED',$total_amt);
+        $total_in_usd = getCurrencyRateAmt($invoice->currency->code,'USD',$total_amt);
+        $total_in_inr = getCurrencyRateAmt($invoice->currency->code,'INR',$total_amt);
+        
         $currentDateTime = now()->format('Y-m-d_H-i-s');  // e.g., 2024-10-04_14-30-00
         $items = [];
     
@@ -561,8 +556,7 @@ class InvoiceController extends Controller
             'iban_no'=> isset($invoice->bank->iban_no)?$invoice->bank->iban_no:'',
             'companyBankDetails' => $companyBankDetails,
             'total_in_inr'=>$total_in_inr,
-            'total_in_aed'=>$total_in_aed,
-            'total_in_eur'=>$total_in_eur,
+            'total_in_aed'=>$total_in_aed,           
             'total_in_usd'=>$total_in_usd,
         ];
         

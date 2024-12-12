@@ -279,29 +279,10 @@ class QuotationController extends Controller
             // Total amount after applying discount and adding tax
             $total_amt = $amount_after_discount + $tax_amt;
        
-            $rates = getCurrencyRate($quotation->currency->code);   
+            $total_in_aed = getCurrencyRateAmt($quotation->currency->code,'AED',$total_amt);
+            $total_in_usd = getCurrencyRateAmt($quotation->currency->code,'USD',$total_amt);
+            $total_in_inr = getCurrencyRateAmt($quotation->currency->code,'INR',$total_amt);
         
-            
-            if (!empty($rates)) {
-            
-                $total_in_inr = $total_amt * $rates['INR'];
-                $total_in_aed = $total_amt * $rates['AED'];
-                $total_in_eur = $total_amt * $rates['EUR'];
-                $total_in_usd = $total_amt * $rates['USD'];
-                
-                // $rate = $conversion_rates[$quotation->currency->code] ?? 0.00; // Pass $conversion_rates to the view
-                // $discountType = $quotation->discount_type ?? '';
-                // $discountAmt = $quotation->discount ?? 0;
-                // $discount = ($discountType === 'Fixed') 
-                // ? number_format($discountAmt * $rate, 2) 
-                // : number_format($discountAmt, 2);
-              
-            } else {
-                // Default to original amounts if conversion fails
-                $totalInINR = $totalInAED = $totalInEUR = $totalInUSD = $total_amt;
-            }
-        
-
             $currentDateTime = now()->format('Y-m-d_H-i-s');  // e.g., 2024-10-04_14-30-00
             $items = [];
         
@@ -363,12 +344,8 @@ class QuotationController extends Controller
                 'iban_no'=> isset($quotation->bank->iban_no)?$quotation->bank->iban_no:'',
                 'companyBankDetails' => $companyBankDetails,  
                 'total_in_inr'=>$total_in_inr,
-                'total_in_aed'=>$total_in_aed,
-                'total_in_eur'=>$total_in_eur,
+                'total_in_aed'=>$total_in_aed,            
                 'total_in_usd'=>$total_in_usd,
-
-
-
             ];
             
             // Load the view and pass data to it

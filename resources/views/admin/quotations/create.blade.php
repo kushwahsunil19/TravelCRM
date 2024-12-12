@@ -230,7 +230,7 @@ td {
                                                             <th>Package Name</th>
                                                             <th>Discription</th>
                                                             <th>Package Amount<br>(Per Passenger)</th>
-                                                            <th>Net Amount<br>(Per Passenger)</th>
+                                                            <th>Net Amount</th>
                                                             <th>Net Profit</th>
                                                             <th class="no-sort">Action</th>
                                                         </tr>
