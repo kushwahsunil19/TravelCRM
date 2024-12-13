@@ -15,40 +15,32 @@
                 <h5>Partners Report</h5>
                 <div class="list-btn">
                     <ul class="filter-list">
-                        <li>
-                            <a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip"
-                                data-bs-placement="bottom" title="Filter"><span class="me-2"><img
-                                        src="{{url('public/assets/img/icons/filter-icon.svg')}}"
-                                        alt="filter"></span>Filter </a>
-                        </li>
-                        <li>
-                            <div class="dropdown dropdown-action" data-bs-toggle="tooltip" data-bs-placement="top"
-                                title="Download">
-                                <a href="#" class="btn-filters" data-bs-toggle="dropdown" aria-expanded="false"><span><i
-                                            class="fe fe-download"></i></span></a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <ul class="d-block">
-                                        <li>
-                                            <a class="d-flex align-items-center download-item"
-                                                href="{{route('partners.partners-report.downloadPDF')}}" download><i
-                                                    class="far fa-file-pdf me-2"></i>PDF</a>
-                                        </li>
-                                        <li>
-                                            <a class="d-flex align-items-center download-item"
-                                                href="{{route('partners.partners-report.downloadCSV')}}" download><i
-                                                    class="far fa-file-text me-2"></i>CVS</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-                        <!--	<li>
+                     <li>
+										<a class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip"
+											data-bs-placement="bottom" title="Filter"><span class="me-2"><img src="{{url('public/assets/img/icons/filter-icon.svg')}}" alt="filter"></span>Filter </a>
+									</li>
+								   	<li>
+										<div class="dropdown dropdown-action" data-bs-toggle="tooltip" data-bs-placement="top" title="Download">
+											<a href="#" class="btn-filters" data-bs-toggle="dropdown" aria-expanded="false"><span><i class="fe fe-download"></i></span></a>
+											<div class="dropdown-menu dropdown-menu-end">
+												<ul class="d-block">
+													<li>
+														<a class="d-flex align-items-center download-item" href="{{route('partners.partners-report.downloadPDF')}}" download><i class="far fa-file-pdf me-2"></i>PDF</a>
+													</li>
+													<li>
+														<a class="d-flex align-items-center download-item" href="{{route('partners.partners-report.downloadCSV')}}" download><i class="far fa-file-text me-2"></i>CVS</a>
+													</li>
+												</ul>
+											</div>
+										</div>														
+									</li>
+								 <!--	<li>
 										<a class="btn-filters" href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print"><span><i class="fe fe-printer"></i></span> </a>
 									</li>
 									<li>
 										<a class="btn btn-import" href="javascript:void(0);"><span><i class="fe fe-check-square me-2"></i>Import Customer</span></a>
 									</li> -->
-
+                        
                     </ul>
                 </div>
             </div>
@@ -56,7 +48,7 @@
         <!-- /Page Header -->
 
         <!-- Search Filter -->
-
+  
 
         <!-- /Search Filter -->
 
@@ -65,77 +57,119 @@
                 <div class="card-table">
                     <div class="card-body">
                         <div class="table-responsive">
-                        <table class="table table-center table-hover datatable">
-                            <thead>
-                                <tr>
-                                    <th>S.No</th>
-                                    <th>Name</th>
-                                    <th>Mobile</th>
-                                    <th>City</th>
-                                    <th>State</th>
-                                    <th>Country</th>
-                                    <th>Gross Amount</th>
-                                    <th>Net Cost</th>
-                                    <th>Net Profit</th>
-                                </tr>
-                            </thead>
+                           <table class="table table-center table-hover datatable">
+                                <thead>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Name</th>
+                                        <th>Mobile</th>
+                                        <th>City</th>
+                                        <th>State</th>
+                                        <th>Country</th>
+                                        <th>Gross Amount</th>
+                                        <th>Net Cost</th>
+                                        <th>Net Profit</th>
+                                    </tr>
+                                </thead>
                             <tbody>
                                 @php
-                                // Initialize totals
-                                $totalGrossAmount = 0;
-                                $totalNetCost = 0;
-                                $totalNetProfit = 0;
+                                    $totalGross = 0;
+                                    $totalNetCost = 0;
+                                    $totalNetProfit = 0;
                                 @endphp
-
+                            
                                 @forelse ($partners as $partner)
-                                @php
-                                // Replace these calculations with actual logic based on your data structure
-                                $grossAmount = $partner->gross_amount ?? 0;
-                                $netCost = $partner->net_cost ?? 0;
-                                $netProfit = $partner->net_profit ?? 0;
-
-                                // Update totals
-                                $totalGrossAmount += $grossAmount;
-                                $totalNetCost += $netCost;
-                                $totalNetProfit += $netProfit;
-                                @endphp
-
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td> <!-- Serial number -->
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            @php
-                                            $avatar = $partner->image ? url('public/profile/' . $partner->image) :
-                                            url('public/assets/img/profiles/default.png');
-                                            @endphp
-                                            <a href="" class="avatar avatar-md me-2"><img class="avatar-img rounded-circle" src="{{ $avatar }}"
-                                                    alt="User Image"></a>
-                                            <a href="">{{ $partner->name }} <span><span class="__cf_email__"
-                                                        data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $partner->email }}]</span></span></a>
-                                    </td>
-                                    <td>{{ $partner->mobile }}</td>
-                                    <td>{{ $partner->city->name ?? 'N/A' }}</td>
-                                    <td>{{ $partner->state->name ?? 'N/A' }}</td>
-                                    <td>{{ $partner->country->name ?? 'N/A' }}</td>
-                                    <td>{{ number_format($grossAmount, 2) }}</td>
-                                    <td>{{ number_format($netCost, 2) }}</td>
-                                    <td>{{ number_format($netProfit, 2) }}</td>
-                                </tr>
+                                    @php
+                                        $grossAmount = 0;
+                                        $netCost = 0; // Initialize netCost for this partner
+                                        $netProfit = 0;
+                                    @endphp
+                            
+                                    @foreach ($partner->invoices as $invoice)
+                                        @php
+                                            $currencyCode = $invoice->currency->code ?? 'AED';
+                                            
+                                            // Calculate gross amount
+                                            $invoiceGrossAmount = ($invoice->package->amount ?? 0) * ($invoice->no_of_passenger ?? 1);
+                            
+                                            // Calculate net cost
+                                            $invoiceNetCost = ($invoice->package->net_amount ?? 0) * ($invoice->no_of_passenger ?? 1);
+                            
+                                            // Apply discount
+                                            $discount = $invoice->discount ?? 0;
+                                            $discountAmount = ($invoice->discount_type === 'Fixed') 
+                                                ? $discount 
+                                                : ($invoiceGrossAmount * $discount) / 100;
+                            
+                                            // Currency conversion
+                                            $invoiceGrossAmount = getCurrencyRateAmt($currencyCode, 'AED', $invoiceGrossAmount);
+                                            $invoiceNetCost = getCurrencyRateAmt($currencyCode, 'AED', $invoiceNetCost);
+                                            $discountAmount = getCurrencyRateAmt($currencyCode, 'AED', $discountAmount);
+                            
+                                            // Tax calculation
+                                            $tax = $invoice->vat ?? 0;
+                                            $amountAfterDiscount = $invoiceGrossAmount - $discountAmount;
+                                            $taxAmount = ($amountAfterDiscount * $tax) / 100;
+                                            $totalInvoiceAmount = $amountAfterDiscount + $taxAmount;
+                            
+                                            // Final gross amount and net profit
+                                            $grossAmount += $totalInvoiceAmount;
+                                            $netCost += $invoiceNetCost; // Accumulate net cost for the partner
+                                            $netProfit += $totalInvoiceAmount - $invoiceNetCost;
+                            
+                                            // Accumulate totals
+                                            $totalGross += $totalInvoiceAmount;
+                                            $totalNetCost += $invoiceNetCost;
+                                            $totalNetProfit += $totalInvoiceAmount - $invoiceNetCost;
+                                        @endphp
+                                    @endforeach
+                            
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                @php
+                                                    $avatar = $partner->image 
+                                                        ? url('public/profile/' . $partner->image) 
+                                                        : url('public/assets/img/profiles/default.png');
+                                                @endphp
+                                                <a href="#" class="avatar avatar-md me-2">
+                                                    <img class="avatar-img rounded-circle" src="{{ $avatar }}" alt="User Image">
+                                                </a>
+                                                <a href="#">{{ $partner->name }}
+                                                    <span>
+                                                        <span class="__cf_email__" data-cfemail="{{ $partner->email }}">
+                                                            [{{ $partner->email }}]
+                                                        </span>
+                                                    </span>
+                                                </a>
+                                            </h2>
+                                        </td>
+                                        <td>{{ $partner->mobile }}</td>
+                                        <td>{{ $partner->city->name ?? 'N/A' }}</td>
+                                        <td>{{ $partner->state->name ?? 'N/A' }}</td>
+                                        <td>{{ $partner->country->name ?? 'N/A' }}</td>
+                                        <td>{{ number_format($grossAmount, 2) }}</td>
+                                        <td>{{ number_format($netCost, 2) }}</td> <!-- Net Cost now displays correctly -->
+                                        <td>{{ number_format($netProfit, 2) }}</td>
+                                    </tr>
                                 @empty
-                                <tr>
-                                    <td colspan="9" class="text-center">No partners found.</td>
-                                </tr>
+                                    <tr>
+                                        <td colspan="9" class="text-center">No partners found.</td>
+                                    </tr>
                                 @endforelse
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th colspan="6" class="text-end">Total:</th>
-                                    <th>{{ number_format($totalGrossAmount, 2) }}</th>
+                                    <th colspan="6" class="text-end">Total Amount:</th>
+                                    <th>{{ number_format($totalGross, 2) }}</th>
                                     <th>{{ number_format($totalNetCost, 2) }}</th>
                                     <th>{{ number_format($totalNetProfit, 2) }}</th>
                                 </tr>
                             </tfoot>
-                        </table>
+                            
+                            </table>
+
 
 
                         </div>
@@ -159,57 +193,55 @@
                 <!-- Name Filter -->
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" name="name" id="name" class="form-control" placeholder="Enter name"
-                        value="{{ request('name') }}">
+                    <input type="text" name="name" id="name" class="form-control"
+                           placeholder="Enter name" value="{{ request('name') }}">
                 </div>
 
                 <!-- Email Filter -->
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="text" name="email" id="email" class="form-control" placeholder="Enter email"
-                        value="{{ request('email') }}">
+                    <input type="text" name="email" id="email" class="form-control"
+                           placeholder="Enter email" value="{{ request('email') }}">
                 </div>
 
                 <!-- Phone Filter -->
                 <div class="form-group">
                     <label for="mobile">Phone</label>
-                    <input type="text" name="mobile" id="mobile" class="form-control" placeholder="Enter phone number"
-                        value="{{ request('mobile') }}">
+                    <input type="text" name="mobile" id="mobile" class="form-control"
+                           placeholder="Enter phone number" value="{{ request('mobile') }}">
                 </div>
 
                 <!-- City Filter -->
                 <div class="form-group">
                     <label for="city">City</label>
-                    <input type="text" name="city" id="city" class="form-control" placeholder="Enter city"
-                        value="{{ request('city') }}">
+                    <input type="text" name="city" id="city" class="form-control"
+                           placeholder="Enter city" value="{{ request('city') }}">
                 </div>
 
                 <!-- State Filter -->
                 <div class="form-group">
                     <label for="state">State</label>
-                    <input type="text" name="state" id="state" class="form-control" placeholder="Enter state"
-                        value="{{ request('state') }}">
+                    <input type="text" name="state" id="state" class="form-control"
+                           placeholder="Enter state" value="{{ request('state') }}">
                 </div>
 
                 <!-- Country Filter -->
                 <div class="form-group">
                     <label for="country">Country</label>
-                    <input type="text" name="country" id="country" class="form-control" placeholder="Enter country"
-                        value="{{ request('country') }}">
+                    <input type="text" name="country" id="country" class="form-control"
+                           placeholder="Enter country" value="{{ request('country') }}">
                 </div>
 
                 <!-- Filter Buttons -->
                 <div style="margin-top:12px">
                     <div class="filter-buttons">
                         <!-- Apply Button -->
-                        <button type="submit"
-                            class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary">
+                        <button type="submit" class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary">
                             Apply
                         </button>
                         <!-- Reset Button -->
-                        <button type="button"
-                            class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary"
-                            onclick="resetForm()">
+                        <button type="button" class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary"
+                                onclick="resetForm()">
                             Reset
                         </button>
                     </div>
@@ -851,34 +883,34 @@ $(document).ready(function() {
 </script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    var filterToggle = document.getElementById('filterToggle'); // Make sure you have this element
-    var filterSidebar = document.querySelector('.toggle-sidebar');
+    document.addEventListener("DOMContentLoaded", function () {
+        var filterToggle = document.getElementById('filterToggle'); // Make sure you have this element
+        var filterSidebar = document.querySelector('.toggle-sidebar');
 
-    filterToggle.addEventListener('click', function(event) {
-        event.preventDefault();
-        filterSidebar.classList.toggle('active');
+        filterToggle.addEventListener('click', function (event) {
+            event.preventDefault();
+            filterSidebar.classList.toggle('active');
+        });
+
+        // Close button functionality
+        var closeSidebar = document.querySelector('.sidebar-closes');
+        closeSidebar.addEventListener('click', function (event) {
+            event.preventDefault();
+            filterSidebar.classList.remove('active');
+        });
     });
 
-    // Close button functionality
-    var closeSidebar = document.querySelector('.sidebar-closes');
-    closeSidebar.addEventListener('click', function(event) {
-        event.preventDefault();
-        filterSidebar.classList.remove('active');
-    });
-});
+    function resetForm() {
+        // Clear the input values
+        document.getElementById('name').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('mobile').value = '';
+        document.getElementById('city').value = '';
+        document.getElementById('state').value = '';
+        document.getElementById('country').value = '';
 
-function resetForm() {
-    // Clear the input values
-    document.getElementById('name').value = '';
-    document.getElementById('email').value = '';
-    document.getElementById('mobile').value = '';
-    document.getElementById('city').value = '';
-    document.getElementById('state').value = '';
-    document.getElementById('country').value = '';
-
-    // Redirect to the main partners page to reset filters
-    window.location.href = '{{route('partners.partners-report')}}';
-}
+        // Redirect to the main partners page to reset filters
+        window.location.href = '{{route('partners.partners-report')}}';
+    }
 </script>
 @endsection

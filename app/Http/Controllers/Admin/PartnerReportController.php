@@ -44,7 +44,6 @@ class PartnerReportController extends Controller
 
         // Get the filtered partners
         $partners = $query->with(['city', 'state', 'country','invoices'])->get();
-       echo "<pre>"; print_r($partners );die;
 
         return view('admin.partners.partners-report', compact('partners'));
     }
@@ -69,7 +68,7 @@ class PartnerReportController extends Controller
         }
 
         // Get the filtered data
-        $partners = $query->with(['city', 'state', 'country'])->get();
+        $partners = $query->with(['city', 'state', 'country','invoices'])->get();
 
         // Check if partners exist before generating the PDF
         if ($partners->isEmpty()) {
@@ -90,53 +89,109 @@ class PartnerReportController extends Controller
     /**
      * Download CSV report.
      */
-    public function downloadCSV(Request $request)
-    {
-        date_default_timezone_set('Asia/Kolkata'); 
+  public function downloadCSV(Request $request)
+{
+    date_default_timezone_set('Asia/Kolkata'); 
 
-        $query = Partner::query();
-        $partners = $query->with(['city', 'state', 'country'])->get();
+    $query = Partner::query();
+    $partners = $query->with(['city', 'state', 'country', 'invoices.currency', 'invoices.package'])->get();
 
-        if ($partners->isEmpty()) {
-            return redirect()->back()->with('error', 'No partners found for the selected filters.');
-        }
-
-        // Create a CSV handle
-        $handle = fopen('php://output', 'w');
-
-        $timestamp = date('Y-m-d_H-i-s');
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="partner_report_' . $timestamp . '.csv"');
-
-        // Add CSV headers
-        fputcsv($handle, [
-            'S.No',
-            'Partner Name',
-            'Email',
-            'Mobile',
-            'City', 
-            'State',
-            'Country',
-            
-        ]);
-        
-        $serialNumber = 1;
-
-        // Add the filtered data rows
-        foreach ($partners as $partner) {
-            fputcsv($handle, [
-                $serialNumber++,
-                $partner->name,
-                $partner->email,
-                $partner->mobile,
-                $partner->city->name,
-                $partner->state->name,
-                $partner->country->name,
-               
-            ]);
-        }
-
-        fclose($handle);
-        exit;
+    if ($partners->isEmpty()) {
+        return redirect()->back()->with('error', 'No partners found for the selected filters.');
     }
+
+    // Create a CSV handle
+    $handle = fopen('php://output', 'w');
+
+    $timestamp = date('Y-m-d_H-i-s');
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="partner_report_' . $timestamp . '.csv"');
+
+    // Add CSV headers
+    fputcsv($handle, [
+        'S.No',
+        'Partner Name',
+        'Email',
+        'Mobile',
+        'City', 
+        'State',
+        'Country',
+        'Gross Amount',
+        'Net Cost',
+        'Net Profit'
+    ]);
+
+    $serialNumber = 1;
+    $totalGross = 0;
+    $totalNetCost = 0;
+    $totalNetProfit = 0;
+
+    foreach ($partners as $partner) {
+        $grossAmount = 0;
+        $netCost = 0;
+        $netProfit = 0;
+
+        foreach ($partner->invoices as $invoice) {
+            $currencyCode = $invoice->currency->code ?? 'AED';
+
+            // Calculate gross amount
+            $invoiceGrossAmount = ($invoice->package->amount ?? 0) * ($invoice->no_of_passenger ?? 1);
+
+            // Calculate net cost
+            $invoiceNetCost = ($invoice->package->net_amount ?? 0) * ($invoice->no_of_passenger ?? 1);
+
+            // Apply discount
+            $discount = $invoice->discount ?? 0;
+            $discountAmount = ($invoice->discount_type === 'Fixed') 
+                ? $discount 
+                : ($invoiceGrossAmount * $discount) / 100;
+
+            // Currency conversion
+            $invoiceGrossAmount = getCurrencyRateAmt($currencyCode, 'AED', $invoiceGrossAmount);
+            $invoiceNetCost = getCurrencyRateAmt($currencyCode, 'AED', $invoiceNetCost);
+            $discountAmount = getCurrencyRateAmt($currencyCode, 'AED', $discountAmount);
+
+            // Tax calculation
+            $tax = $invoice->vat ?? 0;
+            $amountAfterDiscount = $invoiceGrossAmount - $discountAmount;
+            $taxAmount = ($amountAfterDiscount * $tax) / 100;
+            $totalInvoiceAmount = $amountAfterDiscount + $taxAmount;
+
+            // Final gross amount and net profit
+            $grossAmount += $totalInvoiceAmount;
+            $netCost += $invoiceNetCost;
+            $netProfit += $totalInvoiceAmount - $invoiceNetCost;
+        }
+
+        // Accumulate totals
+        $totalGross += $grossAmount;
+        $totalNetCost += $netCost;
+        $totalNetProfit += $netProfit;
+
+        fputcsv($handle, [
+            $serialNumber++,
+            $partner->name,
+            $partner->email,
+            $partner->mobile,
+            $partner->city->name ?? 'N/A',
+            $partner->state->name ?? 'N/A',
+            $partner->country->name ?? 'N/A',
+            number_format($grossAmount, 2),
+            number_format($netCost, 2),
+            number_format($netProfit, 2),
+        ]);
+    }
+
+    // Add totals row
+    fputcsv($handle, [
+        '', '', '', '', '', '', 'Total:',
+        number_format($totalGross, 2),
+        number_format($totalNetCost, 2),
+        number_format($totalNetProfit, 2)
+    ]);
+
+    fclose($handle);
+    exit;
+}
+
 }
