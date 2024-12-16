@@ -82,6 +82,19 @@ class CurrencyController extends Controller
 
        // return redirect()->route('currencies.index')->with('success', 'Currency updated successfully.');
     }
+    public function getCurrencyRate(Request $request)
+    {
+        $fromCurrency = $request->input('fromCurrency', 'USD'); // Default to USD if not provided
+        $toCurrency = $request->input('toCurrency', 'INR'); // Default to INR if not provided
+        $amount = $request->input('amount', 1); // Default to 1 if not provided
+
+        // Call the helper function to get the conversion rate
+        $rate = getCurrencyRateAmt($fromCurrency, $toCurrency, $amount);
+
+        // Return the rate as a JSON response
+        return response()->json(['rate' => $rate]);
+    }
+
 
     /**
      * Remove the specified resource from storage.

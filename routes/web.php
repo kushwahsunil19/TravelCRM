@@ -40,6 +40,7 @@ Route::controller(AuthController::class)->group(function() {
 });
 
 Route::get('current-currency-rate', [CronjobController::class, 'index'])->name('current-currency-rate');
+Route::get('/currency-rate', [CurrencyController::class, 'getCurrencyRate']);
 
 
 Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');

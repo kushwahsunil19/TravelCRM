@@ -157,12 +157,6 @@ td {
                                             </div>
                                         </div>
 
-
-
-
-
-
-
                                         <div class="col-lg-12 col-md-12 col-sm-12">
                                             <div class="input-block mb-3">
                                                 <label>Supplier</label>
@@ -261,6 +255,45 @@ td {
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="input-block mb-3">
+                                                <label>No. of Infant</label>
+                                                <input type="number" class="form-control" name="no_of_passenger"
+                                                    id="no_of_passenger" placeholder="Enter No. of Infant"
+                                                    value="{{ old('no_of_passenger') }}"
+                                                    min="0">
+                                                @if ($errors->has('no_of_passenger'))
+                                                <span class="text-danger">{{ $errors->first('no_of_passenger') }}</span>
+                                                @endif
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="input-block mb-3">
+                                                <label>No. of Child</label>
+                                                <input type="number" class="form-control" name="no_of_passenger"
+                                                    id="no_of_passenger" placeholder="Enter No. of Child"
+                                                    value="{{ old('no_of_passenger') }}"
+                                                    min="0">
+                                                @if ($errors->has('no_of_passenger'))
+                                                <span class="text-danger">{{ $errors->first('no_of_passenger') }}</span>
+                                                @endif
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="input-block mb-3">
+                                                <label>No. of Adult</label>
+                                                <input type="number" class="form-control" name="no_of_passenger"
+                                                    id="no_of_passenger" placeholder="Enter No. of Adult"
+                                                    value="{{ old('no_of_passenger') }}"
+                                                    min="0">
+                                                @if ($errors->has('no_of_passenger'))
+                                                <span class="text-danger">{{ $errors->first('no_of_passenger') }}</span>
+                                                @endif
+
+                                            </div>
+                                        </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12">
                                         <div class="input-block mb-3">
                                             <label>No. of Passenger</label>
                                             <input type="number" class="form-control" id="no_of_passenger"
@@ -274,46 +307,8 @@ td {
                                     </div>
                                     <div class="col-md-12">
                                         <div class="row">
-                                            <div class="col-lg-3">
-                                                <div class="input-block mb-3">
-                                                    <label>Currency</label>
-                                                    <select class="select" name="currency_id" id="currency_id"
-                                                        required>
-                                                        <option value="">Select Currency </option>
-                                                        @foreach ($currencies as $currency)
-                                                        <option value="{{ $currency->id }}"
-                                                            data-code="{{$currency->code}}"
-                                                            data-symbol="{{$currency->symbol}}"
-                                                            {{ old('currency_id') == $currency->id ? 'selected' : '' }}>
-                                                            {{ $currency->code }}
-                                                        </option>
-                                                        @endforeach
-                                                    </select>
-                                                  
 
-                                                    @if ($errors->has('currency_id'))
-                                                    <span class="text-danger">{{ $errors->first('currency_id') }}</span>
-                                                    @endif
-                                                    <input type="hidden" id="currency_symbol" value="₹">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-2">
-                                                <div class="input-block mb-2">
-                                                    <label>Currency Rate</label>
-                                                    <input type="number" class="form-control currency_rate"
-                                                        name="currency_rate" id="currency_rate" placeholder="Enter Rate"
-                                                        min="0" step="any" value="0.00" readonly>
-                                                    @if ($errors->has('currency_rate'))
-                                                    <span
-                                                        class="text-danger">{{ $errors->first('currency_rate') }}</span>
-                                                    @endif
-                                                </div>
-                                            </div>
-
-
-
-                                            <div class="col-lg-3">
+                                            <!-- <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Discount Type</label>
                                                     <select class="select" name="discount_type" id="discount_type">
@@ -343,14 +338,10 @@ td {
                                                         <label>Vat</label>
                                                         <input type="number" class="form-control gst_tax" name="gst_tax"
                                                             placeholder="Enter Vat" min="0" step="any" value="0.00">
-                                                        <!-- <select class="select" name="gst_tax" id="gst_tax">
-                                                            <option value="21">IVA - (21%)</option>
-                                                            <option value="15">IRPF - (-15%)</option>
-                                                            <option value="20">PDV - (20%)</option>
-                                                        </select> -->
+                                                      
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
 
@@ -404,9 +395,9 @@ td {
                                                     <div class="invoice-total-inner">
                                                         <p>Package Amount <span class="amount">0.00</span></p>
                                                         <input type="hidden" id="package_amt" value="0">
-                                                        <p>Discount <span class="discount">0.00</span></p>
+                                                        <!-- <p>Discount <span class="discount">0.00</span></p> -->
                                                         <input type="hidden" id="discount" value="0">
-                                                        <p>Vat <span class="gst_tax">0.00</span></p>
+                                                        <!-- <p>Vat <span class="gst_tax">0.00</span></p> -->
                                                         <input type="hidden" id="gst_tax" value="0">
                                                         <!-- <div class="status-toggle justify-content-between">
                                                             <div class="d-flex align-center">
@@ -753,9 +744,45 @@ td {
                                 @endif
                             </div>
                         </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="input-block mb-3">
+                                <label>Currency</label>
+                                <select class="select form-control" name="currency_id" id="currency_id"
+                                    required>
+                                    <option value="">Select Currency </option>
+                                    @foreach ($currencies as $currency)
+                                    <option value="{{ $currency->id }}"
+                                        data-code="{{$currency->code}}"
+                                        data-symbol="{{$currency->symbol}}"
+                                        {{ old('currency_id') == $currency->id ? 'selected' : '' }}>
+                                        {{ $currency->code }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            
+
+                                @if ($errors->has('currency_id'))
+                                <span class="text-danger">{{ $errors->first('currency_id') }}</span>
+                                @endif
+                             
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="input-block mb-2">
+                                <label>Currency Rate</label>
+                                <input type="number" class="form-control currency_rate"
+                                    name="rate" id="currency_rate" placeholder="Enter Rate"
+                                    min="0" step="any" value="0.00" readonly>
+                                @if ($errors->has('currency_rate'))
+                                <span
+                                    class="text-danger">{{ $errors->first('currency_rate') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        @role('Operations')
                         <!-- Dynamic Title and Rupees Fields -->
-                        <hr> <label>Add More Expenses</label>
-                      
+                        <hr> <label>Add More Expenses</label>                      
                         <div class="col-lg-12">
                             <div id="dynamic-fields-wrapper">
                                 
@@ -776,7 +803,7 @@ td {
                             </div>
                             <button type="button" class="btn btn-secondary" id="add-more-fields">Add More</button>
                         </div>
-
+                     
                         <!-- Total Amount Field -->
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="input-block mb-3">
@@ -788,7 +815,7 @@ td {
                                 @endif
                             </div>
                         </div>
-
+                        @endrole
 
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="input-block mb-3">
@@ -852,6 +879,48 @@ td {
                                 @endif
                             </div>
                         </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="input-block mb-3">
+                                <label>Currency</label>
+                                <select class="select form-control" name="currency_id"
+                                    id="edit_currency_id"  required>
+                                    <option value="">Select Currency</option>
+                                    @foreach ($currencies as $currency)
+
+                                    <option value="{{ $currency->id }}"
+                                        data-symbol="{{ $currency->symbol }}"
+                                        data-code="{{ $currency->code }}"
+                                        {{ (old('currency_id') == $currency->id) ? 'selected' : '' }}>
+                                        {{ $currency->code }}
+                                    </option>
+
+                                    @endforeach
+                                </select>
+                                
+                                @if ($errors->has('currency_id'))
+                                <span class="text-danger">{{ $errors->first('currency_id') }}</span>
+                                @endif
+                            
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="input-block mb-2">
+                                <label>Currency Rate</label>
+                                <input type="number" class="form-control currency_rate"
+                                    name="rate" id="edit_currency_rate" placeholder="Enter Rate"
+                                    min="0" step="any"
+                                    value="{{ old('currency_rate') }}"
+                                    readonly>
+                                @if ($errors->has('currency_rate'))
+                                <span
+                                    class="text-danger">{{ $errors->first('currency_rate') }}</span>
+                                @endif
+                            </div>
+
+                        </div>
+                        @role('Operations')
                         <div class="col-lg-12">
 
                             <div id="edit-dynamic-fields-wrapper">
@@ -874,6 +943,7 @@ td {
                             </div>
                         </div>
 
+                        @endrole
 
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="input-block mb-3">
@@ -1570,8 +1640,9 @@ $(document).ready(function() {
                 $('#edit_package_name').val(data.package_name);
                 $('#edit_package_amt').val(data.amount);
                 $('#edit_package_net_amt').val(data.net_amount);
-
                 $('#description_edit').val(data.description);
+                $('#edit_currency_rate').val(data.rate);
+                $('#edit_currency_id').val(data.currency_id).trigger('change');
 
                 if (CKEDITOR.instances['description_edit']) {
                     CKEDITOR.instances['description_edit'].setData(data.description);
@@ -1683,26 +1754,36 @@ $(document).ready(function() {
     // onchange Symbol
     function updateSymbol() {
         var selectedOption = $('#currency_id option:selected'); // Get selected option
-        var symbol = selectedOption.data('symbol'); // Get symbol from the data attribute
-        
-        if (!symbol) {
-            symbol = '₹'; // Default to ₹ symbol if none selected
-        }
-        // Update all relevant fields with the new symbol
 
-        var discount_type = $('#discount_type').val();
-        var package_amt = $('#package_amt').val(); // Default to 0 if not a number
-        var discount = $('.discount').val();
-        var gst_tax = $('.gst_tax').val();
-        var no_of_passenger = $('#no_of_passenger').val();
-
-        $('#currency_symbol').val(symbol);
-       calculation(package_amt, gst_tax, discount, discount_type, symbol, no_of_passenger);
-        var currency_code = selectedOption.data('code');       
+              
         var branch = $.trim($('#branch_id option:selected').text()).toLowerCase();
         if (currency_code !== undefined ) { 
-           let  rate = 1.00;
-            $('#currency_rate').val(rate.toFixed(2));
+            var fromCurrency = 'INR';
+          
+         //  let  amount = 1.00;
+           var toCurrency = selectedOption.data('code');
+           alert(toCurrency);
+           $.ajax({
+           
+                url:  '{{ url("currency-rate", ":id") }}',  // URL of the route we defined
+                type: 'GET',
+                data: {
+                    fromCurrency: currency_code,
+                    toCurrency: toCurrency,
+                  
+                },
+                success: function(response) {
+                    // On success, update the currency rate
+                    var rate = response.rate;
+                    alert(rate);
+                    $('#currency_rate').val(rate.toFixed(5));
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors (if any)
+                    console.error('Error fetching currency rate:', error);
+                }
+            });
+           // $('#currency_rate').val(rate.toFixed(2));
         } 
        // currencyWiseCalculate(package_amt, gst_tax, discount, discount_type, symbol, branch, currency_code);
 

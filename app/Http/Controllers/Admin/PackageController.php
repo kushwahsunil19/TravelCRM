@@ -59,6 +59,8 @@ class PackageController extends Controller
         // Create a new package
         $input = $request->all();
         $input['user_id'] = auth()->id();
+      
+      
         $pkg_id = Package::create($input)->id;
          // Process expense titles and amounts
     $titles = $request->title; // Titles array from form
@@ -66,18 +68,26 @@ class PackageController extends Controller
 
     // Prepare expense data for batch insert
     $data = [];
-    foreach ($titles as $key => $title) {
-        $data[] = [
-            'package_id' =>$pkg_id,
-            'title' => $title,
-            'amount' => $amounts[$key] ?? 0,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ];
+    if (!empty($title)) {  
+            foreach ($titles as $key => $title) {
+                // Skip empty titles
+            
+                $data[] = [
+                    'package_id' => $pkg_id,
+                    'title' => $title,
+                    'amount' => $amounts[$key] ?? 0,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+        
     }
- 
+    // Insert data into the database (optional step)
+    if (!empty($data)) {
+        PackageExpense::insert($data);
+    }
     // Insert all expenses at once
-    PackageExpense::insert($data);
+  
 
         $packageDetails = Package::with('user')->latest()->get();
         return response()->json(['status'=>true,'data'=>$packageDetails ,'message' => 'Package details added successfully']);

@@ -168,32 +168,7 @@ td {
 
 
 
-                                        <div class="col-lg-6 col-md-6 col-sm-12">
-                                            <div class="input-block mb-3">
-                                                <label>No. of Night</label>
-
-                                                <input type="number" class="form-control" name="no_of_night"
-                                                    placeholder="Enter No. of Night"
-                                                    value="{{ old('no_of_night', $quotation->no_of_night) }}" min="0">
-                                                @if ($errors->has('no_of_night'))
-                                                <span class="text-danger">{{ $errors->first('no_of_night') }}</span>
-                                                @endif
-
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12">
-                                            <div class="input-block mb-3">
-                                                <label>No. of Passenger</label>
-                                                <input type="number" class="form-control" name="no_of_passenger"
-                                                    id="no_of_passenger" placeholder="Enter No. of Passenger"
-                                                    value="{{ old('no_of_passenger', $quotation->no_of_passenger) }}"
-                                                    min="0">
-                                                @if ($errors->has('no_of_passenger'))
-                                                <span class="text-danger">{{ $errors->first('no_of_passenger') }}</span>
-                                                @endif
-
-                                            </div>
-                                        </div>
+                                   
                                         <div class="col-lg-12 col-md-12 col-sm-12">
                                             <div class="input-block mb-3">
                                                 <label>Supplier</label>
@@ -314,51 +289,7 @@ td {
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="row">
-                                            <div class="col-lg-3">
-                                                <div class="input-block mb-3">
-                                                    <label>Currency</label>
-                                                    <select class="select form-control" name="currency_id"
-                                                        id="currency_id"  required>
-                                                        <option value="">Select Currency</option>
-                                                        @foreach ($currencies as $currency)
-
-                                                        <option value="{{ $currency->id }}"
-                                                            data-symbol="{{ $currency->symbol }}"
-                                                            data-code="{{ $currency->code }}"
-                                                            {{ (old('currency_id', $quotation->currency_id) == $currency->id) ? 'selected' : '' }}>
-                                                            {{ $currency->code }}
-                                                        </option>
-
-                                                        @endforeach
-                                                    </select>
-                                                    
-                                                    @if ($errors->has('currency_id'))
-                                                    <span class="text-danger">{{ $errors->first('currency_id') }}</span>
-                                                    @endif
-                                                    <input type="hidden" id="currency_symbol"
-                                                        value="{{ $quotation->currency->symbol }}">
-                                                </div>
-
-                                            </div>
-
-                                            <div class="col-lg-2">
-                                                <div class="input-block mb-2">
-                                                    <label>Currency Rate</label>
-                                                    <input type="number" class="form-control currency_rate"
-                                                        name="currency_rate" id="currency_rate" placeholder="Enter Rate"
-                                                        min="0" step="any"
-                                                        value="{{ old('currency_rate', $quotation->currency_rate) }}"
-                                                        readonly>
-                                                    @if ($errors->has('currency_rate'))
-                                                    <span
-                                                        class="text-danger">{{ $errors->first('currency_rate') }}</span>
-                                                    @endif
-                                                </div>
-
-
-                                            </div>
-
-                                            <div class="col-lg-3">
+                                            <!-- <div class="col-lg-3">
                                                 <div class="input-block mb-3">
                                                     <label>Discount Type</label>
                                                     <select class="select" name="discount_type" id="discount_type">
@@ -396,14 +327,75 @@ td {
                                                             placeholder="Enter Vat"
                                                             value="{{ old('gst_tax', $quotation->gst_tax) }}" min="0"
                                                             step="any">
-                                                        <!-- <select class="select" name="gst_tax" id="gst_tax">
-                                                            <option value="21">IVA - (21%)</option>
-                                                            <option value="15">IRPF - (-15%)</option>
-                                                            <option value="20">PDV - (20%)</option>
-                                                        </select> -->
+                                                       
                                                     </div>
                                                 </div>
+                                            </div> -->
+                                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="input-block mb-3">
+                                                <label>No. of Night</label>
+
+                                                <input type="number" class="form-control" name="no_of_night"
+                                                    placeholder="Enter No. of Night"
+                                                    value="{{ old('no_of_night', $quotation->no_of_night) }}" min="0">
+                                                @if ($errors->has('no_of_night'))
+                                                <span class="text-danger">{{ $errors->first('no_of_night') }}</span>
+                                                @endif
+
                                             </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="input-block mb-3">
+                                                <label>No. of Infant</label>
+                                                <input type="number" class="form-control" name="no_of_passenger"
+                                                    id="no_of_passenger" placeholder="Enter No. of Infant"
+                                                    value="{{ old('no_of_passenger', $quotation->no_of_passenger) }}"
+                                                    min="0">
+                                                @if ($errors->has('no_of_passenger'))
+                                                <span class="text-danger">{{ $errors->first('no_of_passenger') }}</span>
+                                                @endif
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="input-block mb-3">
+                                                <label>No. of Child</label>
+                                                <input type="number" class="form-control" name="no_of_passenger"
+                                                    id="no_of_passenger" placeholder="Enter No. of Child"
+                                                    value="{{ old('no_of_passenger', $quotation->no_of_passenger) }}"
+                                                    min="0">
+                                                @if ($errors->has('no_of_passenger'))
+                                                <span class="text-danger">{{ $errors->first('no_of_passenger') }}</span>
+                                                @endif
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="input-block mb-3">
+                                                <label>No. of Adult</label>
+                                                <input type="number" class="form-control" name="no_of_passenger"
+                                                    id="no_of_passenger" placeholder="Enter No. of Adult"
+                                                    value="{{ old('no_of_passenger', $quotation->no_of_passenger) }}"
+                                                    min="0">
+                                                @if ($errors->has('no_of_passenger'))
+                                                <span class="text-danger">{{ $errors->first('no_of_passenger') }}</span>
+                                                @endif
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="input-block mb-3">
+                                                <label>No. of Passenger</label>
+                                                <input type="number" class="form-control" name="no_of_passenger"
+                                                    id="no_of_passenger" placeholder="Enter No. of Passenger"
+                                                    value="{{ old('no_of_passenger', $quotation->no_of_passenger) }}"
+                                                    min="0">
+                                                @if ($errors->has('no_of_passenger'))
+                                                <span class="text-danger">{{ $errors->first('no_of_passenger') }}</span>
+                                                @endif
+
+                                            </div>
+                                        </div>
                                         </div>
                                     </div>
 
@@ -460,13 +452,13 @@ td {
                                                         </p>
                                                         <input type="hidden" id="package_amt"
                                                             value="{{$quotation->package->amount}}">
-                                                        <p>Discount <span
+                                                        <!-- <p>Discount <span
                                                                 class="discount">{{ $quotation->currency->symbol }}{{ old('discount', $quotation->discount) }}</span>
-                                                        </p>
+                                                        </p> -->
                                                         <input type="hidden" id="discount" value="0">
-                                                        <p>Vat <span
+                                                        <!-- <p>Vat <span
                                                                 class="gst_tax">{{ $quotation->currency->symbol }}{{ old('gst_tax', $quotation->gst_tax) }}</span>
-                                                        </p>
+                                                        </p> -->
                                                         <input type="hidden" id="gst_tax" value="0">
                                                         <!-- <div class="status-toggle justify-content-between">
                                                             <div class="d-flex align-center">
@@ -881,8 +873,51 @@ $total_amt = $amount_after_discount + $tax_amt;
                                 @endif
                             </div>
                         </div>
-                        <!-- Dynamic Title and Rupees Fields -->
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="input-block mb-3">
+                                <label>Currency</label>
+                                <select class="select form-control" name="currency_id"
+                                    id="currency_id"  required>
+                                    <option value="">Select Currency</option>
+                                    @foreach ($currencies as $currency)
 
+                                    <option value="{{ $currency->id }}"
+                                        data-symbol="{{ $currency->symbol }}"
+                                        data-code="{{ $currency->code }}"
+                                        {{ (old('currency_id', $quotation->currency_id) == $currency->id) ? 'selected' : '' }}>
+                                        {{ $currency->code }}
+                                    </option>
+
+                                    @endforeach
+                                </select>
+                                
+                                @if ($errors->has('currency_id'))
+                                <span class="text-danger">{{ $errors->first('currency_id') }}</span>
+                                @endif
+                                <input type="hidden" id="currency_symbol"
+                                    value="{{ $quotation->currency->symbol }}">
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="input-block mb-2">
+                                <label>Currency Rate</label>
+                                <input type="number" class="form-control currency_rate"
+                                    name="rate" id="currency_rate" placeholder="Enter Rate"
+                                    min="0" step="any"
+                                    value="{{ old('currency_rate', $quotation->currency_rate) }}"
+                                    readonly>
+                                @if ($errors->has('currency_rate'))
+                                <span
+                                    class="text-danger">{{ $errors->first('currency_rate') }}</span>
+                                @endif
+                            </div>
+
+
+                        </div>
+                        <!-- Dynamic Title and Rupees Fields -->
+                        @role('Operations')
                         <hr> <label>Add More Expenses</label>
                         <div class="col-lg-12">
                             <div id="dynamic-fields-wrapper">
@@ -916,7 +951,7 @@ $total_amt = $amount_after_discount + $tax_amt;
                                 @endif
                             </div>
                         </div>
-
+                        @endrole
 
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="input-block mb-3">
@@ -980,6 +1015,49 @@ $total_amt = $amount_after_discount + $tax_amt;
                                 @endif
                             </div>
                         </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="input-block mb-3">
+                                <label>Currency</label>
+                                <select class="select form-control" name="currency_id"
+                                    id="edit_currency_id"  required>
+                                    <option value="">Select Currency</option>
+                                    @foreach ($currencies as $currency)
+
+                                    <option value="{{ $currency->id }}"
+                                        data-symbol="{{ $currency->symbol }}"
+                                        data-code="{{ $currency->code }}"
+                                        {{ (old('currency_id', $quotation->currency_id) == $currency->id) ? 'selected' : '' }}>
+                                        {{ $currency->code }}
+                                    </option>
+
+                                    @endforeach
+                                </select>
+                                
+                                @if ($errors->has('currency_id'))
+                                <span class="text-danger">{{ $errors->first('currency_id') }}</span>
+                                @endif
+                                <input type="hidden" id="currency_symbol"
+                                    value="{{ $quotation->currency->symbol }}">
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="input-block mb-2">
+                                <label>Currency Rate</label>
+                                <input type="number" class="form-control currency_rate"
+                                    name="rate" id="edit_currency_rate" placeholder="Enter Rate"
+                                    min="0" step="any"
+                                    value="{{ old('currency_rate', $quotation->currency_rate) }}"
+                                    readonly>
+                                @if ($errors->has('currency_rate'))
+                                <span
+                                    class="text-danger">{{ $errors->first('currency_rate') }}</span>
+                                @endif
+                            </div>
+
+                        </div>
+                        @role('Operations')
                         <div class="col-lg-12">
 
                             <div id="edit-dynamic-fields-wrapper">
@@ -1001,7 +1079,7 @@ $total_amt = $amount_after_discount + $tax_amt;
                                 @endif
                             </div>
                         </div>
-
+                        @endrole
 
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="input-block mb-3">
@@ -1702,6 +1780,8 @@ $(document).ready(function() {
                 $('#edit_package_amt').val(data.amount);
                 $('#edit_package_net_amt').val(data.net_amount);
                 $('#description_edit').val(data.description);
+                $('#edit_currency_rate').val(data.rate);
+                $('#edit_currency_id').val(data.currency_id).trigger('change');
                 if (CKEDITOR.instances['description_edit']) {
                     CKEDITOR.instances['description_edit'].setData(data.description);
                 }

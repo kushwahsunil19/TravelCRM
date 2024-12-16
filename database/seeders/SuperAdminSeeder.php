@@ -14,10 +14,10 @@ class SuperAdminSeeder extends Seeder
     public function run(): void
     {
         $superAdmin = User::create([           
-            'first_name' => 'Admin',
-            'last_name' => 'Ji',
-            'email' => 'admin@cltt.co.in',
-            'password' => Hash::make('admin@123'),
+            'first_name' => 'Super',
+            'last_name' => 'Admin',
+            'email' => 'info@cltt.co.in',
+            'password' => Hash::make('superadmin@001'),
             'mobile' => '1234567900',
             'status'=>1
            
@@ -26,24 +26,46 @@ class SuperAdminSeeder extends Seeder
 
         // Creating Salse User
         $sales = User::create([
-             'first_name' => 'Syed Ahsan ',
-            'last_name' => 'Kamal',
-            'email' => 'syed@gmail.com',
-            'password' => Hash::make('syed@123'),
+             'first_name' => 'Sales',
+            'last_name' => 'User',
+            'email' => 'sales@cltt.co.in',
+            'password' => Hash::make('admin@123'),
             'mobile' => '1234567909',
             'status'=>1
         ]);
         $sales->assignRole('Sales');
 
         // Creating operation Manager User
-         $perations = User::create([
-            'first_name' => 'Javed Ahsan',
-           'last_name' => 'Kamal',
-           'email' => 'javed@gmail.com',
-           'password' => Hash::make('javed@123'),
+         $operations = User::create([
+           'first_name' => 'Operation',
+           'last_name' => 'User',
+           'email' => 'operations@cltt.co.in',
+           'password' => Hash::make('admin@123'),
            'mobile' => '1234567906',
            'status'=>1
        ]);
-         $perations->assignRole('Operations');
+         $operations->assignRole('Operations');
+
+           // Creating operation Manager User
+           $account = User::create([
+            'first_name' => 'Account',
+           'last_name' => 'User',
+           'email' => 'accounts@gmail.com',
+           'password' => Hash::make('admin@123'),
+           'mobile' => '1234567906',
+           'status'=>1
+       ]);
+         $account->assignRole('Accounts');
+
+    //      $admin = User::create([
+    //         'first_name' => 'Admin',
+    //        'last_name' => 'Ji',
+    //        'email' => 'dosm@cltt.co.in',
+    //        'password' => Hash::make('admin@123'),
+    //        'mobile' => '1234567906',
+    //        'status'=>1
+    //    ]);
+    //      $admin->assignRole('Admin');
+
     }
 }

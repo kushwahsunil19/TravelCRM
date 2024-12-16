@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('quotations', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->nullable(); // Add user_id column
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // Add foreign key constraint
             $table->unsignedBigInteger('branch_id'); // Foreign key
             $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade'); // Foreign key constraint
             $table->unsignedBigInteger('partner_id'); // Foreign key
@@ -24,6 +26,9 @@ return new class extends Migration
             $table->integer('quotation_no')->unique();  
             $table->string('booking_reference_no')->unique();
             $table->integer('no_of_night')->default(0)->nullable();
+            $table->integer('no_of_infant')->default(0)->nullable();
+            $table->integer('no_of_child')->default(0)->nullable();
+            $table->integer('no_of_adult')->default(0)->nullable();
             $table->integer('no_of_passenger')->default(0)->nullable();
             $table->decimal('gst_tax', 10, 2)->default(0.00)->nullable();
             $table->string('discount_type')->nullable();

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name'); // Currency name (e.g., Indian Rupee)
             $table->string('code', 3); // Currency code (e.g., INR, USD)
             $table->string('symbol', 10)->nullable(); // Currency symbol (nullable)
-            $table->decimal('exchange_rate', 15, 2)->nullable(); // Exchange rate (nullable)
+            $table->decimal('exchange_rate', 15, 5)->nullable(); // Exchange rate (nullable)
             $table->boolean('status')->default(0); // Nullable status (active/inactive)
             $table->timestamps();
         });

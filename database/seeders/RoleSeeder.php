@@ -16,6 +16,8 @@ class RoleSeeder extends Seeder
         $admin = Role::create(['name' => 'Administrator']);
         $salse = Role::create(['name' => 'Sales']);
         $operationsManager = Role::create(['name' => 'Operations']);
+        $accountManager = Role::create(['name' => 'Accounts']);
+        $adminManager = Role::create(['name' => 'Admin']);
 
         $admin->givePermissionTo([
             'list-role',

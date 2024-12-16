@@ -117,7 +117,7 @@ class QuotationController extends Controller
             'currency_id' => 'required|exists:currencies,id',
             // 'bank_id' => 'nullable|exists:bank_details,id',  
             'quotation_no' => 'required|unique:quotations,quotation_no',  
-            'booking_reference_no' => 'nullable|unique:quotations,booking_reference_no',          
+            // 'booking_reference_no' => 'nullable|unique:quotations,booking_reference_no',          
             'no_of_night' => 'nullable|numeric',
             'no_of_passenger' => 'nullable|numeric',
             //  'discount_type' => 'required',

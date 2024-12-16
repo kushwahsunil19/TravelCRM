@@ -98,7 +98,7 @@ if (!function_exists('getAuth')) {
     }
 
     if (!function_exists('getCurrencyRateAmt')) {
-        function getCurrencyRateAmt($fromCurrency = '', $toCurrency = '', $amount = '')
+        function getCurrencyRateAmt($fromCurrency = '', $toCurrency = '', $amount = '1')
         {
             // Ensure we have both from and to currency
             if (empty($fromCurrency) || empty($toCurrency)) {
