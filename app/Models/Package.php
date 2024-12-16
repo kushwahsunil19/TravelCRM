@@ -18,10 +18,12 @@ class Package extends Model
     protected $fillable = [
         'user_id',
         'currency_id',
-        'rate',
-        'user_id',
+        'rate',       
         'package_name',
         'description',
+        'infant_amount',
+        'child_amount',
+        'adult_amount',
         'amount',
         'net_amount',
     ];

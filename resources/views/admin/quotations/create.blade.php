@@ -780,6 +780,42 @@ td {
                                 @endif
                             </div>
                         </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12">
+                            <div class="input-block mb-2">
+                                <label>Infant Amount</label>
+                                <input type="number" class="form-control "
+                                    name="infant_amount" id="infant_amount" placeholder="Enter Infant Amount"
+                                    min="0" step="any" value="" >
+                                @if ($errors->has('infant_amount'))
+                                <span
+                                    class="text-danger">{{ $errors->first('infant_amount') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12">
+                            <div class="input-block mb-2">
+                                <label>Child Amount</label>
+                                <input type="number" class="form-control "
+                                    name="child_amount" id="child_amount" placeholder="Enter Child Amount"
+                                    min="0" step="any" value="" >
+                                @if ($errors->has('child_amount'))
+                                <span
+                                    class="text-danger">{{ $errors->first('child_amount') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12">
+                            <div class="input-block mb-2">
+                                <label>Adult Amount	</label>
+                                <input type="number" class="form-control "
+                                    name="adult_amount" id="adult_amount" placeholder="Enter Adult Amount"
+                                    min="0" step="any" value="" >
+                                @if ($errors->has('adult_amount'))
+                                <span
+                                    class="text-danger">{{ $errors->first('adult_amount') }}</span>
+                                @endif
+                            </div>
+                        </div>
                         @role('Operations')
                         <!-- Dynamic Title and Rupees Fields -->
                         <hr> <label>Add More Expenses</label>                      
@@ -1752,51 +1788,68 @@ $(document).ready(function() {
     });
 
     // onchange Symbol
-    function updateSymbol() {
+    $(document).on('change', '#currency_id', function() {
         var selectedOption = $('#currency_id option:selected'); // Get selected option
-
-              
-        var branch = $.trim($('#branch_id option:selected').text()).toLowerCase();
-        if (currency_code !== undefined ) { 
-            var fromCurrency = 'INR';
-          
-         //  let  amount = 1.00;
-           var toCurrency = selectedOption.data('code');
-           alert(toCurrency);
+        var toCurrency = selectedOption.data('code');        
+        var fromCurrency = 'AED';          
+        let  amount = 1.00;   
+       
+        if (toCurrency !== undefined ) { 
            $.ajax({
-           
-                url:  '{{ url("currency-rate", ":id") }}',  // URL of the route we defined
-                type: 'GET',
-                data: {
-                    fromCurrency: currency_code,
-                    toCurrency: toCurrency,
-                  
-                },
-                success: function(response) {
-                    // On success, update the currency rate
-                    var rate = response.rate;
-                    alert(rate);
-                    $('#currency_rate').val(rate.toFixed(5));
-                },
-                error: function(xhr, status, error) {
-                    // Handle errors (if any)
-                    console.error('Error fetching currency rate:', error);
-                }
-            });
-           // $('#currency_rate').val(rate.toFixed(2));
-        } 
-       // currencyWiseCalculate(package_amt, gst_tax, discount, discount_type, symbol, branch, currency_code);
-
-    }
-    // Call the function on page load in case a currency is already selected
-    updateSymbol();
+                        url:  '{{ url("currency-rate")}}',  // URL of the route we defined
+                        type: 'GET',
+                        data: {
+                            fromCurrency: fromCurrency,
+                            toCurrency: toCurrency,
+                            amount: amount
+                        },
+                    success: function(response) {
+                        // On success, update the currency rate
+                        var rate = response.rate;                      
+                        $('#currency_rate').val(rate.toFixed(5));
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle errors (if any)
+                        console.error('Error fetching currency rate:', error);
+                    }
+                });
+            }
+         
+    });
     // Update symbol when the selection changes
-    $('#currency_id').on('change', updateSymbol);
-    
+
+    $(document).on('change', '#edit_currency_id', function() {
+        var selectedOption = $('#edit_currency_id option:selected'); // Get selected option
+        var toCurrency = selectedOption.data('code');        
+        var fromCurrency = 'AED';          
+        let  amount = 1.00;    
+        if (toCurrency !== undefined ) {        
+           $.ajax({
+                        url:  '{{ url("currency-rate")}}',  // URL of the route we defined
+                        type: 'GET',
+                        data: {
+                            fromCurrency: fromCurrency,
+                            toCurrency: toCurrency,
+                            amount: amount
+                        },
+                    success: function(response) {
+                        // On success, update the currency rate
+                        var rate = response.rate;
+                      
+                        $('#edit_currency_rate').val(rate.toFixed(5));
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle errors (if any)
+                        console.error('Error fetching currency rate:', error);
+                    }
+                });
+            }
+         
+    });
     // Symbol end 
     $(document).on('change', '#package_id', function() {
         var packageId = $(this).val();
-
+       
         if (packageId) {
             $.ajax({
                 url: '{{ route("packages.details", ":id") }}'.replace(':id', packageId),

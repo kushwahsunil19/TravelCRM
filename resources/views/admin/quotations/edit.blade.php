@@ -1885,36 +1885,60 @@ $(document).ready(function() {
         });
     });
 
-    // onchange Symbol
-    function updateSymbol() {
+  // onchange Symbol
+  $(document).on('change', '#currency_id', function() {
         var selectedOption = $('#currency_id option:selected'); // Get selected option
-        var symbol = selectedOption.data('symbol'); // Get symbol from the data attribute
-
-        if (!symbol) {
-            symbol = '₹'; // Default to ₹ symbol if none selected
-        }
-        // Update all relevant fields with the new symbol
-
-        var discount_type = $('#discount_type').val();
-        var package_amt = $('#package_amt').val(); // Default to 0 if not a number
-        var discount = $('.discount').val();
-        var gst_tax = $('.gst_tax').val();
-        $('#currency_symbol').val(symbol);
-        var no_of_passenger = $('#no_of_passenger').val();
-        calculation(package_amt, gst_tax, discount, discount_type, symbol, no_of_passenger);
-        var currency_code = selectedOption.data('code');
-        var branch = $.trim($('#branch_id option:selected').text()).toLowerCase();
-        if (currency_code !== undefined ) { 
-           let  rate = 1.00;
-            $('#currency_rate').val(rate.toFixed(2));
-        } 
-       // currencyWiseCalculate(package_amt, gst_tax, discount, discount_type, symbol, branch, currency_code);
-
-    }
-    // Call the function on page load in case a currency is already selected
-    updateSymbol();
+        var toCurrency = selectedOption.data('code');        
+        var fromCurrency = 'AED';          
+        let  amount = 1.00;           
+           $.ajax({
+                        url:  '{{ url("currency-rate")}}',  // URL of the route we defined
+                        type: 'GET',
+                        data: {
+                            fromCurrency: fromCurrency,
+                            toCurrency: toCurrency,
+                            amount: amount
+                        },
+                    success: function(response) {
+                        // On success, update the currency rate
+                        var rate = response.rate;                      
+                        $('#currency_rate').val(rate.toFixed(5));
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle errors (if any)
+                        console.error('Error fetching currency rate:', error);
+                    }
+                });
+         
+    });
     // Update symbol when the selection changes
-    $('#currency_id').on('change', updateSymbol);
+
+    $(document).on('change', '#edit_currency_id', function() {
+        var selectedOption = $('#edit_currency_id option:selected'); // Get selected option
+        var toCurrency = selectedOption.data('code');        
+        var fromCurrency = 'AED';          
+        let  amount = 1.00;           
+           $.ajax({
+                        url:  '{{ url("currency-rate")}}',  // URL of the route we defined
+                        type: 'GET',
+                        data: {
+                            fromCurrency: fromCurrency,
+                            toCurrency: toCurrency,
+                            amount: amount
+                        },
+                    success: function(response) {
+                        // On success, update the currency rate
+                        var rate = response.rate;
+                      
+                        $('#edit_currency_rate').val(rate.toFixed(5));
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle errors (if any)
+                        console.error('Error fetching currency rate:', error);
+                    }
+                });
+         
+    });
     // Symbol end
 
     $(document).on('change', '#package_id', function() {
