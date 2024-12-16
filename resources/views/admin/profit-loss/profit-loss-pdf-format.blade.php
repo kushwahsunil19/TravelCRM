@@ -108,7 +108,6 @@
 
                 @forelse ($invoices as $invoice)
                 @php
-
                 $currency_code = $invoice->currency->code ?? 'AED';
                 $package_amt = ($invoice->package->amount ?? 0) * ($invoice->no_of_passenger ?? 1);
                 $net_amt_row = ($invoice->package->net_amount ?? 0) ;
@@ -116,9 +115,9 @@
                 $package_amt = getCurrencyRateAmt($invoice->currency->code,'AED',$package_amt);
                 $net_amt_row = getCurrencyRateAmt($invoice->currency->code,'AED',$net_amt_row);
                 $discount = $invoice->discount ?? 0;
-                $discount_amt = ($invoice->discount_type == 'Fixed') ? $discount : ($package_amt *
-                $discount) / 100;
-                $discount_amt = getCurrencyRateAmt($invoice->currency->code,'AED',$discount_amt);
+                $discount_amt = ($invoice->discount_type === 'Fixed') 
+                           ? getCurrencyRateAmt($invoice->currency->code, 'AED', $discount) 
+                           : ($package_amt * $discount) / 100;
 
                 $total_net_amt += $net_amt_row;
 

@@ -20,7 +20,7 @@
                                         alt="filter"></span>Filter </a>
                         </li>
                         <li>
-                            <div class="dropdown dropdown-action" data-bs-toggle="tooltip" data-bs-placement="top"
+                            <!-- <div class="dropdown dropdown-action" data-bs-toggle="tooltip" data-bs-placement="top"
                                 title="Download">
                                 <a href="#" class="btn-filters" data-bs-toggle="dropdown" aria-expanded="false"><span><i
                                             class="fe fe-download"></i></span></a>
@@ -40,7 +40,7 @@
 
                                     </ul>
                                 </div>
-                            </div>
+                            </div> -->
                         </li>
 
 
@@ -81,77 +81,68 @@
         <div class="card-table">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-center table-hover datatable">
-                        <thead>
-                            <tr>
-                                <th>S.No</th>
-                                <th>Name</th>
-                                <th>Hotel Expenses</th>
-                                <th>Total Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-        @php $counter = 1; @endphp
-
-        @forelse ($Suppliers as $Supplier)
-        @php $hasHotelExpenses = false; @endphp 
-
-        @foreach ($Supplier->expenses as $expense)
-            @if(strpos(strtolower($expense->title), 'hotel') !== false && $expense->amount > 0) <!-- Check if expense is hotel-related and has a non-zero amount -->
-                @php $hasHotelExpenses = true; @endphp <!-- Set flag if hotel expense found -->
-            @endif
-        @endforeach
-        
-        @if($hasHotelExpenses) 
-            <tr>
-                <td>{{ $counter }} </td>
-                
-                <td>
-                    <h2 class="table-avatar">
+                <table class="table table-center table-hover datatable">
+                <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Package Name</th>
+                        <th>Gross Amount</th>
+                        <th>Net Cost</th>
+                        <th>Net Profit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php 
+                    $totalGross = 0; // Corrected variable name
+                    $totalExpenses = 0;
+                    $totalNetProfit = 0;
+                    @endphp
+                    @forelse ($packages as $index => $package)
                         @php
-                            $avatar = $Supplier->image ? url('public/profile/' . $Supplier->image) :
-                            url('public/assets/img/profiles/default.png');
+                        $packageGross = $package->amount ?? 0;
+                        $packageExpenses = $package->expenses->sum('amount');
+                        $packageNetProfit = $packageGross - $packageExpenses;
+
+                        // Update totals
+                        $totalGross += $packageGross;
+                        $totalExpenses += $packageExpenses;
+                        $totalNetProfit += $packageNetProfit;
                         @endphp
-                        <a href="" class="avatar avatar-md me-2"><img
-                                class="avatar-img rounded-circle" src="{{$avatar}}"
-                                alt="User Image"></a>
-                        <a href="">{{ $Supplier->name }} <span><span class="__cf_email__"
-                                    data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $Supplier->email }}]</span></span></a>
-                    </h2>
-                </td>
-                
-                <td>
-                    <ul style="list-style-type: disc; padding-left: 20px;">
-                        @php $hasHotelExpenses = false; @endphp <!-- Reset flag for each expense list -->
-                        
-                        @foreach ($Supplier->expenses as $expense)
-                            @if(strpos(strtolower($expense->title), 'hotel') !== false && $expense->amount > 0) <!-- Check if expense is hotel-related and has a non-zero amount -->
-                                @php $hasHotelExpenses = true; @endphp <!-- Set flag if hotel expense found -->
-                                <li>{{ $expense->title }} = {{ number_format($expense->amount, 2) }}</li>
-                            @endif
-                        @endforeach
-                        
-                        @if(!$hasHotelExpenses) 
-                            <li>No hotel expenses</li>
-                        @endif
-                    </ul>
-                </td>
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $package->package_name }}</td>
+                            <td>{{ number_format($packageGross, 2) }}</td>
+                            <td>
+                                @if($package->expenses->isNotEmpty())
+                                    <ul>
+                                        @foreach ($package->expenses as $expense)
+                                            <li>{{ $expense->title }}: {{ number_format($expense->amount, 2) }}</li>
+                                        @endforeach
+                                    </ul>
+                                    <strong>Total Expenses: </strong>{{ number_format($packageExpenses, 2) }}
+                                @else
+                                    No Expenses
+                                @endif
+                            </td>
+                            <td>{{ number_format($packageNetProfit, 2) }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5">No packages found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2" class="text-end"><strong>Total:</strong></td>
+                        <td><strong>{{ number_format($totalGross, 2) }}</strong></td>
+                        <td><strong>{{ number_format($totalExpenses, 2) }}</strong></td>
+                        <td><strong>{{ number_format($totalNetProfit, 2) }}</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
 
-                <td>
-                    {{ $Supplier->totalHotelAmount > 0 ? number_format($Supplier->totalHotelAmount, 2) : 'No items' }}
-                </td>
-            </tr>
-            
-            @php $counter++; @endphp <!-- Increment the counter only when a row is displayed -->
-        @endif
-    @empty
-        <tr>
-            <td colspan="4" class="text-center">No Suppliers found.</td>
-        </tr>
-    @endforelse
-</tbody>
 
-                    </table>
                 </div>
             </div>
         </div>

@@ -261,14 +261,14 @@
                         <th style="text-align:left; border: 1px solid black; ">Amount ({{ $currency_code }})</th>
                     </tr>
                 </thead>
-                <tbody>
+              
                     <!-- Dynamic Items -->
                     @if(!empty($items) && is_array($items))
                     @foreach($items as $item)
                     @if(is_array($item))
                     <tr style="text-align:center;">
                         <td style="text-align:justify; border: 1px solid black;"><b>{{ $item['package_name'] }}</b></td>
-                        <td style="text-align:justify; border: 1px solid black;">{!! $item['description'] !!}</td>
+                        <td style="text-align:justify; border: 1px solid black;" >{!! $item['description'] !!}</td>
                         <td style="text-align:justify; border: 1px solid black;">
                            {{ number_format($item['amount'] ?? 0, 2) }}</td>
                     </tr>
@@ -279,7 +279,7 @@
                         <td colspan="3" class="text-center">No items available</td>
                     </tr>
                     @endif
-                </tbody>
+               
             </table>
         </div>
 
@@ -312,7 +312,7 @@
                     <br>
 
                     <p><strong>ACCOUNT DETAILS</strong></p>
-                    <br>
+                 
                     @if(!empty($companyBankDetails) && is_array($companyBankDetails))
                     @foreach($companyBankDetails as $bank)
                     <div style="{{ $loop->last ? '' : 'border-bottom: 1px solid #ddd; padding-bottom: 15px; margin-bottom: 15px;' }}">

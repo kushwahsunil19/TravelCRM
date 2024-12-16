@@ -86,7 +86,7 @@ td {
                                                 <label>Booking Reffrence No</label>
                                                 <input type="text" class="form-control" name="booking_reference_no"
                                                     placeholder="Enter booking reffrence no"
-                                                    value="{{ old('booking_reference_no')}}" required>
+                                                    value="{{ old('booking_reference_no')}}" >
                                                 @if ($errors->has('booking_reference_no'))
                                                 <span
                                                     class="text-danger">{{ $errors->first('booking_reference_no') }}</span>

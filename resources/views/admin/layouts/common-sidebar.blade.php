@@ -750,6 +750,22 @@
                         <li>
                             <a href="{{route('expenses.index')}}"><i class="fe fe-file-plus"></i> <span>Expenses</span></a>
                         </li> -->
+                        @if($listInovice)
+                            <!-- Sales -->
+                            <li class="menu-title"><span>Sales</span></li>
+                            <li class="submenu">
+
+                                <a href="{{route('invoices.index')}}"><i class="fe fe-file"></i>
+                                    <span>Manage Invoices</span><span class="menu-arrow"></span></a>
+                                <ul style="display: none;">
+                                    <li><a href="{{route('invoices.index')}}"
+                                            class="{{strpos($url,'invoices') !== false ? 'active' : '' }}">Invoices</a></li>
+                                    <!-- <li><a href="#">Invoice Details (Admin)</a></li>
+                                    <li><a href="#">Invoice Details (Customer)</a></li>
+                                    <li><a href="#">Invoice Templates</a></li> -->
+                                </ul>
+                            </li>
+                            @endif
 
                         <li class="menu-title"><span>Finance & Accounts   </span></li>
 
@@ -801,22 +817,7 @@
                                 </li> -->
                             <!-- /Signature -->
                        
-                            @if($listInovice)
-                            <!-- Sales -->
-                            <li class="menu-title"><span>Sales</span></li>
-                            <li class="submenu">
-
-                                <a href="{{route('invoices.index')}}"><i class="fe fe-file"></i>
-                                    <span>Manage Invoices</span><span class="menu-arrow"></span></a>
-                                <ul style="display: none;">
-                                    <li><a href="{{route('invoices.index')}}"
-                                            class="{{strpos($url,'invoices') !== false ? 'active' : '' }}">Invoices</a></li>
-                                    <!-- <li><a href="#">Invoice Details (Admin)</a></li>
-                                    <li><a href="#">Invoice Details (Customer)</a></li>
-                                    <li><a href="#">Invoice Templates</a></li> -->
-                                </ul>
-                            </li>
-                            @endif
+                       
                             <!-- <li>
                                     <a href="recurring-invoices.html"><i class="fe fe-clipboard"></i> <span>Recurring Invoices</span></a>
                                 </li>

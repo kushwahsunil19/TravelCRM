@@ -79,7 +79,7 @@
 							<div class="card-body">
 								<div class="dash-widget-header">
 									<span class="dash-widget-icon bg-1">
-									<i class="fas fa-indian-rupee-sign"></i>
+									د.إ 
 									</span>
 									<div class="dash-count">
 										<div class="dash-title">Total Income</div>
@@ -100,7 +100,8 @@
 							<div class="card-body">
 								<div class="dash-widget-header">
 									<span class="dash-widget-icon bg-2">
-									<i class="fas fa-indian-rupee-sign"></i>
+									د.إ 
+
 									</span>
 									<div class="dash-count">
 										<div class="dash-title">Total Expenses</div>
@@ -121,7 +122,7 @@
 							<div class="card-body">
 								<div class="dash-widget-header">
 									<span class="dash-widget-icon bg-3">
-									<i class="fas fa-indian-rupee-sign"></i>
+									د.إ 
 									</span>
 									<div class="dash-count">
 										<div class="dash-title">Net Profit</div>

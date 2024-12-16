@@ -4,7 +4,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use PDF;
-use App\Models\Supplier;
+use App\Models\Package;
 
 
 
@@ -12,28 +12,16 @@ class HotelReportController extends Controller
 {
     public function index(Request $request)
 {
-    $query = Supplier::query();
+    $query = Package::query();
 
     // Apply filters based on request input
     if ($request->filled('name')) {
-        $query->where('name', 'like', '%' . $request->name . '%');
+        $query->where('package_name', 'like', '%' . $request->name . '%');
     }
 
-    if ($request->filled('email')) {
-        $query->where('email', 'like', '%' . $request->email . '%');
-    }
-
-    // Get the filtered suppliers with their hotel expenses
-    $Suppliers = $query->with(['expenses' => function ($query) {
-        $query->where('title', 'like', '%hotel%'); // Use LIKE operator to filter for any hotel-related expenses
-    }])->get();
-
-    // Calculate the total hotel expenses for each supplier
-    foreach ($Suppliers as $Supplier) {
-        $Supplier->totalHotelAmount = $Supplier->expenses->sum('amount');
-    }
-
-    return view('admin.expenses.hotel-report', compact('Suppliers'));
+    // Fetch the results (use `get()` or `paginate()` depending on your needs)
+    $packages = $query->with('expenses')->get();
+    return view('admin.expenses.hotel-report', compact('packages'));
 }
 
 
@@ -47,16 +35,16 @@ class HotelReportController extends Controller
     date_default_timezone_set('Asia/Kolkata');
 
     // Initialize the query
-    $query = Supplier::query();
+    $query = Package::query();
 
     // Apply filters based on request input
     if ($request->filled('name')) {
-        $query->where('name', 'like', '%' . $request->name . '%');
+        $query->where('package_name', 'like', '%' . $request->name . '%');
     }
 
-    if ($request->filled('email')) {
-        $query->where('email', 'like', '%' . $request->email . '%');
-    }
+    // if ($request->filled('email')) {
+    //     $query->where('email', 'like', '%' . $request->email . '%');
+    // }
 
     // Get the filtered suppliers with their hotel expenses
     $suppliers = $query->with(['expenses' => function ($query) {
@@ -89,16 +77,16 @@ public function downloadCSV(Request $request)
     date_default_timezone_set('Asia/Kolkata');
 
     // Initialize the query for suppliers
-    $query = Supplier::query();
+    $query = Package::query();
 
     // Apply filters based on request input
     if ($request->filled('name')) {
-        $query->where('name', 'like', '%' . $request->name . '%');
+        $query->where('package_name', 'like', '%' . $request->name . '%');
     }
 
-    if ($request->filled('email')) {
-        $query->where('email', 'like', '%' . $request->email . '%');
-    }
+    // if ($request->filled('email')) {
+    //     $query->where('email', 'like', '%' . $request->email . '%');
+    // }
 
     // Get the filtered suppliers with their hotel expenses (filter expenses with 'hotel' in title)
     $suppliers = $query->with(['expenses' => function ($query) {

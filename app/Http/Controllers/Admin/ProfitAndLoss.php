@@ -240,13 +240,13 @@ class ProfitAndLoss extends Controller
             $netAmountRow = getCurrencyRateAmt($currencyCode, 'AED', $netAmountRow);
     
             $discount = $invoice->discount ?? 0;
-            $discountAmount = ($invoice->discount_type == 'Fixed')
-                ? $discount
-                : ($packageAmount * $discount) / 100;
-            $discountAmount = getCurrencyRateAmt($currencyCode, 'AED', $discountAmount);
-    
+            
+            $discountAmount = ($invoice->discount_type === 'Fixed') 
+            ? getCurrencyRateAmt($invoice->currency->code, 'AED', $discount) 
+            : ($packageAmount * $discount) / 100;
             $amountAfterDiscount = $packageAmount - $discountAmount;
             $vatAmount = ($amountAfterDiscount * ($invoice->vat ?? 0)) / 100;
+
             $totalInvoiceAmount = $amountAfterDiscount + $vatAmount;
     
             $netProfitRow = $totalInvoiceAmount - $netAmountRow;

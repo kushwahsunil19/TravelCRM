@@ -134,7 +134,7 @@
                         
                                     // Apply Discounts
                                     $discount = $invoice->discount ?? 0;
-                                    $discountAmount = ($invoice->discount_type === 'Fixed') ? $discount : ($grossAmount * $discount) / 100;
+                                    $discountAmount = ($invoice->discount_type === 'Fixed') ? getCurrencyRateAmt($invoice->currency->code, 'AED', $discount) : ($grossAmount * $discount) / 100;
                         
                                     // Currency Conversion                             
                                     $grossAmount = getCurrencyRateAmt($invoice->currency->code,'AED',$grossAmount);

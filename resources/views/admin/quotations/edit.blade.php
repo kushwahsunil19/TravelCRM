@@ -91,7 +91,7 @@ td {
                                                 <input type="text" class="form-control" name="booking_reference_no"
                                                     placeholder="Enter booking reffrence no"
                                                     value="{{ old('booking_reference_no', $quotation->booking_reference_no) }}"
-                                                    required>
+                                                    >
                                                 @if ($errors->has('booking_reference_no'))
                                                 <span
                                                     class="text-danger">{{ $errors->first('booking_reference_no') }}</span>
