@@ -97,8 +97,8 @@ $url = $_SERVER['REQUEST_URI'];
         @foreach ($invoices as $invoice)
             @php
           
-            $symbol = isset($invoice->currency->symbol) ?
-            $invoice->currency->symbol : '₹';
+            $symbol = isset($invoice->package->currency->symbol) ?
+            $invoice->package->currency->symbol : '₹';
             $package_amt = $invoice->package->amount * $invoice->no_of_passenger;
             // GST Tax in percentage
             $tax = $invoice->vat;
@@ -113,8 +113,8 @@ $url = $_SERVER['REQUEST_URI'];
             // Amount after discount
             $amount_after_discount = $package_amt - $discount_amt;
             $tax_amt = ($amount_after_discount * $tax) / 100;
-            $rates = getCurrencyRate($invoice->currency->code);            
-            $total_invoice_amt_AED += getCurrencyRateAmt($invoice->currency->code,'AED',($amount_after_discount + $tax_amt));
+            $rates = getCurrencyRate($invoice->package->currency->code);            
+            $total_invoice_amt_AED += getCurrencyRateAmt($invoice->package->currency->code,'AED',($amount_after_discount + $tax_amt));
             @endphp              
         @endforeach
         @php 
@@ -322,9 +322,9 @@ $url = $_SERVER['REQUEST_URI'];
                                         <th>Branch</th>
                                         <th>Package</th>
                                         <th>Invoice To</th>
-                                        <th>Discount Type</th>
+                                        <!-- <th>Discount Type</th>
                                         <th>Discount</th>
-                                        <th>Vat</th>
+                                        <th>Vat</th> -->
                                         <th>Amount</th>
                                         <th>Actions</th>
                                     </tr>
@@ -333,8 +333,8 @@ $url = $_SERVER['REQUEST_URI'];
                                     @forelse ($invoices as $invoice)
 
                                     @php
-                                    $symbol = isset($invoice->currency->symbol) ?
-                                    $invoice->currency->symbol : '₹';
+                                    $symbol = isset($invoice->package->currency->symbol) ?
+                                    $invoice->package->currency->symbol : '₹';
                                     $package_amt = $invoice->package->amount * $invoice->no_of_passenger;
                                     // GST Tax in percentage
                                     $tax = $invoice->vat;
@@ -370,7 +370,7 @@ $url = $_SERVER['REQUEST_URI'];
                                                 <a href="">{{$invoice->partner->name }} <span><span class="__cf_email__"
                                                             data-cfemail="c5b5b7aca6aca9a9a485a0bda4a8b5a9a0eba6aaa8">[{{ $invoice->partner->email }}]</span></span></a>
                                         </td>
-                                        <td> @if($invoice->discount_type == 'Fixed')
+                                        <!-- <td> @if($invoice->discount_type == 'Fixed')
                                                 {{ $invoice->discount_type }}
                                                 @elseif($invoice->discount_type == 'Percentage')
                                                 {{ $invoice->discount_type }}
@@ -378,10 +378,10 @@ $url = $_SERVER['REQUEST_URI'];
                                                 N/A
                                                 @endif
                                         </td>
-                                        <!-- <td>{{ $invoice->discount_type }}</td> -->
+                                        
                                         <td>{{ $invoice->discount }}{{ ($invoice->discount_type=='Fixed')?'':'%'}}
                                         </td>
-                                        <td>{{ $invoice->vat }}%</td>
+                                        <td>{{ $invoice->vat }}%</td> -->
                                         <td>{{$symbol}}{{ number_format($total_amt, 2) }}</td>
                                         <td>
 

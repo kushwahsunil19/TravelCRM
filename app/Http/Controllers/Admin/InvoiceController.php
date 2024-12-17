@@ -30,7 +30,7 @@ class InvoiceController extends Controller
         $rolePermissions = getRolePermissions();   
         if (in_array('list-invoice', $rolePermissions[$userRole])) { 
           // Build the query for fetching invoices with the necessary relationships
-          $query = Invoice::with(['branch', 'partner', 'package', 'bank','currency']);
+          $query = Invoice::with(['branch', 'partner','package.expenses' ,'package.currency', 'bank','currency']);
       
           // Apply filters based on request parameters
           if ($request->filled('invoice_no')) {
@@ -60,7 +60,7 @@ class InvoiceController extends Controller
       
           // Paginate the filtered results (you can adjust the number per page as needed)
           $invoices = $query->paginate($totalInvoices); // Paginate the filtered results
-      
+       
           // Return the view with total invoices and paginated invoices
           return view('admin.invoices.invoices', compact('invoices', 'totalInvoices','states','countries','cities','suppliers'));
         } else {

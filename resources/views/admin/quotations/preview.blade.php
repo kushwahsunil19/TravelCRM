@@ -244,11 +244,11 @@
     <div class="total" style="padding: 0px">
     <p>
         <strong>Sub Total :</strong> {{$data['curreny_symbol']}}{{ number_format($data['subtotal'], 2) }}<br />
-    <p>
+    <!-- <p>
     <strong>Discount @if($data['discount_type'] == 'Percentage') (%) @endif:</strong>
         {{ $data['discount'] }}
    </p>
-        <p><strong>Vat % : </strong>{{ number_format($data['tax'], 2) }} </p>
+        <p><strong>Vat % : </strong>{{ number_format($data['tax'], 2) }} </p> -->
         <!-- <strong>Estimate Total ({{ $data['curreny_symbol'] }}) :</strong> {{$data['curreny_symbol']}}{{ number_format($data['total'], 2) }}<br /> -->
         @php 
        
@@ -274,7 +274,7 @@
             <div class="notes">
                 <h6>Notes / Terms</h6>
                 <p>                
-                    Payments should be made in favor of “{{ $data['bill_to'] }}”
+                    Payments should be made in favor of “CENTURION LUXURY TRAVEL AND TOURISM”
                 </p>
                 <br>
 

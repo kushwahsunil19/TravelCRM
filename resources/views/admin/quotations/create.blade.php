@@ -54,6 +54,7 @@ td {
                                 <div class="row">
                                     <div class="col-lg-4 col-md-6 col-sm-12">
                                         <div class="input-block mb-3">
+                                       
                                             <!-- <div class="mb-2">
                                                 <label>Document Title</label>
                                             </div> -->
@@ -241,6 +242,8 @@ td {
                                         </div>
                                     </div>
                                 </div>
+                                <input type="hidden" class="form-control" id="currency_symbol"
+                                placeholder="" value="" >
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-12">
                                         <div class="input-block mb-3">
@@ -257,10 +260,10 @@ td {
                                     <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="input-block mb-3">
                                                 <label>No. of Infant</label>
-                                                <input type="number" class="form-control" name="no_of_passenger"
-                                                    id="no_of_passenger" placeholder="Enter No. of Infant"
+                                                <input type="number" class="form-control passenger-input" name="no_of_infant"
+                                                    id="no_of_infant" placeholder="Enter No. of Infant"
                                                     value="{{ old('no_of_passenger') }}"
-                                                    min="0">
+                                                    min="0" >
                                                 @if ($errors->has('no_of_passenger'))
                                                 <span class="text-danger">{{ $errors->first('no_of_passenger') }}</span>
                                                 @endif
@@ -270,8 +273,8 @@ td {
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="input-block mb-3">
                                                 <label>No. of Child</label>
-                                                <input type="number" class="form-control" name="no_of_passenger"
-                                                    id="no_of_passenger" placeholder="Enter No. of Child"
+                                                <input type="number" class="form-control passenger-input" name="no_of_child"
+                                                    id="no_of_child" placeholder="Enter No. of Child"
                                                     value="{{ old('no_of_passenger') }}"
                                                     min="0">
                                                 @if ($errors->has('no_of_passenger'))
@@ -283,10 +286,10 @@ td {
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="input-block mb-3">
                                                 <label>No. of Adult</label>
-                                                <input type="number" class="form-control" name="no_of_passenger"
-                                                    id="no_of_passenger" placeholder="Enter No. of Adult"
+                                                <input type="number" class="form-control passenger-input" name="no_of_adult"
+                                                    id="no_of_adult" placeholder="Enter No. of Adult"
                                                     value="{{ old('no_of_passenger') }}"
-                                                    min="0">
+                                                    min="0" >
                                                 @if ($errors->has('no_of_passenger'))
                                                 <span class="text-danger">{{ $errors->first('no_of_passenger') }}</span>
                                                 @endif
@@ -780,42 +783,7 @@ td {
                                 @endif
                             </div>
                         </div>
-                        <div class="col-lg-4 col-md-6 col-sm-12">
-                            <div class="input-block mb-2">
-                                <label>Infant Amount</label>
-                                <input type="number" class="form-control "
-                                    name="infant_amount" id="infant_amount" placeholder="Enter Infant Amount"
-                                    min="0" step="any" value="" >
-                                @if ($errors->has('infant_amount'))
-                                <span
-                                    class="text-danger">{{ $errors->first('infant_amount') }}</span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-sm-12">
-                            <div class="input-block mb-2">
-                                <label>Child Amount</label>
-                                <input type="number" class="form-control "
-                                    name="child_amount" id="child_amount" placeholder="Enter Child Amount"
-                                    min="0" step="any" value="" >
-                                @if ($errors->has('child_amount'))
-                                <span
-                                    class="text-danger">{{ $errors->first('child_amount') }}</span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-sm-12">
-                            <div class="input-block mb-2">
-                                <label>Adult Amount	</label>
-                                <input type="number" class="form-control "
-                                    name="adult_amount" id="adult_amount" placeholder="Enter Adult Amount"
-                                    min="0" step="any" value="" >
-                                @if ($errors->has('adult_amount'))
-                                <span
-                                    class="text-danger">{{ $errors->first('adult_amount') }}</span>
-                                @endif
-                            </div>
-                        </div>
+                    
                         @role('Operations')
                         <!-- Dynamic Title and Rupees Fields -->
                         <hr> <label>Add More Expenses</label>                      
@@ -1737,21 +1705,26 @@ $(document).ready(function() {
                 var discount = $('.discount').val();
                 var gst_tax = $('.gst_tax').val();
                 var discount_type = $('#discount_type').val();
-                var symbol = $('#currency_symbol').val();
+             
                 var no_of_passenger = $('#no_of_passenger').val();
-                calculation(response.data.amount, gst_tax, discount, discount_type,
-                    symbol, no_of_passenger);
+          
                 // Ensure that the response contains the expected fields
-                const packageData = response.data;
+                const packageData = response.data;              
+                $('#currency_symbol').val(packageData.currency.symbol);
                 const expenses = packageData.expenses.map(expense =>
                     `${expense.title}: ${expense.amount}`).join('<br>');
-
+             
                 // Create a new row with package details
                 const newRow = `
                         <tr>
                             <td>${packageData.package_name}</td> <!-- Package Name -->
                             <td  class="description-cell">${packageData.description}</td> <!-- Description -->
-                            <td>${packageData.amount}</td> <!-- Amount -->
+                           <td>
+                                ${packageData.currency.symbol + (packageData.adult_amount ?? 0)} (Adult) <br>
+                                ${packageData.currency.symbol + (packageData.child_amount ?? 0)} (Child) <br>
+                                ${packageData.currency.symbol + (packageData.infant_amount ?? 0)} (Infant)
+                            </td>
+
                             <td>
                               ${expenses} 
                              <hr>
@@ -1771,7 +1744,9 @@ $(document).ready(function() {
                 // Append the new row to the table body
                 tableBody.append(newRow);
                 $('#edit_package_details').modal('hide'); // Close modal after success
-
+                var symbol = $('#currency_symbol').val();
+                calculation(response.data.amount, gst_tax, discount, discount_type,
+                symbol, no_of_passenger);
             },
             error: function(xhr) {
                 // Display error messages from the server if any
@@ -1790,11 +1765,16 @@ $(document).ready(function() {
     // onchange Symbol
     $(document).on('change', '#currency_id', function() {
         var selectedOption = $('#currency_id option:selected'); // Get selected option
-        var toCurrency = selectedOption.data('code');        
+        var toCurrency = selectedOption.data('code');    
+       
+        
         var fromCurrency = 'AED';          
         let  amount = 1.00;   
+        var rate = 0.00;                
        
         if (toCurrency !== undefined ) { 
+            var symbol = selectedOption.data('symbol') ;    
+            $('#currency_symbol').val(symbol);
            $.ajax({
                         url:  '{{ url("currency-rate")}}',  // URL of the route we defined
                         type: 'GET',
@@ -1814,6 +1794,7 @@ $(document).ready(function() {
                     }
                 });
             }
+            $('#currency_rate').val(rate.toFixed(5));
          
     });
     // Update symbol when the selection changes
@@ -1822,8 +1803,11 @@ $(document).ready(function() {
         var selectedOption = $('#edit_currency_id option:selected'); // Get selected option
         var toCurrency = selectedOption.data('code');        
         var fromCurrency = 'AED';          
-        let  amount = 1.00;    
-        if (toCurrency !== undefined ) {        
+        let  amount = 1.00;
+        var rate = 0.00;      
+        if (toCurrency !== undefined ) {  
+            var symbol = selectedOption.data('symbol') ;    
+            $('#currency_symbol').val(symbol);      
            $.ajax({
                         url:  '{{ url("currency-rate")}}',  // URL of the route we defined
                         type: 'GET',
@@ -1844,6 +1828,7 @@ $(document).ready(function() {
                     }
                 });
             }
+            $('#currency_rate').val(rate.toFixed(5));
          
     });
     // Symbol end 
@@ -1851,6 +1836,7 @@ $(document).ready(function() {
         var packageId = $(this).val();
        
         if (packageId) {
+            
             $.ajax({
                 url: '{{ route("packages.details", ":id") }}'.replace(':id', packageId),
                 type: 'GET',
@@ -1863,13 +1849,15 @@ $(document).ready(function() {
                         // $('.amount').text(symbol + response.data.amount);
                         $('#package_amt').val(response.data.amount);
                         // $('.total_amt').text(symbol + response.data.amount);
-
+                       
                         // Clear the existing table body
                         const tableBody = $('#packageBody');
                         tableBody.empty(); // Clear existing rows
 
                         // Ensure that the response contains the expected fields
-                        const packageData = response.data;
+                        const packageData = response.data;                       
+                     
+                        $('#currency_symbol').val(packageData.currency.symbol);
                         const expenses = packageData.expenses.map(expense =>
                             `${expense.title}: ${expense.amount}`).join('<br>');
                         // Create a new row with package details
@@ -1877,7 +1865,9 @@ $(document).ready(function() {
                         <tr>
                             <td>${packageData.package_name}</td> <!-- Package Name -->
                             <td  class="description-cell">${packageData.description}</td> <!-- Description -->
-                            <td>${packageData.amount}</td> <!-- Amount -->
+                           <td>
+                              ${packageData.currency.symbol + (packageData.amount ?? 0)}  
+                          </td>
                             <td>                          
                               ${expenses} 
                               <hr>
@@ -1900,7 +1890,7 @@ $(document).ready(function() {
                         var gst_tax = $('.gst_tax').val();
                         var discount_type = $('#discount_type').val();
                         var symbol = $('#currency_symbol').val();
-                        var no_of_passenger = $('#no_of_passenger').val();
+                        var no_of_passenger = $('#no_of_passenger').val();            
                         calculation(response.data.amount, gst_tax, discount, discount_type,
                             symbol, no_of_passenger);
 
@@ -1929,7 +1919,27 @@ $(document).ready(function() {
         }
     });
 
+    $(document).on('input','.passenger-input',function(){   
+     
+    let total = 0;
+    // Iterate over all .passenger-input fields and sum their values
+    $('.passenger-input').each(function() {
+        total += parseFloat($(this).val()) || 0; // Use jQuery's .val() to get input value safely
+    });
+ 
+    // Update total passengers field using jQuery
+    $('#no_of_passenger').val(total);
 
+    // Retrieve other input values
+    var no_of_passenger = total;
+    var discount = $('.discount').val() || 0; // Fallback to 0 if empty
+    var discount_type = $('#discount_type').val() || 'Fixed'; // Default discount type
+    var package_amt = parseFloat($('#package_amt').val()) || 0;
+    var gst_tax = parseFloat($('.gst_tax').val()) || 0;
+    var symbol = $('#currency_symbol').val() || '₹';
+    // Call the calculation function
+    calculation(package_amt, gst_tax, discount, discount_type, symbol, no_of_passenger);
+});
     $(document).on('change', '#discount_type', function() {
         var discount_type = $(this).val();
         if (discount_type === 'Fixed') {
@@ -2304,6 +2314,8 @@ function addDynamicField(title = '', amount = '', id = '') {
     $('#edit-dynamic-fields-wrapper').append(newField);
 
 }
+
+
 </script>
 <!-- /Theme Setting -->
 @endsection

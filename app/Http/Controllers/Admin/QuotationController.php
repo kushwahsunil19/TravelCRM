@@ -40,7 +40,8 @@ class QuotationController extends Controller
          $totalQuotations = Quotation::count();
      
          // Build the query for fetching quotations with the necessary relationships
-         $query = Quotation::with(['branch.companyBankDetail', 'partner', 'package', 'bank']);
+         $query = Quotation::with(['branch.companyBankDetail', 'partner','package.currency',          // Package and its currency relationship
+    'package.expenses','bank']);
      
          // Apply filters based on request parameters
          if ($request->filled('quotation_no')) {
@@ -110,11 +111,12 @@ class QuotationController extends Controller
      */
     public function store(Request $request)
     {
+      
         $request->validate([
             'branch_id' => 'required|exists:branches,id',
             'partner_id' => 'required|exists:partners,id',
             'package_id' => 'required|exists:packages,id',
-            'currency_id' => 'required|exists:currencies,id',
+            // 'currency_id' => 'required|exists:currencies,id',
             // 'bank_id' => 'nullable|exists:bank_details,id',  
             'quotation_no' => 'required|unique:quotations,quotation_no',  
             // 'booking_reference_no' => 'nullable|unique:quotations,booking_reference_no',          
@@ -125,7 +127,7 @@ class QuotationController extends Controller
             // 'discount' => 'nullable|numeric',
         ]);
         $input = $request->all();
-       
+    
         $input['gst_tax'] = ($request->gst_tax !='')?$request->gst_tax:0.00;
         $input['currency_rate'] = ($request->currency_rate !='')?$request->currency_rate:0.00;
         $input['discount'] = ($request->discount !='')?$request->discount:0.00;
@@ -185,7 +187,7 @@ class QuotationController extends Controller
             'branch_id' => 'required|exists:branches,id',
             'partner_id' => 'required|exists:partners,id',
             'package_id' => 'required|exists:packages,id',
-            'currency_id' => 'required|exists:currencies,id',
+            // 'currency_id' => 'required|exists:currencies,id',
             // 'bank_id' => 'nullable|exists:bank_details,id',
             'quotation_no' => 'required|unique:quotations,quotation_no,' . $quotation->id,
                 
@@ -279,9 +281,9 @@ class QuotationController extends Controller
             // Total amount after applying discount and adding tax
             $total_amt = $amount_after_discount + $tax_amt;
        
-            $total_in_aed = getCurrencyRateAmt($quotation->currency->code,'AED',$total_amt);
-            $total_in_usd = getCurrencyRateAmt($quotation->currency->code,'USD',$total_amt);
-            $total_in_inr = getCurrencyRateAmt($quotation->currency->code,'INR',$total_amt);
+            $total_in_aed = getCurrencyRateAmt($quotation->package->currency->code,'AED',$total_amt);
+            $total_in_usd = getCurrencyRateAmt($quotation->package->currency->code,'USD',$total_amt);
+            $total_in_inr = getCurrencyRateAmt($quotation->package->currency->code,'INR',$total_amt);
         
             $currentDateTime = now()->format('Y-m-d_H-i-s');  // e.g., 2024-10-04_14-30-00
             $items = [];
@@ -316,8 +318,8 @@ class QuotationController extends Controller
            
             // Example: Adjust these fields based on your `quotations` table structure
             $data = [
-                'currency_code'=>$quotation->currency->code,
-                'curreny_symbol'=>$quotation->currency->symbol,
+                'currency_code'=>$quotation->package->currency->code,
+                'curreny_symbol'=>$quotation->package->currency->symbol,
                 'branch_address'=>$quotation->branch->address,
                 'branch_name'=>$quotation->branch->branch_name,
                 'quotation_date' => now()->toDateString(),
@@ -455,9 +457,9 @@ class QuotationController extends Controller
 
         // Example: Adjust these fields based on your `quotations` table structure
         $data = [
-            'currency_rate'=>$quotation->currency->rate,
-            'currency_code'=>$quotation->currency->code,
-            'curreny_symbol'=>$quotation->currency->symbol,
+            'currency_rate'=>$quotation->package->currency->rate,
+            'currency_code'=>$quotation->package->currency->code,
+            'curreny_symbol'=>$quotation->package->currency->symbol,
             'branch_address'=>$quotation->branch->address,
             'branch_name'=>$quotation->branch->branch_name,
             'quotation_date' => now()->toDateString(),

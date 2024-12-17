@@ -123,9 +123,9 @@
                                 <th>Branch</th>
                                 <th>Package</th>
                                 <th>Partner</th>
-                                <th>Discount Type</th>
+                                <!-- <th>Discount Type</th>
                                 <th>Discount</th>
-                                <th>VAT</th>
+                                <th>VAT</th> -->
                                 <th>Amount</th>
                                 <th>Actions</th>
                             </tr>
@@ -160,13 +160,13 @@
                                     <td>{{ $quotation->branch->city ?? 'N/A' }}</td>
                                     <td>{{ $quotation->package->package_name ?? 'N/A' }}</td>
                                     <td>{{ $quotation->partner->name ?? 'N/A' }}</td>
-                                    <td>{{ $quotation->discount_type ?? 'N/A' }}</td>
+                                    <!-- <td>{{ $quotation->discount_type ?? 'N/A' }}</td>
                                     <td>
                                         {{ ($quotation->discount_type == 'Fixed') ? $symbol : '' }}
                                         {{ $quotation->discount }}
                                         {{ ($quotation->discount_type == 'Fixed') ? '' : '%' }}
                                     </td>
-                                    <td>{{ $quotation->gst_tax }}%</td>
+                                    <td>{{ $quotation->gst_tax }}%</td> -->
                                     <td>{{ $symbol }}{{ number_format($total_amt, 2) }}</td>
                                     <td>
                                         <div class="dropdown dropdown-action">

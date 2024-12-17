@@ -22,7 +22,7 @@ class PackageController extends Controller
     }
     public function getPackageDetails($id)
     {
-        $package = Package::with('expenses')->find($id);
+        $package = Package::with('expenses','currency')->find($id);
     
         if (!$package) {
             return response()->json([

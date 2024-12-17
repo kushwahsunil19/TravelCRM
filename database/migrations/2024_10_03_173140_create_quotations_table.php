@@ -24,7 +24,7 @@ return new class extends Migration
             
             $table->integer('bank_id')->nullable();
             $table->integer('quotation_no')->unique();  
-            $table->string('booking_reference_no')->unique();
+            $table->string('booking_reference_no')->unique()->nullable();
             $table->integer('no_of_night')->default(0)->nullable();
             $table->integer('no_of_infant')->default(0)->nullable();
             $table->integer('no_of_child')->default(0)->nullable();

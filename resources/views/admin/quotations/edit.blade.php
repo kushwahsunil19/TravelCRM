@@ -331,6 +331,8 @@ td {
                                                     </div>
                                                 </div>
                                             </div> -->
+                                            <input type="hidden" class="form-control" id="currency_symbol"
+                                value="{{ old('currency_symbol', $quotation->package->currency->symbol) }}" >
                                             <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="input-block mb-3">
                                                 <label>No. of Night</label>
@@ -347,12 +349,12 @@ td {
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="input-block mb-3">
                                                 <label>No. of Infant</label>
-                                                <input type="number" class="form-control" name="no_of_passenger"
-                                                    id="no_of_passenger" placeholder="Enter No. of Infant"
-                                                    value="{{ old('no_of_passenger', $quotation->no_of_passenger) }}"
+                                                <input type="number" class="form-control passenger-input" name="no_of_infant"
+                                                    id="no_of_infant" placeholder="Enter No. of Infant"
+                                                    value="{{ old('no_of_infant', $quotation->no_of_infant) }}"
                                                     min="0">
-                                                @if ($errors->has('no_of_passenger'))
-                                                <span class="text-danger">{{ $errors->first('no_of_passenger') }}</span>
+                                                @if ($errors->has('no_of_infant'))
+                                                <span class="text-danger">{{ $errors->first('no_of_infant') }}</span>
                                                 @endif
 
                                             </div>
@@ -360,12 +362,12 @@ td {
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="input-block mb-3">
                                                 <label>No. of Child</label>
-                                                <input type="number" class="form-control" name="no_of_passenger"
-                                                    id="no_of_passenger" placeholder="Enter No. of Child"
-                                                    value="{{ old('no_of_passenger', $quotation->no_of_passenger) }}"
+                                                <input type="number" class="form-control passenger-input" name="no_of_child"
+                                                    id="no_of_child" placeholder="Enter No. of Child"
+                                                    value="{{ old('no_of_child', $quotation->no_of_child) }}"
                                                     min="0">
-                                                @if ($errors->has('no_of_passenger'))
-                                                <span class="text-danger">{{ $errors->first('no_of_passenger') }}</span>
+                                                @if ($errors->has('no_of_child'))
+                                                <span class="text-danger">{{ $errors->first('no_of_child') }}</span>
                                                 @endif
 
                                             </div>
@@ -373,12 +375,12 @@ td {
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="input-block mb-3">
                                                 <label>No. of Adult</label>
-                                                <input type="number" class="form-control" name="no_of_passenger"
-                                                    id="no_of_passenger" placeholder="Enter No. of Adult"
-                                                    value="{{ old('no_of_passenger', $quotation->no_of_passenger) }}"
+                                                <input type="number" class="form-control passenger-input" name="no_of_adult"
+                                                    id="no_of_adult" placeholder="Enter No. of Adult"
+                                                    value="{{ old('no_of_adult', $quotation->no_of_adult) }}"
                                                     min="0">
-                                                @if ($errors->has('no_of_passenger'))
-                                                <span class="text-danger">{{ $errors->first('no_of_passenger') }}</span>
+                                                @if ($errors->has('no_of_adult'))
+                                                <span class="text-danger">{{ $errors->first('no_of_adult') }}</span>
                                                 @endif
 
                                             </div>
@@ -388,7 +390,7 @@ td {
                                                 <label>No. of Passenger</label>
                                                 <input type="number" class="form-control" name="no_of_passenger"
                                                     id="no_of_passenger" placeholder="Enter No. of Passenger"
-                                                    value="{{ old('no_of_passenger', $quotation->no_of_passenger) }}"
+                                                    value="{{ old('no_of_passenger',  ($quotation->no_of_infant + $quotation->no_of_child + $quotation->no_of_adult)) }}"
                                                     min="0">
                                                 @if ($errors->has('no_of_passenger'))
                                                 <span class="text-danger">{{ $errors->first('no_of_passenger') }}</span>
@@ -447,17 +449,49 @@ td {
                                             <div class="form-group-bank">
                                                 <div class="invoice-total-box">
                                                     <div class="invoice-total-inner">
+                                                    <?php
+                                                        $no_of_passanger = ($quotation->no_of_infant + $quotation->no_of_child + $quotation->no_of_adult);
+                                                        // Package amount
+                                                        $package_amt = $quotation->package->amount * $no_of_passanger;
+
+                                                        // GST Tax in percentage
+                                                        $tax = $quotation->gst_tax;
+
+                                                        // Discount in percentage
+                                                        $discount = $quotation->discount;
+
+                                                        // Calculate discount amount (discount percentage applied to the package amount)
+                                                        if ($quotation->discount_type == 'Fixed') {
+                                                            $discount_amt = $discount;
+
+                                                        } else {
+                                                            $discount_amt = ($package_amt * $discount) / 100;
+
+                                                        }
+
+
+                                                        // Amount after discount
+                                                        $amount_after_discount = $package_amt - $discount_amt;
+
+                                                        // Calculate GST amount (tax percentage applied to the amount after discount)
+
+                                                        $tax_amt = ($amount_after_discount * $tax) / 100;
+
+                                                        // Total amount after applying discount and adding tax
+                                                        $total_amt = $amount_after_discount + $tax_amt;
+                                                        ?>
+                                                       
                                                         <p>Package Amount <span
-                                                                class="amount">{{ $quotation->currency->symbol }}{{$quotation->package->amount}}</span>
+                                                                class="amount">{{ $quotation->package->currency->symbol }}{{$total_amt}}</span>
                                                         </p>
                                                         <input type="hidden" id="package_amt"
                                                             value="{{$quotation->package->amount}}">
                                                         <!-- <p>Discount <span
-                                                                class="discount">{{ $quotation->currency->symbol }}{{ old('discount', $quotation->discount) }}</span>
+                                                                class="discount">{{ $quotation->package->currency->symbol }}{{ old('discount', $quotation->discount) }}</span>
                                                         </p> -->
                                                         <input type="hidden" id="discount" value="0">
                                                         <!-- <p>Vat <span
-                                                                class="gst_tax">{{ $quotation->currency->symbol }}{{ old('gst_tax', $quotation->gst_tax) }}</span>
+                                                                class="gst_tax">{{ $quotation->package->currency->symbol }}{{ old('gst_tax', $quotation->gst_tax) }}</span>
                                                         </p> -->
                                                         <input type="hidden" id="gst_tax" value="0">
                                                         <!-- <div class="status-toggle justify-content-between">
@@ -473,41 +507,34 @@ td {
                                                     </div>
 
                                                     <div class="invoice-total-footer">
-                                                        <?php
-// Package amount
-$package_amt = $quotation->package->amount * $quotation->no_of_passanger;;
-
-// GST Tax in percentage
-$tax = $quotation->gst_tax;
-
-// Discount in percentage
-$discount = $quotation->discount;
-
-// Calculate discount amount (discount percentage applied to the package amount)
-if ($quotation->discount_type == 'Fixed') {
-    $discount_amt = $discount;
-
-} else {
-    $discount_amt = ($package_amt * $discount) / 100;
-
-}
-
-
-// Amount after discount
-$amount_after_discount = $package_amt - $discount_amt;
-
-// Calculate GST amount (tax percentage applied to the amount after discount)
-
-$tax_amt = ($amount_after_discount * $tax) / 100;
-
-// Total amount after applying discount and adding tax
-$total_amt = $amount_after_discount + $tax_amt;
-                                                        ?>
-
-                                                        <h4>Total Amount <span
-                                                                class="total_amt">{{ $quotation->currency->symbol }}{{ number_format($total_amt, 2) }}</span>
-                                                        </h4>
-
+                                                        
+                                                    @php       
+                                                        $total_in_aed = getCurrencyRateAmt($quotation->package->currency->code,'AED', $total_amt );
+                                                        $total_in_usd = getCurrencyRateAmt($quotation->package->currency->code,'USD', $total_amt );
+                                                        $total_in_inr = getCurrencyRateAmt($quotation->package->currency->code,'INR', $total_amt );
+                                                        $currency_totals = [
+                                                            'USD' => $total_in_usd,
+                                                            'INR' => $total_in_inr,
+                                                            'AED' => $total_in_aed,
+                                                        ];
+                                                        @endphp
+                                                        <h4>Total Amount ({{ $quotation->package->currency->code }}): 
+                                                                <span class="total_amt_{{ $quotation->package->currency->code }}">
+                                                                {{ number_format($total_amt, 2) }}                                                              
+                                                                </span>
+                                                            </h4>
+                                                        @foreach ($currency_totals as $currency => $amount)
+                                                       
+                                                        @if ($currency !== $quotation->package->currency->code)
+                                                            <h4>Total Amount ({{ $currency }}): 
+                                                                <span class="total_amt_{{ $quotation->package->currency->code }}">
+                                                                    {{ number_format($amount, 2) }}
+                                                                </span>
+                                                            </h4>
+                                                        @endif
+                                                        
+                                                    @endforeach
+                                                      
 
                                                     </div>
                                                 </div>
@@ -894,8 +921,7 @@ $total_amt = $amount_after_discount + $tax_amt;
                                 @if ($errors->has('currency_id'))
                                 <span class="text-danger">{{ $errors->first('currency_id') }}</span>
                                 @endif
-                                <input type="hidden" id="currency_symbol"
-                                    value="{{ $quotation->currency->symbol }}">
+                               
                             </div>
 
                         </div>
@@ -906,7 +932,7 @@ $total_amt = $amount_after_discount + $tax_amt;
                                 <input type="number" class="form-control currency_rate"
                                     name="rate" id="currency_rate" placeholder="Enter Rate"
                                     min="0" step="any"
-                                    value="{{ old('currency_rate', $quotation->currency_rate) }}"
+                                    value="{{ old('currency_rate') }}"
                                     readonly>
                                 @if ($errors->has('currency_rate'))
                                 <span
@@ -1036,8 +1062,7 @@ $total_amt = $amount_after_discount + $tax_amt;
                                 @if ($errors->has('currency_id'))
                                 <span class="text-danger">{{ $errors->first('currency_id') }}</span>
                                 @endif
-                                <input type="hidden" id="currency_symbol"
-                                    value="{{ $quotation->currency->symbol }}">
+                                
                             </div>
 
                         </div>
@@ -1817,6 +1842,7 @@ $(document).ready(function() {
         for (instance in CKEDITOR.instances) {
             CKEDITOR.instances[instance].updateElement();
         }
+       
         var formData = new FormData(this); // FormData for file uploads
         var id = $('#pkg_id').val(); // Get user ID from hidden input
         $.ajax({
@@ -1830,6 +1856,7 @@ $(document).ready(function() {
             },
             success: function(response) {
                 toastr.success(response.message);
+              
                 // Clear the existing table body
                 const tableBody = $('#packageBody');
                 tableBody.empty(); // Clear existing rows
@@ -1840,8 +1867,13 @@ $(document).ready(function() {
                 var no_of_passenger = $('#no_of_passenger').val();
                 calculation(response.data.amount, gst_tax, discount, discount_type,
                     symbol, no_of_passenger);
+                    setTimeout(function() {
+                window.location.reload(); // Reload the page after the delay
+               }, 3000); // 5-second delay
+
                 // Ensure that the response contains the expected fields
                 const packageData = response.data;
+                $('#currency_symbol').val(packageData.currency.symbol);
                 const expenses = packageData.expenses.map(expense =>
                 `${expense.title}: ${expense.amount}`).join('<br>');
                 // Create a new row with package details
@@ -1868,6 +1900,7 @@ $(document).ready(function() {
 
                 // Append the new row to the table body
                 tableBody.append(newRow);
+               
                 $('#edit_package_details').modal('hide'); // Close modal after success
 
             },
@@ -1885,12 +1918,19 @@ $(document).ready(function() {
         });
     });
 
-  // onchange Symbol
-  $(document).on('change', '#currency_id', function() {
+   // onchange Symbol
+   $(document).on('change', '#currency_id', function() {
         var selectedOption = $('#currency_id option:selected'); // Get selected option
-        var toCurrency = selectedOption.data('code');        
+        var toCurrency = selectedOption.data('code');    
+       
+        
         var fromCurrency = 'AED';          
-        let  amount = 1.00;           
+        let  amount = 1.00;   
+        var rate = 0.00;                
+       
+        if (toCurrency !== undefined ) { 
+            var symbol = selectedOption.data('symbol') ;    
+            $('#currency_symbol').val(symbol);
            $.ajax({
                         url:  '{{ url("currency-rate")}}',  // URL of the route we defined
                         type: 'GET',
@@ -1909,6 +1949,8 @@ $(document).ready(function() {
                         console.error('Error fetching currency rate:', error);
                     }
                 });
+            }
+            $('#currency_rate').val(rate.toFixed(5));
          
     });
     // Update symbol when the selection changes
@@ -1917,7 +1959,11 @@ $(document).ready(function() {
         var selectedOption = $('#edit_currency_id option:selected'); // Get selected option
         var toCurrency = selectedOption.data('code');        
         var fromCurrency = 'AED';          
-        let  amount = 1.00;           
+        let  amount = 1.00;
+        var rate = 0.00;      
+        if (toCurrency !== undefined ) {  
+            var symbol = selectedOption.data('symbol') ;    
+            $('#currency_symbol').val(symbol);      
            $.ajax({
                         url:  '{{ url("currency-rate")}}',  // URL of the route we defined
                         type: 'GET',
@@ -1937,8 +1983,11 @@ $(document).ready(function() {
                         console.error('Error fetching currency rate:', error);
                     }
                 });
+            }
+            $('#currency_rate').val(rate.toFixed(5));
          
     });
+  
     // Symbol end
 
     $(document).on('change', '#package_id', function() {
@@ -1964,6 +2013,7 @@ $(document).ready(function() {
 
                         // Ensure that the response contains the expected fields
                         const packageData = response.data;
+                        $('#currency_symbol').val(packageData.currency.symbol);
                         const expenses = packageData.expenses.map(expense =>
                         `${expense.title}: ${expense.amount}`).join('<br>');
                         // Create a new row with package details
@@ -2023,6 +2073,25 @@ $(document).ready(function() {
 
         }
     });
+    $(document).on('input','.passenger-input',function(){    
+    let total = 0;
+    // Iterate over all .passenger-input fields and sum their values
+    $('.passenger-input').each(function() {
+        total += parseFloat($(this).val()) || 0; // Use jQuery's .val() to get input value safely
+    });
+    // Update total passengers field using jQuery
+    $('#no_of_passenger').val(total);
+
+    // Retrieve other input values
+    var no_of_passenger = total;
+    var discount = $('.discount').val() || 0; // Fallback to 0 if empty
+    var discount_type = $('#discount_type').val() || 'Fixed'; // Default discount type
+    var package_amt = parseFloat($('#package_amt').val()) || 0;
+    var gst_tax = parseFloat($('.gst_tax').val()) || 0;
+    var symbol = $('#currency_symbol').val() || '₹';
+    // Call the calculation function
+    calculation(package_amt, gst_tax, discount, discount_type, symbol, no_of_passenger);
+});
     $(document).on('change', '#discount_type', function() {
         var discount_type = $(this).val();
         if (discount_type === 'Fixed') {
@@ -2166,7 +2235,6 @@ $(document).ready(function() {
 
         // Display the calculated total amount with 2 decimal places
         $('.total_amt').text(symbol + total_amt.toFixed(2));
-
         // Optional: You can remove this alert in the final version
         console.log('Amount after discount: ', amountAfterDiscount);
         console.log('GST Amount: ', gstAmount);

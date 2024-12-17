@@ -35,6 +35,10 @@ class Package extends Model
     {
         return $this->belongsTo(User::class,'user_id', 'id');
     }
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class,'currency_id', 'id');
+    }
     public function expenses()
     {
         return $this->hasMany(PackageExpense::class, 'package_id', 'id');
