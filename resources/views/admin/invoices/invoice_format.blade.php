@@ -239,6 +239,9 @@
                                 <b>Booking Reffrence Number:</b> {{ $booking_reference_no }}<br />
                                 <b>Invoice Date:</b> {{ $invoice_date }}<br />
                                 <b>No. of Night:</b> {{ $no_of_night }}<br />
+                                <b>No. of Infant:</b> {{ $no_of_infant }}<br />
+                                <b>No. of Child:</b> {{ $no_of_child }}<br />
+                                <b>No. of Adult:</b> {{ $no_of_adult }}<br />
                                 <b>No. of Passenger:</b> {{ $no_of_passenger }}<br />
                                 <b>Valid Until:</b> {{ now()->addDays(30)->toDateString() }}<br />
                                 <b>Invoice Total ({{$currency_code}}):</b> {{ number_format($total, 2) }}
@@ -298,9 +301,28 @@
               @endif{{ number_format($discount, 2) }} </p>
             <p><strong>Vat (%) : </strong>{{ number_format($tax, 2) }} </p> -->
             <!-- Converted Amounts (Dynamic) -->
-        <strong>Invoice Total (AED) :</strong> د.إ <span>{{ number_format($total_in_aed, 2) }} </spa><br />
-        <strong>Invoice Total (USD) :</strong> $ <span>{{ number_format($total_in_usd, 2) }}</span><br />
-        <strong>Invoice Total (INR) :</strong> ₹ <span>{{ number_format($total_in_inr, 2) }}</span><br />
+
+            @php       
+                    $total_in_aed = getCurrencyRateAmt($currency_code,'AED',$subtotal);
+                    $total_in_usd = getCurrencyRateAmt($currency_code,'USD',$subtotal);
+                    $total_in_inr = getCurrencyRateAmt($currency_code,'INR',$subtotal);     
+                    $currency_totals = [
+                        'USD' => $total_in_usd,
+                        'INR' => $total_in_inr,
+                        'AED' => $total_in_aed,
+                    ];
+                    @endphp
+                    <strong>Invoice Total ({{ $currency_code }}) :</strong> <span id="total_in_aed">{{ number_format($subtotal,2) }}</span><br />
+
+                    @foreach ($currency_totals as $currency => $amount)
+
+                    @if ($currency !== $currency_code)
+                    <strong>Invoice Total ({{ $currency }}) :</strong> <span id="total_in_usd"> {{ number_format($amount, 2) }} </span><br />
+
+                    @endif
+
+                @endforeach 
+      
         </div>
 
         <!-- Notes / Terms Section -->

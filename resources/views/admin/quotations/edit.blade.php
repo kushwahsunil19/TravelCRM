@@ -1597,7 +1597,13 @@ $(document).ready(function() {
         "hideMethod": "fadeOut" // Use fadeOut or slideUp
     };
 
-
+         var no_of_passenger = $('#no_of_passenger').val();
+        var discount = $('.discount').val();
+        var discount_type = $('#discount_type').val();
+        var package_amt = $('#package_amt').val(); // Default to 0 if not a number
+        var gst_tax = $('.gst_tax').val();
+        var symbol = $('#currency_symbol').val();
+        calculation(package_amt, gst_tax, discount, discount_type, symbol, no_of_passenger);
 
     $('#bank_details_form').on('submit', function(e) {
         e.preventDefault(); // Prevent the form from submitting normally
@@ -2197,7 +2203,7 @@ $(document).ready(function() {
     }
 
     function calculation(amount, tax, discount, discount_type, symbol, no_of_passenger) {
-        //  alert(symbol);
+     
         // Parse discount and tax values as floats, default to 0 if not a number
 
         var discount = parseFloat(discount) || 0;

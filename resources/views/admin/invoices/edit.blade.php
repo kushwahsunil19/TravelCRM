@@ -43,7 +43,7 @@ td {
             <div class="card-body">
                 <div class="page-header">
                     <div class="content-page-header">
-                        <h5>Invoice</h5>
+                        <h5>Invoice ( Quotation no :- {{($invoice->previous_quotation_no)??0}} )</h5>
                     </div>
                 </div>
                 <div class="row">
@@ -91,7 +91,9 @@ td {
                                                     placeholder="Enter booking reffrence no"
                                                     value="{{ old('booking_reference_no', $invoice->booking_reference_no) }}"
                                                     >
-
+                                                    @if ($errors->has('booking_reference_no'))
+                                                <span class="text-danger">{{ $errors->first('booking_reference_no') }}</span>
+                                                @endif
 
                                             </div>
                                         </div>
@@ -284,9 +286,11 @@ td {
                                     </div>
                                 </div>
                                 <div class="row">
+                                <input type="hidden" class="form-control" id="currency_symbol"
+                                value="{{ old('currency_symbol', $invoice->package->currency->symbol) }}" >
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="input-block mb-3">
-                                                <label>No. of Night</label>
+                                                <label>No. of Night </label>
                                                 <input type="number" class="form-control" name="no_of_night"
                                                     placeholder="Enter No. of Night"
                                                     value="{{ old('no_of_night', $invoice->no_of_night) }}" min="0">
@@ -471,8 +475,11 @@ td {
 
                                                     <div class="invoice-total-footer">
                                                         <?php
+                                                   
                                                         // Package amount
-                                                        $package_amt = $invoice->package->amount;
+                                                          $no_of_passanger = ($invoice->no_of_infant + $invoice->no_of_child + $invoice->no_of_adult);
+                                                        // Package amount
+                                                        $package_amt = $invoice->package->amount * $no_of_passanger;
 
                                                         // GST Tax in percentage
                                                         $tax = $invoice->vat;
@@ -501,9 +508,32 @@ td {
                                                         $total_amt = $amount_after_discount + $tax_amt;
                                                         ?>
 
-                                                        <h4>Total Amount <span
-                                                                class="total_amt">{{ number_format($total_amt, 2) }}</span>
-                                                        </h4>
+@php       
+                                                        $total_in_aed = getCurrencyRateAmt($invoice->package->currency->code,'AED', $total_amt );
+                                                        $total_in_usd = getCurrencyRateAmt($invoice->package->currency->code,'USD', $total_amt );
+                                                        $total_in_inr = getCurrencyRateAmt($invoice->package->currency->code,'INR', $total_amt );
+                                                        $currency_totals = [
+                                                            'USD' => $total_in_usd,
+                                                            'INR' => $total_in_inr,
+                                                            'AED' => $total_in_aed,
+                                                        ];
+                                                        @endphp
+                                                        <h4>Total Amount ({{ $invoice->package->currency->code }}): 
+                                                                <span class="total_amt_{{ $invoice->package->currency->code }}">
+                                                                {{ number_format($total_amt, 2) }}                                                              
+                                                                </span>
+                                                            </h4>
+                                                        @foreach ($currency_totals as $currency => $amount)
+                                                       
+                                                        @if ($currency !== $invoice->package->currency->code)
+                                                            <h4>Total Amount ({{ $currency }}): 
+                                                                <span class="total_amt_{{ $invoice->package->currency->code }}">
+                                                                    {{ number_format($amount, 2) }}
+                                                                </span>
+                                                            </h4>
+                                                        @endif
+                                                        
+                                                    @endforeach
 
 
                                                     </div>
@@ -1553,7 +1583,13 @@ $(document).ready(function() {
         "showMethod": "fadeIn", // Use fadeIn or slideDown
         "hideMethod": "fadeOut" // Use fadeOut or slideUp
     };
-
+         var vat = $('.vat').val();
+        var discount_type = $('#discount_type').val();
+        var package_amt = $('#package_amt').val(); // Default to 0 if not a number
+        var discount = $('.discount').val();
+        var symbol = $('#currency_symbol').val();
+        var no_of_passenger = $('#no_of_passenger').val();
+        calculation(package_amt, vat, discount, discount_type, symbol,no_of_passenger);
 
 
     $('#bank_details_form').on('submit', function(e) {
@@ -1745,37 +1781,75 @@ $(document).ready(function() {
         });
     });
     // onchange Symbol
-    function updateSymbol() {
+
+   $(document).on('change', '#currency_id', function() {
         var selectedOption = $('#currency_id option:selected'); // Get selected option
-        var symbol = selectedOption.data('symbol'); // Get symbol from the data attribute
-
-
-        if (!symbol) {
-            symbol = '₹'; // Default to ₹ symbol if none selected
-        }
-        // Update all relevant fields with the new symbol
-
-        var discount_type = $('#discount_type').val();
-        var package_amt = $('#package_amt').val(); // Default to 0 if not a number
-        var discount = $('.discount').val();
-        var vat = $('.vat').val();
-
-        $('#currency_symbol').val(symbol);
-        var no_of_passenger = $('#no_of_passenger').val();
-        calculation(package_amt, vat, discount, discount_type, symbol,no_of_passenger);
-        var currency_code = selectedOption.data('code');
-        var branch = $.trim($('#branch_id option:selected').text()).toLowerCase();
-        if (currency_code !== undefined ) { 
-           let  rate = 1.00;
-            $('#currency_rate').val(rate.toFixed(2));
-        } 
-       // currencyWiseCalculate(package_amt, vat, discount, discount_type, symbol, branch, currency_code);
-
-    }
-    // Call the function on page load in case a currency is already selected
-    updateSymbol();
+        var toCurrency = selectedOption.data('code');    
+       
+        
+        var fromCurrency = 'AED';          
+        let  amount = 1.00;   
+        var rate = 0.00;                
+       
+        if (toCurrency !== undefined ) { 
+            var symbol = selectedOption.data('symbol') ;    
+            $('#currency_symbol').val(symbol);
+           $.ajax({
+                        url:  '{{ url("currency-rate")}}',  // URL of the route we defined
+                        type: 'GET',
+                        data: {
+                            fromCurrency: fromCurrency,
+                            toCurrency: toCurrency,
+                            amount: amount
+                        },
+                    success: function(response) {
+                        // On success, update the currency rate
+                        var rate = response.rate;                      
+                        $('#currency_rate').val(rate.toFixed(5));
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle errors (if any)
+                        console.error('Error fetching currency rate:', error);
+                    }
+                });
+            }
+            $('#currency_rate').val(rate.toFixed(5));
+         
+    });
     // Update symbol when the selection changes
-    $('#currency_id').on('change', updateSymbol);
+
+    $(document).on('change', '#edit_currency_id', function() {
+        var selectedOption = $('#edit_currency_id option:selected'); // Get selected option
+        var toCurrency = selectedOption.data('code');        
+        var fromCurrency = 'AED';          
+        let  amount = 1.00;
+        var rate = 0.00;      
+        if (toCurrency !== undefined ) {  
+            var symbol = selectedOption.data('symbol') ;    
+            $('#currency_symbol').val(symbol);      
+           $.ajax({
+                        url:  '{{ url("currency-rate")}}',  // URL of the route we defined
+                        type: 'GET',
+                        data: {
+                            fromCurrency: fromCurrency,
+                            toCurrency: toCurrency,
+                            amount: amount
+                        },
+                    success: function(response) {
+                        // On success, update the currency rate
+                        var rate = response.rate;
+                      
+                        $('#edit_currency_rate').val(rate.toFixed(5));
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle errors (if any)
+                        console.error('Error fetching currency rate:', error);
+                    }
+                });
+            }
+            $('#currency_rate').val(rate.toFixed(5));
+         
+    });
     // Symbol end
 
     $(document).on('click', '.edit_package', function() {
@@ -1855,6 +1929,7 @@ $(document).ready(function() {
                     symbol,no_of_passenger);
                 // Ensure that the response contains the expected fields
                 const packageData = response.data;
+                $('#currency_symbol').val(packageData.currency.symbol);
                 const expenses = packageData.expenses.map(expense =>
                 `${expense.title}: ${expense.amount}`).join('<br>');
                 // Create a new row with package details
@@ -1921,6 +1996,7 @@ $(document).ready(function() {
 
                         // Ensure that the response contains the expected fields
                         const packageData = response.data;
+                        $('#currency_symbol').val(packageData.currency.symbol);
                         const expenses = packageData.expenses.map(expense =>
                         `${expense.title}: ${expense.amount}`).join('<br>');
                         // Create a new row with package details
@@ -1979,6 +2055,25 @@ $(document).ready(function() {
             tableBody.append(newRow);
         }
     });
+    $(document).on('input','.passenger-input',function(){    
+    let total = 0;
+    // Iterate over all .passenger-input fields and sum their values
+    $('.passenger-input').each(function() {
+        total += parseFloat($(this).val()) || 0; // Use jQuery's .val() to get input value safely
+    });
+    // Update total passengers field using jQuery
+    $('#no_of_passenger').val(total);
+
+    // Retrieve other input values
+    var no_of_passenger = total;
+    var discount = $('.discount').val() || 0; // Fallback to 0 if empty
+    var discount_type = $('#discount_type').val() || 'Fixed'; // Default discount type
+    var package_amt = parseFloat($('#package_amt').val()) || 0;
+    var gst_tax = parseFloat($('.gst_tax').val()) || 0;
+    var symbol = $('#currency_symbol').val() || '₹';
+    // Call the calculation function
+    calculation(package_amt, gst_tax, discount, discount_type, symbol, no_of_passenger);
+});
     $(document).on('change', '#discount_type', function() {
         var discount_type = $(this).val();
         if (discount_type === 'Fixed') {
@@ -2086,7 +2181,7 @@ $(document).ready(function() {
     function calculation(amount, tax, discount, discount_type, symbol,no_of_passenger) {
         // Parse discount and tax values as floats, default to 0 if not a number
         var discount = parseFloat(discount) || 0;
-
+     
         var vat = parseFloat(tax) || 0;
 
         var package_amt = parseFloat(amount) || 0;

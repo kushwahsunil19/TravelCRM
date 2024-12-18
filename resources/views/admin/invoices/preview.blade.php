@@ -204,6 +204,9 @@
                     <b>Booking Reffrence Number:</b> {{ $data['booking_reference_no'] }}<br />
                     <b>Invoice Date:</b> {{ $data['invoice_date'] }}<br />
                     <b>No. of Night:</b> {{ $data['no_of_night'] }}<br />
+                    <b>No. of Infant:</b> {{ $data['no_of_infant'] }}<br />
+                    <b>No. of Child:</b> {{ $data['no_of_child'] }}<br />
+                    <b>No. of Adult:</b> {{ $data['no_of_adult'] }}<br />
                     <b>No. of Passenger:</b> {{ $data['no_of_passenger'] }}<br />
                     <b>Valid Until:</b> {{ now()->addDays(30)->toDateString() }}<br />
                     <b>Invoice Total({{ $data['currency_code'] }}):</b> {{ number_format($data['total'], 2) }}
@@ -249,18 +252,26 @@
    </p> -->
         <!-- <p><strong>Vat % : </strong>{{ number_format($data['tax'], 2) }} </p> -->
         <!-- <strong>Estimate Total ({{ $data['curreny_symbol'] }}) :</strong> {{$data['curreny_symbol']}}{{ number_format($data['total'], 2) }}<br /> -->
-        @php 
-      
-        $total_in_aed = getCurrencyRateAmt($data['currency_code'],'AED',$data['total']);
-        $total_in_usd = getCurrencyRateAmt($data['currency_code'],'USD',$data['total']);
-        $total_in_inr = getCurrencyRateAmt($data['currency_code'],'INR',$data['total']);
-    
-        @endphp
-        <!-- Converted Amounts (Dynamic) -->
-        <strong>Estimate Total (AED) :</strong> <span id="total_in_aed">د.إ{{ number_format($total_in_aed,2) }}</span><br />
-        <strong>Estimate Total (USD) :</strong> <span id="total_in_usd">$ {{ number_format($total_in_usd,2) }}</span><br />
-        <strong>Estimate Total (INR) :</strong> <span id="total_in_usd">₹ {{ number_format($total_in_inr,2) }}</span><br />
-       
+                      @php       
+                    $total_in_aed = getCurrencyRateAmt($data['currency_code'],'AED',$data['total']);
+                    $total_in_usd = getCurrencyRateAmt($data['currency_code'],'USD',$data['total']);
+                    $total_in_inr = getCurrencyRateAmt($data['currency_code'],'INR',$data['total']);    
+                    $currency_totals = [
+                        'USD' => $total_in_usd,
+                        'INR' => $total_in_inr,
+                        'AED' => $total_in_aed,
+                    ];
+                    @endphp
+                    <strong>Invoice Total ({{ $data['currency_code'] }}) :</strong> <span id="total_in_aed">{{ number_format($data['subtotal'],2) }}</span><br />
+
+                    @foreach ($currency_totals as $currency => $amount)
+
+                    @if ($currency !== $data['currency_code'])
+                    <strong>Invoice Total ({{ $currency }}) :</strong> <span id="total_in_usd"> {{ number_format($amount, 2) }} </span><br />
+
+                    @endif
+
+                @endforeach 
         <!-- <strong>Estimate Total (EUR) :</strong> <span id="total_in_eur">€{{ number_format($data['total'] , 2) }}</span><br /> -->
     </p>
 </div>

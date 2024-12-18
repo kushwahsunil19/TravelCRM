@@ -178,7 +178,7 @@ class InvoiceController extends Controller
             'branch_id' => 'required|exists:branches,id',
             'partner_id' => 'required|exists:partners,id',
             'package_id' => 'required|exists:packages,id',
-            'currency_id' => 'required|exists:currencies,id',
+            //'currency_id' => 'required|exists:currencies,id',
             // 'bank_id' => 'required',
             'invoice_no' => 'required|unique:invoices,invoice_no',   
             'booking_reference_no' => 'required|unique:invoices,booking_reference_no',        
@@ -253,8 +253,9 @@ class InvoiceController extends Controller
             'branch_id' => 'required|exists:branches,id',
             'partner_id' => 'required|exists:partners,id',
             'package_id' => 'required|exists:packages,id',
-            'currency_id' => 'required|exists:currencies,id',
+            // 'currency_id' => 'required|exists:currencies,id',
             // 'bank_id' => 'required',
+            'booking_reference_no' => 'required', 
             'invoice_no' => 'required|unique:invoices,invoice_no,' . $invoice->id,
             'no_of_night' => 'nullable|numeric',
             'no_of_passenger' => 'nullable|numeric',          
@@ -412,7 +413,7 @@ class InvoiceController extends Controller
     
         // Add the filtered data rows
         foreach ($invoices as $invoice) {
-            $symbol = isset($invoice->currency->code) ? '(' . $invoice->currency->code . ')' : '(INR)';
+            $symbol = isset($invoice->package->currency->code) ? '(' . $invoice->package->currency->code . ')' : '(INR)';
 
             $package_amt = $invoice->package->amount * $invoice->no_of_passenger;
             $tax = $invoice->vat;
@@ -493,9 +494,9 @@ class InvoiceController extends Controller
         $total_amt = $amount_after_discount + $tax_amt;
         // Currency conversion logic
      
-        $total_in_aed = getCurrencyRateAmt($invoice->currency->code,'AED',$total_amt);
-        $total_in_usd = getCurrencyRateAmt($invoice->currency->code,'USD',$total_amt);
-        $total_in_inr = getCurrencyRateAmt($invoice->currency->code,'INR',$total_amt);
+        $total_in_aed = getCurrencyRateAmt($invoice->package->currency->code,'AED',$total_amt);
+        $total_in_usd = getCurrencyRateAmt($invoice->package->currency->code,'USD',$total_amt);
+        $total_in_inr = getCurrencyRateAmt($invoice->package->currency->code,'INR',$total_amt);
         
         $currentDateTime = now()->format('Y-m-d_H-i-s');  // e.g., 2024-10-04_14-30-00
         $items = [];
@@ -528,14 +529,18 @@ class InvoiceController extends Controller
          }
         // Example: Adjust these fields based on your quotations table structure
         $data = [
-            'currency_code'=>$invoice->currency->code,
-            'curreny_symbol'=>$invoice->currency->symbol,
+            'currency_code'=>$invoice->package->currency->code,
+            'curreny_symbol'=>$invoice->package->currency->symbol,
             'branch_address'=>$invoice->branch->address,
             'branch_name'=>$invoice->branch->branch_name,
             'invoice_date' => now()->toDateString(),
             'invoice_number' => $invoice->invoice_no,  // Assume there's an invoice number
-            'booking_reference_no'=> $invoice->booking_reference_no,
+            'booking_reference_no'=> $invoice->booking_reference_no,          
+            'previous_quotation_no' => $invoice->previous_quotation_no, 
             'no_of_night' => $invoice->no_of_night,
+            'no_of_infant' => $invoice->no_of_infant, 
+            'no_of_child' => $invoice->no_of_child, 
+            'no_of_adult' => $invoice->no_of_adult, 
             'no_of_passenger' => $invoice->no_of_passenger, 
             'bill_to' => $invoice->partner->name,  // Assuming you have customer info in your invoice
             'bill_email' => $invoice->partner->email,  // Assuming you have customer info in your invoice
@@ -663,14 +668,18 @@ class InvoiceController extends Controller
 
         // Example: Adjust these fields based on your invoices table structure
         $data = [
-            'currency_code'=>$invoice->currency->code,
-            'curreny_symbol'=>$invoice->currency->symbol,
+            'currency_code'=>$invoice->package->currency->code,
+            'curreny_symbol'=>$invoice->package->currency->symbol,
             'branch_address'=>$invoice->branch->address,
             'branch_name'=>$invoice->branch->branch_name,
-            'invoice_date' => now()->toDateString(),
+            'invoice_date' => now()->toDateString(),         
             'invoice_number' => $invoice->invoice_no,  // Assume there's an invoice number
             'booking_reference_no'=> $invoice->booking_reference_no,
+            'previous_quotation_no' => $invoice->previous_quotation_no, 
             'no_of_night' => $invoice->no_of_night,
+            'no_of_infant' => $invoice->no_of_infant, 
+            'no_of_child' => $invoice->no_of_child, 
+            'no_of_adult' => $invoice->no_of_adult, 
             'no_of_passenger' => $invoice->no_of_passenger, 
             'bill_to' => $invoice->partner->name,  // Assuming you have customer info in your invoice
             'bill_email' => $invoice->partner->email,  // Assuming you have customer info in your invoice

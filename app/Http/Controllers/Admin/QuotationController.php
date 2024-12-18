@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Quotation,Invoice,Branch,Partner,Package,Bank,Currency,City,Country,State,Supplier,Service,TmpService,CompanyBankDetail};
+use App\Models\{Quotation,Invoice,Branch,Partner,Package,Bank,Currency,City,Country,State,Supplier,Service,TmpService,CompanyBankDetail,User};
 use PDF;
 use Spatie\Permission\Models\Role;
 use Mpdf\Mpdf;
+use Illuminate\Support\Facades\Auth;
 
 class QuotationController extends Controller
 {
@@ -29,11 +30,16 @@ class QuotationController extends Controller
      public function index(Request $request)
      {
 
+        $user = Auth::user();
+        $userId = $user->id;
+       
         $countries = Country::all();
         $states = State::all();
         $cities = City::all();
         $suppliers = Supplier::all();
         $userRole = auth()->user()->roles->first()->name; // Assuming the user has only one role
+        $userIds = User::role(  $userRole)->pluck('id');
+        
         $rolePermissions = getRolePermissions();   
         if (in_array('list-quotation', $rolePermissions[$userRole])) { 
          // Get the total number of quotations
@@ -65,8 +71,14 @@ class QuotationController extends Controller
          if ($request->filled('discount_type')) {
              $query->where('discount_type', $request->discount_type);
          }
-         $totalQuotations = Quotation::count();
-     
+        
+         if($userRole=='Administrator') {          
+         
+            $totalQuotations = Quotation::where('id', '!=', 1)->count();
+            }else{          
+            $totalQuotations = Quotation::whereIn('user_id', $userIds)->count();
+            $query = $query->whereIn('user_id', $userIds);
+           } 
          // Paginate the filtered results (you can adjust the number per page as needed)
          $quotations = $query->paginate( $totalQuotations); // Paginate the filtered results
          
@@ -326,6 +338,9 @@ class QuotationController extends Controller
                 'quotation_number' => $quotation->quotation_no,  // Assume there's an invoice number
                 'booking_reference_no'=> $quotation->booking_reference_no,
                 'no_of_night' => $quotation->no_of_night,
+                'no_of_infant' => $quotation->no_of_infant, 
+                'no_of_child' => $quotation->no_of_child, 
+                'no_of_adult' => $quotation->no_of_adult, 
                 'no_of_passenger' => $quotation->no_of_passenger,          
                 'bill_to' => $quotation->partner->name,  // Assuming you have customer info in your quotation
                 'bill_email' => $quotation->partner->email,  // Assuming you have customer info in your quotation
@@ -466,6 +481,9 @@ class QuotationController extends Controller
             'quotation_number' => $quotation->quotation_no,  // Assume there's an invoice number
             'booking_reference_no'=> $quotation->booking_reference_no,
             'no_of_night' => $quotation->no_of_night,
+            'no_of_infant' => $quotation->no_of_infant, 
+            'no_of_child' => $quotation->no_of_child, 
+            'no_of_adult' => $quotation->no_of_adult, 
             'no_of_passenger' => $quotation->no_of_passenger,  
             'bill_to' => $quotation->partner->name,  // Assuming you have customer info in your quotation
             'bill_email' => $quotation->partner->email,  // Assuming you have customer info in your quotation
@@ -542,7 +560,11 @@ class QuotationController extends Controller
                 'user_id' => $quotation->user_id,
                 'invoice_no' => $invoice_no,
                 'no_of_night' => $quotation->no_of_night,
+                'no_of_infant' => $quotation->no_of_infant,   
+                'no_of_child' => $quotation->no_of_child,   
+                'no_of_adult' => $quotation->no_of_adult,   
                 'no_of_passenger' => $quotation->no_of_passenger,   
+                'previous_quotation_no'=>$quotation->quotation_no,
                 'booking_reference_no'=> $quotation->booking_reference_no,
                 'branch_id' => $quotation->branch_id,
                 'partner_id' => $quotation->partner_id,
@@ -558,6 +580,7 @@ class QuotationController extends Controller
             ]);
           
         }else{
+           
             $invoice = Invoice::updateOrCreate(
                 [  
                     'id' => $existingInvoice->id,                     
@@ -565,6 +588,9 @@ class QuotationController extends Controller
                 [
                     'branch_id' => $quotation->branch_id,
                     'no_of_night' => $quotation->no_of_night,
+                    'no_of_infant' => $quotation->no_of_infant,   
+                    'no_of_child' => $quotation->no_of_child,   
+                    'no_of_adult' => $quotation->no_of_adult,   
                     'no_of_passenger' => $quotation->no_of_passenger,    
                     'partner_id' => $quotation->partner_id,
                     'package_id' => $quotation->package_id,
