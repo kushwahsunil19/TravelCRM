@@ -272,7 +272,7 @@
             <div class="notes">
                 <h6>Notes / Terms</h6>
                 <p>                
-                    Payments should be made in favor of “{{ $data['bill_to'] }}”
+                    Payments should be made in favor of CENTURION LUXURY TRAVEL & TOURISM
                 </p>
                 <br>
 

@@ -297,7 +297,7 @@
             <p><strong>Discount @if($discount_type == 'Percentage') (%) @endif: </strong>@if($discount_type == 'Fixed')
                 @endif{{ number_format($discount, 2) }} </p>
             <p><strong>Vat (%) : </strong>{{ number_format($tax, 2) }} </p>
-            <!-- Converted Amounts (Dynamic) -->
+         
         <strong>Estimate Total (AED) :</strong> د.إ <span>{{ number_format($total_in_aed, 2) }} </spa><br />
         <strong>Estimate Total (USD) :</strong> $ <span>{{ number_format($total_in_usd, 2) }}</span><br />
         <strong>Estimate Total (INR) :</strong> ₹ <span>{{ number_format($total_in_inr, 2) }}</span><br />
@@ -309,7 +309,7 @@
             <div class="content-wrapper total-section">
                 <div class="notes">
                     <h6>Notes / Terms</h6>
-                    <p>Payments should be made in favor of “{{ $bill_to }}” </p>
+                    <p>Payments should be made in favor of CENTURION LUXURY TRAVEL & TOURISM </p>
                     <br>
 
                     <p><strong>ACCOUNT DETAILS</strong></p>

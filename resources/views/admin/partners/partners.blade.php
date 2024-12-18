@@ -12,7 +12,7 @@
         <!-- Page Header -->
         <div class="page-header">
             <div class="content-page-header">
-                <h5>Partners/Agent</h5>
+                <h5>Agency</h5>
                 <div class="list-btn">
                     <ul class="filter-list">
                         <li>
@@ -44,7 +44,7 @@
 									</li> -->
                         <li>
                             <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#partner_details"><i
-                                    class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add Partner</a>
+                                    class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add Agency</a>
                         </li>
                     </ul>
                 </div>
@@ -135,7 +135,7 @@
                                                                                         <div class="modal-content">
                                                                                             <div class="modal-body">
                                                                                                 <div class="form-header">
-                                                                                                    <h3>Delete Partner</h3>
+                                                                                                    <h3>Delete Agency</h3>
                                                                                                     <p>Are you sure want to delete?</p>
                                                                                                 </div>
                                                                                                 <div class="modal-btn delete-action">
@@ -168,7 +168,7 @@
                                                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="9" class="text-center">No partners found.</td>
+                                            <td colspan="9" class="text-center">No Agency found.</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
@@ -265,7 +265,7 @@
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
                 <div class="form-header modal-header-title text-start mb-0">
-                    <h4 class="mb-0">Add Partner Details</h4>
+                    <h4 class="mb-0">Add Agency Details</h4>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -388,7 +388,7 @@
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
                 <div class="form-header modal-header-title text-start mb-0">
-                    <h4 class="mb-0">Edit Partner Details</h4>
+                    <h4 class="mb-0">Edit Agency Details</h4>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>

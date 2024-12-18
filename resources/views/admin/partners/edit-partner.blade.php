@@ -14,7 +14,7 @@
 							<!-- Page Header -->
 							<div class="page-header">
 								<div class="content-page-header">
-									<h5>Edit Partner</h5>
+									<h5>Edit Agency</h5>
 								</div>	
 							</div>
 							<!-- /Page Header -->				
@@ -233,7 +233,7 @@
 										</div>								 -->
 										<div class="add-customer-btns text-end">
 											<a href="{{route('partners.index')}}"  class="btn customer-btn-cancel">Cancel</a>
-											<button type="submit" class="btn customer-btn-save">Create Partner</button>
+											<button type="submit" class="btn customer-btn-save">Create Agency</button>
 										
 										</div>
 									</form>

@@ -66,12 +66,14 @@
 															</textarea>
 															
 															@if ($errors->has('description'))
-															<span class="text-danger">{{ $errors->first('description') }}</span>
-															@endif
-														</div>											
-													</div>
-												
-											</div>
+            <span class="text-danger">{{ $errors->first('description') }}</span>
+        @endif
+        <small class="text-muted">Maximum 500 characters allowed.</small>
+    </div>                                            
+</div>
+									
+													
+									
 										<!-- </div>
 										<div class="form-group-item">
 											<div class="row align-items-end">
@@ -552,4 +554,23 @@
     </script>	
 
 
-		
+<script>
+    document.getElementById('description').addEventListener('input', function () {
+        const maxLength = 500;
+        const currentLength = this.value.length;
+        const remaining = maxLength - currentLength;
+
+        // Update a counter element (if you add one for user feedback)
+        if (document.getElementById('charCount')) {
+            document.getElementById('charCount').textContent = `${remaining} characters remaining.`;
+        }
+
+        // Optionally, show a warning if nearing the limit
+        if (remaining <= 50) {
+            document.getElementById('charCount').classList.add('text-warning');
+        } else {
+            document.getElementById('charCount').classList.remove('text-warning');
+        }
+    });
+</script>
+<div id="charCount" class="text-muted">500 characters remaining.</div>

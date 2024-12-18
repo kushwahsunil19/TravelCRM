@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Partner Report</title>
+    <title>Agency Report</title>
     <style>
-        /* Add some styles for the PDF */
+       
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
@@ -31,13 +31,13 @@
 </head>
 <body>
 
-<h1>Partner Report</h1>
+<h1>Agency Report</h1>
 
 <table>
     <thead>
         <tr>
             <th>S. No</th>
-            <th>Partner Name</th>
+            <th>Agency Name</th>
             <th>Email</th>
             <th>Mobile</th>
             <th>City</th>

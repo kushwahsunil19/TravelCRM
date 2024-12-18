@@ -248,21 +248,18 @@
     {{ $data['discount'] }}
    </p>
         <p><strong>Vat % : </strong>{{ number_format($data['tax'], 2) }} </p>
-        <!-- <strong>Estimate Total ({{ $data['curreny_symbol'] }}) :</strong> {{$data['curreny_symbol']}}{{ number_format($data['total'], 2) }}<br /> -->
+       
         @php 
         $rates = getCurrencyRate($data['currency_code'] );       
         @endphp
-        <!-- Converted Amounts (Dynamic) -->
+       
         <strong>Estimate Total (AED) :</strong> <span id="total_in_aed">د.إ{{ number_format($data['total'] * $rates['AED'], 2) }}</span><br />
         <strong>Estimate Total (USD) :</strong> <span id="total_in_usd">$ {{ number_format($data['total'] * $rates['USD'], 2) }}</span><br />
         <strong>Estimate Total (INR) :</strong> <span id="total_in_inr">₹{{ number_format($data['total'] * $rates['INR'], 2) }}</span><br />
        
-        <!-- <strong>Estimate Total (EUR) :</strong> <span id="total_in_eur">€{{ number_format($data['total'] , 2) }}</span><br /> -->
+       
     </p>
 </div>
-
-
-
 
      <!-- Notes / Terms Section -->
      <div class="note1">
@@ -270,7 +267,7 @@
             <div class="notes">
                 <h6>Notes / Terms</h6>
                 <p>                
-                    Payments should be made in favor of “{{ $data['bill_to'] }}”
+                    Payments should be made in favor of CENTURION LUXURY TRAVEL & TOURISM
                 </p>
                 <br>
                 <p><strong>ACCOUNT DETAILS</strong></p>

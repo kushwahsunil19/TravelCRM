@@ -2,17 +2,14 @@
 @section('content')
 
 
-<!-- Main Wrapper -->
 @include('admin.layouts.common-sidebar')
-<!-- /Main Wrapper -->
 
-<!-- Page Wrapper -->
 <div class="page-wrapper">
     <div class="content container-fluid">
         <!-- Page Header -->
         <div class="page-header">
             <div class="content-page-header">
-                <h5>Partners Report</h5>
+                <h5>Agency Report</h5>
                 <div class="list-btn">
                     <ul class="filter-list">
                      <li>
@@ -162,7 +159,7 @@
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="9" class="text-center">No partners found.</td>
+                                        <td colspan="9" class="text-center">No Agency found.</td>
                                     </tr>
                                     @endforelse
                                 </tbody>
@@ -258,7 +255,7 @@
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
                 <div class="form-header modal-header-title text-start mb-0">
-                    <h4 class="mb-0">Add Partner Details</h4>
+                    <h4 class="mb-0">Add Agency Details</h4>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>

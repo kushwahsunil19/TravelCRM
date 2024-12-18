@@ -13,7 +13,7 @@
 								<h1>Forgot Password?</h1>
 								<p class="account-subtitle">Enter your email to get a password reset link</p>
 											
-								<!-- Form -->
+							
 								<form action="{{ route('forget.password.post') }}" method="post">
 								@csrf
 									<div class="input-block mb-3">
