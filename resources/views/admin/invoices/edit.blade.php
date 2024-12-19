@@ -43,7 +43,7 @@ td {
             <div class="card-body">
                 <div class="page-header">
                     <div class="content-page-header">
-                        <h5>Invoice</h5>
+                        <h5>Invoice ( Quotation no :- {{$invoice->previous_quotation_no}} )</h5>
                     </div>
                 </div>
                 <div class="row">

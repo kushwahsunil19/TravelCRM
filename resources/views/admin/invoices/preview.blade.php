@@ -172,7 +172,7 @@
                 </a>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item text-end">
-                        <h1>INVOICE</h1>
+                        <h1>INVOICE {{$data['previous_quotation_no']}}</h1>
                         <!-- Dynamic Company Info -->
                         {{ $data['branch_address'] }}<br />
                     </li>

@@ -109,47 +109,57 @@ class QuotationController extends Controller
     /**
      * Store a newly created quotation in storage.
      */
-    public function store(Request $request)
-    {
-      
-        $request->validate([
-            'branch_id' => 'required|exists:branches,id',
-            'partner_id' => 'required|exists:partners,id',
-            'package_id' => 'required|exists:packages,id',
-            // 'currency_id' => 'required|exists:currencies,id',
-            // 'bank_id' => 'nullable|exists:bank_details,id',  
-            'quotation_no' => 'required|unique:quotations,quotation_no',  
-            // 'booking_reference_no' => 'nullable|unique:quotations,booking_reference_no',          
-            'no_of_night' => 'nullable|numeric',
-            'no_of_passenger' => 'nullable|numeric',
-            //  'discount_type' => 'required',
-            // 'gst_tax' => 'nullable|numeric',
-            // 'discount' => 'nullable|numeric',
-        ]);
-        $input = $request->all();
     
-        $input['gst_tax'] = ($request->gst_tax !='')?$request->gst_tax:0.00;
-        $input['currency_rate'] = ($request->currency_rate !='')?$request->currency_rate:0.00;
-        $input['discount'] = ($request->discount !='')?$request->discount:0.00;
-        $input['user_id'] = auth()->id();
-        $quotation = Quotation::create($input);
-      
-        if (!empty($request->supplier) && is_array($request->supplier)) {
-            $data = [];
-            foreach ($request->supplier as $val) {
-                $data[] = [
-                    'suplyer_id' => $val,
-                    'quotation_id' => $quotation->id,
-                ];
-            }
-            if (!empty($data)) {
-                TmpService::insert($data);
-            }
+     public function store(Request $request)
+{
+    $request->validate([
+        'branch_id' => 'required|exists:branches,id',
+        'partner_id' => 'required|exists:partners,id',
+        'package_id' => 'required|exists:packages,id',
+        // 'currency_id' => 'required|exists:currencies,id',
+        // 'bank_id' => 'nullable|exists:bank_details,id',
+        'quotation_no' => 'required|unique:quotations,quotation_no',
+        // 'booking_reference_no' => 'nullable|unique:quotations,booking_reference_no',
+        'no_of_night' => 'nullable|numeric',
+        'no_of_passenger' => 'nullable|numeric',
+        'arrival_datetime' => 'required|date|after_or_equal:today',
+        'departure_datetime' => 'required|date|after:arrival_datetime',
+        // 'discount_type' => 'required',
+        // 'gst_tax' => 'nullable|numeric',
+        // 'discount' => 'nullable|numeric',
+    ]);
+
+    $input = $request->all();
+
+    // Default values for optional numeric fields
+    $input['gst_tax'] = $request->gst_tax != '' ? $request->gst_tax : 0.00;
+    $input['currency_rate'] = $request->currency_rate != '' ? $request->currency_rate : 0.00;
+    $input['discount'] = $request->discount != '' ? $request->discount : 0.00;
+
+    // Assign the authenticated user as the creator
+    $input['user_id'] = auth()->id();
+
+    // Create the quotation record
+    $quotation = Quotation::create($input);
+
+    // Handle supplier data if provided
+    if (!empty($request->supplier) && is_array($request->supplier)) {
+        $data = [];
+        foreach ($request->supplier as $val) {
+            $data[] = [
+                'suplyer_id' => $val,
+                'quotation_id' => $quotation->id,
+            ];
         }
-        return redirect()->route('quotations.edit', $quotation->id)
-                         ->with('success', 'Quotation created successfully and you are now editing it.');
-    
+        if (!empty($data)) {
+            TmpService::insert($data);
+        }
     }
+
+    return redirect()->route('quotations.edit', $quotation->id)
+                     ->with('success', 'Quotation created successfully and you are now editing it.');
+}
+
 
     /**
      * Display the specified quotation.
@@ -182,47 +192,50 @@ class QuotationController extends Controller
      * Update the specified quotation in storage.
      */
     public function update(Request $request, Quotation $quotation)
-    {
-        $request->validate([
-            'branch_id' => 'required|exists:branches,id',
-            'partner_id' => 'required|exists:partners,id',
-            'package_id' => 'required|exists:packages,id',
-            // 'currency_id' => 'required|exists:currencies,id',
-            // 'bank_id' => 'nullable|exists:bank_details,id',
-            'quotation_no' => 'required|unique:quotations,quotation_no,' . $quotation->id,
-                
-            'no_of_night' => 'nullable|numeric',
-            'no_of_passenger' => 'nullable|numeric',          
-            //  'gst_tax' => 'nullable|numeric',
-            //  'discount' => 'nullable|numeric',
-        ]);
-        $input = $request->all();
-        $input['gst_tax'] = ($request->gst_tax !='')?$request->gst_tax:0.00;
-        $input['currency_rate'] = ($request->currency_rate !='')?$request->currency_rate:0.00;
-        $input['discount'] = ($request->discount !='')?$request->discount:0.00;
-        // $input['user_id'] = auth()->id();
-                // Clear existing tmp_services records for this quotation
-                // Delete existing services for the quotation
-            TmpService::where('quotation_id', $quotation->id)->delete();
+{
+    $request->validate([
+        'branch_id' => 'required|exists:branches,id',
+        'partner_id' => 'required|exists:partners,id',
+        'package_id' => 'required|exists:packages,id',
+        // 'currency_id' => 'required|exists:currencies,id',
+        // 'bank_id' => 'nullable|exists:bank_details,id',
+        'quotation_no' => 'required|unique:quotations,quotation_no,' . $quotation->id,
+        'no_of_night' => 'nullable|numeric',
+        'no_of_passenger' => 'nullable|numeric',
+        'arrival_datetime' => 'required|date|after_or_equal:today',
+        'departure_datetime' => 'required|date|after:arrival_datetime',
+        // 'gst_tax' => 'nullable|numeric',
+        // 'discount' => 'nullable|numeric',
+    ]);
 
-            // Insert new suppliers if not empty
-            $suppliers = $request->input('supplier');
-            if (!empty($suppliers)) {
-                foreach ($suppliers as $supplier_id) {
-                    TmpService::create([
-                        'suplyer_id' => $supplier_id,
-                        'quotation_id' => $quotation->id,
-                    ]);
-                }
-            }
+    $input = $request->all();
 
-            // Update the quotation with the new input data
-            $quotation->update($input);
+    // Default values for optional numeric fields
+    $input['gst_tax'] = $request->gst_tax != '' ? $request->gst_tax : 0.00;
+    $input['currency_rate'] = $request->currency_rate != '' ? $request->currency_rate : 0.00;
+    $input['discount'] = $request->discount != '' ? $request->discount : 0.00;
 
+    // Clear existing TmpService records for this quotation
+    TmpService::where('quotation_id', $quotation->id)->delete();
 
-        return redirect()->route('quotations.edit', $quotation->id)
-                         ->with('success', 'Quotation updated successfully.');
+    // Insert new suppliers if provided
+    $suppliers = $request->input('supplier');
+    if (!empty($suppliers)) {
+        foreach ($suppliers as $supplier_id) {
+            TmpService::create([
+                'suplyer_id' => $supplier_id,
+                'quotation_id' => $quotation->id,
+            ]);
+        }
     }
+
+    // Update the quotation record with the new data
+    $quotation->update($input);
+
+    return redirect()->route('quotations.edit', $quotation->id)
+                     ->with('success', 'Quotation updated successfully.');
+}
+
 
     /**
      * Remove the specified quotation from storage.
@@ -325,6 +338,8 @@ class QuotationController extends Controller
                 'quotation_date' => now()->toDateString(),
                 'quotation_number' => $quotation->quotation_no,  // Assume there's an invoice number
                 'booking_reference_no'=> $quotation->booking_reference_no,
+                'arrival_datetime' => $quotation->arrival_datetime,  // Adding arrival_datetime
+            'departure_datetime' => $quotation->departure_datetime,  // Adding departure_datetime
                 'no_of_night' => $quotation->no_of_night,
                 'no_of_passenger' => $quotation->no_of_passenger,          
                 'bill_to' => $quotation->partner->name,  // Assuming you have customer info in your quotation
@@ -465,6 +480,8 @@ class QuotationController extends Controller
             'quotation_date' => now()->toDateString(),
             'quotation_number' => $quotation->quotation_no,  // Assume there's an invoice number
             'booking_reference_no'=> $quotation->booking_reference_no,
+            'arrival_datetime' => $quotation->arrival_datetime,  // Adding arrival_datetime
+            'departure_datetime' => $quotation->departure_datetime,  // Adding departure_datetime
             'no_of_night' => $quotation->no_of_night,
             'no_of_passenger' => $quotation->no_of_passenger,  
             'bill_to' => $quotation->partner->name,  // Assuming you have customer info in your quotation
@@ -491,7 +508,7 @@ class QuotationController extends Controller
      return view('admin.quotations.preview', compact('data'));
     }
     
-        public function addBankDetail(Request $request){
+    public function addBankDetail(Request $request){
 
             $request->validate([
                 'bank_name' => 'required|string|max:255',
@@ -511,91 +528,103 @@ class QuotationController extends Controller
             $bankDetails = Bank::latest()->get();
             return response()->json(['status'=>true,'data'=>$bankDetails ,'message' => 'Bank details added successfully']);
         }
-        public function convertToInvoice($id){
+        public function convertToInvoice($id)
+{
+    // Fetch the quotation with related models
+    $quotation = Quotation::with(['branch', 'partner', 'package', 'bank'])->findOrFail($id);
+    // Fetch associated services from TmpService
+    $tmpServices = TmpService::where('quotation_id', $id)->get(); 
+    $user_id = auth()->id();
 
-            $quotation = Quotation::with(['branch', 'partner', 'package','bank'])->findOrFail($id);
-            $tmpServices = TmpService::where('quotation_id',$id)->get(); 
-            $user_id = auth()->id();
-            $invoice = Invoice::with(['branch', 'partner', 'package'])
-            ->latest('id')  // Sort by the latest ID
-            ->first(); 
-            $invoice_no = 100;           
-            if(isset( $invoice->id)){
-            $invoice_no =  $invoice->invoice_no +1 ;
-            } 
-          
-            $existingInvoice = Invoice::where('branch_id', $quotation->branch_id)
-            ->where('partner_id', $quotation->partner_id)
-            ->where('package_id', $quotation->package_id)
-            ->where('bank_id', $quotation->bank_id)
-            ->where('vat', $quotation->gst_tax)
-            ->where('discount_type', $quotation->discount_type)
-            ->where('note', $quotation->note)
-            ->where('term_condition', $quotation->term_condition)
-            ->first();
-       
+    // Get the last invoice to increment invoice number
+    $invoice = Invoice::with(['branch', 'partner', 'package'])
+        ->latest('id')  
+        ->first(); 
     
-        // If an invoice with the same invoice_no and attributes exists, avoid updating it
-        if (!$existingInvoice) {
-         
-            $invoice = Invoice::create([
-                'user_id' => $quotation->user_id,
-                'invoice_no' => $invoice_no,
-                'no_of_night' => $quotation->no_of_night,
-                'no_of_passenger' => $quotation->no_of_passenger,   
-                'booking_reference_no'=> $quotation->booking_reference_no,
+    // Default invoice number
+    $invoice_no = 100;           
+    if (isset($invoice->id)) {
+        $invoice_no = $invoice->invoice_no + 1;
+    }          
+
+    // Check if an invoice with similar attributes already exists
+    $existingInvoice = Invoice::where('branch_id', $quotation->branch_id)
+        ->where('partner_id', $quotation->partner_id)
+        ->where('package_id', $quotation->package_id)
+        ->where('bank_id', $quotation->bank_id)
+        ->where('vat', $quotation->gst_tax)
+        ->where('discount_type', $quotation->discount_type)
+        ->where('note', $quotation->note)
+        ->where('term_condition', $quotation->term_condition)
+        ->first();       
+
+    // If an invoice with the same attributes does not exist, create a new one
+    if (!$existingInvoice) {
+        $invoice = Invoice::create([
+            'user_id' => $quotation->user_id,
+            'previous_quotation_no' => $quotation->quotation_no,
+            'invoice_no' => $invoice_no,
+            'no_of_night' => $quotation->no_of_night,
+            'no_of_passenger' => $quotation->no_of_passenger,   
+            'booking_reference_no' => $quotation->booking_reference_no,
+            'branch_id' => $quotation->branch_id,
+            'partner_id' => $quotation->partner_id,
+            'package_id' => $quotation->package_id,
+            'currency_id' => $quotation->currency_id,
+            'currency_rate' => $quotation->currency_rate,
+            'bank_id' => $quotation->bank_id,
+            'vat' => $quotation->gst_tax, 
+            'discount_type' => $quotation->discount_type,               
+            'discount' => $quotation->discount,
+            'note' => $quotation->note,
+            'term_condition' => $quotation->term_condition,
+            'arrival_datetime' => $quotation->arrival_datetime,  // Adding arrival_datetime
+            'departure_datetime' => $quotation->departure_datetime,  // Adding departure_datetime
+        ]);
+    } else {
+        $invoice = Invoice::updateOrCreate(
+            [  
+                'id' => $existingInvoice->id,                     
+            ], // The unique key for the invoice (could be quotation_id)
+            [
                 'branch_id' => $quotation->branch_id,
+                'no_of_night' => $quotation->no_of_night,
+                'no_of_passenger' => $quotation->no_of_passenger,    
                 'partner_id' => $quotation->partner_id,
                 'package_id' => $quotation->package_id,
                 'currency_id' => $quotation->currency_id,
                 'currency_rate' => $quotation->currency_rate,
                 'bank_id' => $quotation->bank_id,
-                'vat' => $quotation->gst_tax, // Assuming total amount is mapped
-                'discount_type' => $quotation->discount_type,               
+                'vat' => $quotation->gst_tax, 
+                'discount_type' => $quotation->discount_type,  
                 'discount' => $quotation->discount,
                 'note' => $quotation->note,
-                'term_condition' => $quotation->term_condition,
-            ]);
-          
-        }else{
-            $invoice = Invoice::updateOrCreate(
-                [  
-                    'id' => $existingInvoice->id,                     
-                ], // The unique key for the invoice (could be quotation_id)
-                [
-                    'branch_id' => $quotation->branch_id,
-                    'no_of_night' => $quotation->no_of_night,
-                    'no_of_passenger' => $quotation->no_of_passenger,    
-                    'partner_id' => $quotation->partner_id,
-                    'package_id' => $quotation->package_id,
-                    'currency_id' => $quotation->currency_id,
-                    'currency_rate' => $quotation->currency_rate,
-                    'bank_id' => $quotation->bank_id,
-                    'vat' => $quotation->gst_tax, // Assuming total amount is mapped
-                    'discount_type' =>$quotation->discount_type, // Or any other status you want to set                 
-                    'discount' =>$quotation->discount,
-                    'note' =>$quotation->note,
-                    'term_condition' =>$quotation->term_condition,                    
+                'term_condition' => $quotation->term_condition, 
+                'arrival_datetime' => $quotation->arrival_datetime,  // Updating arrival_datetime
+                'departure_datetime' => $quotation->departure_datetime,  // Updating departure_datetime
+            ]
+        );
+    }
 
-                ]
-            );
+    // Insert the services into the invoice if there are any temporary services
+    if (!empty($tmpServices)) {
+        $invicedata = [];
+        foreach ($tmpServices as $val) {
+            $invicedata[] = [
+                'suplyer_id' => $val->suplyer_id,
+                'invoice_id' => $invoice->id,
+            ];
         }
-        if (!empty($tmpServices)) {
-            $invicedata = [];
-            foreach ($tmpServices as $val) {
-                $invicedata[] = [
-                    'suplyer_id' => $val->suplyer_id,
-                    'invoice_id' => $invoice->id,
-                ];
-            }
-        
-            if (!empty($invicedata)) {
-                Service::insert($invicedata);
-            }
+
+        if (!empty($invicedata)) {
+            Service::insert($invicedata);
         }
-            return redirect()->route('invoices.edit', $invoice->id);
-          
-        }
+    }
+
+    // Redirect to the invoice edit page
+    return redirect()->route('invoices.edit', $invoice->id);
+}
+
       /**
      * Restore a soft-deleted package.
      */

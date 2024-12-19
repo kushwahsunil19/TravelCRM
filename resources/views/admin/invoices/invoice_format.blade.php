@@ -202,7 +202,7 @@
                     </a>
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0" style="float:right;margin-top:-50px;">
                         <li class="nav-item text-end">
-                            <h1>INVOICE</h1>
+                            <h1>INVOICE ( Quotation no :- {{$invoice->previous_quotation_no}} )</h1>
                             <!-- Dynamic Company Info -->
                             {{ $branch_address }}<br />
                         </li>

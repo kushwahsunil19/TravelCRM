@@ -3,7 +3,6 @@
     data-sidebar-image="none">
 
 <!-- Mirrored from kanakku.dreamstechnologies.com/html/template/users.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 07 Feb 2024 11:49:49 GMT -->
-
 <head>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="current-currency-api" content="{{ env('CURRENT_CURRENCY_RATE_KEY') }}">
@@ -14,10 +13,10 @@
     <title>CENTURION LUXURY TRAVELS | UAE</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="{{url('/public/assets/img/favicon.png')}}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{url('assets/img/favicon.png')}}">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{{url('/public/assets/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{url('assets/css/bootstrap.min.css')}}">
 
     <!-- Font family -->
     <link
@@ -25,29 +24,29 @@
         rel="stylesheet">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="{{url('/public/assets/plugins/fontawesome/css/fontawesome.min.css')}}">
-    <link rel="stylesheet" href="{{url('/public/assets/plugins/fontawesome/css/all.min.css')}}">
+    <link rel="stylesheet" href="{{url('assets/plugins/fontawesome/css/fontawesome.min.css')}}">
+    <link rel="stylesheet" href="{{url('assets/plugins/fontawesome/css/all.min.css')}}">
 
     <!-- Feather CSS -->
-    <link rel="stylesheet" href="{{url('/public/assets/plugins/feather/feather.css')}}">
+    <link rel="stylesheet" href="{{url('assets/plugins/feather/feather.css')}}">
 
     <!-- Datepicker CSS -->
-    <link rel="stylesheet" href="{{url('/public/assets/css/bootstrap-datetimepicker.min.css')}}">
+    <link rel="stylesheet" href="{{url('assets/css/bootstrap-datetimepicker.min.css')}}">
 
     <!-- Select2 CSS -->
-    <link rel="stylesheet" href="{{url('/public/assets/plugins/select2/css/select2.min.css')}}">
+    <link rel="stylesheet" href="{{url('assets/plugins/select2/css/select2.min.css')}}">
 
     <!-- Datatables CSS -->
-    <link rel="stylesheet" href="{{url('/public/assets/plugins/datatables/datatables.min.css')}}">
+    <link rel="stylesheet" href="{{url('assets/plugins/datatables/datatables.min.css')}}">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="{{url('/public/assets/css/style.css')}}">
-    <link rel="stylesheet" href="{{url('/public/assets/css/custom-style.css')}}">
+    <link rel="stylesheet" href="{{url('assets/css/style.css')}}">
+    <link rel="stylesheet" href="{{url('assets/css/custom-style.css')}}">
 
     <!-- Layout Js -->
-    <script src="{{url('/public/assets/js/layout.js')}}"></script>
+    <script src="{{url('assets/js/layout.js')}}"></script>
     <!-- Summernote CSS -->
-    <link rel="stylesheet" href="{{url('/public/assets/plugins/summernote/summernote-bs4.min.css')}}">
+    <link rel="stylesheet" href="{{url('assets/plugins/summernote/summernote-bs4.min.css')}}">
     <style>
     .remove-field {
         display: flex;
@@ -72,35 +71,35 @@
     <!-- /Theme Setting -->
     <!-- jQuery -->
     <script data-cfasync="false" src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-    <script src="{{url('/public/assets/js/jquery-3.7.1.min.js')}}"></script>
+    <script src="{{url('assets/js/jquery-3.7.1.min.js')}}"></script>
 
     <!-- Bootstrap Core JS -->
-    <script src="{{url('/public/assets/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{url('assets/js/bootstrap.bundle.min.js')}}"></script>
 
     <!-- Datatable JS -->
-    <script src="{{url('/public/assets/plugins/datatables/datatables.min.js')}}"></script>
+    <script src="{{url('assets/plugins/datatables/datatables.min.js')}}"></script>
 
     <!-- select CSS -->
-    <script src="{{url('/public/assets/plugins/select2/js/select2.min.js')}}"></script>
+    <script src="{{url('assets/plugins/select2/js/select2.min.js')}}"></script>
 
     <!-- Slimscroll JS -->
-    <script src="{{url('/public/assets/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
+    <script src="{{url('assets/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
 
     <!-- Datepicker Core JS -->
-    <script src="{{url('/public/assets/plugins/moment/moment.min.js')}}"></script>
-    <script src="{{url('/public/assets/js/bootstrap-datetimepicker.min.js')}}"></script>
+    <script src="{{url('assets/plugins/moment/moment.min.js')}}"></script>
+    <script src="{{url('assets/js/bootstrap-datetimepicker.min.js')}}"></script>
 
     <!-- multiselect JS -->
-    <script src="{{url('/public/assets/js/jquery-ui.min.js')}}"></script>
+    <script src="{{url('assets/js/jquery-ui.min.js')}}"></script>
 
     <!-- Theme Settings JS -->
-    <script src="{{url('/public/assets/js/theme-settings.js')}}"></script>
-    <script src="{{url('/public/assets/js/greedynav.js')}}"></script>
+    <script src="{{url('assets/js/theme-settings.js')}}"></script>
+    <script src="{{url('assets/js/greedynav.js')}}"></script>
 
     <!-- Custom JS -->
-    <script src="{{url('/public/assets/js/script.js')}}"></script>
+    <script src="{{url('assets/js/script.js')}}"></script>
     <!-- Summernote JS -->
-    <script src="{{url('/public/assets/plugins/summernote/summernote-bs4.min.js')}}"></script>
+    <script src="{{url('assets/plugins/summernote/summernote-bs4.min.js')}}"></script>
     <script>
     $(document).on('click', '#toggle_btn', function() {
         //$('.sorting_desc').trigger('click');

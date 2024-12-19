@@ -17,9 +17,9 @@
         </div>
         <div class="sidebar-body">
             <form action="{{ route('invoices.index') }}" method="GET" autocomplete="off">
-                <!-- Invoice No Filter -->
+                
                 <div class="form-group">
-                    <label for="invoice_no">Invoice No</label>
+                    <label for="invoice_no">Invoice No </label>
                     <input type="text" name="invoice_no" id="invoice_no" class="form-control"
                            placeholder="Enter invoice number" value="{{ request('invoice_no') }}">
                 </div>

@@ -17,23 +17,30 @@ class Invoice extends Model
         /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [
-        'user_id',
-        'branch_id',
-        'partner_id',
-        'package_id',       
-        'bank_id',
-        'invoice_no',   
-        'no_of_night',
-        'no_of_passenger', 
-        'booking_reference_no',           
-        'vat',       
-        'discount_type',
-        'discount',
-        'status',
-        'note',
-        'term_condition'
-    ];
+    
+        protected $fillable = [
+            'user_id',
+            'previous_quotation_no',
+            'invoice_no',
+            'no_of_night',
+            'no_of_passenger',
+            'booking_reference_no',
+            'branch_id',
+            'partner_id',
+            'package_id',
+            'currency_id',
+            'currency_rate',
+            'bank_id',
+            'vat',
+            'discount_type',
+            'discount',
+            'note',
+            'term_condition',
+            'arrival_datetime',
+            'departure_datetime', // Add these fields
+        ];
+        
+
 
       /**
      * Get the User associated with the quotation.
