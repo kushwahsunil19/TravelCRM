@@ -240,6 +240,8 @@
                                 <b>Estimate Date:</b> {{ $quotation_date }}<br />
                                 <b>No. of Night:</b> {{ $no_of_night }}<br />
                                 <b>No. of Passenger:</b> {{ $no_of_passenger }}<br />
+                                <b>Arrival Date and Time:</b> {{ $arrival_datetime }}<br />
+                                <b>Departure Date and Time:</b> {{ $departure_datetime }}<br />
                                 <b>Valid Until:</b> {{ now()->addDays(30)->toDateString() }}<br />
                                 <b>Estimate Total({{ $currency_code }}):</b> {{ number_format($total, 2) }}
                             </p>

@@ -45,13 +45,13 @@ class DashboardController extends Controller
                    foreach ($user->invoices as $invoice) { // Loop through each invoice of the user
                        $grossAmount = ($invoice->package->amount ?? 0) * ($invoice->no_of_passenger ?? 1);                                 
                        // Currency Conversion
-                       $grossAmount = getCurrencyRateAmt($invoice->currency->code, 'AED', ($grossAmount));
-                       $netAmount = getCurrencyRateAmt($invoice->currency->code, 'AED', ($invoice->package->net_amount ?? 0));
+                       $grossAmount = getCurrencyRateAmt($invoice->package->currency->code, 'AED', ($grossAmount));
+                       $netAmount = getCurrencyRateAmt($invoice->package->currency->code, 'AED', ($invoice->package->net_amount ?? 0));
            
                        // Apply Discounts
                        $discount = $invoice->discount ?? 0;
                        $discountAmount = ($invoice->discount_type === 'Fixed') 
-                           ? getCurrencyRateAmt($invoice->currency->code, 'AED', $discount) 
+                           ? getCurrencyRateAmt($invoice->package->currency->code, 'AED', $discount) 
                            : ($grossAmount * $discount) / 100;
            
                        // Apply Tax

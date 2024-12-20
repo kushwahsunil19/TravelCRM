@@ -31,7 +31,9 @@ class Quotation extends Model
         'discount',
         'status',
         'note',
-        'term_condition'
+        'term_condition',
+        'arrival_datetime', // Added field
+        'departure_datetime' // Added field
     ];
 
     /**
@@ -57,35 +59,50 @@ class Quotation extends Model
     {
         return $this->belongsTo(Package::class);
     }
-    // Defining the relationship with the Back model
+
+    /**
+     * Defining the relationship with the Bank model.
+     */
     public function bank()
     {
-        return $this->belongsTo(Bank::class , 'bank_id', 'id');    
-
+        return $this->belongsTo(Bank::class, 'bank_id', 'id');
     }
+
+    /**
+     * Defining the relationship with the Currency model.
+     */
     public function currency()
     {
-        return $this->belongsTo(Currency::class , 'currency_id', 'id');    
-
+        return $this->belongsTo(Currency::class, 'currency_id', 'id');
     }
+
+    /**
+     * Get the temporary services associated with the quotation.
+     */
     public function tmpServices()
     {
         return $this->hasMany(TmpService::class, 'quotation_id', 'id');
     }
 
-    // Alternative method to retrieve supplier IDs directly (optional)
+    /**
+     * Retrieve supplier IDs directly (optional).
+     */
     public function supplierIds()
     {
         return $this->tmpServices()->pluck('suplyer_id')->toArray();
     }
+
     /**
      * Get the User associated with the quotation.
      */
     public function user()
     {
-        return $this->belongsTo(User::class,'user_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
-    
+
+    /**
+     * Get services associated with the quotation.
+     */
     public function services()
     {
         return $this->hasMany(Service::class, 'invoice_id', 'id');

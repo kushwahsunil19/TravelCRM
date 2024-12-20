@@ -36,7 +36,8 @@ return new class extends Migration
             $table->text('note')->nullable();
             $table->text('term_condition')->nullable();
             $table->tinyInteger('status')->default(2)->comment('0 for Declined, 1 for Accepted, 2 for Sent, 3 for Expired');
-          
+            $table->dateTime('arrival_datetime')->nullable();
+            $table->dateTime('departure_datetime')->nullable();
             $table->timestamps();
             $table->softDeletes(); // Soft delete timestamp
     

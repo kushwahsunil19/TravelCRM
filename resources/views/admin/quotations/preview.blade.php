@@ -207,6 +207,9 @@
                     <b>Estimate Date:</b> {{ $data['quotation_date'] }}<br />
                     <b>No. of Night:</b> {{ $data['no_of_night'] }}<br />
                     <b>No. of Passenger:</b> {{ $data['no_of_passenger'] }}<br />
+                    <b>Arrival Date and Time:</b>{{ $data['arrival_datetime']}}<br />
+                    <b>Departure Date and Time:</b>{{ $data['departure_datetime' ]}}<br />
+                   
                     <b>Valid Until:</b> {{ now()->addDays(30)->toDateString() }}<br />
                     <b>Estimate Total({{ $data['currency_code'] }}):</b> {{ number_format($data['total'], 2) }}
                 </p>

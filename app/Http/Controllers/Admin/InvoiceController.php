@@ -180,6 +180,7 @@ class InvoiceController extends Controller
             'package_id' => 'required|exists:packages,id',
             'currency_id' => 'required|exists:currencies,id',
             // 'bank_id' => 'required',
+            
             'invoice_no' => 'required|unique:invoices,invoice_no',   
             'booking_reference_no' => 'required|unique:invoices,booking_reference_no',        
             'no_of_night' => 'nullable|numeric',
