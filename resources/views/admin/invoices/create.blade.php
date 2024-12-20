@@ -180,6 +180,27 @@ td {
 
                                             </div>
                                         </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                        <div class="input-block mb-3">
+                                            <label>Arrival Date and Time</label>
+                                            <input type="datetime-local" class="form-control" id="arrival_datetime"
+                                                name="arrival_datetime" value="{{ old('arrival_datetime') }}">
+                                            @if ($errors->has('arrival_datetime'))
+                                                <span class="text-danger">{{ $errors->first('arrival_datetime') }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-6 col-md-6 col-sm-12">
+                                        <div class="input-block mb-3">
+                                            <label>Departure Date and Time</label>
+                                            <input type="datetime-local" class="form-control" id="departure_datetime"
+                                                name="departure_datetime" value="{{ old('departure_datetime') }}">
+                                            @if ($errors->has('departure_datetime'))
+                                                <span class="text-danger">{{ $errors->first('departure_datetime') }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
 
                                         <div class="col-lg-12 col-md-12 col-sm-12">
                                             <div class="input-block mb-3">

@@ -304,7 +304,7 @@
                                         <div class="input-block mb-3">
                                             <label>Arrival Date and Time</label>
                                             <input type="datetime-local" class="form-control" id="arrival_datetime"
-                                                name="arrival_datetime" value="{{ old('arrival_datetime') }}">
+                                                name="arrival_datetime" value="{{ old('arrival_datetime',) }}">
                                             @if ($errors->has('arrival_datetime'))
                                                 <span class="text-danger">{{ $errors->first('arrival_datetime') }}</span>
                                             @endif

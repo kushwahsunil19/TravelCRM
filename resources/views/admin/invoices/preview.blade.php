@@ -199,12 +199,13 @@
             </div>
             <div class="col-6 text-end">
                 <p>
-                    <!-- Dynamic Estimate Info -->
                     <b>Invoice Number:</b> {{ $data['invoice_number'] }}<br />
                     <b>Booking Reffrence Number:</b> {{ $data['booking_reference_no'] }}<br />
                     <b>Invoice Date:</b> {{ $data['invoice_date'] }}<br />
                     <b>No. of Night:</b> {{ $data['no_of_night'] }}<br />
                     <b>No. of Passenger:</b> {{ $data['no_of_passenger'] }}<br />
+                    <b>Arrival Date and Time:</b> {{ $data['arrival_datetime'] }}<br />
+                    <b>Departure Date and Time:</b> {{ $data['departure_datetime'] }}<br />
                     <b>Valid Until:</b> {{ now()->addDays(30)->toDateString() }}<br />
                     <b>Invoice Total({{ $data['currency_code'] }}):</b> {{ number_format($data['total'], 2) }}
                 </p>

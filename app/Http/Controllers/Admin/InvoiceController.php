@@ -180,7 +180,8 @@ class InvoiceController extends Controller
             'package_id' => 'required|exists:packages,id',
             'currency_id' => 'required|exists:currencies,id',
             // 'bank_id' => 'required',
-            
+            'arrival_datetime' => 'required|date|after_or_equal:today',
+            'departure_datetime' => 'required|date|after:arrival_datetime',
             'invoice_no' => 'required|unique:invoices,invoice_no',   
             'booking_reference_no' => 'required|unique:invoices,booking_reference_no',        
             'no_of_night' => 'nullable|numeric',
@@ -256,6 +257,8 @@ class InvoiceController extends Controller
             'package_id' => 'required|exists:packages,id',
             'currency_id' => 'required|exists:currencies,id',
             // 'bank_id' => 'required',
+            'arrival_datetime' => 'required|date|after_or_equal:today',
+            'departure_datetime' => 'required|date|after:arrival_datetime',
             'invoice_no' => 'required|unique:invoices,invoice_no,' . $invoice->id,
             'no_of_night' => 'nullable|numeric',
             'no_of_passenger' => 'nullable|numeric',          
@@ -403,10 +406,13 @@ class InvoiceController extends Controller
             'Branch',
             'Package',
             'Partner',
+            'arrival_datetime',
+            'departure_datetime',
             'Discount Type',
             'Discount',
             'VAT',
             'Amount'
+            
         ]);
     
         $serialNumber = 1;
@@ -550,6 +556,8 @@ class InvoiceController extends Controller
             'discount_type'=> $invoice->discount_type,
             'tax' => $tax,  // Assuming a field for VAT
             'total' =>  $total_amt,
+            'arrival_datetime' => $invoice->arrival_datetime,  // Adding arrival_datetime
+            'departure_datetime' => $invoice->departure_datetime,  // Adding departure_datetime
             'bank_name'=> isset($invoice->bank->bank_name)?$invoice->bank->bank_name:'',
             'account_no'=> isset($invoice->bank->account_no)?$invoice->bank->account_no:'',
             'bank_branch'=> isset($invoice->bank->branch_name)?$invoice->bank->branch_name:'',
@@ -672,6 +680,8 @@ class InvoiceController extends Controller
             'invoice_number' => $invoice->invoice_no,  // Assume there's an invoice number
             'booking_reference_no'=> $invoice->booking_reference_no,
             'no_of_night' => $invoice->no_of_night,
+            'arrival_datetime' => $invoice->arrival_datetime,  // Adding arrival_datetime
+            'departure_datetime' => $invoice->departure_datetime,  // Adding departure_datetime
             'no_of_passenger' => $invoice->no_of_passenger, 
             'bill_to' => $invoice->partner->name,  // Assuming you have customer info in your invoice
             'bill_email' => $invoice->partner->email,  // Assuming you have customer info in your invoice
